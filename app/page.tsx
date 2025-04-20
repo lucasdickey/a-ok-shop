@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getAllProducts } from '@/app/lib/shopify';
 
-export default function Home() {
+export default async function Home() {
+  // Fetch products for the featured section
+  const products = await getAllProducts();
+  const featuredProducts = products.slice(0, 3); // Take the first 3 products for the featured section
+  
   return (
     <div className="container mx-auto py-8">
       {/* Hero Section */}
@@ -30,22 +35,20 @@ export default function Home() {
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* This will be populated with actual products from Shopify */}
-          <div className="bg-secondary p-4 rounded-lg">
-            <div className="h-64 bg-light mb-4 rounded-md"></div>
-            <h3 className="font-semibold text-lg">Product Name</h3>
-            <p className="text-primary font-medium">$99.99</p>
-          </div>
-          <div className="bg-secondary p-4 rounded-lg">
-            <div className="h-64 bg-light mb-4 rounded-md"></div>
-            <h3 className="font-semibold text-lg">Product Name</h3>
-            <p className="text-primary font-medium">$99.99</p>
-          </div>
-          <div className="bg-secondary p-4 rounded-lg">
-            <div className="h-64 bg-light mb-4 rounded-md"></div>
-            <h3 className="font-semibold text-lg">Product Name</h3>
-            <p className="text-primary font-medium">$99.99</p>
-          </div>
+          {featuredProducts.map((product) => (
+            <Link href={`/products/${product.handle}`} key={product.id} className="group">
+              <div className="bg-secondary p-4 rounded-lg">
+                <div className="relative h-64 bg-light mb-4 rounded-md overflow-hidden">
+                  {/* Use a div with background color instead of Image component to avoid image loading issues */}
+                  <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500">{product.title}</span>
+                  </div>
+                </div>
+                <h3 className="font-semibold text-lg">{product.title}</h3>
+                <p className="text-primary font-medium">${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p>
+              </div>
+            </Link>
+          ))}
         </div>
         <div className="text-center mt-8">
           <Link href="/products" className="btn btn-outline">

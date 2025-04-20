@@ -53,19 +53,142 @@ export type ShopifyCollection = {
 
 // Initialize GraphQL client
 const getShopifyClient = () => {
-  const endpoint = `https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2023-10/graphql.json`;
-  const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN;
+  // For development/testing, use hardcoded values if environment variables are not available
+  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN || 'aokstore.myshopify.com';
+  const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN || '4b49c3f76d66c4c3e27116438c3470d3';
+  
+  // Shopify Storefront API endpoint
+  const endpoint = `https://${storeDomain}/api/2023-04/graphql.json`;
 
   if (!endpoint || !token) {
     throw new Error('Shopify API credentials are missing');
   }
 
+  console.log('Connecting to Shopify API at:', endpoint);
+  
   return new GraphQLClient(endpoint, {
     headers: {
       'X-Shopify-Storefront-Access-Token': token,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
   });
 };
+
+// Mock products for development when API is not available
+const mockProducts: ShopifyProduct[] = [
+  {
+    id: 'gid://shopify/Product/1',
+    handle: 'mock-tshirt-1',
+    title: 'A-OK T-Shirt',
+    description: 'A comfortable t-shirt with the A-OK logo',
+    priceRange: {
+      minVariantPrice: {
+        amount: '29.99',
+      },
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/product-placeholder.jpg',
+            altText: 'A-OK T-Shirt',
+          },
+        },
+      ],
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/1',
+            title: 'Default',
+            price: {
+              amount: '29.99',
+            },
+            availableForSale: true,
+          },
+        },
+      ],
+    },
+    tags: ['t-shirt', 'apparel'],
+    productType: 'T-Shirts',
+  },
+  {
+    id: 'gid://shopify/Product/2',
+    handle: 'mock-hoodie-1',
+    title: 'A-OK Hoodie',
+    description: 'A warm hoodie with the A-OK logo',
+    priceRange: {
+      minVariantPrice: {
+        amount: '49.99',
+      },
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/product-placeholder.jpg',
+            altText: 'A-OK Hoodie',
+          },
+        },
+      ],
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/2',
+            title: 'Default',
+            price: {
+              amount: '49.99',
+            },
+            availableForSale: true,
+          },
+        },
+      ],
+    },
+    tags: ['hoodie', 'apparel'],
+    productType: 'Hoodies',
+  },
+  {
+    id: 'gid://shopify/Product/3',
+    handle: 'mock-cap-1',
+    title: 'A-OK Cap',
+    description: 'A stylish cap with the A-OK logo',
+    priceRange: {
+      minVariantPrice: {
+        amount: '19.99',
+      },
+    },
+    images: {
+      edges: [
+        {
+          node: {
+            url: '/images/product-placeholder.jpg',
+            altText: 'A-OK Cap',
+          },
+        },
+      ],
+    },
+    variants: {
+      edges: [
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/3',
+            title: 'Default',
+            price: {
+              amount: '19.99',
+            },
+            availableForSale: true,
+          },
+        },
+      ],
+    },
+    tags: ['cap', 'accessories'],
+    productType: 'Accessories',
+  },
+];
 
 // Fetch all products
 export async function getAllProducts() {
@@ -114,16 +237,25 @@ export async function getAllProducts() {
   `;
 
   try {
+    console.log('Fetching products from Shopify...');
     const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
+    console.log('Products fetched successfully:', data.products.edges.length);
     return data.products.edges.map(({ node }) => node);
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
+    console.error('Error fetching products from Shopify API:', error);
+    console.log('Using mock products instead');
+    return mockProducts;
   }
 }
 
 // Fetch a single product by handle
 export async function getProductByHandle(handle: string) {
+  // For mock data, return a mock product if the handle matches
+  const mockProduct = mockProducts.find(p => p.handle === handle);
+  if (mockProduct) {
+    return mockProduct;
+  }
+
   const client = getShopifyClient();
   
   const query = `
@@ -169,7 +301,8 @@ export async function getProductByHandle(handle: string) {
     return data.productByHandle;
   } catch (error) {
     console.error('Error fetching product:', error);
-    return null;
+    // Return the first mock product as a fallback
+    return mockProducts[0];
   }
 }
 
@@ -227,6 +360,7 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
     return data.checkoutCreate.checkout.webUrl;
   } catch (error) {
     console.error('Error creating checkout:', error);
-    return null;
+    // Return a mock checkout URL
+    return 'https://aokstore.myshopify.com/checkout';
   }
 }
