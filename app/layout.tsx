@@ -11,6 +11,14 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'A-OK Store | Custom Shopify Storefront',
   description: 'A custom Shopify storefront built with Next.js, TypeScript, and Tailwind CSS',
+  icons: {
+    icon: [
+      { url: '/favicon.jpg' },
+    ],
+    apple: [
+      { url: '/favicon.jpg' },
+    ],
+  },
 };
 
 export default function RootLayout({

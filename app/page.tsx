@@ -12,12 +12,12 @@ export default function Home() {
             alt="A-OK Store"
             fill
             priority
-            className="object-cover"
+            className="object-cover object-right"
           />
-          <div className="absolute inset-0 bg-dark/40 flex items-center justify-center">
-            <div className="text-center text-light p-6">
-              <h1 className="mb-4">Welcome to A-OK Store</h1>
-              <p className="text-xl mb-6">Premium products for discerning customers</p>
+          <div className="absolute inset-0 bg-dark/70 flex items-center">
+            <div className="text-center bg-white/50 p-8 rounded-lg max-w-xl ml-8 mr-auto">
+              <h1 className="mb-4 text-dark font-bold">Welcome to A-OK Store</h1>
+              <p className="text-xl mb-6 text-dark">Premium products for discerning customers</p>
               <Link href="/products" className="btn btn-primary">
                 Shop Now
               </Link>
