@@ -39,10 +39,19 @@ export default async function Home() {
             <Link href={`/products/${product.handle}`} key={product.id} className="group">
               <div className="bg-secondary p-4 rounded-lg">
                 <div className="relative h-64 bg-light mb-4 rounded-md overflow-hidden">
-                  {/* Use a div with background color instead of Image component to avoid image loading issues */}
-                  <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">{product.title}</span>
-                  </div>
+                  {product.images.edges[0]?.node.url && 
+                   product.images.edges[0].node.url.startsWith('http') ? (
+                    <Image
+                      src={product.images.edges[0].node.url}
+                      alt={product.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">{product.title}</span>
+                    </div>
+                  )}
                 </div>
                 <h3 className="font-semibold text-lg">{product.title}</h3>
                 <p className="text-primary font-medium">${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p>

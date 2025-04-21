@@ -53,18 +53,20 @@ export type ShopifyCollection = {
 
 // Initialize GraphQL client
 const getShopifyClient = () => {
-  // For development/testing, use hardcoded values if environment variables are not available
-  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN || 'aokstore.myshopify.com';
+  // Get credentials from environment variables or use hardcoded values for development
+  // The correct store domain is from the admin URL: 19gpdr-ps
+  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN || '19gpdr-ps.myshopify.com';
   const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN || '4b49c3f76d66c4c3e27116438c3470d3';
   
-  // Shopify Storefront API endpoint
-  const endpoint = `https://${storeDomain}/api/2023-04/graphql.json`;
+  // Correct Shopify Storefront API endpoint format
+  const endpoint = `https://${storeDomain}/api/2023-07/graphql.json`;
 
   if (!endpoint || !token) {
     throw new Error('Shopify API credentials are missing');
   }
 
   console.log('Connecting to Shopify API at:', endpoint);
+  console.log('Using token:', token.substring(0, 4) + '...' + token.substring(token.length - 4));
   
   return new GraphQLClient(endpoint, {
     headers: {
@@ -195,7 +197,7 @@ export async function getAllProducts() {
   const client = getShopifyClient();
   
   const query = `
-    query GetAllProducts {
+    query {
       products(first: 50) {
         edges {
           node {
@@ -238,11 +240,24 @@ export async function getAllProducts() {
 
   try {
     console.log('Fetching products from Shopify...');
+    console.log('GraphQL Query:', query);
+    
     const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
     console.log('Products fetched successfully:', data.products.edges.length);
     return data.products.edges.map(({ node }) => node);
   } catch (error) {
     console.error('Error fetching products from Shopify API:', error);
+    
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      // @ts-ignore
+      if (error.response) {
+        // @ts-ignore
+        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      }
+    }
+    
     console.log('Using mock products instead');
     return mockProducts;
   }

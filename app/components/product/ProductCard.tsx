@@ -12,15 +12,25 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { handle, title, priceRange, images } = product;
   
   const price = parseFloat(priceRange.minVariantPrice.amount);
+  const imageUrl = images.edges[0]?.node.url || '/images/product-placeholder.jpg';
+  const imageAlt = images.edges[0]?.node.altText || title;
 
   return (
     <Link href={`/products/${handle}`} className="group">
       <div className="overflow-hidden rounded-lg bg-secondary-light">
         <div className="relative aspect-square overflow-hidden">
-          {/* Replace Image with a div to avoid image loading issues */}
-          <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500">{title}</span>
-          </div>
+          {imageUrl.startsWith('http') ? (
+            <Image
+              src={imageUrl}
+              alt={imageAlt}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-500">{title}</span>
+            </div>
+          )}
         </div>
         <div className="p-4">
           <h3 className="font-medium text-dark group-hover:text-primary">{title}</h3>
