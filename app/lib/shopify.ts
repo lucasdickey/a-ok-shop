@@ -449,15 +449,15 @@ export async function getProductByHandle(handle: string) {
 export async function createShopifyCheckout(lineItems: Array<{ variantId: string; quantity: number }>) {
   const client = getShopifyClient();
   
+  // Use cartCreate instead of checkoutCreate (which is deprecated)
   const query = `
-    mutation CheckoutCreate($input: CheckoutCreateInput!) {
-      checkoutCreate(input: $input) {
-        checkout {
+    mutation CartCreate($input: CartInput!) {
+      cartCreate(input: $input) {
+        cart {
           id
-          webUrl
+          checkoutUrl
         }
-        checkoutUserErrors {
-          code
+        userErrors {
           field
           message
         }
@@ -467,42 +467,41 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
 
   // Convert lineItems to the format expected by the Shopify API
   const formattedLineItems = lineItems.map(item => ({
-    variantId: item.variantId,
+    merchandiseId: item.variantId,
     quantity: item.quantity
   }));
 
   try {
     const variables = {
       input: {
-        lineItems: formattedLineItems,
+        lines: formattedLineItems,
       },
     };
 
-    console.log('Creating checkout with variables:', JSON.stringify(variables, null, 2));
+    console.log('Creating cart with variables:', JSON.stringify(variables, null, 2));
     
     const data = await client.request<{
-      checkoutCreate: {
-        checkout: {
+      cartCreate: {
+        cart: {
           id: string;
-          webUrl: string;
+          checkoutUrl: string;
         };
-        checkoutUserErrors: Array<{
-          code: string;
+        userErrors: Array<{
           field: string;
           message: string;
         }>;
       };
     }>(query, variables);
 
-    console.log('Checkout response:', JSON.stringify(data, null, 2));
+    console.log('Cart creation response:', JSON.stringify(data, null, 2));
     
-    if (data.checkoutCreate.checkoutUserErrors.length > 0) {
-      console.error('Checkout creation errors:', data.checkoutCreate.checkoutUserErrors);
-      throw new Error(data.checkoutCreate.checkoutUserErrors[0].message);
+    if (data.cartCreate.userErrors.length > 0) {
+      console.error('Cart creation errors:', data.cartCreate.userErrors);
+      throw new Error(data.cartCreate.userErrors[0].message);
     }
 
     // Get the original checkout URL from Shopify
-    const originalCheckoutUrl = data.checkoutCreate.checkout.webUrl;
+    const originalCheckoutUrl = data.cartCreate.cart.checkoutUrl;
     console.log('Original checkout URL:', originalCheckoutUrl);
     
     // Extract the checkout token from the original URL
