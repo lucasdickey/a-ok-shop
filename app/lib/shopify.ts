@@ -504,14 +504,13 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
     const originalCheckoutUrl = data.cartCreate.cart.checkoutUrl;
     console.log('Original checkout URL:', originalCheckoutUrl);
     
-    // Extract the checkout token from the original URL
-    // Original format: https://store-name.myshopify.com/checkouts/c/token
-    // We need to extract just the token part
-    const urlParts = originalCheckoutUrl.split('/');
-    const checkoutToken = urlParts[urlParts.length - 1];
+    // Instead of trying to parse and reconstruct the URL, use the original URL structure
+    // but replace the domain with our custom checkout domain
+    const redirectUrl = originalCheckoutUrl.replace(
+      /https:\/\/[^\/]+/,
+      'https://checkout.a-ok.shop'
+    );
     
-    // Construct the new checkout URL with the subdomain
-    const redirectUrl = `https://checkout.a-ok.shop/checkouts/${checkoutToken}`;
     console.log('Redirecting to:', redirectUrl);
     
     return redirectUrl;
