@@ -478,6 +478,8 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
       },
     };
 
+    console.log('Creating checkout with variables:', JSON.stringify(variables, null, 2));
+    
     const data = await client.request<{
       checkoutCreate: {
         checkout: {
@@ -492,14 +494,41 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
       };
     }>(query, variables);
 
+    console.log('Checkout response:', JSON.stringify(data, null, 2));
+    
     if (data.checkoutCreate.checkoutUserErrors.length > 0) {
+      console.error('Checkout creation errors:', data.checkoutCreate.checkoutUserErrors);
       throw new Error(data.checkoutCreate.checkoutUserErrors[0].message);
     }
 
-    return data.checkoutCreate.checkout.webUrl;
+    // Get the original checkout URL from Shopify
+    const originalCheckoutUrl = data.checkoutCreate.checkout.webUrl;
+    console.log('Original checkout URL:', originalCheckoutUrl);
+    
+    // Extract the checkout token from the original URL
+    // Original format: https://store-name.myshopify.com/checkouts/c/token
+    // We need to extract just the token part
+    const urlParts = originalCheckoutUrl.split('/');
+    const checkoutToken = urlParts[urlParts.length - 1];
+    
+    // Construct the new checkout URL with the subdomain
+    const redirectUrl = `https://checkout.a-ok.shop/checkouts/${checkoutToken}`;
+    console.log('Redirecting to:', redirectUrl);
+    
+    return redirectUrl;
   } catch (error) {
     console.error('Error creating checkout:', error);
-    // Return a mock checkout URL
-    return 'https://aokstore.myshopify.com/checkout';
+    
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      // @ts-ignore
+      if (error.response) {
+        // @ts-ignore
+        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      }
+    }
+    
+    throw new Error('Unable to create checkout. Please try again or contact support.');
   }
 }
