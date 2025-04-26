@@ -12,29 +12,17 @@ export default function ProductFilter({ productTypes }: ProductFilterProps) {
   const searchParams = useSearchParams();
   
   // Get initial filter values from URL
-  const initialCategory = searchParams.get('category') || '';
-  const initialMinPrice = searchParams.get('minPrice') || '';
-  const initialMaxPrice = searchParams.get('maxPrice') || '';
+  const initialCategory = searchParams.get('category')?.toLowerCase() || '';
   
   // State for filter values
   const [category, setCategory] = useState(initialCategory);
-  const [minPrice, setMinPrice] = useState(initialMinPrice);
-  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   
   // Apply filters
   const applyFilters = () => {
     const params = new URLSearchParams();
     
     if (category) {
-      params.set('category', category);
-    }
-    
-    if (minPrice) {
-      params.set('minPrice', minPrice);
-    }
-    
-    if (maxPrice) {
-      params.set('maxPrice', maxPrice);
+      params.set('category', category.toLowerCase());
     }
     
     router.push(`/products?${params.toString()}`);
@@ -43,8 +31,6 @@ export default function ProductFilter({ productTypes }: ProductFilterProps) {
   // Reset filters
   const resetFilters = () => {
     setCategory('');
-    setMinPrice('');
-    setMaxPrice('');
     router.push('/products');
   };
   
@@ -62,44 +48,11 @@ export default function ProductFilter({ productTypes }: ProductFilterProps) {
         >
           <option value="">All Categories</option>
           {productTypes.map((type) => (
-            <option key={type} value={type.toLowerCase()}>
-              {type}
+            <option key={type} value={type}>
+              {type.charAt(0).toUpperCase() + type.slice(1)}
             </option>
           ))}
         </select>
-      </div>
-      
-      {/* Price Range Filter */}
-      <div>
-        <h3 className="mb-2 text-sm font-medium">Price Range</h3>
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label htmlFor="min-price" className="sr-only">
-              Minimum Price
-            </label>
-            <input
-              id="min-price"
-              type="number"
-              placeholder="Min"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              className="w-full rounded-md border border-secondary bg-light px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label htmlFor="max-price" className="sr-only">
-              Maximum Price
-            </label>
-            <input
-              id="max-price"
-              type="number"
-              placeholder="Max"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full rounded-md border border-secondary bg-light px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
       </div>
       
       {/* Filter Actions */}

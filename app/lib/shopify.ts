@@ -53,21 +53,18 @@ export type ShopifyCollection = {
 
 // Initialize GraphQL client
 const getShopifyClient = () => {
-  // Get credentials from environment variables or use hardcoded values for development
-  // The correct store domain is from the admin URL: 19gpdr-ps
-  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN || '19gpdr-ps.myshopify.com';
-  const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN || '4b49c3f76d66c4c3e27116438c3470d3';
+  // Get credentials from environment variables
+  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN;
+  const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN;
+  
+  if (!storeDomain || !token) {
+    console.error('Missing Shopify API credentials');
+    throw new Error('Shopify API credentials are missing. Please check your environment variables.');
+  }
   
   // Correct Shopify Storefront API endpoint format
   const endpoint = `https://${storeDomain}/api/2023-07/graphql.json`;
 
-  if (!endpoint || !token) {
-    throw new Error('Shopify API credentials are missing');
-  }
-
-  console.log('Connecting to Shopify API at:', endpoint);
-  console.log('Using token:', token.substring(0, 4) + '...' + token.substring(token.length - 4));
-  
   return new GraphQLClient(endpoint, {
     headers: {
       'X-Shopify-Storefront-Access-Token': token,
@@ -244,7 +241,12 @@ export async function getAllProducts() {
     
     const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
     console.log('Products fetched successfully:', data.products.edges.length);
-    return data.products.edges.map(({ node }) => node);
+    
+    // Log all product types to see the exact values
+    const products = data.products.edges.map(({ node }) => node);
+    console.log('All product types in Shopify:', products.map(p => `"${p.productType}"`).join(', '));
+    
+    return products;
   } catch (error) {
     console.error('Error fetching products from Shopify API:', error);
     
@@ -260,6 +262,128 @@ export async function getAllProducts() {
     
     console.log('Using mock products instead');
     return mockProducts;
+  }
+}
+
+// Fetch products by category
+export async function getProductsByCategory(category: string) {
+  const client = getShopifyClient();
+  
+  // Map UI category names to query patterns using both tags and product types
+  let queryFilter = '';
+  
+  if (category.toLowerCase() === 'hats') {
+    // Use both tag and product_type filters for hats
+    queryFilter = 'tag:hats OR product_type:hats';
+  } else if (category.toLowerCase() === 't-shirts') {
+    // Use both tag and product_type filters for t-shirts
+    queryFilter = 'tag:t-shirts OR product_type:t-shirts';
+  } else if (category.toLowerCase() === 'hoodies') {
+    // Use both tag and product_type filters for hoodies
+    queryFilter = 'tag:hoodies OR product_type:hoodies';
+  } else {
+    // Default case - use the category as both tag and product_type
+    queryFilter = `tag:${category.toLowerCase()} OR product_type:${category.toLowerCase()}`;
+  }
+  
+  const query = `
+    query {
+      products(first: 50, query: "${queryFilter}") {
+        edges {
+          node {
+            id
+            handle
+            title
+            description
+            priceRange {
+              minVariantPrice {
+                amount
+              }
+            }
+            images(first: 1) {
+              edges {
+                node {
+                  url
+                  altText
+                }
+              }
+            }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  title
+                  price {
+                    amount
+                  }
+                  availableForSale
+                }
+              }
+            }
+            tags
+            productType
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    console.log(`Fetching products for category: ${category} using filter: ${queryFilter}`);
+    
+    const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
+    console.log('Category products fetched successfully:', data.products.edges.length);
+    
+    const products = data.products.edges.map(({ node }) => node);
+    
+    // Log the product details that were found
+    console.log('Found products:');
+    products.forEach(p => {
+      console.log(`- ${p.title} (Type: "${p.productType}", Tags: ${p.tags.join(', ')})`);
+    });
+    
+    return products;
+  } catch (error) {
+    console.error(`Error fetching products for category ${category}:`, error);
+    
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      // @ts-ignore
+      if (error.response) {
+        // @ts-ignore
+        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      }
+    }
+    
+    // Fallback to getting all products and filtering manually
+    console.log(`Falling back to manual filtering for category: ${category}`);
+    const allProducts = await getAllProducts();
+    
+    // Filter products by both tags and product type
+    const filteredProducts = allProducts.filter(product => {
+      const normalizedTags = product.tags.map(tag => tag.toLowerCase());
+      const normalizedProductType = product.productType.toLowerCase();
+      
+      // Check if any tag or product type matches the category
+      if (category.toLowerCase() === 'hats') {
+        return normalizedTags.some(tag => tag.includes('hat') || tag.includes('cap')) || 
+               normalizedProductType.includes('hat') || 
+               normalizedProductType.includes('cap');
+      } else if (category.toLowerCase() === 't-shirts') {
+        return normalizedTags.some(tag => tag.includes('shirt')) || 
+               normalizedProductType.includes('t-shirt');
+      } else if (category.toLowerCase() === 'hoodies') {
+        return normalizedTags.some(tag => tag.includes('hoodie')) || 
+               normalizedProductType.includes('hoodie');
+      } else {
+        return normalizedTags.some(tag => tag.includes(category.toLowerCase())) || 
+               normalizedProductType.includes(category.toLowerCase());
+      }
+    });
+    
+    console.log(`Fallback found ${filteredProducts.length} products for category: ${category}`);
+    return filteredProducts;
   }
 }
 

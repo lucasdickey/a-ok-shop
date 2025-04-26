@@ -1,23 +1,19 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import CartProvider from './components/cart/CartProvider';
-import CartDrawer from './components/cart/CartDrawer';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import CartProvider from "./components/cart/CartProvider";
+import CartDrawer from "./components/cart/CartDrawer";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'A-OK Store | Custom Shopify Storefront',
-  description: 'A custom Shopify storefront built with Next.js, TypeScript, and Tailwind CSS',
+  title: "A-OK: Shop Apes On Keys",
+  description: "Apes On Keys - Nerd Streetwear (for real)",
   icons: {
-    icon: [
-      { url: '/favicon.jpg' },
-    ],
-    apple: [
-      { url: '/favicon.jpg' },
-    ],
+    icon: [{ url: "/images/a-ok-o-face.png" }],
+    apple: [{ url: "/images/a-ok-o-face.png" }],
   },
 };
 

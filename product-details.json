@@ -1,0 +1,1007 @@
+{
+  "products": {
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/Product/8755818758363",
+          "handle": "a-ok-glitch-art-face-mask-t-shirt",
+          "title": "A-OK - Glitch Art Face Mask T-Shirt",
+          "description": "The Apes On Keys Glitch Art T-Shirt features a bold, pixel-style typography design that creates a descending cascade effect on a vibrant red background. Below the text, the design incorporates a striking monochromatic illustration of a DJ monkey wearing headphones at a mixing board, rendered in a street art style. The contrast between the sharp black digital text and the artistic monkey illustration creates a unique fusion of digital and urban aesthetics. Perfect for music enthusiasts, digital art lovers, and those who appreciate streetwear with an edge.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">The Apes On Keys Glitch Art T-Shirt features a bold, pixel-style typography design that creates a descending cascade effect on a vibrant red background. Below the text, the design incorporates a striking monochromatic illustration of a DJ monkey wearing headphones at a mixing board, rendered in a street art style. The contrast between the sharp black digital text and the artistic monkey illustration creates a unique fusion of digital and urban aesthetics. Perfect for music enthusiasts, digital art lovers, and those who appreciate streetwear with an edge.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057592205531",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43553126023387",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_9.08.16_PM.png?v=1733627213",
+                  "altText": null,
+                  "width": 970,
+                  "height": 626
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43553126056155",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_9.08.00_PM.png?v=1733627213",
+                  "altText": null,
+                  "width": 960,
+                  "height": 702
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46333881417947",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/Collection/501455651035",
+                  "handle": "frontpage",
+                  "title": "Home page"
+                }
+              }
+            ]
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-glitch-art-face-mask-t-shirt",
+          "availableForSale": true,
+          "createdAt": "2024-12-08T03:15:06Z",
+          "updatedAt": "2025-04-19T23:52:34Z",
+          "publishedAt": "2025-04-19T23:52:34Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8755984367835",
+          "handle": "a-ok-basic-ape",
+          "title": "A-OK - Basic Ape",
+          "description": "The original A-OK Ape. The logo may evolve, but this ape was the beginning of the Symbiocene era. This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling. This shirt is available in black, white (with black ape), red, and grey (as shown here).",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">The original A-OK Ape.</p>\n<p><meta charset=\"utf-8\">The logo may evolve, but this ape was the beginning of the Symbiocene era.</p>\n<p>This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling.</p>\n<p>This shirt is available in black, white (with black ape), red, and grey (as shown here).</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057800151259",
+              "name": "Color",
+              "values": [
+                "Animal",
+                "Gray",
+                "Red",
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43554496839899",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.56_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 950,
+                  "height": 1164
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43554496872667",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.08_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 956,
+                  "height": 1160
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618534107",
+                  "title": "Animal",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Animal"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618566875",
+                  "title": "Gray",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Gray"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618599643",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618632411",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618665179",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-basic-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-08T20:56:16Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:34Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756065665243",
+          "handle": "a-ok-the-typewriter",
+          "title": "A-OK - The Typewriter",
+          "description": "This striking black t-shirt features a bold, vintage-inspired design centered on a detailed illustration of a classic typewriter rendered in crisp white against the dark background. The typewriter's paper roll displays a playful repetition of \"A-OK\" text variants, much like its keyboard showcases the input text training's impact on the output text. The design skillfully combines retro office aesthetics with modern streetwear sensibilities, creating a unique piece that pays homage to both classic typography and contemporary urban fashion. The squared frame around the typewriter gives the graphic a clean, contained look that makes a strong visual statement. Find the hidden \"A-OK\" split logo on the typewriter itself.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This striking black t-shirt features a bold, vintage-inspired design centered on a detailed illustration of a classic typewriter rendered in crisp white against the dark background. The typewriter's paper roll displays a playful repetition of \"A-OK\" text variants, much like its keyboard showcases the input text training's impact on the output text. </p>\n<p>The design skillfully combines retro office aesthetics with modern streetwear sensibilities, creating a unique piece that pays homage to both classic typography and contemporary urban fashion. The squared frame around the typewriter gives the graphic a clean, contained look that makes a strong visual statement. <meta charset=\"utf-8\">Find the hidden \"A-OK\" split logo on the typewriter itself.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057905303771",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555130441947",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.05.47_PM.png?v=1733627215",
+                  "altText": null,
+                  "width": 950,
+                  "height": 1146
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334914167003",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-the-typewriter",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:48:16Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066255067",
+          "handle": "a-ok-this-ape-is-not-okay",
+          "title": "A-OK - This Ape Is Not Okay",
+          "description": "this red t-shirt shOwcAses A striKing geOmetric design feAturing A stylized Ape heAd rendered in A bOld blAcK squAre with red circuit-liKe detAils. the Ape spOrts An A-OK brAnded cAp And studiO heAdphOnes, with the heAdphOnes integrAted intO A futuristic circuit pAttern thAt frAmes the fAce. smAll geOmetric Accents And dOts ArOund the design creAte A tech-inspired Aesthetic, while the Ape's determined expressiOn gives the piece An edgy, urbAn feel. the mOnOchrOmAtic use Of red And blAcK creAtes A pOwerful cOntrAst thAt mAKes the design pOp AgAinst the bright red shirt bAcKgrOund.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\"><meta charset=\"utf-8\">this red t-shirt shOwcAses A striKing geOmetric design feAturing A stylized Ape heAd rendered in A bOld blAcK squAre with red circuit-liKe detAils. the Ape spOrts An A-OK brAnded cAp And studiO heAdphOnes, with the heAdphOnes integrAted intO A futuristic circuit pAttern thAt frAmes the fAce. smAll geOmetric Accents And dOts ArOund the design creAte A tech-inspired Aesthetic, while the Ape's determined expressiOn gives the piece An edgy, urbAn feel. the mOnOchrOmAtic use Of red And blAcK creAtes A pOwerful cOntrAst thAt mAKes the design pOp AgAinst the bright red shirt bAcKgrOund.<br></p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057906188507",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555136241883",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.53.46_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 964,
+                  "height": 1158
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555136274651",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.54.00_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1164
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334917869787",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-this-ape-is-not-okay",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:51:35Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066648283",
+          "handle": "a-ok-hype-weight-overload",
+          "title": "A-OK - Hype Weight Overload",
+          "description": "This bold black t-shirt features a striking circular design on the front, showcasing our central ape character wearing red and black headphones and an \"A-OK\" branded cap. The chimp's expressive face and open mouth create a dynamic focal point, surrounded by additional monkey motifs in a stylized, retro-inspired arrangement. The circular emblem uses a clean color palette of black, white, and red accents. The design achieves a perfect balance between playful character art and clean geometric composition, making it an eye-catching piece that captures the brand's music and primate-themed aesthetic.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This bold black t-shirt features a striking circular design on the front, showcasing our central ape character wearing red and black headphones and an \"A-OK\" branded cap. The chimp's expressive face and open mouth create a dynamic focal point, surrounded by additional monkey motifs in a stylized, retro-inspired arrangement. The circular emblem uses a clean color palette of black, white, and red accents. The design achieves a perfect balance between playful character art and clean geometric composition, making it an eye-catching piece that captures the brand's music and primate-themed aesthetic.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057906909403",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141517531",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.17_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 972,
+                  "height": 1218
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141550299",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.35_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1196
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334923243739",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-hype-weight-overload",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:54:19Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066844891",
+          "handle": "a-ok-we-got-the-keys",
+          "title": "A-OK - We Got The Keys",
+          "description": "This black t-shirt features a distinctive white rectangular panel containing a humorous office scene with a group of apes in a business meeting setting. The illustration shows several apes wearing headphones seated around a conference table, with one enthusiastic ape standing and gesturing, all rendered in a three-color palette of black, white, and red accents. The background includes repeating text that reads \"I GOT THE KEYS,\" while a stylized red \"A-O-K\" tag appears below the main illustration. The design cleverly combines corporate culture parody with the brand's signature ape motif, creating a witty commentary on modern workplace dynamics.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This black t-shirt features a distinctive white rectangular panel containing a humorous office scene with a group of apes in a business meeting setting. The illustration shows several apes wearing headphones seated around a conference table, with one enthusiastic ape standing and gesturing, all rendered in a three-color palette of black, white, and red accents. The background includes repeating text that reads \"I GOT THE KEYS,\" while a stylized red \"A-O-K\" tag appears below the main illustration. The design cleverly combines corporate culture parody with the brand's signature ape motif, creating a witty commentary on modern workplace dynamics.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057907138779",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555143483611",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.05.07_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 952,
+                  "height": 1168
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141550299",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.35_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1196
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334923997403",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-we-got-the-keys",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:56:10Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756067107035",
+          "handle": "a-ok-nextjs-is-nice-space-ape",
+          "title": "A-OK - NextJS Is Nice Space Ape",
+          "description": "This black t-shirt features a modern tech-inspired design with a white squared frame containing a sophisticated ape character sporting headphones and sunglasses, surrounded by NextJs branding and various tech-themed icons and elements. The design includes geometric shapes, rocket icons, and UI-style elements that create a developer-focused aesthetic. Below the main illustration, the A-OK brand name appears in crisp white pixel-style typography, giving the shirt a perfect blend of coding culture and street style. The monochromatic color scheme keeps the design clean and professional while maintaining the playful nature of the brand's signature ape character.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This black t-shirt features a modern tech-inspired design with a white squared frame containing a sophisticated ape character sporting headphones and sunglasses, surrounded by NextJs branding and various tech-themed icons and elements. The design includes geometric shapes, rocket icons, and UI-style elements that create a developer-focused aesthetic. Below the main illustration, the A-OK brand name appears in crisp white pixel-style typography, giving the shirt a perfect blend of coding culture and street style. The monochromatic color scheme keeps the design clean and professional while maintaining the playful nature of the brand's signature ape character.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057907433691",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555145547995",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.59_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1160
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334925045979",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-nextjs-is-nice-space-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:58:39Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756070973659",
+          "handle": "a-ok-12mm-monkeys",
+          "title": "A-OK - 12MM Monkeys",
+          "description": "This charcoal gray t-shirt features a striking white rectangular design with a graffiti-style illustration of a focused chimpanzee producer at a keyboard, wearing headphones and a cap. Behind the main character, smaller monkeys appear at the keys, creating a playful depth to the scene. The artwork is topped with bold \"12MM MONKEYS\" text and accented with splashes of red that add urban flair to the composition. Below the main graphic, the A-OK brand name appears in classic pixel-style typography in white. The design combines street art aesthetics with music production culture, creating a perfect blend of urban style and audio technology references. And yes, this is an homage to 12 Monkeys.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This charcoal gray t-shirt features a striking white rectangular design with a graffiti-style illustration of a focused chimpanzee producer at a keyboard, wearing headphones and a cap. Behind the main character, smaller monkeys appear at the keys, creating a playful depth to the scene. The artwork is topped with bold \"12MM MONKEYS\" text and accented with splashes of red that add urban flair to the composition. Below the main graphic, the A-OK brand name appears in classic pixel-style typography in white. The design combines street art aesthetics with music production culture, creating a perfect blend of urban style and audio technology references. And yes, this is an homage to 12 Monkeys.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057913004251",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555184574683",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.34_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 948,
+                  "height": 1154
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334950506715",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-12mm-monkeys",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T04:28:25Z",
+          "updatedAt": "2025-04-19T23:52:35Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756072448219",
+          "handle": "a-ok-monkey-master",
+          "title": "A-OK - Monkey Master",
+          "description": "This white t-shirt features a striking design set in a rounded-corner red square, depicting the DJ A-OK as a puppet master wearing headphones and a cap. The main character looms large against the red background, controlling a line of smaller marching ape figures below with puppet strings. The design is rendered in a bold three-color scheme of white, black, and red, creating a powerful contrast. The back of the shirt is minimal with just a red rectangular badge featuring the reversed \"A-OK\" text in pixel style, adding a subtle branded touch. The overall design cleverly combines the brand's music culture with a unique puppet master motif, creating an eye-catching streetwear piece.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">This white t-shirt features a striking design set in a rounded-corner red square, depicting the DJ A-OK as a puppet master wearing headphones and a cap. The main character looms large against the red background, controlling a line of smaller marching ape figures below with puppet strings. The design is rendered in a bold three-color scheme of white, black, and red, creating a powerful contrast. The back of the shirt is minimal with just a red rectangular badge featuring the reversed \"A-OK\" text in pixel style, adding a subtle branded touch. The overall design cleverly combines the brand's music culture with a unique puppet master motif, creating an eye-catching streetwear piece.</p>",
+          "productType": "",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057915298011",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555190538459",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.14_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1154
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555190571227",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.28_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1164
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334961647835",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-monkey-master",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T04:41:33Z",
+          "updatedAt": "2025-04-19T23:52:36Z",
+          "publishedAt": "2025-04-19T23:52:36Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8759465771227",
+          "handle": "a-ok-octo-ape",
+          "title": "A-OK - Octo Ape",
+          "description": "Unleash your inner AI geek* with the bold and creative Octo-Ape T-Shirt from the Apes On Keys (A-OK) fashion line. This design features a wildly imaginative octopus-armed ape wearing the iconic A-OK cap and headphones, feverishly typing on a vintage typewriter amidst a flurry of scattered pages—perfectly capturing the chaotic brilliance of AI-driven innovation. Printed on a premium black tee, this eye-catching graphic makes a statement about embracing creativity and technology with a touch of humor and style. Whether you’re coding, brainstorming, or just turning heads, this shirt keeps you feeling A-OK! *Apes On Keys is inspired by the infinite monkey theorem",
+          "descriptionHtml": "<p class=\"p1\">Unleash your inner AI geek* with the bold and creative Octo-Ape T-Shirt from the Apes On Keys (A-OK) fashion line. This design features a wildly imaginative octopus-armed ape wearing the iconic A-OK cap and headphones, feverishly typing on a vintage typewriter amidst a flurry of scattered pages—perfectly capturing the chaotic brilliance of AI-driven innovation. Printed on a premium black tee, this eye-catching graphic makes a statement about embracing creativity and technology with a touch of humor and style. Whether you’re coding, brainstorming, or just turning heads, this shirt keeps you feeling A-OK!</p>\n<p class=\"p1\">*Apes On Keys is inspired by the infinite monkey theorem</p>",
+          "productType": "",
+          "vendor": "A-OK Shop",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11062040625371",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43594165420251",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Octo_Ape.png?v=1734122567",
+                  "altText": "Octo Ape",
+                  "width": 757,
+                  "height": 742
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43594165453019",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2024-12-13at12.30.04PM.png?v=1734121856",
+                  "altText": null,
+                  "width": 998,
+                  "height": 1076
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46350429913307",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://a-ok.shop/products/a-ok-octo-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-13T20:45:03Z",
+          "updatedAt": "2025-04-19T23:52:36Z",
+          "publishedAt": "2025-04-19T23:52:36Z"
+        }
+      }
+    ]
+  }
+}
