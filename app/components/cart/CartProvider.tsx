@@ -9,6 +9,7 @@ export type CartItem = {
   quantity: number;
   image: string;
   variantId: string;
+  size?: string;
 };
 
 type CartContextType = {

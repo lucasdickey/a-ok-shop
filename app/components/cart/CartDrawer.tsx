@@ -134,6 +134,9 @@ export default function CartDrawer() {
                       <h3>{item.title}</h3>
                       <p className="ml-4">${item.price.toFixed(2)}</p>
                     </div>
+                    {item.size && (
+                      <p className="mt-1 text-sm text-gray-500">Size: {item.size}</p>
+                    )}
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center border border-secondary rounded-md">
                         <button

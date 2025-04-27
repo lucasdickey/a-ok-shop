@@ -28,9 +28,17 @@ export type ShopifyProduct = {
           amount: string;
         };
         availableForSale: boolean;
+        selectedOptions?: Array<{
+          name: string;
+          value: string;
+        }>;
       };
     }>;
   };
+  options?: Array<{
+    name: string;
+    values: string[];
+  }>;
   tags: string[];
   productType: string;
 };
@@ -101,15 +109,59 @@ const mockProducts: ShopifyProduct[] = [
         {
           node: {
             id: 'gid://shopify/ProductVariant/1',
-            title: 'Default',
+            title: 'S',
             price: {
               amount: '29.99',
             },
             availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'S'
+              }
+            ]
+          },
+        },
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/2',
+            title: 'M',
+            price: {
+              amount: '29.99',
+            },
+            availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'M'
+              }
+            ]
+          },
+        },
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/3',
+            title: 'L',
+            price: {
+              amount: '29.99',
+            },
+            availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'L'
+              }
+            ]
           },
         },
       ],
     },
+    options: [
+      {
+        name: 'Size',
+        values: ['S', 'M', 'L']
+      }
+    ],
     tags: ['t-shirt', 'apparel'],
     productType: 'T-Shirts',
   },
@@ -137,16 +189,76 @@ const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            id: 'gid://shopify/ProductVariant/2',
-            title: 'Default',
+            id: 'gid://shopify/ProductVariant/4',
+            title: 'S',
             price: {
               amount: '49.99',
             },
             availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'S'
+              }
+            ]
+          },
+        },
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/5',
+            title: 'M',
+            price: {
+              amount: '49.99',
+            },
+            availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'M'
+              }
+            ]
+          },
+        },
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/6',
+            title: 'L',
+            price: {
+              amount: '49.99',
+            },
+            availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'L'
+              }
+            ]
+          },
+        },
+        {
+          node: {
+            id: 'gid://shopify/ProductVariant/7',
+            title: 'XL',
+            price: {
+              amount: '49.99',
+            },
+            availableForSale: true,
+            selectedOptions: [
+              {
+                name: 'Size',
+                value: 'XL'
+              }
+            ]
           },
         },
       ],
     },
+    options: [
+      {
+        name: 'Size',
+        values: ['S', 'M', 'L', 'XL']
+      }
+    ],
     tags: ['hoodie', 'apparel'],
     productType: 'Hoodies',
   },
@@ -174,7 +286,7 @@ const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            id: 'gid://shopify/ProductVariant/3',
+            id: 'gid://shopify/ProductVariant/8',
             title: 'Default',
             price: {
               amount: '19.99',
@@ -417,7 +529,7 @@ export async function getProductByHandle(handle: string) {
             }
           }
         }
-        variants(first: 10) {
+        variants(first: 20) {
           edges {
             node {
               id
@@ -426,8 +538,16 @@ export async function getProductByHandle(handle: string) {
                 amount
               }
               availableForSale
+              selectedOptions {
+                name
+                value
+              }
             }
           }
+        }
+        options {
+          name
+          values
         }
         tags
         productType
