@@ -327,7 +327,7 @@ export async function getAllProducts() {
                 }
               }
             }
-            variants(first: 1) {
+            variants(first: 50) {
               edges {
                 node {
                   id
@@ -336,8 +336,16 @@ export async function getAllProducts() {
                     amount
                   }
                   availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
                 }
               }
+            }
+            options {
+              name
+              values
             }
             tags
             productType
@@ -420,7 +428,7 @@ export async function getProductsByCategory(category: string) {
                 }
               }
             }
-            variants(first: 1) {
+            variants(first: 50) {
               edges {
                 node {
                   id
@@ -429,8 +437,16 @@ export async function getProductsByCategory(category: string) {
                     amount
                   }
                   availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
                 }
               }
+            }
+            options {
+              name
+              values
             }
             tags
             productType

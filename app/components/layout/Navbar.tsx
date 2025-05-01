@@ -21,12 +21,6 @@ export default function Navbar() {
           </Link>
           <nav className="hidden md:flex gap-6">
             <Link
-              href="/products"
-              className="text-sm font-medium hover:text-primary"
-            >
-              All Products
-            </Link>
-            <Link
               href="/products?category=t-shirts"
               className="text-sm font-medium hover:text-primary"
             >

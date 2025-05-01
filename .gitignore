@@ -46,3 +46,6 @@ next-env.d.ts
 
 # OS specific
 Thumbs.db
+
+# Ignore podcast feed file
+podcast_feed.xml

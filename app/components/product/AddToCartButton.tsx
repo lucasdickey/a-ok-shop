@@ -12,14 +12,24 @@ type AddToCartButtonProps = {
     variantId: string;
   };
   quantity?: number;
+  showSizeWarning?: boolean;
 };
 
-export default function AddToCartButton({ product, quantity = 1 }: AddToCartButtonProps) {
+export default function AddToCartButton({ product, quantity = 1, showSizeWarning = false }: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [itemQuantity, setItemQuantity] = useState(quantity);
+  const [showWarning, setShowWarning] = useState(false);
 
   const handleAddToCart = () => {
+    if (showSizeWarning) {
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 3000);
+      return;
+    }
+    
     setIsAdding(true);
     
     const cartItem: CartItem = {
@@ -39,32 +49,40 @@ export default function AddToCartButton({ product, quantity = 1 }: AddToCartButt
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center border border-secondary rounded-md">
+    <div>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center border border-secondary rounded-md">
+          <button
+            onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
+            className="px-3 py-2 hover:bg-secondary-light"
+            aria-label="Decrease quantity"
+          >
+            -
+          </button>
+          <span className="px-3 py-2">{itemQuantity}</span>
+          <button
+            onClick={() => setItemQuantity(prev => prev + 1)}
+            className="px-3 py-2 hover:bg-secondary-light"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+        
         <button
-          onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
-          className="px-3 py-2 hover:bg-secondary-light"
-          aria-label="Decrease quantity"
+          onClick={handleAddToCart}
+          disabled={isAdding}
+          className="btn btn-primary flex-1"
         >
-          -
-        </button>
-        <span className="px-3 py-2">{itemQuantity}</span>
-        <button
-          onClick={() => setItemQuantity(prev => prev + 1)}
-          className="px-3 py-2 hover:bg-secondary-light"
-          aria-label="Increase quantity"
-        >
-          +
+          {isAdding ? 'Adding...' : 'Add to Cart'}
         </button>
       </div>
       
-      <button
-        onClick={handleAddToCart}
-        disabled={isAdding}
-        className="btn btn-primary flex-1"
-      >
-        {isAdding ? 'Adding...' : 'Add to Cart'}
-      </button>
+      {showWarning && (
+        <div className="mt-2 text-sm text-red-500">
+          Please select a size before adding to cart.
+        </div>
+      )}
     </div>
   );
 }

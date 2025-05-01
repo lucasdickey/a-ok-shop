@@ -20,12 +20,10 @@ export default async function Home() {
             className="object-cover object-right"
           />
           <div className="absolute inset-0 bg-dark/70 flex items-center">
-            <div className="text-center bg-white/50 p-8 rounded-lg max-w-xl ml-8 mr-auto">
-              <h1 className="mb-4 text-dark font-bold">
-                Welcome to A-OK Store
-              </h1>
+            <div className="text-center bg-white/80 p-8 rounded-lg max-w-xl ml-8 mr-auto">
+              <h1 className="mb-4 text-dark font-bold">APES ON KEYS</h1>
               <p className="text-xl mb-6 text-dark">
-                Premium products for discerning customers
+                Nerd streetwear for AI junkies
               </p>
               <Link href="/products" className="btn btn-primary">
                 Shop Now

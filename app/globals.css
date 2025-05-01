@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-tshirt: #8B1E24;    /* Deep Red */
+  --bg-hoodie: #F5F2DC;    /* Bone White */
+  --bg-hat: #2C2C2C;       /* Charcoal */
+}
+
 @layer base {
   body {
     @apply bg-light text-dark antialiased;
@@ -42,4 +48,89 @@
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8;
   }
+}
+
+/* Product Card Styling - Non-Tailwind Custom CSS */
+.product-card {
+  border: 2px solid #1F1F1F;
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.product-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.product-price {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #FCEFB9; /* subtle yellow highlight */
+  margin-bottom: 1rem;
+}
+
+.size-options {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.size-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #F5F2DC;
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.size-button:hover {
+  border-color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Product type specific styling */
+.tshirt-card { 
+  background-color: var(--bg-tshirt); 
+  color: white;
+}
+
+.hoodie-card { 
+  background-color: var(--bg-hoodie); 
+  color: #1F1F1F;
+}
+
+.hoodie-card .product-price {
+  color: #8B1E24;
+}
+
+.hoodie-card .size-button {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: #1F1F1F;
+  color: #1F1F1F;
+}
+
+.hoodie-card .size-button:hover {
+  border-color: #1F1F1F;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.hat-card { 
+  background-color: var(--bg-hat); 
+  color: white;
 }

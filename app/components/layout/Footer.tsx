@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -9,9 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
             <h3 className="text-lg font-bold">A-OK Store</h3>
-            <p className="mt-2 text-sm">
-              Premium products for discerning customers.
-            </p>
+            <p className="mt-2 text-sm">Nerd streetwear for AI junkies</p>
           </div>
           <div>
             <h3 className="text-lg font-bold">Quick Links</h3>
