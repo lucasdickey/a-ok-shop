@@ -29,8 +29,8 @@ export default async function Home() {
             priority
             className="object-cover object-right"
           />
-          <div className="absolute inset-0 bg-dark/70 flex items-center">
-            <div className="text-center bg-white/80 p-8 rounded-lg max-w-xl ml-8 mr-auto">
+          <div className="absolute inset-0 bg-dark/70 flex items-center justify-center p-4">
+            <div className="hero-content bg-white/80 p-4 md:p-8 rounded-lg max-w-xl mx-auto">
               <h1 className="mb-4 text-dark font-bold">APES ON KEYS</h1>
               <p className="text-xl mb-6 text-dark">
                 Nerd streetwear for AI junkies

@@ -140,9 +140,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     padding: '0.25rem 0.6rem',
     borderRadius: '50px',
     fontSize: '0.75rem',
-    fontWeight: 500,
     cursor: 'pointer',
-    transition: 'border-color 0.2s ease, background-color 0.2s ease',
+    transition: 'border-color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease',
     fontFamily: "'Space Grotesk', sans-serif",
     minWidth: '2rem',
     textAlign: 'center' as 'center'
@@ -216,7 +215,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           {hasSizes && (
             <div style={sizeOptionsStyle}>
               {sizeValues.map((size) => (
-                <span key={size} style={sizeButtonStyle} className="size-button-hover">
+                <span 
+                  key={size} 
+                  style={sizeButtonStyle} 
+                  className="size-button-hover"
+                  onClick={(e) => {
+                    // Prevent the click from bubbling up to the Link component
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Here you can add any size selection logic if needed
+                    console.log(`Size ${size} selected`);
+                  }}
+                >
                   {size}
                 </span>
               ))}

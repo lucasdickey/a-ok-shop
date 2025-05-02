@@ -167,12 +167,53 @@
 }
 
 /* Size button hover effect */
+.size-button-hover {
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  pointer-events: auto;
+}
+
 .size-button-hover:hover {
   border-color: #fff;
   background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.size-button-hover:active {
+  transform: scale(0.95);
+  transition: all 0.05s ease-in-out;
 }
 
 .hoodie-card .size-button-hover:hover {
   border-color: #000;
   background-color: rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+}
+
+.hoodie-card .size-button-hover:active {
+  transform: scale(0.95);
+  transition: all 0.05s ease-in-out;
+}
+
+/* Hero section responsive alignment */
+.hero-content {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    margin-left: 2rem;
+    margin-right: auto;
+    text-align: left;
+    max-width: 36rem; /* xl size in Tailwind */
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
