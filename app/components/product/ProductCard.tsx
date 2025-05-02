@@ -112,20 +112,25 @@ export default function ProductCard({ product }: ProductCardProps) {
     fontWeight: 600,
     lineHeight: 1.3,
     marginBottom: '0.5rem',
-    color: textColor
+    color: textColor,
+    fontFamily: "'Space Grotesk', sans-serif",
+    letterSpacing: '0.01em'
   };
 
   const priceStyle = {
     fontSize: '0.875rem',
     fontWeight: 500,
     color: priceColor,
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    fontFamily: "'Space Grotesk', sans-serif",
+    letterSpacing: '0.02em'
   };
 
   const sizeOptionsStyle = {
     display: 'flex',
     gap: '0.5rem',
-    marginTop: 'auto'
+    marginTop: 'auto',
+    flexWrap: 'wrap' as 'wrap'
   };
 
   const sizeButtonStyle = {
@@ -136,7 +141,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     borderRadius: '50px',
     fontSize: '0.75rem',
     fontWeight: 500,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'border-color 0.2s ease, background-color 0.2s ease',
+    fontFamily: "'Space Grotesk', sans-serif",
+    minWidth: '2rem',
+    textAlign: 'center' as 'center'
   };
 
   const imageContainerStyle = {
@@ -146,7 +155,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     borderRadius: '8px',
     border: '1px solid #1F1F1F',
     marginBottom: '1rem',
-    width: '100%'
+    width: '100%',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#f8f8f8'
   };
 
   return (
@@ -161,7 +172,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div 
         style={cardStyle}
       >
-        <div style={imageContainerStyle}>
+        <div style={imageContainerStyle} className="image-container-hover">
           {imageUrl.startsWith('http') ? (
             <Image
               src={imageUrl}
@@ -205,7 +216,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {hasSizes && (
             <div style={sizeOptionsStyle}>
               {sizeValues.map((size) => (
-                <span key={size} style={sizeButtonStyle}>
+                <span key={size} style={sizeButtonStyle} className="size-button-hover">
                   {size}
                 </span>
               ))}

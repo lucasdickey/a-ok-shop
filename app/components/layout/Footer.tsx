@@ -25,13 +25,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm hover:text-primary">
+                <Link
+                  href="https://apesonkeys.com"
+                  target="_blank"
+                  className="text-sm hover:text-primary"
+                >
                   About
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-sm hover:text-primary">
-                  Contact
                 </Link>
               </li>
             </ul>
@@ -39,9 +38,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold">Contact</h3>
             <ul className="mt-2 space-y-2">
-              <li className="text-sm">Email: info@a-ok-store.com</li>
-              <li className="text-sm">Phone: (555) 123-4567</li>
-              <li className="text-sm">Address: 123 Main St, Anytown, USA</li>
+              <li className="text-sm">Email: info @ a-ok.shop</li>
+              <li>
+                <Link
+                  href="https://x.com/apesonkeys"
+                  target="_blank"
+                  className="text-sm hover:text-primary"
+                >
+                  Find us on X
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
