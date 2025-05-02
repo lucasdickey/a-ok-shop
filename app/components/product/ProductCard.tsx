@@ -34,11 +34,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     sizeTextColor = '#1F1F1F';
   } else if (productType.toLowerCase().includes('hat') || tags.some(tag => tag.toLowerCase().includes('hat'))) {
     cardType = 'hat';
-    bgColor = '#2C2C2C'; // Charcoal Gray
+    bgColor = '#8B1E24'; // Dark Maroon for hats
   } else {
     // Default to t-shirt
     cardType = 't-shirt';
-    bgColor = '#8B1E24'; // Deep Red
+    bgColor = '#2C2C2C'; // Black for t-shirts
   }
   
   // Extract size information - only include S, M, L, XL
@@ -102,7 +102,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     justifyContent: 'space-between',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
     fontFamily: "'Space Grotesk', sans-serif",
-    height: '100%'
+    height: '100%',
+    cursor: 'pointer',
+    maxWidth: '100%'
   };
 
   const titleStyle = {
@@ -143,7 +145,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     overflow: 'hidden',
     borderRadius: '8px',
     border: '1px solid #1F1F1F',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    width: '100%'
   };
 
   return (
@@ -168,6 +171,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 objectFit: 'cover',
                 transition: 'transform 0.3s ease'
               }}
+              className="product-image-hover"
             />
           ) : (
             <div style={{

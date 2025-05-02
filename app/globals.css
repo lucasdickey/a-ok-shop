@@ -134,3 +134,8 @@
   background-color: var(--bg-hat); 
   color: white;
 }
+
+/* Product image hover effect */
+.product-image-hover:hover {
+  transform: scale(1.05);
+}
