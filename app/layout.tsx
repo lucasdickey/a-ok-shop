@@ -14,11 +14,33 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "A-OK: Shop Apes On Keys",
+  title: "ꓘO-∀ - Shop A-OK Merch",
   description: "Apes On Keys - Nerd Streetwear (for real)",
   icons: {
     icon: [{ url: "/images/a-ok-o-face.png" }],
     apple: [{ url: "/images/a-ok-o-face.png" }],
+  },
+  openGraph: {
+    title: "ꓘO-∀ - Shop A-OK Merch",
+    description: "Apes On Keys - Nerd Streetwear (for real)",
+    url: "https://www.a-ok.shop/",
+    siteName: "a-ok.shop",
+    images: [
+      {
+        url: "/images/og_image.png",
+        width: 768,
+        height: 512,
+        alt: "A-OK Shop - Apes On Keys",
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ꓘO-∀ - Shop A-OK Merch",
+    description: "Apes On Keys - Nerd Streetwear (for real)",
+    images: ["/images/og_image.png"],
   },
 };
 

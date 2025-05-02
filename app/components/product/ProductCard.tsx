@@ -41,9 +41,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     bgColor = '#2C2C2C'; // Black for t-shirts
   }
   
-  // Extract size information - only include S, M, L, XL
-  const standardSizes = ['S', 'M', 'L', 'XL'];
+  // Extract size information - include all standard clothing sizes
+  const standardSizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
   let sizeValues: string[] = [];
+  
+  // Track availability for each size
+  const sizeAvailability: Record<string, boolean> = {};
+  standardSizes.forEach(size => {
+    sizeAvailability[size] = false; // Default to unavailable
+  });
   
   // First try to get size options from the product options
   const sizeOption = options?.find(option => 
@@ -53,6 +59,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   if (sizeOption && sizeOption.values.length > 0) {
     // Filter to only include standard sizes
     sizeValues = sizeOption.values.filter(size => standardSizes.includes(size));
+    
+    // Update size availability
+    sizeValues.forEach(size => {
+      sizeAvailability[size] = true;
+    });
   }
   
   // If no size options found, try to extract from variants
@@ -67,9 +78,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         if (sizeOption && standardSizes.includes(sizeOption.value)) {
           sizeSet.add(sizeOption.value);
+          sizeAvailability[sizeOption.value] = node.availableForSale;
         } else if (standardSizes.includes(node.title)) {
           // If variant title is a standard size
           sizeSet.add(node.title);
+          sizeAvailability[node.title] = node.availableForSale;
         }
       }
     });
@@ -78,8 +91,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   
   // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // Always include all standard sizes for clothing items since "continue selling when out of stock" is enabled
-  if (cardType === 't-shirt' || cardType === 'hoodie') {
+  // But mark them as unavailable unless we have specific availability information
+  if ((cardType === 't-shirt' || cardType === 'hoodie') && sizeValues.length === 0) {
     sizeValues = [...standardSizes];
   }
   
@@ -118,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const priceStyle = {
-    fontSize: '0.875rem',
+    fontSize: '1.25rem',
     fontWeight: 500,
     color: priceColor,
     marginBottom: '1rem',
@@ -217,9 +230,14 @@ export default function ProductCard({ product }: ProductCardProps) {
               {sizeValues.map((size) => (
                 <span 
                   key={size} 
-                  style={sizeButtonStyle} 
-                  className="size-button-hover"
+                  style={{
+                    ...sizeButtonStyle,
+                    opacity: sizeAvailability[size] ? 1 : 0.5,
+                    cursor: sizeAvailability[size] ? 'pointer' : 'not-allowed'
+                  }} 
+                  className={`size-button-hover ${!sizeAvailability[size] ? 'size-button-unavailable' : ''}`}
                   onClick={(e) => {
+                    if (!sizeAvailability[size]) return;
                     // Prevent the click from bubbling up to the Link component
                     e.preventDefault();
                     e.stopPropagation();

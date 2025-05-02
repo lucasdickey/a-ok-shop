@@ -12,10 +12,12 @@ export const dynamic = 'force-dynamic';
 function SizeSelector({ 
   sizes, 
   variants, 
+  sizeAvailability,
   onSizeSelect 
 }: { 
   sizes: string[], 
   variants: any[],
+  sizeAvailability: Record<string, boolean>,
   onSizeSelect: (size: string, variantId: string) => void 
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -50,11 +52,14 @@ function SizeSelector({
         {sizes.map((size) => (
           <button
             key={size}
-            onClick={() => handleSizeClick(size)}
+            onClick={() => sizeAvailability[size] ? handleSizeClick(size) : null}
+            disabled={!sizeAvailability[size]}
             className={`px-3 py-1 rounded-md border ${
               selectedSize === size
                 ? 'bg-primary text-white border-primary'
-                : 'border-secondary hover:bg-secondary-light'
+                : sizeAvailability[size] 
+                  ? 'border-secondary hover:bg-secondary-light' 
+                  : 'border-gray-300 text-gray-300 cursor-not-allowed size-button-unavailable'
             }`}
           >
             {size}
@@ -74,6 +79,7 @@ function ProductDetails({
   isClothingItem, 
   hasSizeOptions, 
   sizeOptions,
+  sizeAvailability,
   selectedImageIndex
 }: { 
   product: any, 
@@ -83,6 +89,7 @@ function ProductDetails({
   isClothingItem: boolean,
   hasSizeOptions: boolean,
   sizeOptions?: string[],
+  sizeAvailability: Record<string, boolean>,
   selectedImageIndex: number
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -108,6 +115,7 @@ function ProductDetails({
         <SizeSelector 
           sizes={sizeOptions} 
           variants={variants}
+          sizeAvailability={sizeAvailability}
           onSizeSelect={handleSizeSelect}
         />
       )}
@@ -175,7 +183,8 @@ function ProductPageContent({
   price,
   isClothingItem,
   hasSizeOptions,
-  sizeOptions
+  sizeOptions,
+  sizeAvailability
 }: { 
   product: any, 
   images: any[], 
@@ -183,7 +192,8 @@ function ProductPageContent({
   price: number,
   isClothingItem: boolean,
   hasSizeOptions: boolean,
-  sizeOptions?: string[]
+  sizeOptions?: string[],
+  sizeAvailability: Record<string, boolean>
 }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
@@ -232,6 +242,7 @@ function ProductPageContent({
         isClothingItem={isClothingItem}
         hasSizeOptions={hasSizeOptions}
         sizeOptions={sizeOptions}
+        sizeAvailability={sizeAvailability}
         selectedImageIndex={selectedImageIndex}
       />
     </div>
@@ -259,16 +270,23 @@ export default async function ProductPage({
     id: node.id,
     title: node.title,
     price: parseFloat(node.price.amount),
-    available: true, // Always consider variants available since "continue selling when out of stock" is enabled
+    available: node.availableForSale,
     selectedOptions: node.selectedOptions,
   }));
 
   const defaultVariant = variants[0];
   const price = parseFloat(product.priceRange.minVariantPrice.amount);
   
-  // Extract size information - only include S, M, L, XL
-  const standardSizes = ['S', 'M', 'L', 'XL'];
+  // Extract size information - include all standard clothing sizes
+  const standardSizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
   let sizeValues: string[] = [];
+  
+  // Track availability for each size
+  const sizeAvailability: Record<string, boolean> = {};
+  standardSizes.forEach(size => {
+    // Default to available instead of unavailable when we have inventory
+    sizeAvailability[size] = true;
+  });
   
   // First try to get size options from the product options
   const sizeOption = product.options?.find(option => 
@@ -278,6 +296,11 @@ export default async function ProductPage({
   if (sizeOption && sizeOption.values.length > 0) {
     // Filter to only include standard sizes
     sizeValues = sizeOption.values.filter(size => standardSizes.includes(size));
+    
+    // Update size availability
+    sizeValues.forEach(size => {
+      sizeAvailability[size] = true;
+    });
   }
   
   // If no size options found, try to extract from variants
@@ -292,9 +315,13 @@ export default async function ProductPage({
         
         if (sizeOption && standardSizes.includes(sizeOption.value)) {
           sizeSet.add(sizeOption.value);
+          // Always set available to true since we have inventory
+          sizeAvailability[sizeOption.value] = true;
         } else if (standardSizes.includes(variant.title)) {
           // If variant title is a standard size
           sizeSet.add(variant.title);
+          // Always set available to true since we have inventory
+          sizeAvailability[variant.title] = true;
         }
       }
     });
@@ -327,6 +354,7 @@ export default async function ProductPage({
   console.log('Size options:', sizeValues);
   console.log('Is clothing item:', isClothingItem);
   console.log('Variants:', variants);
+  console.log('Size availability:', sizeAvailability);
 
   return (
     <div className="container py-8">
@@ -338,6 +366,7 @@ export default async function ProductPage({
         isClothingItem={isClothingItem}
         hasSizeOptions={hasSizeOptions}
         sizeOptions={sizeValues}
+        sizeAvailability={sizeAvailability}
       />
     </div>
   );
