@@ -224,32 +224,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 style={titleStyle}>{title}</h3>
           <p style={priceStyle}>${price.toFixed(2)}</p>
           
-          {/* Display available sizes if present */}
-          {hasSizes && (
-            <div style={sizeOptionsStyle}>
-              {sizeValues.map((size) => (
-                <span 
-                  key={size} 
-                  style={{
-                    ...sizeButtonStyle,
-                    opacity: sizeAvailability[size] ? 1 : 0.5,
-                    cursor: sizeAvailability[size] ? 'pointer' : 'not-allowed'
-                  }} 
-                  className={`size-button-hover ${!sizeAvailability[size] ? 'size-button-unavailable' : ''}`}
-                  onClick={(e) => {
-                    if (!sizeAvailability[size]) return;
-                    // Prevent the click from bubbling up to the Link component
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // Here you can add any size selection logic if needed
-                    console.log(`Size ${size} selected`);
-                  }}
-                >
-                  {size}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Size options removed from product list view */}
         </div>
       </div>
     </Link>

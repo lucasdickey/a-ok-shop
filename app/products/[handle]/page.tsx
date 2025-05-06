@@ -1,127 +1,251 @@
-'use client';
+"use client";
 
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { getProductByHandle } from '@/app/lib/shopify';
-import AddToCartButton from '@/app/components/product/AddToCartButton';
-import { useState } from 'react';
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { getProductByHandle } from "@/app/lib/shopify";
+import AddToCartButton from "@/app/components/product/AddToCartButton";
+import { useState, useEffect } from "react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
+// DO NOT PUT IN HARDCODED VALUES IN HERE -- EVERYTHING SHOULD BE DYNAMICALLY GENERATED FROM THE SHOPIFY API
 
 // Client component for size selection
-function SizeSelector({ 
-  sizes, 
-  variants, 
-  sizeAvailability,
-  onSizeSelect 
-}: { 
-  sizes: string[], 
-  variants: any[],
-  sizeAvailability: Record<string, boolean>,
-  onSizeSelect: (size: string, variantId: string) => void 
+function SizeSelector({
+  sizes,
+  variants,
+  onSizeSelect,
+}: {
+  sizes: string[];
+  variants: any[];
+  onSizeSelect: (size: string, variantId: string) => void;
 }) {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string>("");
 
-  const handleSizeClick = (size: string) => {
+  // Set a default size when the component mounts
+  useEffect(() => {
+    if (sizes.length > 0 && !selectedSize) {
+      const defaultSize = sizes.includes("M") ? "M" : sizes[0];
+      handleSizeSelection(defaultSize);
+    }
+  }, [sizes]);
+
+  const handleSizeSelection = (size: string) => {
     setSelectedSize(size);
-    
+
     // Find the variant ID for this size
-    let variantId = '';
-    
+    let variantId = "";
+
     // First try to find a variant with matching size
-    const variant = variants.find(v => 
-      v.selectedOptions?.some((option: {name: string, value: string}) => 
-        option.name.toLowerCase() === 'size' && option.value === size
-      ) || v.title === size
+    const variant = variants.find(
+      (v) =>
+        v.selectedOptions?.some(
+          (option: { name: string; value: string }) =>
+            option.name.toLowerCase() === "size" && option.value === size
+        ) || v.title === size
     );
-    
+
     if (variant) {
       variantId = variant.id;
     } else {
       // If no specific variant found, use the default variant
-      variantId = variants[0]?.id || '';
+      variantId = variants[0]?.id || "";
     }
-    
+
     onSizeSelect(size, variantId);
+  };
+
+  const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const size = e.target.value;
+    handleSizeSelection(size);
   };
 
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium mb-2">Size</h3>
-      <div className="flex flex-wrap gap-2">
+      <label htmlFor="size-select" className="block text-sm font-medium mb-2">
+        Size
+      </label>
+      <select
+        id="size-select"
+        value={selectedSize}
+        onChange={handleSizeChange}
+        className="w-full p-2 border border-secondary rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+        <option value="" disabled>
+          Select a size
+        </option>
         {sizes.map((size) => (
-          <button
-            key={size}
-            onClick={() => sizeAvailability[size] ? handleSizeClick(size) : null}
-            disabled={!sizeAvailability[size]}
-            className={`px-3 py-1 rounded-md border ${
-              selectedSize === size
-                ? 'bg-primary text-white border-primary'
-                : sizeAvailability[size] 
-                  ? 'border-secondary hover:bg-secondary-light' 
-                  : 'border-gray-300 text-gray-300 cursor-not-allowed size-button-unavailable'
-            }`}
-          >
+          <option key={size} value={size}>
             {size}
-          </button>
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+// Client component for color selection
+function ColorSelector({
+  colors,
+  variants,
+  colorAvailability,
+  onColorSelect,
+}: {
+  colors: string[];
+  variants: any[];
+  colorAvailability: Record<string, boolean>;
+  onColorSelect: (color: string, variantId: string) => void;
+}) {
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  const handleColorClick = (color: string) => {
+    setSelectedColor(color);
+
+    // Find the variant ID for this color
+    let variantId = "";
+
+    // First try to find a variant with matching color
+    const variant = variants.find((v) =>
+      v.selectedOptions?.some(
+        (option: { name: string; value: string }) =>
+          option.name.toLowerCase() === "color" &&
+          option.value.toLowerCase() === color.toLowerCase()
+      )
+    );
+
+    if (variant) {
+      variantId = variant.id;
+    } else {
+      // If no specific variant found, use the default variant
+      variantId = variants[0]?.id || "";
+    }
+
+    onColorSelect(color, variantId);
+  };
+
+  // Function to determine the background color for the button
+  const getColorStyle = (color: string) => {
+    // Map color names to CSS colors
+    const colorMap: Record<string, string> = {
+      black: "bg-black",
+      white: "bg-white",
+      red: "bg-red-500",
+      blue: "bg-blue-500",
+      green: "bg-green-500",
+      yellow: "bg-yellow-400",
+      purple: "bg-purple-500",
+      gray: "bg-gray-500",
+      navy: "bg-blue-900",
+      brown: "bg-amber-800",
+      orange: "bg-orange-500",
+      pink: "bg-pink-500",
+    };
+
+    // Default to a gray background if color not in map
+    return colorMap[color.toLowerCase()] || "bg-gray-300";
+  };
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-sm font-medium mb-2">Color</h3>
+      <div className="flex flex-wrap gap-2">
+        {colors.map((color) => (
+          <button
+            key={color}
+            onClick={() => handleColorClick(color)}
+            className={`w-8 h-8 rounded-full border ${getColorStyle(color)} ${
+              selectedColor === color
+                ? "ring-2 ring-primary ring-offset-2"
+                : "hover:ring-1 hover:ring-gray-300"
+            }`}
+            title={color}
+            aria-label={`Select ${color} color`}
+          />
         ))}
       </div>
+      {selectedColor && (
+        <p className="mt-2 text-sm text-gray-600">Selected: {selectedColor}</p>
+      )}
     </div>
   );
 }
 
 // Client component for product details
-function ProductDetails({ 
-  product, 
-  images, 
-  variants, 
-  price, 
-  isClothingItem, 
-  hasSizeOptions, 
+function ProductDetails({
+  product,
+  images,
+  variants,
+  price,
+  isClothingItem,
+  hasSizeOptions,
   sizeOptions,
   sizeAvailability,
-  selectedImageIndex
-}: { 
-  product: any, 
-  images: any[], 
-  variants: any[], 
-  price: number,
-  isClothingItem: boolean,
-  hasSizeOptions: boolean,
-  sizeOptions?: string[],
-  sizeAvailability: Record<string, boolean>,
-  selectedImageIndex: number
+  hasColorOptions,
+  colorOptions,
+  colorAvailability,
+  selectedImageIndex,
+}: {
+  product: any;
+  images: any[];
+  variants: any[];
+  price: number;
+  isClothingItem: boolean;
+  hasSizeOptions: boolean;
+  sizeOptions?: string[];
+  sizeAvailability: Record<string, boolean>;
+  hasColorOptions: boolean;
+  colorOptions?: string[];
+  colorAvailability: Record<string, boolean>;
+  selectedImageIndex: number;
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedVariantId, setSelectedVariantId] = useState<string>(variants[0]?.id || '');
-  
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedVariantId, setSelectedVariantId] = useState<string>(
+    variants[0]?.id || ""
+  );
+
   const handleSizeSelect = (size: string, variantId: string) => {
     setSelectedSize(size);
     setSelectedVariantId(variantId);
   };
 
+  const handleColorSelect = (color: string, variantId: string) => {
+    setSelectedColor(color);
+    // Only update variant ID if it's valid
+    if (variantId) {
+      setSelectedVariantId(variantId);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold">{product.title}</h1>
-      
+
       <div className="mt-4">
-        <p className="text-2xl font-medium text-primary">
-          ${price.toFixed(2)}
-        </p>
+        <p className="text-2xl font-medium text-primary">${price.toFixed(2)}</p>
       </div>
+
+      {/* Color selector for products with color options */}
+      {hasColorOptions && colorOptions && (
+        <ColorSelector
+          colors={colorOptions}
+          variants={variants}
+          colorAvailability={colorAvailability}
+          onColorSelect={handleColorSelect}
+        />
+      )}
 
       {/* Size selector for clothing items */}
       {isClothingItem && hasSizeOptions && sizeOptions && (
-        <SizeSelector 
-          sizes={sizeOptions} 
+        <SizeSelector
+          sizes={sizeOptions}
           variants={variants}
-          sizeAvailability={sizeAvailability}
           onSizeSelect={handleSizeSelect}
         />
       )}
 
       {/* Variant selector for non-clothing items with multiple variants */}
-      {!isClothingItem && variants.length > 1 && (
+      {!isClothingItem && !hasColorOptions && variants.length > 1 && (
         <div className="mt-6">
           <h3 className="text-sm font-medium">Variants</h3>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -142,18 +266,36 @@ function ProductDetails({
         <AddToCartButton
           product={{
             id: product.id,
-            title: product.title + (selectedSize ? ` - ${selectedSize}` : ''),
+            title:
+              product.title +
+              (selectedSize ? ` - ${selectedSize}` : "") +
+              (selectedColor ? ` - ${selectedColor}` : ""),
             price: price,
-            image: images[selectedImageIndex]?.url || '/product-placeholder.jpg',
-            variantId: selectedVariantId || variants[0]?.id || '',
+            image:
+              images[selectedImageIndex]?.url || "/product-placeholder.jpg",
+            variantId: selectedVariantId || variants[0]?.id || "",
+            size: selectedSize || undefined,
+            color: selectedColor || undefined,
           }}
           showSizeWarning={isClothingItem && hasSizeOptions && !selectedSize}
+          showColorWarning={hasColorOptions && !selectedColor}
         />
       </div>
 
-      <div className="mt-8 prose prose-sm max-w-none">
+      <div className="mt-8 prose prose-sm max-w-none prose-headings:font-medium prose-ul:list-disc prose-ul:pl-5 prose-li:mt-2 prose-p:mb-4">
         <h3 className="text-lg font-medium">Description</h3>
-        <div dangerouslySetInnerHTML={{ __html: product.description }} />
+        <div
+          dangerouslySetInnerHTML={{
+            __html:
+              product.descriptionHtml ||
+              (product.description
+                ? product.description
+                    .replace(/\n/g, "<br />")
+                    .replace(/\r/g, "")
+                : ""),
+          }}
+          className="product-description"
+        />
       </div>
 
       {product.tags.length > 0 && (
@@ -176,7 +318,7 @@ function ProductDetails({
 }
 
 // Main product page component
-function ProductPageContent({ 
+function ProductPageContent({
   product,
   images,
   variants,
@@ -184,40 +326,51 @@ function ProductPageContent({
   isClothingItem,
   hasSizeOptions,
   sizeOptions,
-  sizeAvailability
-}: { 
-  product: any, 
-  images: any[], 
-  variants: any[], 
-  price: number,
-  isClothingItem: boolean,
-  hasSizeOptions: boolean,
-  sizeOptions?: string[],
-  sizeAvailability: Record<string, boolean>
+  sizeAvailability,
+  hasColorOptions,
+  colorOptions,
+  colorAvailability,
+}: {
+  product: any;
+  images: any[];
+  variants: any[];
+  price: number;
+  isClothingItem: boolean;
+  hasSizeOptions: boolean;
+  sizeOptions?: string[];
+  sizeAvailability: Record<string, boolean>;
+  hasColorOptions: boolean;
+  colorOptions?: string[];
+  colorAvailability: Record<string, boolean>;
 }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  
+
+  // Log the description data to check what's coming from Shopify
+  console.log("Product description:", product.description);
+  console.log("Product descriptionHtml:", product.descriptionHtml);
+
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
       {/* Product Images */}
       <div className="space-y-4">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
           <Image
-            src={images[selectedImageIndex]?.url || '/product-placeholder.jpg'}
+            src={images[selectedImageIndex]?.url || "/product-placeholder.jpg"}
             alt={images[selectedImageIndex]?.alt || product.title}
             fill
             className="object-cover"
             priority
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
-        
+
         {images.length > 1 && (
           <div className="grid grid-cols-4 gap-2">
             {images.map((image, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`relative aspect-square overflow-hidden rounded-lg bg-secondary-light cursor-pointer ${
-                  selectedImageIndex === index ? 'ring-2 ring-primary' : ''
+                  selectedImageIndex === index ? "ring-2 ring-primary" : ""
                 }`}
                 onClick={() => setSelectedImageIndex(index)}
               >
@@ -226,6 +379,7 @@ function ProductPageContent({
                   alt={image.alt}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 25vw, 10vw"
                 />
               </div>
             ))}
@@ -234,7 +388,7 @@ function ProductPageContent({
       </div>
 
       {/* Product Info */}
-      <ProductDetails 
+      <ProductDetails
         product={product}
         images={images}
         variants={variants}
@@ -243,6 +397,9 @@ function ProductPageContent({
         hasSizeOptions={hasSizeOptions}
         sizeOptions={sizeOptions}
         sizeAvailability={sizeAvailability}
+        hasColorOptions={hasColorOptions}
+        colorOptions={colorOptions}
+        colorAvailability={colorAvailability}
         selectedImageIndex={selectedImageIndex}
       />
     </div>
@@ -272,93 +429,189 @@ export default async function ProductPage({
     price: parseFloat(node.price.amount),
     available: node.availableForSale,
     selectedOptions: node.selectedOptions,
+    metafield: node.metafield,
   }));
 
   const defaultVariant = variants[0];
   const price = parseFloat(product.priceRange.minVariantPrice.amount);
-  
+
   // Extract size information - include all standard clothing sizes
-  const standardSizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
-  let sizeValues: string[] = [];
-  
-  // Track availability for each size
-  const sizeAvailability: Record<string, boolean> = {};
-  standardSizes.forEach(size => {
-    // Default to available instead of unavailable when we have inventory
-    sizeAvailability[size] = true;
-  });
-  
+  const sizeValues: string[] = [];
+
   // First try to get size options from the product options
-  const sizeOption = product.options?.find(option => 
-    option.name.toLowerCase() === 'size'
+  const sizeOption = product.options?.find(
+    (option) => option.name.toLowerCase() === "size"
   );
-  
+
   if (sizeOption && sizeOption.values.length > 0) {
     // Filter to only include standard sizes
-    sizeValues = sizeOption.values.filter(size => standardSizes.includes(size));
-    
-    // Update size availability
-    sizeValues.forEach(size => {
-      sizeAvailability[size] = true;
-    });
+    sizeValues.push(...sizeOption.values);
   }
-  
+
   // If no size options found, try to extract from variants
   if (sizeValues.length === 0) {
     const sizeSet = new Set<string>();
-    
-    variants.forEach(variant => {
+
+    variants.forEach((variant) => {
       if (variant.selectedOptions) {
-        const sizeOption = variant.selectedOptions.find((opt: {name: string, value: string}) => 
-          opt.name.toLowerCase() === 'size'
+        const sizeOption = variant.selectedOptions.find(
+          (opt: { name: string; value: string }) =>
+            opt.name.toLowerCase() === "size"
         );
-        
-        if (sizeOption && standardSizes.includes(sizeOption.value)) {
+
+        if (sizeOption) {
           sizeSet.add(sizeOption.value);
-          // Always set available to true since we have inventory
-          sizeAvailability[sizeOption.value] = true;
-        } else if (standardSizes.includes(variant.title)) {
+        } else if (variant.title) {
           // If variant title is a standard size
           sizeSet.add(variant.title);
-          // Always set available to true since we have inventory
-          sizeAvailability[variant.title] = true;
         }
       }
     });
-    
-    sizeValues = Array.from(sizeSet);
+
+    sizeValues.push(...Array.from(sizeSet));
   }
-  
+
   // Check if this is a clothing item (shirt or hoodie)
-  const isClothingItem = product.productType.toLowerCase().includes('t-shirt') || 
-                         product.productType.toLowerCase().includes('hoodie') ||
-                         product.tags.some(tag => 
-                           tag.toLowerCase().includes('t-shirt') || 
-                           tag.toLowerCase().includes('tshirt') || 
-                           tag.toLowerCase().includes('hoodie')
-                         );
-  
+  const isClothingItem =
+    product.productType.toLowerCase().includes("t-shirt") ||
+    product.productType.toLowerCase().includes("hoodie") ||
+    product.tags.some(
+      (tag) =>
+        tag.toLowerCase().includes("t-shirt") ||
+        tag.toLowerCase().includes("tshirt") ||
+        tag.toLowerCase().includes("hoodie")
+    );
+
   // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  if (sizeValues.length === 0 && isClothingItem) {
-    sizeValues = [...standardSizes];
+  // Since products are printed on demand, all sizes are always available
+  if ((sizeValues.length === 0 || true) && isClothingItem) {
+    console.log("Using standard sizes for clothing item");
+    sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
+    sizeValues.push(...["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"]);
   }
-  
+
   // Sort sizes in the standard order
   sizeValues.sort((a, b) => {
-    return standardSizes.indexOf(a) - standardSizes.indexOf(b);
+    return (
+      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(a) -
+      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(b)
+    );
   });
-  
+
   const hasSizeOptions = sizeValues.length > 0;
 
-  console.log('Product has size options:', hasSizeOptions);
-  console.log('Size options:', sizeValues);
-  console.log('Is clothing item:', isClothingItem);
-  console.log('Variants:', variants);
-  console.log('Size availability:', sizeAvailability);
+  console.log("Product has size options:", hasSizeOptions);
+  console.log("Size options:", sizeValues);
+  console.log("Is clothing item:", isClothingItem);
+  console.log("Variants:", variants);
+
+  // Extract color information
+  const colorValues: string[] = [];
+
+  // First try to get color options from product metafield
+  if (product.metafield && product.metafield.value) {
+    try {
+      console.log(
+        "Found product metafield with value:",
+        product.metafield.value
+      );
+
+      // Check if it's a JSON array
+      if (
+        product.metafield.value.startsWith("[") &&
+        product.metafield.value.endsWith("]")
+      ) {
+        const colors = JSON.parse(product.metafield.value);
+        if (Array.isArray(colors)) {
+          colorValues.push(...colors);
+        }
+      } else {
+        // Single color value
+        colorValues.push(product.metafield.value);
+      }
+    } catch (e) {
+      console.error("Error parsing product metafield:", e);
+    }
+  }
+
+  // If no colors found in metafields, try to get from product options
+  if (colorValues.length === 0) {
+    const colorOption = product.options?.find(
+      (option) => option.name.toLowerCase() === "color"
+    );
+
+    if (colorOption && colorOption.values.length > 0) {
+      console.log(
+        "Found color options in product options:",
+        colorOption.values
+      );
+      colorValues.push(...colorOption.values);
+    }
+  }
+
+  // If still no colors found, check variant metafields for colors
+  if (colorValues.length === 0) {
+    console.log("Checking variant metafields for colors");
+    const colorSet = new Set<string>();
+
+    variants.forEach((variant) => {
+      if (variant.metafield && variant.metafield.value) {
+        console.log(
+          `Found color in variant ${variant.title}:`,
+          variant.metafield.value
+        );
+        colorSet.add(variant.metafield.value);
+      }
+    });
+
+    if (colorSet.size > 0) {
+      colorValues.push(...Array.from(colorSet));
+    }
+  }
+
+  // If still no colors found, check if there are color-related selectedOptions in variants
+  if (colorValues.length === 0) {
+    console.log("Checking variant selectedOptions for colors");
+    const colorSet = new Set<string>();
+
+    variants.forEach((variant) => {
+      if (variant.selectedOptions) {
+        const colorOption = variant.selectedOptions.find(
+          (opt: { name: string; value: string }) =>
+            opt.name.toLowerCase() === "color"
+        );
+
+        if (colorOption) {
+          console.log(
+            `Found color in variant ${variant.title} selectedOptions:`,
+            colorOption.value
+          );
+          colorSet.add(colorOption.value);
+        }
+      }
+    });
+
+    if (colorSet.size > 0) {
+      colorValues.push(...Array.from(colorSet));
+    }
+  }
+
+  // All colors are always available since products are printed on demand
+  const colorAvailability: Record<string, boolean> = {};
+  colorValues.forEach((color) => {
+    colorAvailability[color] = true;
+  });
+
+  // Set hasColorOptions based on whether we found any colors
+  const hasColorOptions = colorValues.length > 0;
+
+  console.log("Product has color options:", hasColorOptions);
+  console.log("Color options:", colorValues);
+  console.log("Product metafield:", product.metafield);
 
   return (
     <div className="container py-8">
-      <ProductPageContent 
+      <ProductPageContent
         product={product}
         images={images}
         variants={variants}
@@ -366,7 +619,10 @@ export default async function ProductPage({
         isClothingItem={isClothingItem}
         hasSizeOptions={hasSizeOptions}
         sizeOptions={sizeValues}
-        sizeAvailability={sizeAvailability}
+        sizeAvailability={{}}
+        hasColorOptions={hasColorOptions}
+        colorOptions={colorValues}
+        colorAvailability={colorAvailability}
       />
     </div>
   );

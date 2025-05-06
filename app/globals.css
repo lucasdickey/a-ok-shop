@@ -48,183 +48,234 @@
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8;
   }
+  
+  /* Product description formatting */
+  .product-description {
+    @apply text-base leading-relaxed;
+  }
+  
+  .product-description p {
+    @apply mb-4;
+  }
+  
+  .product-description ul {
+    @apply list-disc pl-5 mb-4;
+  }
+  
+  .product-description li {
+    @apply mb-2;
+  }
+  
+  .product-description strong,
+  .product-description b {
+    @apply font-bold;
+  }
+  
+  .product-description em,
+  .product-description i {
+    @apply italic;
+  }
+  
+  .product-description br {
+    @apply block my-2;
+  }
+  
+  .product-description h1, 
+  .product-description h2, 
+  .product-description h3, 
+  .product-description h4 {
+    @apply font-bold my-3;
+  }
+  
+  .product-description h1 {
+    @apply text-2xl;
+  }
+  
+  .product-description h2 {
+    @apply text-xl;
+  }
+  
+  .product-description h3 {
+    @apply text-lg;
+  }
+  
+  .product-card {
+    border: 2px solid #1F1F1F;
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--font-space-grotesk), sans-serif;
+  }
+
+  .product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .product-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #FCEFB9; /* subtle yellow highlight */
+    margin-bottom: 1rem;
+  }
+
+  .size-options {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .size-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid #F5F2DC;
+    color: #fff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .size-button:hover {
+    border-color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .size-button-unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .size-button-unavailable:hover {
+    border-color: #F5F2DC;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Product type specific styling */
+  .tshirt-card { 
+    background-color: var(--bg-tshirt); 
+    color: white;
+  }
+
+  .hoodie-card { 
+    background-color: var(--bg-hoodie); 
+    color: #1F1F1F;
+  }
+
+  .hoodie-card .product-price {
+    color: #8B1E24;
+  }
+
+  .hoodie-card .size-button {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-color: #1F1F1F;
+    color: #1F1F1F;
+  }
+
+  .hoodie-card .size-button:hover {
+    border-color: #1F1F1F;
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .hat-card { 
+    background-color: var(--bg-hat); 
+    color: white;
+  }
+
+  /* Product image hover effect */
+  .product-image-hover {
+    transition: transform 0.4s ease;
+  }
+
+  .product-image-hover:hover {
+    transform: scale(1.08);
+  }
+
+  /* Image container hover effect - to be added to the container div */
+  .image-container-hover {
+    position: relative;
+  }
+
+  .image-container-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .image-container-hover:hover::after {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Size button hover effect */
+  .size-button-hover {
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+    pointer-events: auto;
+  }
+
+  .size-button-hover:hover {
+    border-color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: 700;
+    transform: scale(1.05);
+  }
+
+  .size-button-hover:active {
+    transform: scale(0.95);
+    transition: all 0.05s ease-in-out;
+  }
+
+  .hoodie-card .size-button-hover:hover {
+    border-color: #000;
+    background-color: rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+  }
+
+  .hoodie-card .size-button-hover:active {
+    transform: scale(0.95);
+    transition: all 0.05s ease-in-out;
+  }
+
+  /* Hero section responsive alignment */
+  .hero-content {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  @media (min-width: 768px) {
+    .hero-content {
+      margin-left: 2rem;
+      margin-right: auto;
+      text-align: left;
+      max-width: 36rem; /* xl size in Tailwind */
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
 /* Product Card Styling - Non-Tailwind Custom CSS */
-.product-card {
-  border: 2px solid #1F1F1F;
-  border-radius: 12px;
-  padding: 1.25rem 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  font-family: var(--font-space-grotesk), sans-serif;
-}
-
-.product-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-.product-title {
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
-}
-
-.product-price {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #FCEFB9; /* subtle yellow highlight */
-  margin-bottom: 1rem;
-}
-
-.size-options {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: auto;
-}
-
-.size-button {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid #F5F2DC;
-  color: #fff;
-  padding: 0.25rem 0.6rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.size-button:hover {
-  border-color: #fff;
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.size-button-unavailable {
-  opacity: 0.5;
-  cursor: not-allowed;
-  text-decoration: line-through;
-}
-
-.size-button-unavailable:hover {
-  border-color: #F5F2DC;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Product type specific styling */
-.tshirt-card { 
-  background-color: var(--bg-tshirt); 
-  color: white;
-}
-
-.hoodie-card { 
-  background-color: var(--bg-hoodie); 
-  color: #1F1F1F;
-}
-
-.hoodie-card .product-price {
-  color: #8B1E24;
-}
-
-.hoodie-card .size-button {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-color: #1F1F1F;
-  color: #1F1F1F;
-}
-
-.hoodie-card .size-button:hover {
-  border-color: #1F1F1F;
-  background-color: rgba(0, 0, 0, 0.15);
-}
-
-.hat-card { 
-  background-color: var(--bg-hat); 
-  color: white;
-}
-
-/* Product image hover effect */
-.product-image-hover {
-  transition: transform 0.4s ease;
-}
-
-.product-image-hover:hover {
-  transform: scale(1.08);
-}
-
-/* Image container hover effect - to be added to the container div */
-.image-container-hover {
-  position: relative;
-}
-
-.image-container-hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0);
-  transition: background 0.3s ease;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.image-container-hover:hover::after {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-/* Size button hover effect */
-.size-button-hover {
-  font-weight: 500;
-  transition: all 0.15s ease-in-out;
-  pointer-events: auto;
-}
-
-.size-button-hover:hover {
-  border-color: #fff;
-  background-color: rgba(255, 255, 255, 0.15);
-  font-weight: 700;
-  transform: scale(1.05);
-}
-
-.size-button-hover:active {
-  transform: scale(0.95);
-  transition: all 0.05s ease-in-out;
-}
-
-.hoodie-card .size-button-hover:hover {
-  border-color: #000;
-  background-color: rgba(0, 0, 0, 0.15);
-  font-weight: 700;
-}
-
-.hoodie-card .size-button-hover:active {
-  transform: scale(0.95);
-  transition: all 0.05s ease-in-out;
-}
-
-/* Hero section responsive alignment */
-.hero-content {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  width: 100%;
-  max-width: 100%;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-@media (min-width: 768px) {
-  .hero-content {
-    margin-left: 2rem;
-    margin-right: auto;
-    text-align: left;
-    max-width: 36rem; /* xl size in Tailwind */
-    padding-left: 0;
-    padding-right: 0;
-  }
-}

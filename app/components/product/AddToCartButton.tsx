@@ -10,19 +10,38 @@ type AddToCartButtonProps = {
     price: number;
     image: string;
     variantId: string;
+    size?: string;
+    color?: string;
   };
   quantity?: number;
   showSizeWarning?: boolean;
+  showColorWarning?: boolean;
 };
 
-export default function AddToCartButton({ product, quantity = 1, showSizeWarning = false }: AddToCartButtonProps) {
+export default function AddToCartButton({ 
+  product, 
+  quantity = 1, 
+  showSizeWarning = false,
+  showColorWarning = false 
+}: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [itemQuantity, setItemQuantity] = useState(quantity);
   const [showWarning, setShowWarning] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
 
   const handleAddToCart = () => {
     if (showSizeWarning) {
+      setWarningMessage('Please select a size before adding to cart.');
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 3000);
+      return;
+    }
+
+    if (showColorWarning) {
+      setWarningMessage('Please select a color before adding to cart.');
       setShowWarning(true);
       setTimeout(() => {
         setShowWarning(false);
@@ -39,6 +58,8 @@ export default function AddToCartButton({ product, quantity = 1, showSizeWarning
       quantity: itemQuantity,
       image: product.image,
       variantId: product.variantId,
+      size: product.size,
+      color: product.color,
     };
     
     addToCart(cartItem);
@@ -80,7 +101,7 @@ export default function AddToCartButton({ product, quantity = 1, showSizeWarning
       
       {showWarning && (
         <div className="mt-2 text-sm text-red-500">
-          Please select a size before adding to cart.
+          {warningMessage}
         </div>
       )}
     </div>

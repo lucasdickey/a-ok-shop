@@ -1,4 +1,4 @@
-import { GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from "graphql-request";
 
 // Types for Shopify API responses
 export type ShopifyProduct = {
@@ -6,6 +6,8 @@ export type ShopifyProduct = {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml?: string;
+  createdAt: string;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -32,6 +34,11 @@ export type ShopifyProduct = {
           name: string;
           value: string;
         }>;
+        metafield?: {
+          namespace: string;
+          key: string;
+          value: string;
+        };
       };
     }>;
   };
@@ -39,6 +46,11 @@ export type ShopifyProduct = {
     name: string;
     values: string[];
   }>;
+  metafield?: {
+    namespace: string;
+    key: string;
+    value: string;
+  };
   tags: string[];
   productType: string;
 };
@@ -64,20 +76,24 @@ const getShopifyClient = () => {
   // Get credentials from environment variables
   const storeDomain = process.env.SHOPIFY_STORE_DOMAIN;
   const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN;
-  
-  if (!storeDomain || !token) {
-    console.error('Missing Shopify API credentials');
-    throw new Error('Shopify API credentials are missing. Please check your environment variables.');
-  }
-  
-  // Correct Shopify Storefront API endpoint format
-  const endpoint = `https://${storeDomain}/api/2023-07/graphql.json`;
 
+  if (!storeDomain || !token) {
+    console.error("Missing Shopify API credentials");
+    throw new Error(
+      "Shopify API credentials are missing. Please check your environment variables."
+    );
+  }
+
+  // Correct Shopify Storefront API endpoint format
+  const endpoint = `https://${storeDomain}/api/2024-01/graphql.json`;
+  
+  console.log(`Initializing Shopify client with endpoint: ${endpoint}`);
+  
   return new GraphQLClient(endpoint, {
     headers: {
-      'X-Shopify-Storefront-Access-Token': token,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      "X-Shopify-Storefront-Access-Token": token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
   });
 };
@@ -85,21 +101,22 @@ const getShopifyClient = () => {
 // Mock products for development when API is not available
 const mockProducts: ShopifyProduct[] = [
   {
-    id: 'gid://shopify/Product/1',
-    handle: 'mock-tshirt-1',
-    title: 'A-OK T-Shirt',
-    description: 'A comfortable t-shirt with the A-OK logo',
+    id: "gid://shopify/Product/1",
+    handle: "mock-tshirt-1",
+    title: "A-OK T-Shirt",
+    description: "A comfortable t-shirt with the A-OK logo",
+    createdAt: "2022-01-01T00:00:00Z",
     priceRange: {
       minVariantPrice: {
-        amount: '29.99',
+        amount: "29.99",
       },
     },
     images: {
       edges: [
         {
           node: {
-            url: '/images/product-placeholder.jpg',
-            altText: 'A-OK T-Shirt',
+            url: "/images/product-placeholder.jpg",
+            altText: "A-OK T-Shirt",
           },
         },
       ],
@@ -108,79 +125,100 @@ const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            id: 'gid://shopify/ProductVariant/1',
-            title: 'S',
+            id: "gid://shopify/ProductVariant/1",
+            title: "S",
             price: {
-              amount: '29.99',
+              amount: "29.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'S'
-              }
-            ]
+                name: "Size",
+                value: "S",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Red",
+            },
           },
         },
         {
           node: {
-            id: 'gid://shopify/ProductVariant/2',
-            title: 'M',
+            id: "gid://shopify/ProductVariant/2",
+            title: "M",
             price: {
-              amount: '29.99',
+              amount: "29.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'M'
-              }
-            ]
+                name: "Size",
+                value: "M",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Blue",
+            },
           },
         },
         {
           node: {
-            id: 'gid://shopify/ProductVariant/3',
-            title: 'L',
+            id: "gid://shopify/ProductVariant/3",
+            title: "L",
             price: {
-              amount: '29.99',
+              amount: "29.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'L'
-              }
-            ]
+                name: "Size",
+                value: "L",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Green",
+            },
           },
         },
       ],
     },
     options: [
       {
-        name: 'Size',
-        values: ['S', 'M', 'L']
-      }
+        name: "Size",
+        values: ["S", "M", "L"],
+      },
     ],
-    tags: ['t-shirt', 'apparel'],
-    productType: 'T-Shirts',
+    metafield: {
+      namespace: "custom",
+      key: "color",
+      value: "Red",
+    },
+    tags: ["t-shirt", "apparel"],
+    productType: "T-Shirts",
   },
   {
-    id: 'gid://shopify/Product/2',
-    handle: 'mock-hoodie-1',
-    title: 'A-OK Hoodie',
-    description: 'A warm hoodie with the A-OK logo',
+    id: "gid://shopify/Product/2",
+    handle: "mock-hoodie-1",
+    title: "A-OK Hoodie",
+    description: "A warm hoodie with the A-OK logo",
+    createdAt: "2022-01-01T00:00:00Z",
     priceRange: {
       minVariantPrice: {
-        amount: '49.99',
+        amount: "49.99",
       },
     },
     images: {
       edges: [
         {
           node: {
-            url: '/images/product-placeholder.jpg',
-            altText: 'A-OK Hoodie',
+            url: "/images/product-placeholder.jpg",
+            altText: "A-OK Hoodie",
           },
         },
       ],
@@ -189,95 +227,121 @@ const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            id: 'gid://shopify/ProductVariant/4',
-            title: 'S',
+            id: "gid://shopify/ProductVariant/4",
+            title: "S",
             price: {
-              amount: '49.99',
+              amount: "49.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'S'
-              }
-            ]
+                name: "Size",
+                value: "S",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Red",
+            },
           },
         },
         {
           node: {
-            id: 'gid://shopify/ProductVariant/5',
-            title: 'M',
+            id: "gid://shopify/ProductVariant/5",
+            title: "M",
             price: {
-              amount: '49.99',
+              amount: "49.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'M'
-              }
-            ]
+                name: "Size",
+                value: "M",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Blue",
+            },
           },
         },
         {
           node: {
-            id: 'gid://shopify/ProductVariant/6',
-            title: 'L',
+            id: "gid://shopify/ProductVariant/6",
+            title: "L",
             price: {
-              amount: '49.99',
+              amount: "49.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'L'
-              }
-            ]
+                name: "Size",
+                value: "L",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Green",
+            },
           },
         },
         {
           node: {
-            id: 'gid://shopify/ProductVariant/7',
-            title: 'XL',
+            id: "gid://shopify/ProductVariant/7",
+            title: "XL",
             price: {
-              amount: '49.99',
+              amount: "49.99",
             },
             availableForSale: true,
             selectedOptions: [
               {
-                name: 'Size',
-                value: 'XL'
-              }
-            ]
+                name: "Size",
+                value: "XL",
+              },
+            ],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Yellow",
+            },
           },
         },
       ],
     },
     options: [
       {
-        name: 'Size',
-        values: ['S', 'M', 'L', 'XL']
-      }
+        name: "Size",
+        values: ["S", "M", "L", "XL"],
+      },
     ],
-    tags: ['hoodie', 'apparel'],
-    productType: 'Hoodies',
+    metafield: {
+      namespace: "custom",
+      key: "color",
+      value: "Red",
+    },
+    tags: ["hoodie", "apparel"],
+    productType: "Hoodies",
   },
   {
-    id: 'gid://shopify/Product/3',
-    handle: 'mock-cap-1',
-    title: 'A-OK Cap',
-    description: 'A stylish cap with the A-OK logo',
+    id: "gid://shopify/Product/3",
+    handle: "mock-hat-1",
+    title: "A-OK Baseball Cap",
+    description: "A stylish baseball cap with the A-OK logo",
+    createdAt: "2022-01-01T00:00:00Z",
     priceRange: {
       minVariantPrice: {
-        amount: '19.99',
+        amount: "24.99",
       },
     },
     images: {
       edges: [
         {
           node: {
-            url: '/images/product-placeholder.jpg',
-            altText: 'A-OK Cap',
+            url: "/images/product-placeholder.jpg",
+            altText: "A-OK Baseball Cap",
           },
         },
       ],
@@ -286,34 +350,48 @@ const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            id: 'gid://shopify/ProductVariant/8',
-            title: 'Default',
+            id: "gid://shopify/ProductVariant/7",
+            title: "Default Title",
             price: {
-              amount: '19.99',
+              amount: "24.99",
             },
             availableForSale: true,
+            selectedOptions: [],
+            metafield: {
+              namespace: "custom",
+              key: "color",
+              value: "Red",
+            },
           },
         },
       ],
     },
-    tags: ['cap', 'accessories'],
-    productType: 'Accessories',
+    options: [],
+    metafield: {
+      namespace: "custom",
+      key: "color",
+      value: "Red",
+    },
+    tags: ["hat", "cap", "apparel"],
+    productType: "Hats",
   },
 ];
 
 // Fetch all products
 export async function getAllProducts() {
   const client = getShopifyClient();
-  
+
   const query = `
     query {
-      products(first: 50) {
+      products(first: 50, sortKey: CREATED_AT, reverse: true) {
         edges {
           node {
             id
             handle
             title
             description
+            descriptionHtml
+            createdAt
             priceRange {
               minVariantPrice {
                 amount
@@ -340,12 +418,20 @@ export async function getAllProducts() {
                     name
                     value
                   }
+                  metafield(namespace: "custom", key: "color") {
+                    value
+                    type
+                  }
                 }
               }
             }
             options {
               name
               values
+            }
+            metafield(namespace: "custom", key: "color") {
+              value
+              type
             }
             tags
             productType
@@ -356,31 +442,39 @@ export async function getAllProducts() {
   `;
 
   try {
-    console.log('Fetching products from Shopify...');
-    console.log('GraphQL Query:', query);
-    
-    const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
-    console.log('Products fetched successfully:', data.products.edges.length);
-    
+    console.log("Fetching products from Shopify...");
+    console.log("GraphQL Query:", query);
+
+    const data = await client.request<{
+      products: { edges: Array<{ node: ShopifyProduct }> };
+    }>(query);
+    console.log("Products fetched successfully:", data.products.edges.length);
+
     // Log all product types to see the exact values
     const products = data.products.edges.map(({ node }) => node);
-    console.log('All product types in Shopify:', products.map(p => `"${p.productType}"`).join(', '));
-    
+    console.log(
+      "All product types in Shopify:",
+      products.map((p) => `"${p.productType}"`).join(", ")
+    );
+
     return products;
   } catch (error) {
-    console.error('Error fetching products from Shopify API:', error);
-    
+    console.error("Error fetching all products:", error);
+
     // More detailed error logging
     if (error instanceof Error) {
-      console.error('Error message:', error.message);
-      // @ts-ignore
-      if (error.response) {
-        // @ts-ignore
-        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      console.error("Error message:", error.message);
+      // Check if error has a response property (GraphQL client error)
+      const graphqlError = error as any;
+      if (graphqlError.response) {
+        console.error(
+          "Response details:",
+          JSON.stringify(graphqlError.response, null, 2)
+        );
       }
     }
-    
-    console.log('Using mock products instead');
+
+    console.log("Using mock products instead");
     return mockProducts;
   }
 }
@@ -388,33 +482,35 @@ export async function getAllProducts() {
 // Fetch products by category
 export async function getProductsByCategory(category: string) {
   const client = getShopifyClient();
-  
+
   // Map UI category names to query patterns using both tags and product types
-  let queryFilter = '';
-  
-  if (category.toLowerCase() === 'hats') {
+  let queryFilter = "";
+
+  if (category.toLowerCase() === "hats") {
     // Use both tag and product_type filters for hats
-    queryFilter = 'tag:hats OR product_type:hats';
-  } else if (category.toLowerCase() === 't-shirts') {
+    queryFilter = "tag:hats OR product_type:hats";
+  } else if (category.toLowerCase() === "t-shirts") {
     // Use both tag and product_type filters for t-shirts
-    queryFilter = 'tag:t-shirts OR product_type:t-shirts';
-  } else if (category.toLowerCase() === 'hoodies') {
+    queryFilter = "tag:t-shirts OR product_type:t-shirts";
+  } else if (category.toLowerCase() === "hoodies") {
     // Use both tag and product_type filters for hoodies
-    queryFilter = 'tag:hoodies OR product_type:hoodies';
+    queryFilter = "tag:hoodies OR product_type:hoodies";
   } else {
     // Default case - use the category as both tag and product_type
     queryFilter = `tag:${category.toLowerCase()} OR product_type:${category.toLowerCase()}`;
   }
-  
+
   const query = `
     query {
-      products(first: 50, query: "${queryFilter}") {
+      products(first: 50, sortKey: CREATED_AT, reverse: true, query: "${queryFilter}") {
         edges {
           node {
             id
             handle
             title
             description
+            descriptionHtml
+            createdAt
             priceRange {
               minVariantPrice {
                 amount
@@ -441,12 +537,20 @@ export async function getProductsByCategory(category: string) {
                     name
                     value
                   }
+                  metafield(namespace: "custom", key: "color") {
+                    value
+                    type
+                  }
                 }
               }
             }
             options {
               name
               values
+            }
+            metafield(namespace: "custom", key: "color") {
+              value
+              type
             }
             tags
             productType
@@ -457,60 +561,84 @@ export async function getProductsByCategory(category: string) {
   `;
 
   try {
-    console.log(`Fetching products for category: ${category} using filter: ${queryFilter}`);
-    
-    const data = await client.request<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(query);
-    console.log('Category products fetched successfully:', data.products.edges.length);
-    
+    console.log(
+      `Fetching products for category: ${category} using filter: ${queryFilter}`
+    );
+
+    const data = await client.request<{
+      products: { edges: Array<{ node: ShopifyProduct }> };
+    }>(query);
+    console.log(
+      "Category products fetched successfully:",
+      data.products.edges.length
+    );
+
     const products = data.products.edges.map(({ node }) => node);
-    
+
     // Log the product details that were found
-    console.log('Found products:');
-    products.forEach(p => {
-      console.log(`- ${p.title} (Type: "${p.productType}", Tags: ${p.tags.join(', ')})`);
+    console.log("Found products:");
+    products.forEach((p) => {
+      console.log(
+        `- ${p.title} (Type: "${p.productType}", Tags: ${p.tags.join(", ")})`
+      );
     });
-    
+
     return products;
   } catch (error) {
     console.error(`Error fetching products for category ${category}:`, error);
-    
+
     // More detailed error logging
     if (error instanceof Error) {
-      console.error('Error message:', error.message);
-      // @ts-ignore
-      if (error.response) {
-        // @ts-ignore
-        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      console.error("Error message:", error.message);
+      // Check if error has a response property (GraphQL client error)
+      const graphqlError = error as any;
+      if (graphqlError.response) {
+        console.error(
+          "Response details:",
+          JSON.stringify(graphqlError.response, null, 2)
+        );
       }
     }
-    
+
     // Fallback to getting all products and filtering manually
     console.log(`Falling back to manual filtering for category: ${category}`);
     const allProducts = await getAllProducts();
-    
+
     // Filter products by both tags and product type
-    const filteredProducts = allProducts.filter(product => {
-      const normalizedTags = product.tags.map(tag => tag.toLowerCase());
+    const filteredProducts = allProducts.filter((product) => {
+      const normalizedTags = product.tags.map((tag) => tag.toLowerCase());
       const normalizedProductType = product.productType.toLowerCase();
-      
+
       // Check if any tag or product type matches the category
-      if (category.toLowerCase() === 'hats') {
-        return normalizedTags.some(tag => tag.includes('hat') || tag.includes('cap')) || 
-               normalizedProductType.includes('hat') || 
-               normalizedProductType.includes('cap');
-      } else if (category.toLowerCase() === 't-shirts') {
-        return normalizedTags.some(tag => tag.includes('shirt')) || 
-               normalizedProductType.includes('t-shirt');
-      } else if (category.toLowerCase() === 'hoodies') {
-        return normalizedTags.some(tag => tag.includes('hoodie')) || 
-               normalizedProductType.includes('hoodie');
+      if (category.toLowerCase() === "hats") {
+        return (
+          normalizedTags.some(
+            (tag) => tag.includes("hat") || tag.includes("cap")
+          ) ||
+          normalizedProductType.includes("hat") ||
+          normalizedProductType.includes("cap")
+        );
+      } else if (category.toLowerCase() === "t-shirts") {
+        return (
+          normalizedTags.some((tag) => tag.includes("shirt")) ||
+          normalizedProductType.includes("t-shirt")
+        );
+      } else if (category.toLowerCase() === "hoodies") {
+        return (
+          normalizedTags.some((tag) => tag.includes("hoodie")) ||
+          normalizedProductType.includes("hoodie")
+        );
       } else {
-        return normalizedTags.some(tag => tag.includes(category.toLowerCase())) || 
-               normalizedProductType.includes(category.toLowerCase());
+        return (
+          normalizedTags.some((tag) => tag.includes(category.toLowerCase())) ||
+          normalizedProductType.includes(category.toLowerCase())
+        );
       }
     });
-    
-    console.log(`Fallback found ${filteredProducts.length} products for category: ${category}`);
+
+    console.log(
+      `Fallback found ${filteredProducts.length} products for category: ${category}`
+    );
     return filteredProducts;
   }
 }
@@ -518,13 +646,13 @@ export async function getProductsByCategory(category: string) {
 // Fetch a single product by handle
 export async function getProductByHandle(handle: string) {
   // For mock data, return a mock product if the handle matches
-  const mockProduct = mockProducts.find(p => p.handle === handle);
+  const mockProduct = mockProducts.find((p) => p.handle === handle);
   if (mockProduct) {
     return mockProduct;
   }
 
   const client = getShopifyClient();
-  
+
   const query = `
     query GetProductByHandle($handle: String!) {
       productByHandle(handle: $handle) {
@@ -532,6 +660,7 @@ export async function getProductByHandle(handle: string) {
         handle
         title
         description
+        descriptionHtml
         priceRange {
           minVariantPrice {
             amount
@@ -558,12 +687,20 @@ export async function getProductByHandle(handle: string) {
                 name
                 value
               }
+              metafield(namespace: "custom", key: "color") {
+                value
+                type
+              }
             }
           }
         }
         options {
           name
           values
+        }
+        metafield(namespace: "custom", key: "color") {
+          value
+          type
         }
         tags
         productType
@@ -572,19 +709,51 @@ export async function getProductByHandle(handle: string) {
   `;
 
   try {
-    const data = await client.request<{ productByHandle: ShopifyProduct }>(query, { handle });
+    console.log(`Fetching product with handle: ${handle}`);
+    console.log(`Using query: ${query}`);
+    console.log(`With variables: ${JSON.stringify({ handle })}`);
+    
+    const data = await client.request<{ productByHandle: ShopifyProduct }>(
+      query,
+      { handle }
+    );
+    
+    console.log(`API response received: ${JSON.stringify(data, null, 2).substring(0, 200)}...`);
+    
+    if (!data || !data.productByHandle) {
+      console.error(`No product found with handle: ${handle}`);
+      // Return the first mock product as a fallback
+      return mockProducts[0];
+    }
+    
     return data.productByHandle;
   } catch (error) {
-    console.error('Error fetching product:', error);
+    console.error("Error fetching product:", error);
+
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      // Check if error has a response property (GraphQL client error)
+      const graphqlError = error as any;
+      if (graphqlError.response) {
+        console.error(
+          "Response details:",
+          JSON.stringify(graphqlError.response, null, 2)
+        );
+      }
+    }
+
     // Return the first mock product as a fallback
     return mockProducts[0];
   }
 }
 
 // Create a checkout
-export async function createShopifyCheckout(lineItems: Array<{ variantId: string; quantity: number }>) {
+export async function createShopifyCheckout(
+  lineItems: Array<{ variantId: string; quantity: number }>
+) {
   const client = getShopifyClient();
-  
+
   // Use cartCreate instead of checkoutCreate (which is deprecated)
   const query = `
     mutation CartCreate($input: CartInput!) {
@@ -602,9 +771,9 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
   `;
 
   // Convert lineItems to the format expected by the Shopify API
-  const formattedLineItems = lineItems.map(item => ({
+  const formattedLineItems = lineItems.map((item) => ({
     merchandiseId: item.variantId,
-    quantity: item.quantity
+    quantity: item.quantity,
   }));
 
   try {
@@ -614,8 +783,11 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
       },
     };
 
-    console.log('Creating cart with variables:', JSON.stringify(variables, null, 2));
-    
+    console.log(
+      "Creating cart with variables:",
+      JSON.stringify(variables, null, 2)
+    );
+
     const data = await client.request<{
       cartCreate: {
         cart: {
@@ -629,40 +801,45 @@ export async function createShopifyCheckout(lineItems: Array<{ variantId: string
       };
     }>(query, variables);
 
-    console.log('Cart creation response:', JSON.stringify(data, null, 2));
-    
+    console.log("Cart creation response:", JSON.stringify(data, null, 2));
+
     if (data.cartCreate.userErrors.length > 0) {
-      console.error('Cart creation errors:', data.cartCreate.userErrors);
+      console.error("Cart creation errors:", data.cartCreate.userErrors);
       throw new Error(data.cartCreate.userErrors[0].message);
     }
 
     // Get the original checkout URL from Shopify
     const originalCheckoutUrl = data.cartCreate.cart.checkoutUrl;
-    console.log('Original checkout URL:', originalCheckoutUrl);
-    
+    console.log("Original checkout URL:", originalCheckoutUrl);
+
     // Instead of trying to parse and reconstruct the URL, use the original URL structure
     // but replace the domain with our custom checkout domain
     const redirectUrl = originalCheckoutUrl.replace(
       /https:\/\/[^\/]+/,
-      'https://checkout.a-ok.shop'
+      "https://checkout.a-ok.shop"
     );
-    
-    console.log('Redirecting to:', redirectUrl);
-    
+
+    console.log("Redirecting to:", redirectUrl);
+
     return redirectUrl;
   } catch (error) {
-    console.error('Error creating checkout:', error);
-    
+    console.error("Error creating checkout:", error);
+
     // More detailed error logging
     if (error instanceof Error) {
-      console.error('Error message:', error.message);
-      // @ts-ignore
-      if (error.response) {
-        // @ts-ignore
-        console.error('Response details:', JSON.stringify(error.response, null, 2));
+      console.error("Error message:", error.message);
+      // Check if error has a response property (GraphQL client error)
+      const graphqlError = error as any;
+      if (graphqlError.response) {
+        console.error(
+          "Response details:",
+          JSON.stringify(graphqlError.response, null, 2)
+        );
       }
     }
-    
-    throw new Error('Unable to create checkout. Please try again or contact support.');
+
+    throw new Error(
+      "Unable to create checkout. Please try again or contact support."
+    );
   }
 }
