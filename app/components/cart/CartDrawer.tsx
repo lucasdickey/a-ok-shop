@@ -137,6 +137,9 @@ export default function CartDrawer() {
                     {item.size && (
                       <p className="mt-1 text-sm text-gray-500">Size: {item.size}</p>
                     )}
+                    {item.color && (
+                      <p className="mt-1 text-sm text-gray-500">Color: {item.color}</p>
+                    )}
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center border border-secondary rounded-md">
                         <button

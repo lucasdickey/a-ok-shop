@@ -18,6 +18,7 @@ export type ShopifyProduct = {
       node: {
         url: string;
         altText: string;
+        originalSrc?: string;
       };
     }>;
   };
@@ -39,6 +40,15 @@ export type ShopifyProduct = {
           key: string;
           value: string;
         };
+        metafields?: {
+          edges: Array<{
+            node: {
+              namespace: string;
+              key: string;
+              value: string;
+            };
+          }>;
+        };
       };
     }>;
   };
@@ -50,6 +60,15 @@ export type ShopifyProduct = {
     namespace: string;
     key: string;
     value: string;
+  };
+  metafields?: {
+    edges: Array<{
+      node: {
+        namespace: string;
+        key: string;
+        value: string;
+      };
+    }>;
   };
   tags: string[];
   productType: string;
@@ -750,7 +769,12 @@ export async function getProductByHandle(handle: string) {
 
 // Create a checkout
 export async function createShopifyCheckout(
-  lineItems: Array<{ variantId: string; quantity: number }>
+  lineItems: Array<{ 
+    variantId: string; 
+    quantity: number; 
+    size?: string;
+    color?: string;
+  }>
 ) {
   const client = getShopifyClient();
 
@@ -771,10 +795,33 @@ export async function createShopifyCheckout(
   `;
 
   // Convert lineItems to the format expected by the Shopify API
-  const formattedLineItems = lineItems.map((item) => ({
-    merchandiseId: item.variantId,
-    quantity: item.quantity,
-  }));
+  const formattedLineItems = lineItems.map((item) => {
+    const lineItem: any = {
+      merchandiseId: item.variantId,
+      quantity: item.quantity,
+    };
+    
+    // Add attributes array if we have color or size
+    if (item.color || item.size) {
+      lineItem.attributes = [];
+      
+      if (item.color) {
+        lineItem.attributes.push({
+          key: "Color",
+          value: item.color
+        });
+      }
+      
+      if (item.size) {
+        lineItem.attributes.push({
+          key: "Size",
+          value: item.size
+        });
+      }
+    }
+    
+    return lineItem;
+  });
 
   try {
     const variables = {

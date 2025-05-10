@@ -354,14 +354,20 @@ function ProductPageContent({
       {/* Product Images */}
       <div className="space-y-4">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
-          <Image
-            src={images[selectedImageIndex]?.url || "/product-placeholder.jpg"}
-            alt={images[selectedImageIndex]?.alt || product.title}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+          {images[selectedImageIndex]?.url?.startsWith('http') ? (
+            <Image
+              src={images[selectedImageIndex]?.url || "/product-placeholder.jpg"}
+              alt={images[selectedImageIndex]?.alt || product.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+              <span className="text-gray-500">{product.title}</span>
+            </div>
+          )}
         </div>
 
         {images.length > 1 && (
@@ -374,13 +380,19 @@ function ProductPageContent({
                 }`}
                 onClick={() => setSelectedImageIndex(index)}
               >
-                <Image
-                  src={image.url}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 25vw, 10vw"
-                />
+                {image.url?.startsWith('http') ? (
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 25vw, 10vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                    <span className="text-xs text-gray-500">No image</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -418,10 +430,39 @@ export default async function ProductPage({
     notFound();
   }
 
-  const images = product.images.edges.map(({ node }) => ({
-    url: node.url,
-    alt: node.altText || product.title,
-  }));
+  // Log the raw image data from the API
+  console.log("Raw image data:", JSON.stringify(product.images.edges, null, 2));
+  
+  const images = product.images.edges.map(({ node }) => {
+    // Log each image node
+    console.log("Image node:", node);
+    
+    // Ensure URL is absolute (starts with http or https)
+    let imageUrl = node.url;
+    if (imageUrl && !imageUrl.startsWith('http')) {
+      // If it's a protocol-relative URL (starts with //)
+      if (imageUrl.startsWith('//')) {
+        imageUrl = `https:${imageUrl}`;
+      } 
+      // If it's a relative URL (doesn't start with /)
+      else if (!imageUrl.startsWith('/')) {
+        imageUrl = `/${imageUrl}`;
+      }
+      // For other relative URLs, prepend the Shopify domain
+      else {
+        const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN || 'a-ok.myshopify.com';
+        imageUrl = `https://${shopifyDomain}${imageUrl}`;
+      }
+    }
+    
+    return {
+      url: imageUrl,
+      alt: node.altText || product.title,
+    };
+  });
+  
+  // Log the processed images
+  console.log("Processed images:", images);
 
   const variants = product.variants.edges.map(({ node }) => ({
     id: node.id,
@@ -430,6 +471,7 @@ export default async function ProductPage({
     available: node.availableForSale,
     selectedOptions: node.selectedOptions,
     metafield: node.metafield,
+    metafields: node.metafields,
   }));
 
   const defaultVariant = variants[0];
@@ -537,7 +579,7 @@ export default async function ProductPage({
   // If no colors found in metafields, try to get from product options
   if (colorValues.length === 0) {
     const colorOption = product.options?.find(
-      (option) => option.name.toLowerCase() === "color"
+      (option: any) => option.name.toLowerCase() === "color"
     );
 
     if (colorOption && colorOption.values.length > 0) {
