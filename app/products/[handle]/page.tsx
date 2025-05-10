@@ -361,7 +361,7 @@ function ProductPageContent({
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
@@ -386,7 +386,7 @@ function ProductPageContent({
                     alt={image.alt}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 25vw, 10vw"
+                    sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
@@ -637,7 +637,114 @@ export default async function ProductPage({
       colorValues.push(...Array.from(colorSet));
     }
   }
+  
+  // If still no colors found, try to extract from product description
+  if (colorValues.length === 0 && product.description) {
+    console.log("Attempting to extract colors from product description");
+    
+    // Common color names to look for
+    const commonColors = [
+      "black", "white", "red", "blue", "green", "yellow", "purple", "pink",
+      "orange", "brown", "gray", "grey", "navy", "teal", "maroon", "olive",
+      "silver", "gold", "beige", "tan", "coral", "mint", "lavender"
+    ];
+    
+    // Look for color patterns in the description
+    const colorPattern = new RegExp(`\\b(${commonColors.join('|')})\\b`, 'gi');
+    const matches = product.description.match(colorPattern);
+    
+    if (matches && matches.length > 0) {
+      console.log("Found colors in description:", matches);
+      
+      // Create a set of unique colors (case-insensitive)
+      const uniqueColorsSet = new Set<string>();
+      
+      // Process each color and add to the set
+      matches.forEach(color => {
+        const formattedColor = color.charAt(0).toUpperCase() + color.slice(1).toLowerCase();
+        uniqueColorsSet.add(formattedColor);
+      });
+      
+      // Convert set to array and add to colorValues
+      colorValues.push(...Array.from(uniqueColorsSet));
+    }
+    
+    // Look for specific color mentions like "Color: Red, Blue" or "Color palette: cardinal red, shell white"
+    const colorListPatterns = [
+      /colors?:?\s*([\w\s,]+)/i,
+      /colors? palette:?\s*([\w\s,]+)/i,
+      /palette:?\s*([\w\s,]+)/i
+    ];
+    
+    for (const pattern of colorListPatterns) {
+      const colorListMatch = product.description.match(pattern);
+      
+      if (colorListMatch && colorListMatch[1]) {
+        console.log("Found color list in description:", colorListMatch[1]);
+        
+        // Split by commas and clean up each color name
+        // This will handle compound color names like "cardinal red" or "shell white"
+        const extractedColors = colorListMatch[1].split(/,|\sand\s/).map(color => {
+          const trimmed = color.trim();
+          // For compound colors like "cardinal red", keep the full name
+          if (trimmed.includes(' ')) {
+            return trimmed.split(' ').map(word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+          }
+          // For single word colors
+          return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+        }).filter(color => color.length > 0);
+        
+        if (extractedColors.length > 0) {
+          console.log("Extracted color names:", extractedColors);
+          colorValues.push(...extractedColors);
+          break; // Stop after finding the first match
+        }
+      }
+    }
+    
+    // Look for specific color mentions in bullet points or lists
+    if (colorValues.length === 0) {
+      // This pattern looks for color names that might be part of a list item
+      const bulletPointColorPattern = /[•\-*]\s*([\w\s]+) (red|blue|black|white|green|yellow|purple|pink|orange|brown|gray|grey)/gi;
+      let match;
+      const compoundColors = new Set<string>();
+      
+      while ((match = bulletPointColorPattern.exec(product.description)) !== null) {
+        if (match[1] && match[2]) {
+          const compoundColor = `${match[1].trim()} ${match[2]}`.trim();
+          console.log("Found compound color in bullet point:", compoundColor);
+          compoundColors.add(compoundColor.charAt(0).toUpperCase() + compoundColor.slice(1).toLowerCase());
+        }
+      }
+      
+      if (compoundColors.size > 0) {
+        colorValues.push(...Array.from(compoundColors));
+      }
+    }
+  }
 
+  // If still no colors found and this is a clothing item, provide standard color options
+  // Since products are printed on demand, we can offer standard colors
+  if (colorValues.length === 0 && isClothingItem) {
+    console.log("Using standard colors for print-on-demand clothing item");
+    colorValues.push(
+      "Black", 
+      "White", 
+      "Red", 
+      "Blue", 
+      "Green", 
+      "Yellow", 
+      "Purple", 
+      "Gray", 
+      "Navy", 
+      "Brown", 
+      "Orange", 
+      "Pink"
+    );
+  }
+  
   // All colors are always available since products are printed on demand
   const colorAvailability: Record<string, boolean> = {};
   colorValues.forEach((color) => {

@@ -65,8 +65,8 @@ export default function CartDrawer() {
         ref={drawerRef}
         className="fixed right-0 top-0 h-full w-full max-w-md bg-light p-6 shadow-xl transition-transform sm:w-96"
       >
-        <div className="flex items-center justify-between border-b border-secondary pb-4">
-          <h2 className="text-xl font-bold">Your Cart</h2>
+        <div className="flex items-center justify-between border-b border-secondary pb-2">
+          <h2 className="text-lg font-bold">Your Cart</h2>
           <button
             onClick={closeCart}
             className="rounded-md p-1 hover:bg-secondary-light"
@@ -91,7 +91,7 @@ export default function CartDrawer() {
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex h-[calc(100vh-200px)] flex-col items-center justify-center">
+          <div className="flex h-[calc(100vh-180px)] flex-col items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -102,16 +102,16 @@ export default function CartDrawer() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-12 w-12 text-secondary-dark mb-4"
+              className="h-10 w-10 text-secondary-dark mb-3"
             >
               <circle cx="8" cy="21" r="1" />
               <circle cx="19" cy="21" r="1" />
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
-            <p className="text-lg font-medium">Your cart is empty</p>
+            <p className="text-base font-medium">Your cart is empty</p>
             <button
               onClick={closeCart}
-              className="mt-4 btn btn-primary"
+              className="mt-3 btn btn-primary text-sm py-2 px-4"
             >
               Continue Shopping
             </button>
@@ -120,45 +120,46 @@ export default function CartDrawer() {
           <>
             <div className="max-h-[calc(100vh-200px)] overflow-y-auto py-4">
               {cart.map((item) => (
-                <div key={item.id} className="flex border-b border-secondary py-4">
-                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md">
+                <div key={item.id} className="flex border-b border-secondary py-2 text-sm">
+                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                     <Image
                       src={item.image || '/product-placeholder.jpg'}
                       alt={item.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 12vw, 10vw"
                     />
                   </div>
-                  <div className="ml-4 flex flex-1 flex-col">
-                    <div className="flex justify-between text-base font-medium">
-                      <h3>{item.title}</h3>
-                      <p className="ml-4">${item.price.toFixed(2)}</p>
+                  <div className="ml-2 flex flex-1 flex-col">
+                    <div className="flex justify-between text-sm font-medium">
+                      <h3 className="text-sm truncate max-w-[150px]">{item.title}</h3>
+                      <p className="ml-2 text-sm">${item.price.toFixed(2)}</p>
                     </div>
-                    {item.size && (
-                      <p className="mt-1 text-sm text-gray-500">Size: {item.size}</p>
-                    )}
-                    {item.color && (
-                      <p className="mt-1 text-sm text-gray-500">Color: {item.color}</p>
-                    )}
-                    <div className="mt-auto flex items-center justify-between">
+                    <div className="flex text-xs text-gray-500 gap-2">
+                      {item.size && <span>Size: {item.size}</span>}
+                      {item.color && <span>Color: {item.color}</span>}
+                    </div>
+                    <div className="mt-1 flex items-center justify-between">
                       <div className="flex items-center border border-secondary rounded-md">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-2 py-1 hover:bg-secondary-light"
+                          className="px-1 text-xs hover:bg-secondary-light"
+                          aria-label="Decrease quantity"
                         >
                           -
                         </button>
-                        <span className="px-2 py-1">{item.quantity}</span>
+                        <span className="px-1 text-xs">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-2 py-1 hover:bg-secondary-light"
+                          className="px-1 text-xs hover:bg-secondary-light"
+                          aria-label="Increase quantity"
                         >
                           +
                         </button>
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-sm text-primary hover:text-primary-dark"
+                        className="text-xs text-primary hover:text-primary-dark"
                       >
                         Remove
                       </button>
@@ -167,23 +168,23 @@ export default function CartDrawer() {
                 </div>
               ))}
             </div>
-            <div className="border-t border-secondary pt-4">
-              <div className="flex justify-between text-base font-medium">
+            <div className="border-t border-secondary pt-3">
+              <div className="flex justify-between text-sm font-medium">
                 <p>Subtotal</p>
                 <p>${subtotal.toFixed(2)}</p>
               </div>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-xs text-gray-500">
                 Shipping and taxes calculated at checkout.
               </p>
-              <div className="mt-4">
+              <div className="mt-3">
                 <button
                   onClick={handleCheckout}
-                  className="w-full btn btn-primary"
+                  className="w-full btn btn-primary text-sm py-2"
                 >
                   Checkout
                 </button>
               </div>
-              <div className="mt-2 flex justify-center text-sm">
+              <div className="mt-2 flex justify-center text-xs">
                 <button
                   onClick={closeCart}
                   className="text-primary hover:text-primary-dark"
