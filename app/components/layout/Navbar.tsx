@@ -17,7 +17,7 @@ export default function Navbar() {
               height={48} 
               className="rounded-full"
             />
-            <span className="text-xl font-bold text-primary">a-ok.shop</span>
+            <span className="text-xl font-bold text-primary font-bebas-neue">a-ok.shop</span>
           </Link>
           <nav className="hidden md:flex gap-6">
             <Link

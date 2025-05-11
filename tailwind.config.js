@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'bebas-neue': ['var(--font-bebas-neue)'],
+      },
       colors: {
         primary: {
           DEFAULT: '#B91C1C', // crimson red

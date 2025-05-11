@@ -49,3 +49,5 @@ Thumbs.db
 
 # Ignore podcast feed file
 podcast_feed.xml
+
+**/.claude/settings.local.json

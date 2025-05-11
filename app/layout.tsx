@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -10,6 +10,12 @@ const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
   variable: '--font-space-grotesk',
+  display: 'swap',
+});
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: '--font-bebas-neue',
+  weight: '400',
   display: 'swap',
 });
 
@@ -56,7 +62,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.className} ${spaceGrotesk.variable}`}>
+      <body className={`${inter.className} ${spaceGrotesk.variable} ${bebasNeue.variable}`}>
         <CartProvider>
           <div className="flex min-h-screen flex-col">
             <Navbar />

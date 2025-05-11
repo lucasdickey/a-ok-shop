@@ -1,12 +1,27 @@
-# A-OK Store - Custom Shopify Storefront
+# A-OK Shop - Custom Shopify Storefront
 
-A modern, custom Shopify storefront built with Next.js 14, TypeScript, and Tailwind CSS. This project uses the Shopify Storefront GraphQL API to create a seamless shopping experience.
+A modern, custom Shopify storefront for [Apes on Keys](https://www.apesonkeys.com), built with Next.js 14, TypeScript, and Tailwind CSS. This project uses the Shopify Storefront GraphQL API to create a seamless shopping experience for AI-inspired streetwear.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black.svg)](https://vercel.com)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
 [![Shopify](https://img.shields.io/badge/Shopify-API-7AB55C.svg)](https://shopify.dev/docs/api/storefront)
+
+## About Apes on Keys
+
+A-OK Shop is the official merchandise store for Apes on Keys, home of the E/ACC Monkey Theorem:
+
+> **The E/ACC Monkey Theorem** states that if you give an infinite number of AI models an infinite amount of compute, they will eventually generate every possible text, image, video, and piece of code – including all of Shakespeare's works, their various HBO adaptations, and at least 47 different AI-generated musicals where Hamlet raps.
+> 
+> However, they'll also generate an infinite number of hallucinated Shakespeare quotes about cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations of "To yeet or not to yeet." The models will perpetually insist they're unsure about events after their training cutoff date" even when discussing events from the 16th century.
+> 
+> Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can generate nonsense at unprecedented speeds and with unwavering confidence. They'll even add citations to completely imaginary academic papers and insist they're being helpful while doing so.
+>
+> The theorem suggests that somewhere in this infinite digital soup of content, there exists a perfect reproduction of Romeo and Juliet – though it's probably tagged as "not financial advice" and ends with a prompt to like and subscribe.
+>
+> _(Note: This theorem has been reviewed by approximately 2.7 million AI models, each claiming to have a knowledge cutoff date that makes them unable to verify their own existence.)_
+
+Our products are designed for AI enthusiasts, tech professionals, and anyone who appreciates the intersection of technology and humor. We offer high-quality streetwear with designs that capture the essence of modern AI culture - "Nerd streetwear for AI junkies."
 
 ## Features
 
@@ -30,8 +45,8 @@ A modern, custom Shopify storefront built with Next.js 14, TypeScript, and Tailw
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/a-ok-store.git
-cd a-ok-store
+git clone https://github.com/yourusername/a-ok-shop.git
+cd a-ok-shop
 ```
 
 2. Install dependencies:
@@ -127,7 +142,7 @@ After deployment, verify that:
 ## Project Structure
 
 ```
-a-ok-store/
+a-ok-shop/
 ├── app/                  # Next.js App Router
 │   ├── components/       # Reusable components
 │   │   ├── cart/         # Cart-related components
@@ -159,7 +174,16 @@ a-ok-store/
 - [ ] Wishlist functionality
 - [ ] Product reviews
 - [ ] Internationalization support
+- [ ] AI-generated product descriptions that cite non-existent academic papers
+
+## Connect with Apes on Keys
+
+- Website: [apesonkeys.com](https://www.apesonkeys.com)
+- Twitter: [@apesonkeys](https://x.com/apesonkeys)
+- Email: info@a-ok.shop
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+> _Disclaimer: This README has been reviewed by at least 13 AI models, none of which can verify whether they actually wrote it due to their knowledge cutoff dates._

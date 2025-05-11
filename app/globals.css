@@ -12,8 +12,18 @@
   body {
     @apply bg-light text-dark antialiased;
   }
+  
+  .bebas-heading {
+    font-family: var(--font-bebas-neue), sans-serif;
+  }
+  
+  .text-shadow-bold {
+    text-shadow: 0.5px 0.5px 0 #000, -0.5px 0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px -0.5px 0 #000;
+    letter-spacing: 0.05em;
+  }
   h1 {
     @apply text-4xl font-bold md:text-5xl;
+    font-family: var(--font-bebas-neue), sans-serif;
   }
   h2 {
     @apply text-3xl font-bold md:text-4xl;
