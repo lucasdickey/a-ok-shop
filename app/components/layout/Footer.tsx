@@ -48,6 +48,15 @@ export default function Footer() {
                   Find us on X
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="https://github.com/lucasdickey/a-ok-shop"
+                  target="_blank"
+                  className="text-sm hover:text-primary"
+                >
+                  Go ape our shit
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

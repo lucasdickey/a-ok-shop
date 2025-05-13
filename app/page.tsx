@@ -33,7 +33,7 @@ export default async function Home() {
   const imageUrls = imageFilenames.map(filename => `/images/hp-art-grid-collection/${filename}`);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
       {/* Hero Section */}
       <section className="mb-12">
         <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
