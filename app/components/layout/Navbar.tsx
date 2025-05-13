@@ -3,22 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import CartButton from "../cart/CartButton";
+import TextAnimatedLogo from "./TextAnimatedLogo";
 
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-secondary bg-light/80 backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <Image 
-              src="/images/a-ok-o-face.png" 
-              alt="A-OK Logo" 
-              width={48} 
-              height={48} 
-              className="rounded-full"
-            />
-            <span className="text-xl font-bold text-primary font-bebas-neue">a-ok.shop</span>
-          </Link>
+          <TextAnimatedLogo />
           <nav className="hidden md:flex gap-6">
             <Link
               href="/products?category=t-shirts"

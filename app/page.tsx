@@ -2,6 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllProducts } from "@/app/lib/shopify";
 import { siteConfig } from "@/app/config/siteConfig";
+import ImageGrid from "@/app/components/ImageGrid";
+import fs from 'fs';
+import path from 'path';
 
 export default async function Home() {
   // Fetch all products
@@ -17,6 +20,17 @@ export default async function Home() {
     featuredProducts.length === siteConfig.featuredProducts.length
       ? featuredProducts
       : products.slice(0, 3);
+      
+  // Get all image files from the hp-art-grid-collection directory
+  const imageDirectory = path.join(process.cwd(), 'public/images/hp-art-grid-collection');
+  const imageFilenames = fs.readdirSync(imageDirectory)
+    .filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(ext);
+    });
+  
+  // Create full paths for the images
+  const imageUrls = imageFilenames.map(filename => `/images/hp-art-grid-collection/${filename}`);
 
   return (
     <div className="container mx-auto py-8">
@@ -215,6 +229,14 @@ export default async function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Chaos Monkeys Image Grid */}
+      <section className="mb-16">
+        <ImageGrid 
+          images={imageUrls} 
+          title="CHAOS MONKEYS AT WORK" 
+        />
       </section>
     </div>
   );
