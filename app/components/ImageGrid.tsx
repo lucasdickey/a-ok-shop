@@ -30,8 +30,14 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
   const generateBentoLayout = (imgs: string[]) => {
     if (!imgs.length) return [];
     
-    // Limit the number of images to use (to avoid overcrowding)
-    const imagesToUse = [...imgs].slice(0, 12);
+    // Limit the number of images to use based on screen size
+    // This helps ensure we don't overflow our fixed-height container
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
+    
+    // Adjust number of images based on screen size
+    const maxImages = isMobile ? 8 : isTablet ? 10 : 12;
+    const imagesToUse = [...imgs].slice(0, maxImages);
     
     // Assign a size to each image
     return imagesToUse.map((src, index) => {
@@ -150,6 +156,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
           </div>
         ))}
       </div>
+      <div className="bento-red-border"></div>
     </div>
   );
 }
