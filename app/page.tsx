@@ -30,11 +30,11 @@ export default async function Home() {
   let galleryImages = [];
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    console.log(`Fetching gallery images from: ${baseUrl}/api/gallery`);
+    console.log(`Fetching gallery images from: ${baseUrl}/api/local-gallery`);
     
-    const galleryResponse = await fetch(`${baseUrl}/api/gallery`, {
-      cache: 'no-store', // Ensure we get fresh images each time
-      next: { revalidate: 3600 } // Cache for 1 hour as fallback
+    const galleryResponse = await fetch(`${baseUrl}/api/local-gallery`, {
+      cache: 'force-cache', // Use caching to prevent dynamic server usage errors
+      next: { revalidate: 3600 } // Cache for 1 hour
     });
     
     if (galleryResponse.ok) {

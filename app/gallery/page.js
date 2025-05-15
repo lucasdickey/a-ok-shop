@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export default function GalleryPage() {
   const [images, setImages] = useState([]);
@@ -15,7 +16,11 @@ export default function GalleryPage() {
     async function fetchImages() {
       try {
         console.log("Fetching images from API...");
-        const response = await fetch("/api/gallery");
+        // Use the new local-gallery endpoint with cache control
+        const response = await fetch("/api/local-gallery", {
+          cache: 'force-cache',
+          next: { revalidate: 3600 } // Cache for 1 hour
+        });
         console.log("API response status:", response.status);
 
         const data = await response.json();
