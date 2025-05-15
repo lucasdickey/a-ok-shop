@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 // Hardcoded external image for today
 const TODAY_IMAGE = {
@@ -8,46 +6,37 @@ const TODAY_IMAGE = {
   date: "2025-05-14"
 };
 
+// Hardcoded local images (instead of reading from filesystem which doesn't work on Vercel)
+const LOCAL_IMAGES = [
+  {
+    name: "art-grid-1.png",
+    url: "/images/hp-art-grid-collection/art-grid-1.png",
+    source: 'local'
+  },
+  {
+    name: "art-grid-2.png",
+    url: "/images/hp-art-grid-collection/art-grid-2.png",
+    source: 'local'
+  },
+  {
+    name: "art-grid-3.png",
+    url: "/images/hp-art-grid-collection/art-grid-3.png",
+    source: 'local'
+  },
+  {
+    name: "art-grid-4.png",
+    url: "/images/hp-art-grid-collection/art-grid-4.png",
+    source: 'local'
+  }
+];
+
 export async function GET() {
   try {
-    const directoryPath = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      "hp-art-grid-collection"
-    );
-    const files = fs.readdirSync(directoryPath);
+    // Use hardcoded local images instead of reading from filesystem
+    const localImages = LOCAL_IMAGES;
 
-    // Filter for image files only
-    const imageFiles = files.filter((file) => {
-      const ext = path.extname(file).toLowerCase();
-      return [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext);
-    });
-
-    // Create URLs for each image
-    const localImages = imageFiles.map((file) => ({
-      name: file,
-      url: `/images/hp-art-grid-collection/${file}`,
-      source: 'local'
-    }));
-
-    // 2. Add external images - simplified approach
+    // 2. Add external images - simplified approach with error handling
     let externalImages = [];
-    let apiData = null;
-    
-    try {
-      console.log('Fetching from external API: https://self-replicating-art.vercel.app/api/daily');
-      const response = await fetch('https://self-replicating-art.vercel.app/api/daily');
-      
-      if (response.ok) {
-        apiData = await response.json();
-        console.log('External API response:', JSON.stringify(apiData));
-      } else {
-        console.error(`External API returned status ${response.status}`);
-      }
-    } catch (err) {
-      console.error("Error fetching external API:", err.message);
-    }
     
     // Always include today's image, regardless of API response
     externalImages.push({
@@ -59,24 +48,49 @@ export async function GET() {
     
     console.log('Added hardcoded external image:', TODAY_IMAGE.url);
     
-    // Try to add any additional images from the API if available
-    if (apiData && Array.isArray(apiData) && apiData.length > 0) {
-      console.log(`Processing ${apiData.length} items from external API`);
+    // Add a few more hardcoded external images to ensure we have content
+    externalImages.push({
+      name: "2025-05-15",
+      url: "https://self-replicating-art.vercel.app/daily/2025-05-15.png",
+      date: "2025-05-15",
+      source: 'self-replicating-art'
+    });
+    
+    // Try to fetch from external API, but don't rely on it
+    try {
+      console.log('Fetching from external API: https://self-replicating-art.vercel.app/api/daily');
+      const response = await fetch('https://self-replicating-art.vercel.app/api/daily', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        next: { revalidate: 3600 } // Cache for 1 hour
+      });
       
-      // Add any other images from the API (excluding today's which we already added)
-      const additionalImages = apiData
-        .filter(item => item.date !== TODAY_IMAGE.date)
-        .map(item => ({
-          name: item.date || 'Unknown Date',
-          url: `https://self-replicating-art.vercel.app${item.url}`,
-          date: item.date,
-          source: 'self-replicating-art'
-        }));
-      
-      if (additionalImages.length > 0) {
-        console.log(`Adding ${additionalImages.length} additional external images`);
-        externalImages = [...externalImages, ...additionalImages];
+      if (response.ok) {
+        const apiData = await response.json();
+        console.log('External API response received');
+        
+        // Add any other images from the API (excluding ones we already added)
+        if (Array.isArray(apiData) && apiData.length > 0) {
+          const existingDates = externalImages.map(img => img.date);
+          
+          const additionalImages = apiData
+            .filter(item => item.date && !existingDates.includes(item.date))
+            .slice(0, 3) // Limit to 3 additional images
+            .map(item => ({
+              name: item.date || 'Unknown Date',
+              url: `https://self-replicating-art.vercel.app${item.url}`,
+              date: item.date,
+              source: 'self-replicating-art'
+            }));
+          
+          if (additionalImages.length > 0) {
+            console.log(`Adding ${additionalImages.length} additional external images`);
+            externalImages = [...externalImages, ...additionalImages];
+          }
+        }
       }
+    } catch (err) {
+      console.error("Error fetching external API, continuing with hardcoded images:", err.message);
     }
 
     // Combine both image sources

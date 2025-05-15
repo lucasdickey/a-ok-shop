@@ -5,8 +5,15 @@ import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
 
 export default async function Home() {
-  // Fetch all products
-  const products = await getAllProducts();
+  // Fetch all products with error handling
+  let products: Array<any> = [];
+  try {
+    products = await getAllProducts();
+    console.log(`Fetched ${products.length} products successfully`);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    // Continue with empty products array
+  }
 
   // Filter products based on the handles in siteConfig
   const featuredProducts = products.filter((product) =>
@@ -17,20 +24,29 @@ export default async function Home() {
   const productsToShow =
     featuredProducts.length === siteConfig.featuredProducts.length
       ? featuredProducts
-      : products.slice(0, 3);
+      : products.slice(0, Math.min(3, products.length));
       
-  // Fetch gallery images from the API
-  const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/gallery`, {
-    cache: 'no-store' // Ensure we get fresh images each time
-  });
-  
+  // Fetch gallery images from the API with better error handling
   let galleryImages = [];
-  
-  if (galleryResponse.ok) {
-    const galleryData = await galleryResponse.json();
-    galleryImages = galleryData.images || [];
-  } else {
-    console.error('Failed to fetch gallery images for homepage');
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    console.log(`Fetching gallery images from: ${baseUrl}/api/gallery`);
+    
+    const galleryResponse = await fetch(`${baseUrl}/api/gallery`, {
+      cache: 'no-store', // Ensure we get fresh images each time
+      next: { revalidate: 3600 } // Cache for 1 hour as fallback
+    });
+    
+    if (galleryResponse.ok) {
+      const galleryData = await galleryResponse.json();
+      galleryImages = galleryData.images || [];
+      console.log(`Fetched ${galleryImages.length} gallery images`);
+    } else {
+      console.error(`Failed to fetch gallery images: ${galleryResponse.status} ${galleryResponse.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error fetching gallery images:', error);
+    // Continue with empty gallery images
   }
 
   return (
