@@ -38,7 +38,7 @@ export default async function Home() {
       : products.slice(0, Math.min(3, products.length));
       
   // Fetch gallery images from the API with better error handling
-  let galleryImages = [];
+  let galleryImages: any[] = [];
   let hasGalleryImages = false;
   
   try {
@@ -52,25 +52,28 @@ export default async function Home() {
     
     if (galleryResponse.ok) {
       const galleryData = await galleryResponse.json();
-      galleryImages = galleryData.images || [];
       
-      // Validate that we have at least some valid images
-      const validImages = galleryImages.filter((img: any) => {
-        if (typeof img === 'string') return true;
-        return img && img.url && typeof img.url === 'string';
-      });
-      
-      // Log the images to understand what we're working with
-      console.log('Gallery images by source:');
-      const localImgs = validImages.filter((img: any) => img.source === 'local');
-      const externalImgs = validImages.filter((img: any) => img.source === 'self-replicating-art');
-      console.log(`- Local images: ${localImgs.length}`);
-      console.log(`- External images: ${externalImgs.length}`);
-      
-      // Make sure we have the images available for the ImageGrid
-      galleryImages = validImages;
-      hasGalleryImages = validImages.length > 0;
-      console.log(`Fetched ${validImages.length} valid gallery images out of ${galleryImages.length} total`);
+      if (galleryData && galleryData.images && Array.isArray(galleryData.images)) {
+        // Validate that we have at least some valid images
+        const validImages = galleryData.images.filter((img: any) => {
+          if (typeof img === 'string') return true;
+          return img && img.url && typeof img.url === 'string';
+        });
+        
+        // Log the images to understand what we're working with
+        console.log('Gallery images by source:');
+        const localImgs = validImages.filter((img: any) => img.source === 'local');
+        const externalImgs = validImages.filter((img: any) => img.source === 'self-replicating-art');
+        console.log(`- Local images: ${localImgs.length}`);
+        console.log(`- External images: ${externalImgs.length}`);
+        
+        // Make sure we have the images available for the ImageGrid
+        galleryImages = validImages;
+        hasGalleryImages = validImages.length > 0;
+        console.log(`Fetched ${validImages.length} valid gallery images out of ${galleryData.images.length} total`);
+      } else {
+        console.error('Invalid gallery data format:', galleryData);
+      }
     } else {
       console.error(`Failed to fetch gallery images: ${galleryResponse.status} ${galleryResponse.statusText}`);
     }
@@ -279,14 +282,27 @@ export default async function Home() {
       </section>
 
       {/* Chaos Monkeys Image Grid - only render if we have images */}
-      {galleryImages && galleryImages.length > 0 && (
-        <section className="mb-16">
+      <section className="mb-16">
+        <div className="flex justify-center w-full">
+          <Link href="/gallery" className="no-underline hover:no-underline">
+            <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center relative group inline-flex items-center justify-center">
+              <span className="relative z-10">CHAOS MONKEYS AT WORK</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></span>
+              <span className="hidden group-hover:inline-block text-gray-400 opacity-70 ml-1">→</span>
+            </h2>
+          </Link>
+        </div>
+        {galleryImages && galleryImages.length > 0 ? (
           <ImageGrid 
             images={galleryImages} 
             title="CHAOS MONKEYS AT WORK" 
           />
-        </section>
-      )}
+        ) : (
+          <div className="text-center p-8 bg-gray-100 rounded-lg border border-gray-300">
+            <p className="text-gray-600">Image gallery is currently loading or unavailable.</p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

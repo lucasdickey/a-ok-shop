@@ -97,6 +97,7 @@ export async function GET() {
     
     try {
       // Always include hardcoded fallback images to ensure we have content
+      // Use relative URLs for better compatibility with Next.js Image component
       externalImages.push({
         name: TODAY_IMAGE.date,
         url: `https://self-replicating-art.vercel.app${TODAY_IMAGE.url}`,
@@ -108,6 +109,14 @@ export async function GET() {
         name: "2025-05-15",
         url: "https://self-replicating-art.vercel.app/daily/2025-05-15.png",
         date: "2025-05-15",
+        source: "self-replicating-art",
+      });
+      
+      // Add a third hardcoded image for more content
+      externalImages.push({
+        name: "2025-05-13",
+        url: "https://self-replicating-art.vercel.app/daily/2025-05-13.png",
+        date: "2025-05-13",
         source: "self-replicating-art",
       });
       
