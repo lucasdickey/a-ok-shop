@@ -30,6 +30,7 @@ interface BentoCell {
 export default function ImageGrid({ images, title }: ImageGridProps) {
   const [bentoCells, setBentoCells] = useState<BentoCell[]>([]);
   const [layoutSeed, setLayoutSeed] = useState<number>(0);
+  const [hasImages, setHasImages] = useState<boolean>(false);
   const [ref, inView] = useInView({
     triggerOnce: false,
     threshold: 0.1,
@@ -42,7 +43,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
 
   // Generate a new bento box layout
   const generateBentoLayout = (imgs: ImageSource[]) => {
-    if (!imgs.length) return [];
+    if (!imgs || !imgs.length) return [];
     
     // Limit the number of images to use based on screen size
     // This helps ensure we don't overflow our fixed-height container
@@ -92,38 +93,72 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
 
   // Initialize layout when images change or come into view
   useEffect(() => {
-    if (inView && images.length) {
-      const shuffled = [...images].sort(() => Math.random() - 0.5);
-      const newLayout = generateBentoLayout(shuffled);
-      setBentoCells(newLayout);
+    // Check if we have valid images
+    const validImages = images?.filter(img => {
+      if (typeof img === 'string') return true;
+      return !!img?.url; // Make sure image objects have a URL
+    }) || [];
+    
+    // Debug logging to understand what images we're working with
+    console.log('ImageGrid received images:', validImages.length);
+    validImages.forEach((img, index) => {
+      if (index < 5) { // Log just the first few to avoid console spam
+        console.log(`Image ${index}:`, typeof img === 'string' ? img : `${img.source} - ${img.url}`);
+      }
+    });
+    
+    setHasImages(validImages.length > 0);
+    
+    if (inView && validImages.length) {
+      try {
+        const shuffled = [...validImages].sort(() => Math.random() - 0.5);
+        const newLayout = generateBentoLayout(shuffled);
+        console.log('Generated layout with cells:', newLayout.length);
+        setBentoCells(newLayout);
+      } catch (error) {
+        console.error('Error generating image layout:', error);
+        setBentoCells([]);
+      }
     }
   }, [inView, images]);
 
   // Change layout periodically
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || !hasImages) return;
 
     const interval = setInterval(() => {
-      // Change the layout seed to get a new arrangement
-      setLayoutSeed(prev => prev + 1);
-      
-      // Shuffle images and regenerate layout
-      const shuffled = [...images].sort(() => Math.random() - 0.5);
-      const newLayout = generateBentoLayout(shuffled);
-      
-      // Animate the transition
-      setBentoCells(prev => {
-        // Apply the new layout with a slight delay for each cell
-        return newLayout.map((cell, i) => ({
-          ...cell,
-          // Keep the same ID to prevent full remount, but change other properties
-          id: prev[i]?.id || cell.id
-        }));
-      });
+      try {
+        // Change the layout seed to get a new arrangement
+        setLayoutSeed(prev => prev + 1);
+        
+        // Filter out any invalid images
+        const validImages = images?.filter(img => {
+          if (typeof img === 'string') return true;
+          return !!img?.url;
+        }) || [];
+        
+        if (validImages.length === 0) return;
+        
+        // Shuffle images and regenerate layout
+        const shuffled = [...validImages].sort(() => Math.random() - 0.5);
+        const newLayout = generateBentoLayout(shuffled);
+        
+        // Animate the transition
+        setBentoCells(prev => {
+          // Apply the new layout with a slight delay for each cell
+          return newLayout.map((cell, i) => ({
+            ...cell,
+            // Keep the same ID to prevent full remount, but change other properties
+            id: prev[i]?.id || cell.id
+          }));
+        });
+      } catch (error) {
+        console.error('Error updating image layout:', error);
+      }
     }, 5000); // Change layout every 5 seconds
 
     return () => clearInterval(interval);
-  }, [inView, images]);
+  }, [inView, images, hasImages]);
 
   // Get the appropriate CSS classes for each cell size
   const getCellClasses = (size: CellSize) => {
@@ -145,6 +180,11 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
     }
   };
 
+  // Don't render anything if there are no images
+  if (!hasImages || bentoCells.length === 0) {
+    return null;
+  }
+  
   return (
     <div ref={ref} className="w-full">
       <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center">
@@ -167,7 +207,10 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               fill
               className="object-cover hover:scale-110 transition-transform duration-700"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              unoptimized={cell.src.startsWith('https://')} // Skip optimization for external images
+              unoptimized={true} // Skip optimization for all images to ensure external ones load
+              onError={(e) => {
+                console.error(`Failed to load image: ${cell.src}`, e);
+              }}
             />
           </div>
         ))}

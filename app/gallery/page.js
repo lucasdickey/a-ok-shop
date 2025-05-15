@@ -17,14 +17,27 @@ export default function GalleryPage() {
       try {
         console.log("Fetching images from API...");
         // Use the new local-gallery endpoint with cache control
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        
         const response = await fetch("/api/local-gallery", {
           cache: 'force-cache',
-          next: { revalidate: 3600 } // Cache for 1 hour
+          next: { revalidate: 3600 }, // Cache for 1 hour
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         console.log("API response status:", response.status);
 
         const data = await response.json();
-        console.log("API response data:", data);
+        console.log("API response data counts:", data.counts);
+        
+        // Debug the external images specifically
+        const externalImages = data.images?.filter(img => img.source === 'self-replicating-art') || [];
+        console.log(`External images count: ${externalImages.length}`);
+        externalImages.forEach((img, i) => {
+          if (i < 3) console.log(`External image ${i}:`, img.url);
+        });
 
         if (!response.ok) {
           throw new Error(data.error || "Failed to fetch images");
@@ -156,6 +169,11 @@ export default function GalleryPage() {
                     src={image.url}
                     alt={image.name.replace(/\.[^/.]+$/, "").replace(/-/g, " ")}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error(`Failed to load gallery image: ${image.url}`, e);
+                      // Fallback to a placeholder if image fails to load
+                      e.currentTarget.src = "/images/hp-art-grid-collection/a-ok-acc-preso-flat.png";
+                    }}
                   />
                 </div>
                 <div className="p-4 bg-gray-50">

@@ -1,14 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getAllProducts } from "@/app/lib/shopify";
 import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
+
+// Dynamically import the Shopify functionality to avoid webpack issues
+const getProducts = async () => {
+  try {
+    // Dynamic import to avoid circular dependencies
+    const { getAllProducts } = await import("@/app/lib/shopify");
+    return await getAllProducts();
+  } catch (error) {
+    console.error('Error importing or calling getAllProducts:', error);
+    return [];
+  }
+};
 
 export default async function Home() {
   // Fetch all products with error handling
   let products: Array<any> = [];
   try {
-    products = await getAllProducts();
+    products = await getProducts();
     console.log(`Fetched ${products.length} products successfully`);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -28,6 +39,8 @@ export default async function Home() {
       
   // Fetch gallery images from the API with better error handling
   let galleryImages = [];
+  let hasGalleryImages = false;
+  
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     console.log(`Fetching gallery images from: ${baseUrl}/api/local-gallery`);
@@ -40,7 +53,24 @@ export default async function Home() {
     if (galleryResponse.ok) {
       const galleryData = await galleryResponse.json();
       galleryImages = galleryData.images || [];
-      console.log(`Fetched ${galleryImages.length} gallery images`);
+      
+      // Validate that we have at least some valid images
+      const validImages = galleryImages.filter((img: any) => {
+        if (typeof img === 'string') return true;
+        return img && img.url && typeof img.url === 'string';
+      });
+      
+      // Log the images to understand what we're working with
+      console.log('Gallery images by source:');
+      const localImgs = validImages.filter((img: any) => img.source === 'local');
+      const externalImgs = validImages.filter((img: any) => img.source === 'self-replicating-art');
+      console.log(`- Local images: ${localImgs.length}`);
+      console.log(`- External images: ${externalImgs.length}`);
+      
+      // Make sure we have the images available for the ImageGrid
+      galleryImages = validImages;
+      hasGalleryImages = validImages.length > 0;
+      console.log(`Fetched ${validImages.length} valid gallery images out of ${galleryImages.length} total`);
     } else {
       console.error(`Failed to fetch gallery images: ${galleryResponse.status} ${galleryResponse.statusText}`);
     }
@@ -248,13 +278,15 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Chaos Monkeys Image Grid */}
-      <section className="mb-16">
-        <ImageGrid 
-          images={galleryImages} 
-          title="CHAOS MONKEYS AT WORK" 
-        />
-      </section>
+      {/* Chaos Monkeys Image Grid - only render if we have images */}
+      {galleryImages && galleryImages.length > 0 && (
+        <section className="mb-16">
+          <ImageGrid 
+            images={galleryImages} 
+            title="CHAOS MONKEYS AT WORK" 
+          />
+        </section>
+      )}
     </div>
   );
 }
