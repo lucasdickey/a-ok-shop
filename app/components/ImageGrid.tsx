@@ -4,8 +4,17 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 
+interface GalleryImage {
+  url: string;
+  name?: string;
+  source?: string;
+  date?: string;
+}
+
+type ImageSource = string | GalleryImage;
+
 interface ImageGridProps {
-  images: string[];
+  images: ImageSource[];
   title: string;
 }
 
@@ -26,8 +35,13 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
     threshold: 0.1,
   });
 
+  // Helper to get URL from either string or image object
+  const getImageUrl = (img: ImageSource): string => {
+    return typeof img === 'string' ? img : img.url;
+  };
+
   // Generate a new bento box layout
-  const generateBentoLayout = (imgs: string[]) => {
+  const generateBentoLayout = (imgs: ImageSource[]) => {
     if (!imgs.length) return [];
     
     // Limit the number of images to use based on screen size
@@ -40,7 +54,8 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
     const imagesToUse = [...imgs].slice(0, maxImages);
     
     // Assign a size to each image
-    return imagesToUse.map((src, index) => {
+    return imagesToUse.map((img, index) => {
+      const src = getImageUrl(img);
       // Use different probability distributions based on layout seed
       // to create variety in layouts over time
       const random = Math.random() + (layoutSeed * 0.1) % 1;
@@ -152,6 +167,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               fill
               className="object-cover hover:scale-110 transition-transform duration-700"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              unoptimized={cell.src.startsWith('https://')} // Skip optimization for external images
             />
           </div>
         ))}

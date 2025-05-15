@@ -3,8 +3,6 @@ import Image from "next/image";
 import { getAllProducts } from "@/app/lib/shopify";
 import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
-import fs from 'fs';
-import path from 'path';
 
 export default async function Home() {
   // Fetch all products
@@ -21,16 +19,19 @@ export default async function Home() {
       ? featuredProducts
       : products.slice(0, 3);
       
-  // Get all image files from the hp-art-grid-collection directory
-  const imageDirectory = path.join(process.cwd(), 'public/images/hp-art-grid-collection');
-  const imageFilenames = fs.readdirSync(imageDirectory)
-    .filter(file => {
-      const ext = path.extname(file).toLowerCase();
-      return ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(ext);
-    });
+  // Fetch gallery images from the API
+  const galleryResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/gallery`, {
+    cache: 'no-store' // Ensure we get fresh images each time
+  });
   
-  // Create full paths for the images
-  const imageUrls = imageFilenames.map(filename => `/images/hp-art-grid-collection/${filename}`);
+  let galleryImages = [];
+  
+  if (galleryResponse.ok) {
+    const galleryData = await galleryResponse.json();
+    galleryImages = galleryData.images || [];
+  } else {
+    console.error('Failed to fetch gallery images for homepage');
+  }
 
   return (
     <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
@@ -234,7 +235,7 @@ export default async function Home() {
       {/* Chaos Monkeys Image Grid */}
       <section className="mb-16">
         <ImageGrid 
-          images={imageUrls} 
+          images={galleryImages} 
           title="CHAOS MONKEYS AT WORK" 
         />
       </section>
