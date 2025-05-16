@@ -85,8 +85,8 @@ function getLocalImages() {
         source: "local",
       },
       {
-        name: "fratcal-money-tesseract-multi-dimension-vector.png",
-        url: "/images/hp-art-grid-collection/fratcal-money-tesseract-multi-dimension-vector.png",
+        name: "fractal-money-tesseract-multi-dimension-vector.png",
+        url: "/images/hp-art-grid-collection/fractal-money-tesseract-multi-dimension-vector.png",
         source: "local",
       },
       {
