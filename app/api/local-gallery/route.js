@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-// Function to get all images from the directory or JSON file
+// Helper to get local images from JSON or directory
 function getLocalImages() {
   const imageListPath = path.join(
     process.cwd(),
@@ -10,87 +10,74 @@ function getLocalImages() {
     "data",
     "image-list.json"
   );
-
-  // During build time or in production, use the pre-generated JSON file
-  if (
-    process.env.NODE_ENV === "production" ||
-    process.env.NEXT_PHASE === "phase-production-build"
-  ) {
+  if (fs.existsSync(imageListPath)) {
     try {
       const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-      console.log(`Loaded ${imageList.length} images from pre-generated list`);
       return imageList;
     } catch (error) {
       console.error("Error reading pre-generated image list:", error);
       return [];
     }
   }
-
-  // In development, try to read the directory
+  // fallback: try to read from directory (dev only)
   try {
     const publicDir = path.join(process.cwd(), "public");
     const imageDir = path.join(publicDir, "images", "hp-art-grid-collection");
-
-    if (!fs.existsSync(imageDir)) {
-      console.error(`Directory does not exist: ${imageDir}`);
-      // Fallback to JSON file if directory doesn't exist
-      if (fs.existsSync(imageListPath)) {
-        const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-        console.log(
-          `Falling back to ${imageList.length} images from pre-generated list`
-        );
-        return imageList;
-      }
-      return [];
-    }
-
+    if (!fs.existsSync(imageDir)) return [];
     const files = fs.readdirSync(imageDir);
     const imageFiles = files.filter((file) => {
       const ext = path.extname(file).toLowerCase();
       return [".png", ".jpg", ".jpeg", ".webp", ".gif"].includes(ext);
     });
-
-    console.log(`Found ${imageFiles.length} image files in ${imageDir}`);
-
-    const images = imageFiles.map((file) => ({
+    return imageFiles.map((file) => ({
       name: file,
       url: `/images/hp-art-grid-collection/${file}`,
       source: "local",
     }));
+  } catch {
+    return [];
+  }
+}
 
-    return images;
-  } catch (error) {
-    console.error("Error reading local images directory:", error);
-    // Fallback to JSON file if directory read fails
-    if (fs.existsSync(imageListPath)) {
-      try {
-        const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-        console.log(
-          `Falling back to ${imageList.length} images from pre-generated list`
-        );
-        return imageList;
-      } catch (jsonError) {
-        console.error("Error reading fallback JSON file:", jsonError);
+// Helper to fetch external images from self-replicating-art API
+async function getExternalImages() {
+  try {
+    const response = await fetch(
+      "https://self-replicating-art.vercel.app/api/daily",
+      {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        next: { revalidate: 3600 },
       }
-    }
+    );
+    if (!response.ok) return [];
+    const apiData = await response.json();
+    if (!Array.isArray(apiData)) return [];
+    // Map to gallery format
+    return apiData.map((item) => ({
+      name: item.date || "Unknown Date",
+      url: `https://self-replicating-art.vercel.app${item.url}`,
+      date: item.date,
+      source: "self-replicating-art",
+    }));
+  } catch (err) {
+    console.error("Error fetching external images:", err);
     return [];
   }
 }
 
 export async function GET() {
   try {
-    // Get local images only
     const localImages = getLocalImages();
-
-    console.log(`Total images: ${localImages.length}`);
-
-    // Return the results with proper cache headers
+    const externalImages = await getExternalImages();
+    const allImages = [...localImages, ...externalImages];
     const response = NextResponse.json(
       {
-        images: localImages,
+        images: allImages,
         counts: {
           local: localImages.length,
-          total: localImages.length,
+          external: externalImages.length,
+          total: allImages.length,
         },
       },
       {
@@ -100,12 +87,9 @@ export async function GET() {
         },
       }
     );
-
-    // Add CORS headers
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
     response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-
     return response;
   } catch (error) {
     console.error("Error reading gallery directory:", error);
@@ -116,14 +100,12 @@ export async function GET() {
     errorResponse.headers.set("Access-Control-Allow-Origin", "*");
     errorResponse.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
     errorResponse.headers.set("Access-Control-Allow-Headers", "Content-Type");
-
     return errorResponse;
   }
 }
 
-// Handle OPTIONS requests for CORS preflight
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 204 }); // No content
+  const response = new NextResponse(null, { status: 204 });
   response.headers.set("Access-Control-Allow-Origin", "*");
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
