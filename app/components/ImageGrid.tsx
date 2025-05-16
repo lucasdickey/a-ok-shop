@@ -260,13 +260,9 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
                 loading="lazy"
                 crossOrigin="anonymous"
                 onError={(e) => {
-                  console.error(
-                    `Failed to load external image: ${cell.src}`,
-                    e
-                  );
-                  // Fallback to a local image
-                  e.currentTarget.src =
-                    "/images/hp-art-grid-collection/a-ok-acc-preso-flat.png";
+                  console.error(`Failed to load external image: ${cell.src}`);
+                  // Remove the fallback to prevent redundant loading
+                  e.currentTarget.style.display = "none";
                 }}
               />
             ) : (
@@ -279,7 +275,9 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 unoptimized={false}
                 onError={(e) => {
-                  console.error(`Failed to load image: ${cell.src}`, e);
+                  console.error(`Failed to load local image: ${cell.src}`);
+                  // Hide the image on error instead of trying to load a fallback
+                  e.currentTarget.style.display = "none";
                 }}
               />
             )}
