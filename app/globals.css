@@ -293,11 +293,12 @@
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: minmax(150px, auto);
+  grid-template-rows: repeat(3, 1fr); /* Limit grid to 3 rows */
+  grid-auto-rows: 1fr;
   gap: 1rem;
   width: 100%;
   margin: 0 auto;
-  height: 800px; /* Fixed height to prevent layout shifts */
+  height: 600px; /* Fixed height prevents layout shifts */
   overflow-y: hidden; /* Hide overflow content */
   border-bottom: 16px solid #1f1f1f; /* Fat black border at the bottom */
   padding-bottom: 2rem; /* Add some space before the border */
@@ -315,6 +316,11 @@
   height: 16px;
   background-color: #8b1e24; /* Using the same deep red as the t-shirt background */
   margin-top: 16px;
+}
+
+/* Placeholder with fixed height to avoid layout shifts before images load */
+.bento-grid-placeholder {
+  height: 600px;
 }
 
 /* Hover effects for bento cells */
@@ -337,16 +343,26 @@
 @media (max-width: 1024px) {
   .bento-grid {
     grid-template-columns: repeat(3, 1fr);
-    height: 700px; /* Slightly shorter on medium screens */
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    height: 525px; /* Slightly shorter on medium screens */
+  }
+  .bento-grid-placeholder {
+    height: 525px;
   }
 }
 
 @media (max-width: 768px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(120px, auto);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
     gap: 0.75rem;
-    height: 600px; /* Shorter on tablet screens */
+    height: 450px; /* Shorter on tablet screens */
+  }
+
+  .bento-grid-placeholder {
+    height: 450px;
   }
 
   .bento-cell {
@@ -357,9 +373,14 @@
 @media (max-width: 480px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(100px, auto);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
     gap: 0.5rem;
-    height: 500px; /* Even shorter on mobile screens */
+    height: 375px; /* Even shorter on mobile screens */
+  }
+
+  .bento-grid-placeholder {
+    height: 375px;
   }
 
   .bento-cell {
