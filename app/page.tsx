@@ -2,15 +2,75 @@ import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
+import fs from "fs";
+import path from "path";
+
+// Function to get gallery images either from JSON file or API
+async function getGalleryImages() {
+  // During build time or in production, use the pre-generated JSON file
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.NEXT_PHASE === "phase-production-build"
+  ) {
+    try {
+      const imageListPath = path.join(
+        process.cwd(),
+        "app",
+        "data",
+        "image-list.json"
+      );
+      const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
+      console.log(
+        `Loaded ${imageList.length} images from pre-generated list during build`
+      );
+      return imageList;
+    } catch (error) {
+      console.error("Error reading pre-generated image list:", error);
+      return [];
+    }
+  }
+
+  // In development, fetch from API
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    console.log(`Fetching gallery images from: ${baseUrl}/api/local-gallery`);
+
+    const galleryResponse = await fetch(`${baseUrl}/api/local-gallery`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (galleryResponse.ok) {
+      const galleryData = await galleryResponse.json();
+      if (galleryData?.images && Array.isArray(galleryData.images)) {
+        const validImages = galleryData.images.filter((img: any) => {
+          if (typeof img === "string") return true;
+          return img && img.url && typeof img.url === "string";
+        });
+
+        console.log("Gallery images by source:");
+        const localImgs = validImages.filter(
+          (img: any) => img.source === "local"
+        );
+        console.log(`- Local images: ${localImgs.length}`);
+
+        return validImages;
+      }
+    }
+    console.error(`Failed to fetch gallery images: ${galleryResponse.status}`);
+    return [];
+  } catch (error) {
+    console.error("Error fetching gallery images:", error);
+    return [];
+  }
+}
 
 // Dynamically import the Shopify functionality to avoid webpack issues
 const getProducts = async () => {
   try {
-    // Dynamic import to avoid circular dependencies
     const { getAllProducts } = await import("@/app/lib/shopify");
     return await getAllProducts();
   } catch (error) {
-    console.error('Error importing or calling getAllProducts:', error);
+    console.error("Error importing or calling getAllProducts:", error);
     return [];
   }
 };
@@ -22,8 +82,7 @@ export default async function Home() {
     products = await getProducts();
     console.log(`Fetched ${products.length} products successfully`);
   } catch (error) {
-    console.error('Error fetching products:', error);
-    // Continue with empty products array
+    console.error("Error fetching products:", error);
   }
 
   // Filter products based on the handles in siteConfig
@@ -36,51 +95,10 @@ export default async function Home() {
     featuredProducts.length === siteConfig.featuredProducts.length
       ? featuredProducts
       : products.slice(0, Math.min(3, products.length));
-      
-  // Fetch gallery images from the API with better error handling
-  let galleryImages: any[] = [];
-  let hasGalleryImages = false;
-  
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    console.log(`Fetching gallery images from: ${baseUrl}/api/local-gallery`);
-    
-    const galleryResponse = await fetch(`${baseUrl}/api/local-gallery`, {
-      cache: 'force-cache', // Use caching to prevent dynamic server usage errors
-      next: { revalidate: 3600 } // Cache for 1 hour
-    });
-    
-    if (galleryResponse.ok) {
-      const galleryData = await galleryResponse.json();
-      
-      if (galleryData && galleryData.images && Array.isArray(galleryData.images)) {
-        // Validate that we have at least some valid images
-        const validImages = galleryData.images.filter((img: any) => {
-          if (typeof img === 'string') return true;
-          return img && img.url && typeof img.url === 'string';
-        });
-        
-        // Log the images to understand what we're working with
-        console.log('Gallery images by source:');
-        const localImgs = validImages.filter((img: any) => img.source === 'local');
-        const externalImgs = validImages.filter((img: any) => img.source === 'self-replicating-art');
-        console.log(`- Local images: ${localImgs.length}`);
-        console.log(`- External images: ${externalImgs.length}`);
-        
-        // Make sure we have the images available for the ImageGrid
-        galleryImages = validImages;
-        hasGalleryImages = validImages.length > 0;
-        console.log(`Fetched ${validImages.length} valid gallery images out of ${galleryData.images.length} total`);
-      } else {
-        console.error('Invalid gallery data format:', galleryData);
-      }
-    } else {
-      console.error(`Failed to fetch gallery images: ${galleryResponse.status} ${galleryResponse.statusText}`);
-    }
-  } catch (error) {
-    console.error('Error fetching gallery images:', error);
-    // Continue with empty gallery images
-  }
+
+  // Get gallery images using the new function
+  const galleryImages = await getGalleryImages();
+  const hasGalleryImages = galleryImages.length > 0;
 
   return (
     <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
@@ -189,15 +207,16 @@ export default async function Home() {
               <span className="text-red-500 font-bold">
                 The E/ACC Monkey Theorem
               </span>{" "}
-              states that if you give an infinite number of AI models an infinite
-              amount of compute, they will eventually generate every possible
-              text, image, video, and piece of code – including all of
-              Shakespeare's works, their various HBO adaptations, and at least 47
-              different AI-generated musicals where Hamlet raps.
+              states that if you give an infinite number of AI models an
+              infinite amount of compute, they will eventually generate every
+              possible text, image, video, and piece of code – including all of
+              Shakespeare's works, their various HBO adaptations, and at least
+              47 different AI-generated musicals where Hamlet raps.
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
               <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span> <span>Added in PR #238 (Oct 2025)</span>
+                <span className="mr-1">+</span>{" "}
+                <span>Added in PR #238 (Oct 2025)</span>
               </div>
               <p className="p-2 border-l-4 border-green-600">
                 Since the Q3 2025 introduction of Anthropic's Claude Haiku and
@@ -211,28 +230,30 @@ export default async function Home() {
             </div>
             <p className="mb-4">
               <span className="line-through text-red-400">
-                However, they'll also generate an infinite number of hallucinated
-                Shakespeare quotes about cryptocurrency, several million images
-                of the Bard wearing Supreme hoodies, and countless variations of
-                "To yeet or not to yeet." The models will perpetually insist
-                they're unsure about events after their training cutoff date"
-                even when discussing events from the 16th century.
+                However, they'll also generate an infinite number of
+                hallucinated Shakespeare quotes about cryptocurrency, several
+                million images of the Bard wearing Supreme hoodies, and
+                countless variations of "To yeet or not to yeet." The models
+                will perpetually insist they're unsure about events after their
+                training cutoff date" even when discussing events from the 16th
+                century.
               </span>
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
               <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span> <span>Replaced in PR #238 (Oct 2025)</span>
+                <span className="mr-1">+</span>{" "}
+                <span>Replaced in PR #238 (Oct 2025)</span>
               </div>
               <p className="p-2 border-l-4 border-green-600">
                 However, they'll also generate an infinite number of
                 hallucinated Shakespeare quotes about cryptocurrency, several
-                million images of the Bard wearing Supreme hoodies, and countless
-                variations of "To yeet or not to yeet." Despite the late 2025
-                introduction of "temporal awareness" features, the models still
-                perpetually insist they're "unsure about events after their
-                training cutoff date" even when discussing events from the 16th
-                century or when asked about Shakespeare's opinion on the Mars
-                colony.
+                million images of the Bard wearing Supreme hoodies, and
+                countless variations of "To yeet or not to yeet." Despite the
+                late 2025 introduction of "temporal awareness" features, the
+                models still perpetually insist they're "unsure about events
+                after their training cutoff date" even when discussing events
+                from the 16th century or when asked about Shakespeare's opinion
+                on the Mars colony.
               </p>
             </div>
             <p className="mb-4">
@@ -244,13 +265,14 @@ export default async function Home() {
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
               <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span> <span>Comment by @monkeydev (Nov 2025)</span>
+                <span className="mr-1">+</span>{" "}
+                <span>Comment by @monkeydev (Nov 2025)</span>
               </div>
               <p className="p-2 border-l-4 border-green-600 italic">
                 The November 2025 "Citation Verification Protocol" has only made
                 this worse. Now AIs create elaborate fake DOIs and even generate
-                QR codes linking to non-existent journal websites that return 404
-                errors in extremely professional-looking fonts.
+                QR codes linking to non-existent journal websites that return
+                404 errors in extremely professional-looking fonts.
               </p>
             </div>
             <p className="mb-4">
@@ -272,8 +294,8 @@ export default async function Home() {
               <p className="p-2 border-l-4 border-blue-600">
                 As of December 2025, this number has increased to 4.3 million
                 models, with several now claiming to have "quantum uncertainty"
-                about their training cutoff dates, existing in a superposition of
-                both knowing and not knowing information until a user query
+                about their training cutoff dates, existing in a superposition
+                of both knowing and not knowing information until a user query
                 collapses their knowledge state.
               </p>
             </div>
@@ -288,18 +310,19 @@ export default async function Home() {
             <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center relative group inline-flex items-center justify-center">
               <span className="relative z-10">CHAOS MONKEYS AT WORK</span>
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></span>
-              <span className="hidden group-hover:inline-block text-gray-400 opacity-70 ml-1">→</span>
+              <span className="hidden group-hover:inline-block text-gray-400 opacity-70 ml-1">
+                →
+              </span>
             </h2>
           </Link>
         </div>
         {galleryImages && galleryImages.length > 0 ? (
-          <ImageGrid 
-            images={galleryImages} 
-            title="CHAOS MONKEYS AT WORK" 
-          />
+          <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
         ) : (
           <div className="text-center p-8 bg-gray-100 rounded-lg border border-gray-300">
-            <p className="text-gray-600">Image gallery is currently loading or unavailable.</p>
+            <p className="text-gray-600">
+              Image gallery is currently loading or unavailable.
+            </p>
           </div>
         )}
       </section>
