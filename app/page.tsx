@@ -310,7 +310,7 @@ export default async function Home() {
             <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center relative group inline-flex items-center justify-center">
               <span className="relative z-10">CHAOS MONKEYS AT WORK</span>
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></span>
-              <span className="hidden group-hover:inline-block text-gray-400 opacity-70 ml-1">
+              <span className="inline-block ml-1 text-gray-400 opacity-0 group-hover:opacity-70 transition-opacity duration-300">
                 →
               </span>
             </h2>
