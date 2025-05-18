@@ -60,6 +60,7 @@ npm install
 ```
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_API_TOKEN=your-storefront-api-token
+SHOPIFY_ADMIN_API_ACCESS_TOKEN=your-admin-api-token
 ```
 
 4. Start the development server:
@@ -69,6 +70,10 @@ npm run dev
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### One-off Discount Codes
+
+An API route is provided to generate a single-use 25% discount code using the Shopify Admin API. You can call `POST /api/create-discount` from your frontend to retrieve a code and display it to the customer.
 
 ## Deployment
 
@@ -87,7 +92,8 @@ The easiest way to deploy this app is using [Vercel](https://vercel.com):
    - In the Vercel project settings, go to the "Environment Variables" tab
    - Add the following variables:
      - `SHOPIFY_STORE_DOMAIN`: Your Shopify store domain (e.g., your-store.myshopify.com)
-     - `SHOPIFY_STOREFRONT_API_TOKEN`: Your Shopify Storefront API access token
+    - `SHOPIFY_STOREFRONT_API_TOKEN`: Your Shopify Storefront API access token
+    - `SHOPIFY_ADMIN_API_ACCESS_TOKEN`: Shopify Admin API token for creating discounts
 
 4. Deploy the project.
 
@@ -107,6 +113,7 @@ You can also deploy to [Netlify](https://netlify.com):
 3. Add environment variables:
    - In the Netlify site settings, go to "Environment" > "Environment variables"
    - Add the same environment variables as mentioned in the Vercel deployment
+     (`SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_API_TOKEN`, `SHOPIFY_ADMIN_API_ACCESS_TOKEN`)
 
 ### Important Production Considerations
 
