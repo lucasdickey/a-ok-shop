@@ -1,5 +1,5 @@
 {
-  "name": "a-ok-store",
+  "name": "a-ok-shop",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,6 @@
     "prebuild": "node scripts/generate-image-list.js"
   },
   "dependencies": {
-    "chaos-monkey-game": "file:../v0-retro-style-game-concept",
     "clsx": "^2.0.0",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
@@ -29,8 +28,8 @@
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.0.4",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
     "typescript": "^5.3.3"
   }
 }
