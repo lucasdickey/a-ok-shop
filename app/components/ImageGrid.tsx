@@ -68,13 +68,21 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
 
       // Adjust number of images based on screen size
       const maxImages = isMobile ? 8 : isTablet ? 10 : 12;
-      const imagesToUse = [...imgs].slice(0, maxImages);
 
-      // Assign a size to each image and filter out invalid ones
+      // Instead of slicing the input array, we'll randomly select images
+      const selectedIndices = new Set<number>();
       const cells: BentoCell[] = [];
 
-      for (let index = 0; index < imagesToUse.length; index++) {
-        const img = imagesToUse[index];
+      // Keep selecting random images until we have enough or run out of unique options
+      while (cells.length < maxImages && selectedIndices.size < imgs.length) {
+        const randomIndex = Math.floor(Math.random() * imgs.length);
+
+        // Skip if we've already used this index
+        if (selectedIndices.has(randomIndex)) continue;
+
+        const img = imgs[randomIndex];
+        selectedIndices.add(randomIndex);
+
         // Make sure we have a valid image URL
         const src = getImageUrl(img);
         if (!src) continue; // Skip invalid images
@@ -100,7 +108,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
         // Convert some to small if we're past the first few items
         if (
           (size === "large" || size === "wide" || size === "tall") &&
-          index > 5
+          cells.length > 5
         ) {
           // 50% chance to downgrade to small for later items
           if (Math.random() > 0.5) {
@@ -109,7 +117,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
         }
 
         cells.push({
-          id: `${src}-${index}-${layoutSeed}`,
+          id: `${src}-${randomIndex}-${layoutSeed}`,
           src,
           size,
         });

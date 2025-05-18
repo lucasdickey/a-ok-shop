@@ -30,6 +30,12 @@ export default function Navbar() {
             >
               Hats
             </Link>
+            <Link
+              href="/game"
+              className="text-sm font-medium hover:text-primary"
+            >
+              Run, Human, Run!
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">
