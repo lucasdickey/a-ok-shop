@@ -1,20 +1,13 @@
 "use client";
 
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  Component,
-  ErrorInfo,
-  ReactNode,
-} from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 // Error Boundary Component
-class ErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback: React.ReactNode },
   { hasError: boolean }
 > {
-  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
     super(props);
     this.state = { hasError: false };
   }
@@ -23,7 +16,7 @@ class ErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Game Embed Error:", error, errorInfo);
   }
 
