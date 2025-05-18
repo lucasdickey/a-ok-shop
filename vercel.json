@@ -1,0 +1,4 @@
+{
+  "buildCommand": "npm install && npm run build",
+  "installCommand": "mkdir -p node_modules/chaos-monkey-game && cp -r ../v0-retro-style-game-concept/* node_modules/chaos-monkey-game/"
+}
