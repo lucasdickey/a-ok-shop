@@ -4,19 +4,38 @@ import { useEffect, useState } from "react";
 
 export default function GameEmbed() {
   const [gameUrl, setGameUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Set this to your deployed game URL
-    setGameUrl("https://v0-retro-style-game-concept.vercel.app/");
-  }, []);
+    const url = "https://v0-retro-style-game-concept.vercel.app/";
+    setGameUrl(url);
 
-  if (!gameUrl) {
-    return (
-      <div className="w-full max-w-4xl mx-auto bg-[#1E1E1E] rounded-lg overflow-hidden shadow-lg border border-gray-700 p-8 text-center">
-        <p className="text-gray-400">Loading game...</p>
-      </div>
+    // Set a timeout to handle cases where the iframe fails to load
+    const timer = setTimeout(() => {
+      if (isLoading) {
+        setError(
+          "The game is taking longer than expected to load. Please refresh the page or try again later."
+        );
+        setIsLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+    setError(null);
+  };
+
+  const handleIframeError = () => {
+    setError(
+      "Failed to load the game. Please check your internet connection and try again."
     );
-  }
+    setIsLoading(false);
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-[#1E1E1E] rounded-lg overflow-hidden shadow-lg border border-gray-700">
@@ -30,12 +49,28 @@ export default function GameEmbed() {
           chaos_monkey.tsx
         </div>
       </div>
-      <div className="aspect-video w-full">
+      <div className="aspect-video w-full relative">
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#1E1E1E]">
+            <p className="text-gray-400">Loading game...</p>
+          </div>
+        )}
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#1E1E1E] text-center p-4">
+            <p className="text-red-400">{error}</p>
+          </div>
+        )}
         <iframe
           src={gameUrl}
-          className="w-full h-full border-0"
+          className={`w-full h-full border-0 ${
+            isLoading || error ? "opacity-0" : "opacity-100"
+          }`}
+          onLoad={handleIframeLoad}
+          onError={handleIframeError}
+          sandbox="allow-scripts allow-same-origin"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          title="Chaos Monkey Game"
         />
       </div>
     </div>
