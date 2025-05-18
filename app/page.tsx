@@ -185,7 +185,7 @@ export default async function Home() {
       {hasGalleryImages && (
         <section className="mb-16">
           <h2 className="text-2xl font-bold mb-8 text-center">Gallery</h2>
-          <ImageGrid images={galleryImages} />
+          <ImageGrid images={galleryImages} title="Gallery Images" />
         </section>
       )}
 
