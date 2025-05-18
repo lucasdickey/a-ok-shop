@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, ErrorBoundary } from "react";
 
 export default function GameEmbed() {
   const [gameUrl, setGameUrl] = useState("");
