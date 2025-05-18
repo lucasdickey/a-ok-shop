@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-// Helper to get local images from JSON or directory
+// Helper to get local images from JSON and directory and merge them
 function getLocalImages() {
   const imageListPath = path.join(
     process.cwd(),
@@ -10,33 +10,46 @@ function getLocalImages() {
     "data",
     "image-list.json"
   );
+
+  let jsonImages = [];
   if (fs.existsSync(imageListPath)) {
     try {
-      const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-      return imageList;
+      jsonImages = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
     } catch (error) {
       console.error("Error reading pre-generated image list:", error);
-      return [];
     }
   }
-  // fallback: try to read from directory (dev only)
+
+  let dirImages = [];
   try {
     const publicDir = path.join(process.cwd(), "public");
     const imageDir = path.join(publicDir, "images", "hp-art-grid-collection");
-    if (!fs.existsSync(imageDir)) return [];
-    const files = fs.readdirSync(imageDir);
-    const imageFiles = files.filter((file) => {
-      const ext = path.extname(file).toLowerCase();
-      return [".png", ".jpg", ".jpeg", ".webp", ".gif"].includes(ext);
-    });
-    return imageFiles.map((file) => ({
-      name: file,
-      url: `/images/hp-art-grid-collection/${file}`,
-      source: "local",
-    }));
-  } catch {
-    return [];
+    if (fs.existsSync(imageDir)) {
+      const files = fs.readdirSync(imageDir);
+      const imageFiles = files.filter((file) => {
+        const ext = path.extname(file).toLowerCase();
+        return [".png", ".jpg", ".jpeg", ".webp", ".gif"].includes(ext);
+      });
+      dirImages = imageFiles.map((file) => ({
+        name: file,
+        url: `/images/hp-art-grid-collection/${file}`,
+        source: "local",
+      }));
+    }
+  } catch (err) {
+    console.error("Error reading gallery directory:", err);
   }
+
+  // Merge and de-duplicate by file name
+  const seen = new Set();
+  const allImages = [...jsonImages, ...dirImages].filter((img) => {
+    if (!img || !img.name) return false;
+    if (seen.has(img.name)) return false;
+    seen.add(img.name);
+    return true;
+  });
+
+  return allImages;
 }
 
 // Helper to fetch external images from self-replicating-art API
