@@ -1,17 +1,18 @@
 {
   "version": 2,
+  "framework": "nextjs",
+  "regions": ["iad1"],
   "builds": [
     {
-      "src": "next.config.js",
-      "use": "@vercel/static-build"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": ".next" }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "next.config.js"
+      "dest": "/"
     }
-  ],
-  "framework": "nextjs",
-  "regions": ["iad1"]
+  ]
 }
