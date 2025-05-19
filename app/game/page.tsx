@@ -8,12 +8,6 @@ export default function GamePage() {
       <div className="w-full max-w-4xl mx-auto">
         <ChaosMonkey />
       </div>
-
-      <div className="mt-8 text-center">
-        <p className="text-sm text-gray-500">
-          Use arrow keys to move. Collect UBI credits to win!
-        </p>
-      </div>
     </div>
   );
 }
