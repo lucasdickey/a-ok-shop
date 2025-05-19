@@ -139,6 +139,12 @@ After deployment, verify that:
 - The cart functionality operates properly
 - Checkout redirects to Shopify correctly
 
+### Custom 404 Page
+
+The storefront includes a friendly 404 page defined in `app/not-found.tsx`.
+If the Next.js runtime fails entirely, the static `public/404.html` file is
+served as a fallback. Both pages provide a simple link back to the homepage.
+
 ## Project Structure
 
 ```
