@@ -23,3 +23,10 @@ Please do:
 11. Use NextJS for all server-side code.
 12. Use TailwindCSS for styling as much as possible.
 13. Use Shopify's GraphQL APIs for all catalog data access.
+14. Please be very cognization of types and type safety.
+15. Please be very cognization of code quality and maintainability.
+16. Please be very cognization of code security.
+17. Try to touch as few files as possible to accomplish a thing.
+18. Ask before deleting any files.
+19. Ask before deleting any code.
+20. Ask before deleting any dependencies.
