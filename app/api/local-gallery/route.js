@@ -1,6 +1,23 @@
-import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+
+// CORS headers configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400',
+  'Vary': 'Origin',
+  'Content-Type': 'application/json'
+};
+
+// Helper to create response with CORS headers
+const jsonResponse = (data, status = 200) => {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: corsHeaders
+  });
+};
 
 // Helper to get local images from JSON or directory
 function getLocalImages() {
@@ -66,48 +83,52 @@ async function getExternalImages() {
   }
 }
 
+// Set revalidation time (in seconds)
+export const revalidate = 3600; // Revalidate at most every hour
+
 export async function GET() {
   try {
+    console.log('Fetching local images...');
     const localImages = getLocalImages();
+    console.log(`Found ${localImages.length} local images`);
+    
+    console.log('Fetching external images...');
     const externalImages = await getExternalImages();
+    console.log(`Found ${externalImages.length} external images`);
+    
     const allImages = [...localImages, ...externalImages];
-    const response = NextResponse.json(
-      {
-        images: allImages,
-        counts: {
-          local: localImages.length,
-          external: externalImages.length,
-          total: allImages.length,
-        },
+    
+    const responseData = {
+      images: allImages,
+      counts: {
+        local: localImages.length,
+        external: externalImages.length,
+        total: allImages.length,
       },
-      {
-        headers: {
-          "Cache-Control":
-            "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
-        },
-      }
-    );
-    response.headers.set("Access-Control-Allow-Origin", "*");
-    response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-    return response;
+    };
+    
+    console.log(`Returning ${allImages.length} total images`);
+    return jsonResponse(responseData);
   } catch (error) {
-    console.error("Error reading gallery directory:", error);
-    const errorResponse = NextResponse.json(
-      { error: "Failed to load gallery images", message: error.message },
-      { status: 500 }
+    console.error("Error in GET /api/local-gallery:", error);
+    return jsonResponse(
+      { 
+        error: "Failed to load gallery images", 
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
+      500
     );
-    errorResponse.headers.set("Access-Control-Allow-Origin", "*");
-    errorResponse.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-    errorResponse.headers.set("Access-Control-Allow-Headers", "Content-Type");
-    return errorResponse;
   }
 }
 
 export async function OPTIONS() {
-  const response = new NextResponse(null, { status: 204 });
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-  return response;
+  console.log('Handling OPTIONS request');
+  return new Response(null, {
+    status: 204,
+    headers: {
+      ...corsHeaders,
+      'Content-Length': '0'
+    }
+  });
 }

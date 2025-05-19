@@ -1,24 +1,38 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
-// Hardcoded external image for today
-const TODAY_IMAGE = {
-  url: "/daily/2025-05-14.png",
-  date: "2025-05-14",
-};
+// Sample local images (replace with your actual image paths)
+const SAMPLE_LOCAL_IMAGES = [
+  {
+    name: "Sample Image 1",
+    url: "/images/hp-art-grid-collection/image1.jpg",
+    source: "local"
+  },
+  {
+    name: "Sample Image 2",
+    url: "/images/hp-art-grid-collection/image2.jpg",
+    source: "local"
+  }
+];
 
-// This array will be populated at build time in development
-// and used as a fallback in production where fs operations aren't available
-const LOCAL_IMAGES_CACHE = [];
+// Hardcoded external images
+const EXTERNAL_IMAGES = [
+  {
+    name: "2025-05-14",
+    url: "https://self-replicating-art.vercel.app/daily/2025-05-14.png",
+    date: "2025-05-14",
+    source: "self-replicating-art"
+  },
+  {
+    name: "2025-05-15",
+    url: "https://self-replicating-art.vercel.app/daily/2025-05-15.png",
+    date: "2025-05-15",
+    source: "self-replicating-art"
+  }
+];
 
-// Function to get all images from the directory
+// Simple function to get local images
 function getLocalImages() {
-  // In production (Vercel), we can't use fs operations at runtime
-  // So we'll use a hybrid approach - use fs in development, and a pre-generated list in production
-  const isProduction = process.env.NODE_ENV === "production";
-
-  // If we're in production or if we've already cached the images, return the cache
+  return SAMPLE_LOCAL_IMAGES;
   if (isProduction) {
     console.log("Using pre-generated image list for production");
     // Return a list of all images we know exist in the directory
@@ -174,91 +188,33 @@ function getLocalImages() {
 
 export async function GET() {
   try {
-    // Use dynamic local images instead of hardcoded constants
     const localImages = getLocalImages();
-
-    // 2. Add external images - simplified approach with error handling
-    let externalImages = [];
-
-    // Always include today's image, regardless of API response
-    externalImages.push({
-      name: TODAY_IMAGE.date,
-      url: `https://self-replicating-art.vercel.app${TODAY_IMAGE.url}`,
-      date: TODAY_IMAGE.date,
-      source: "self-replicating-art",
-    });
-
-    console.log("Added hardcoded external image:", TODAY_IMAGE.url);
-
-    // Add a few more hardcoded external images to ensure we have content
-    externalImages.push({
-      name: "2025-05-15",
-      url: "https://self-replicating-art.vercel.app/daily/2025-05-15.png",
-      date: "2025-05-15",
-      source: "self-replicating-art",
-    });
-
-    // Try to fetch from external API, but don't rely on it
-    try {
-      console.log(
-        "Fetching from external API: https://self-replicating-art.vercel.app/api/daily"
-      );
-      const response = await fetch(
-        "https://self-replicating-art.vercel.app/api/daily",
-        {
-          method: "GET",
-          headers: { Accept: "application/json" },
-          next: { revalidate: 3600 }, // Cache for 1 hour
-        }
-      );
-
-      if (response.ok) {
-        const apiData = await response.json();
-        console.log("External API response received");
-
-        // Add any other images from the API (excluding ones we already added)
-        if (Array.isArray(apiData) && apiData.length > 0) {
-          const existingDates = externalImages.map((img) => img.date);
-
-          const additionalImages = apiData
-            .filter((item) => item.date && !existingDates.includes(item.date))
-            .map((item) => ({
-              name: item.date || "Unknown Date",
-              url: `https://self-replicating-art.vercel.app${item.url}`,
-              date: item.date,
-              source: "self-replicating-art",
-            }));
-
-          if (additionalImages.length > 0) {
-            console.log(
-              `Adding ${additionalImages.length} additional external images`
-            );
-            externalImages = [...externalImages, ...additionalImages];
-          }
-        }
-      }
-    } catch (err) {
-      console.error(
-        "Error fetching external API, continuing with hardcoded images:",
-        err.message
-      );
-    }
-
-    // Combine both image sources
+    const externalImages = EXTERNAL_IMAGES;
+    
+    console.log(`Found ${localImages.length} local images and ${externalImages.length} external images`);
+    
+    // Combine all images
     const allImages = [...localImages, ...externalImages];
 
-    console.log(
-      `Total images: ${allImages.length} (${localImages.length} local, ${externalImages.length} external)`
+    // Return the combined list with counts
+    return NextResponse.json(
+      {
+        images: allImages,
+        counts: {
+          local: localImages.length,
+          external: externalImages.length,
+          total: allImages.length,
+        },
+      },
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+      }
     );
-    console.log("External images:", JSON.stringify(externalImages));
-
-    // Return the combined results
-    const response = NextResponse.json({
-      images: allImages,
-      counts: {
-        local: localImages.length,
-        external: externalImages.length,
-        total: allImages.length,
       },
     });
     response.headers.set("Access-Control-Allow-Origin", "*");

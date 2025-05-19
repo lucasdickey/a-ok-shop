@@ -2,65 +2,60 @@ import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
-import fs from "fs";
-import path from "path";
-
-// Function to get gallery images from JSON file
-async function getGalleryImages() {
-  try {
-    const imageListPath = path.join(
-      process.cwd(),
-      "app",
-      "data",
-      "image-list.json"
-    );
-    const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-    console.log(
-      `Loaded ${imageList.length} images from pre-generated list during build`
-    );
-    return imageList;
-  } catch (error) {
-    console.error("Error reading pre-generated image list:", error);
-    return [];
-  }
-}
 
 // Simple mock product for fallback
 const mockProduct = {
   id: "fallback-1",
   handle: "fallback-product",
-  title: "Featured Product",
-  description: "Check out our amazing products",
+  title: "A-OK T-Shirt",
+  description: "A comfortable t-shirt for everyday wear",
   priceRange: {
     minVariantPrice: {
       amount: "29.99",
     },
   },
-  images: {
-    edges: [
-      {
-        node: {
-          url: "/placeholder-product.jpg",
-          altText: "Product placeholder",
-        },
+  images: [
+    {
+      url: "/images/placeholder-product.jpg",
+      altText: "A-OK T-Shirt",
+    },
+  ],
+  variants: [
+    {
+      id: "1",
+      title: "Default Title",
+      price: {
+        amount: "29.99",
       },
-    ],
-  },
-  variants: {
-    edges: [
-      {
-        node: {
-          id: "fallback-variant-1",
-          title: "Default Title",
-          price: {
-            amount: "29.99",
-          },
-          availableForSale: true,
-        },
-      },
-    ],
-  },
+      availableForSale: true,
+    },
+  ],
 };
+
+// Function to get gallery images from API
+async function getGalleryImages() {
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+      }/api/local-gallery`,
+      {
+        next: { revalidate: 3600 }, // Revalidate every hour
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch gallery images");
+    }
+
+    const data = await response.json();
+    console.log(`Loaded ${data.counts?.total || 0} images from API`);
+    return data.images || [];
+  } catch (error) {
+    console.error("Error fetching gallery images:", error);
+    return [];
+  }
+}
 
 // Dynamically import the Shopify functionality to avoid webpack issues
 async function getProducts() {
@@ -68,7 +63,7 @@ async function getProducts() {
     const { getAllProducts } = await import("@/app/lib/shopify");
     return await getAllProducts();
   } catch (error) {
-    console.error("Error in getProducts:", error);
+    console.error("Error initializing Shopify client:", error);
     return [];
   }
 }
@@ -98,17 +93,10 @@ export default async function Home() {
 
   // If we couldn't find any featured products, use the first available products
   const productsToShow =
-    featuredProducts.length > 0
-      ? featuredProducts.slice(0, 3)
-      : products.slice(0, Math.min(3, products.length));
+    featuredProducts.length > 0 ? featuredProducts : products.slice(0, 3);
 
-  // Get gallery images using the new function
-  let galleryImages = [];
-  try {
-    galleryImages = await getGalleryImages();
-  } catch (error) {
-    console.error("Error loading gallery images:", error);
-  }
+  // Get gallery images
+  const galleryImages = await getGalleryImages();
   const hasGalleryImages = galleryImages.length > 0;
 
   return (
@@ -142,9 +130,7 @@ export default async function Home() {
 
       {/* Featured Products */}
       <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-8 text-center">
-          Featured Products
-        </h2>
+        <h2 className="text-5xl font-bold mb-8 text-center">Featured Gear</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {productsToShow.map((product) => (
             <div
@@ -183,31 +169,19 @@ export default async function Home() {
 
       {/* Gallery Section */}
       {hasGalleryImages && (
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-8 text-center">Gallery</h2>
-          <ImageGrid images={galleryImages} title="Gallery Images" />
+        <section className="mb-16 px-4">
+          <Link href="/gallery" passHref legacyBehavior>
+            <a className="block">
+              <h2 className="text-5xl font-bold mb-8 text-center bebas-heading hover:opacity-80 transition-opacity">
+                Chaos Monkeys at work
+              </h2>
+            </a>
+          </Link>
+          <div className="max-w-7xl mx-auto">
+            <ImageGrid images={galleryImages} title="Gallery Images" />
+          </div>
         </section>
       )}
-
-      {/* Game Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-8 text-center">Play Our Game</h2>
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <div className="aspect-video w-full relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-gray-400">Loading game...</p>
-            </div>
-            <iframe
-              src="https://v0-retro-style-game-concept.vercel.app/"
-              className="w-full h-full border-0"
-              sandbox="allow-scripts allow-same-origin"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="Chaos Monkey Game"
-            />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

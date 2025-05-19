@@ -1,0 +1,313 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+
+// Local images from the hp-art-grid-collection directory
+const localImages = [
+  {
+    name: "A-OK Acc Preso Flat",
+    url: "/images/hp-art-grid-collection/a-ok-acc-preso-flat.png"
+  },
+  {
+    name: "A-OK SOTA Wheatpaste Photo Realistic",
+    url: "/images/hp-art-grid-collection/a-ok-acc-sota-wheatpaste-photo-realistic.png"
+  },
+  {
+    name: "A-OK Hallucinations",
+    url: "/images/hp-art-grid-collection/a-ok-hallucinations-face.png"
+  },
+  {
+    name: "A-OK SOTA Wheatpaste",
+    url: "/images/hp-art-grid-collection/a-ok-sota-acc-wheatpaste.png"
+  },
+  {
+    name: "Age of Intelligence",
+    url: "/images/hp-art-grid-collection/age-of-intelligence.png"
+  },
+  {
+    name: "Alignment Apes on Keys",
+    url: "/images/hp-art-grid-collection/alignment-apes-on-keys-acc-pole-realistic.png"
+  },
+  {
+    name: "Alignment vs Acceleration",
+    url: "/images/hp-art-grid-collection/alignment-vs-acceleration-apes-on-keys.png"
+  },
+  {
+    name: "Ape in Peace",
+    url: "/images/hp-art-grid-collection/ape-in-peace.png"
+  },
+  {
+    name: "Billboard Graffiti",
+    url: "/images/hp-art-grid-collection/billboard-realistic-grafitti-meta.png"
+  },
+  {
+    name: "Chilling in the Hood Part II",
+    url: "/images/hp-art-grid-collection/chilling-in-the-hood-part-II.png"
+  },
+  {
+    name: "Coffee Shop Apes",
+    url: "/images/hp-art-grid-collection/coffee-shop-apesonkeys-vs-aok-head-on.png"
+  },
+  {
+    name: "Fractal Arrows",
+    url: "/images/hp-art-grid-collection/fractal-arrows.png"
+  },
+  {
+    name: "Fractal Money Tesseract",
+    url: "/images/hp-art-grid-collection/fratcal-money-tesseract-multi-dimension-vector.png"
+  },
+  {
+    name: "Heavily Tagged Pole",
+    url: "/images/hp-art-grid-collection/heavily-tagged-pole.png"
+  },
+  {
+    name: "Human Inertia Text Literal",
+    url: "/images/hp-art-grid-collection/human-inertia-text-literal.png"
+  },
+  {
+    name: "Human Inertia Text Literal 2",
+    url: "/images/hp-art-grid-collection/human-inertia-text-literal-2.png"
+  },
+  {
+    name: "Mixture of Apes",
+    url: "/images/hp-art-grid-collection/mixture-of-apes.png"
+  },
+  {
+    name: "Much Happier Version",
+    url: "/images/hp-art-grid-collection/much-happier-version-than-replicating-ape.png"
+  },
+  {
+    name: "Poster Flat Subway",
+    url: "/images/hp-art-grid-collection/poster-flat-subway.png"
+  },
+  {
+    name: "Reading on Machines",
+    url: "/images/hp-art-grid-collection/reading-on-machines-of.png"
+  },
+  {
+    name: "SOTA OG Apes",
+    url: "/images/hp-art-grid-collection/sota-og-apes-with-thinking-poised-fingers.png"
+  },
+  {
+    name: "SOTA Stark Poster",
+    url: "/images/hp-art-grid-collection/sota-stark-poster.png"
+  },
+  {
+    name: "Stochastic Ape",
+    url: "/images/hp-art-grid-collection/stochastic-ape.png"
+  },
+  {
+    name: "The Future is A-OK (Misaligned)",
+    url: "/images/hp-art-grid-collection/the-future-is-a-ok-misaligned.png"
+  }
+];
+
+// Function to fetch daily images from the external API
+async function fetchDailyImages() {
+  try {
+    const response = await fetch('https://self-replicating-art.vercel.app/api/daily');
+    if (!response.ok) {
+      throw new Error('Failed to fetch daily images');
+    }
+    const data = await response.json();
+    return data.map(img => {
+      // Format the date for display (e.g., "2025-05-18-19-szu2-draft1" -> "May 18, 2025")
+      const dateStr = img.date.split('-').slice(0, 3).join('-');
+      const date = new Date(dateStr);
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      
+      return {
+        ...img,
+        // Use the full URL for the image
+        url: `https://self-replicating-art.vercel.app${img.url}`,
+        isDaily: true,
+        name: `Daily - ${formattedDate}${img.date.includes('draft') ? ' (Draft)' : ''}`,
+        date: date
+      };
+    }).sort((a, b) => b.date - a.date); // Sort by date, newest first
+  } catch (error) {
+    console.error('Error fetching daily images:', error);
+    return [];
+  }
+}
+
+export default function Gallery() {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dailyImages, setDailyImages] = useState([]);
+  const [activeTab, setActiveTab] = useState('all');
+
+  // Combine local and daily images
+  const allImages = [...localImages, ...dailyImages];
+
+  // Filter images based on active tab
+  const filteredImages = activeTab === 'all' 
+    ? allImages 
+    : activeTab === 'local' 
+      ? localImages 
+      : dailyImages;
+
+  // Fetch daily images on component mount
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const [daily] = await Promise.all([
+          fetchDailyImages(),
+          new Promise(resolve => setTimeout(resolve, 500)) // Minimum loading time
+        ]);
+        setDailyImages(daily);
+      } catch (error) {
+        console.error('Error loading images:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadImages();
+  }, []);
+
+  const openModal = (image) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  // Show empty state if no images are available
+  if (filteredImages.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">No images found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Gallery</h1>
+          <p className="text-lg text-gray-600 mb-6">Explore our collection of artwork</p>
+          
+          {/* Tab Navigation */}
+          <div className="flex justify-center space-x-4 mb-8">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'all' 
+                  ? 'bg-black text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              All Images
+            </button>
+            <button
+              onClick={() => setActiveTab('local')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'local' 
+                  ? 'bg-black text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              Local Collection
+            </button>
+            <button
+              onClick={() => setActiveTab('daily')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'daily' 
+                  ? 'bg-black text-white' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              disabled={dailyImages.length === 0}
+            >
+              Daily Images {dailyImages.length > 0 && `(${dailyImages.length})`}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredImages.map((image, index) => (
+            <div 
+              key={index}
+              className="group relative overflow-hidden rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+              onClick={() => openModal(image)}
+            >
+              <div className="aspect-square relative">
+                <Image
+                  src={image.url}
+                  alt={image.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={index < 4}
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-gray-900 truncate">{image.name}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" 
+            onClick={closeModal}
+          >
+            <div 
+              className="relative max-w-4xl w-full max-h-[90vh]" 
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={closeModal}
+                className="absolute -top-10 right-0 text-white hover:text-gray-300 focus:outline-none"
+                aria-label="Close"
+              >
+                <span className="text-2xl">×</span>
+              </button>
+              <div className="bg-white rounded-lg overflow-hidden">
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={selectedImage.url}
+                    alt={selectedImage.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="p-4">
+                  <h2 className="text-xl font-bold text-gray-900">{selectedImage.name}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
