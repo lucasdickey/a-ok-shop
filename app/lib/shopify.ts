@@ -91,7 +91,7 @@ export type ShopifyCollection = {
 };
 
 // Initialize GraphQL client
-const getShopifyClient = () => {
+export const getShopifyClient = () => {
   // Get credentials from environment variables
   const storeDomain = process.env.SHOPIFY_STORE_DOMAIN;
   const token = process.env.SHOPIFY_STOREFRONT_API_TOKEN;

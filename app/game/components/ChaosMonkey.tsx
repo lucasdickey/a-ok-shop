@@ -2,16 +2,52 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function ChaosMonkey() {
+interface GameProps {
+  gameStarted: boolean;
+  setGameStarted: (value: boolean) => void;
+  score: number;
+  setScore: (value: number | ((prev: number) => number)) => void;
+  lives: number;
+  setLives: (value: number) => void;
+  gameOver: boolean;
+  setGameOver: (value: boolean) => void;
+  gameWon: boolean;
+  setGameWon: (value: boolean) => void;
+  discountCode: string;
+  setDiscountCode: (value: string) => void;
+  tokensCollected: number;
+  setTokensCollected: (value: number | ((prev: number) => number)) => void;
+  onGameComplete: (success: boolean) => void;
+}
+
+interface Ape {
+  x: number;
+  y: number;
+  direction: { x: number; y: number };
+}
+
+const ChaosMonkey: React.FC<GameProps> = ({
+  gameStarted,
+  setGameStarted,
+  score,
+  setScore,
+  lives,
+  setLives,
+  gameOver,
+  setGameOver,
+  gameWon,
+  setGameWon,
+  discountCode,
+  setDiscountCode,
+  tokensCollected,
+  setTokensCollected,
+  onGameComplete,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(3);
+  const [discountError, setDiscountError] = useState<string | null>(null);
+  const [isClaimingDiscount, setIsClaimingDiscount] = useState(false);
   const livesRef = useRef(3);
-  const [gameOver, setGameOver] = useState(false);
-  const [gameWon, setGameWon] = useState(false);
-  const [tokensCollected, setTokensCollected] = useState(0);
   const tokensCollectedRef = useRef(0);
-  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     if (!gameStarted) return;
@@ -84,7 +120,7 @@ export default function ChaosMonkey() {
     }
 
     // Initialize game
-    function initGame() {
+    const initGame = () => {
       try {
         // Place player
         player = {
@@ -124,7 +160,7 @@ export default function ChaosMonkey() {
     }
 
     // Place a token at a random empty position
-    function placeToken() {
+    const placeToken = () => {
       try {
         let x: number, y: number;
         let attempts = 0;
@@ -158,7 +194,7 @@ export default function ChaosMonkey() {
     }
 
     // Place a power-up at a random empty position
-    function placePowerUp() {
+    const placePowerUp = () => {
       try {
         let x: number, y: number;
         let attempts = 0;
@@ -192,7 +228,7 @@ export default function ChaosMonkey() {
     }
 
     // Spawn new apes from existing ones or from corners if no apes exist
-    function spawnNewApes(count: number) {
+    const spawnNewApes = (count: number) => {
       try {
         for (let j = 0; j < count; j++) {
           if (apes && apes.length > 0) {
@@ -266,7 +302,7 @@ export default function ChaosMonkey() {
     }
 
     // Helper function to spawn an ape in a corner
-    function spawnApeInCorner() {
+    const spawnApeInCorner = () => {
       try {
         const positions = [
           { x: 2, y: 2 },
@@ -286,7 +322,7 @@ export default function ChaosMonkey() {
     }
 
     // Move apes toward player with improved pursuit AI
-    function moveApes() {
+    const moveApes = () => {
       try {
         if (!apes || !player) return;
 
@@ -444,8 +480,30 @@ export default function ChaosMonkey() {
       }
     }
 
+    // Draw function
+    const draw = () => {
+      try {
+        if (!ctx || !canvas) return;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw maze
+        ctx.fillStyle = "#0000AA";
+        for (let y = 0; y < GRID_HEIGHT; y++) {
+          for (let x = 0; x < GRID_WIDTH; x++) {
+            if (maze[y] && maze[x] && maze[y][x] === 1) {
+              ctx.fillRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error in draw:", error);
+      }
+    };
+
     // Check collisions
-    function checkCollisions() {
+    const checkCollisions = () => {
       try {
         // Ensure player and player.direction are defined
         if (!player || !player.direction) {
@@ -468,10 +526,18 @@ export default function ChaosMonkey() {
           return;
         }
 
-        if (maze[nextY][nextX] === 1) {
+
+        if (maze[nextY] && maze[nextY][nextX] === 1) {
           // Hit a wall, stop moving
           player.direction = { x: 0, y: 0 };
           return;
+        }
+
+
+        // Move player if there's a direction
+        if (player.direction.x !== 0 || player.direction.y !== 0) {
+          player.x = nextX;
+          player.y = nextY;
         }
 
         // Update player position
@@ -491,453 +557,38 @@ export default function ChaosMonkey() {
           for (let i = tokens.length - 1; i >= 0; i--) {
             const token = tokens[i];
             if (token && token.x === player.x && token.y === player.y) {
+              // Token collected
               tokens.splice(i, 1);
-              player.tailLength += 1;
-              tokensCollectedRef.current += 1;
-              const newTokens = tokensCollectedRef.current;
-              setTokensCollected(newTokens);
-              setScore((prevScore) => prevScore + 1);
-
+              setScore(prev => prev + 1);
+              tokensCollectedRef.current++;
+              
               // Check win condition
-              if (newTokens >= TOKENS_TO_WIN) {
+              if (tokensCollectedRef.current >= TOKENS_TO_WIN) {
                 setGameWon(true);
-                // Immediately draw the win screen and stop the game loop
-                drawWinScreen();
-                return; // Exit the function to prevent further processing
-              }
-
-              placeToken();
-            }
-          }
-        }
-
-        // Check power-up collisions
-        if (powerUps) {
-          for (let i = powerUps.length - 1; i >= 0; i--) {
-            const powerUp = powerUps[i];
-            if (
-              powerUp &&
-              powerUp.x === player.x &&
-              powerUp.y === player.y &&
-              powerUp.active
-            ) {
-              powerUps.splice(i, 1);
-              powerMode = true;
-              powerModeTimer = 300; // 10 seconds at 30fps
-              setScore((prevScore) => prevScore + 5);
-              placePowerUp();
-            }
-          }
-        }
-
-        // Check ape collisions
-        if (apes) {
-          for (let i = apes.length - 1; i >= 0; i--) {
-            const ape = apes[i];
-            if (!ape) continue;
-
-            if (ape.x === player.x && ape.y === player.y) {
-              if (powerMode) {
-                // Player eats ape
-                const capturedApeIndex = i;
-                apes.splice(capturedApeIndex, 1);
-                setScore((prevScore) => prevScore + 10);
-
-                // Remove two additional random apes if available
-                if (apes.length >= 2) {
-                  // Get two random indices to remove
-                  const indicesToRemove: number[] = [];
-                  while (
-                    indicesToRemove.length < 2 &&
-                    indicesToRemove.length < apes.length
-                  ) {
-                    const randomIndex = Math.floor(Math.random() * apes.length);
-                    if (!indicesToRemove.includes(randomIndex)) {
-                      indicesToRemove.push(randomIndex);
-                    }
-                  }
-
-                  // Sort indices in descending order to avoid index shifting issues when removing
-                  indicesToRemove.sort((a, b) => b - a);
-
-                  // Remove the apes and add points
-                  indicesToRemove.forEach((index) => {
-                    apes.splice(index, 1);
-                    setScore((prevScore) => prevScore + 5); // Bonus points for additional apes
-                  });
-                }
-
-                // Respawn apes after a delay
-                setTimeout(() => {
-                  // Determine how many apes to respawn (1 + the number of additional apes removed)
-                  const apesToRespawn = Math.min(3, 4 - apes.length); // Ensure we don't exceed 4 total apes
-                  spawnNewApes(apesToRespawn);
-                }, 3000);
-              } else {
-                // Ape catches player - ensure this code runs
-                livesRef.current = Math.max(0, livesRef.current - 1);
-                setLives(livesRef.current);
-                if (livesRef.current === 0) {
-                  setGameOver(true);
-                } else {
-                  // Reset player position but keep the game state
-                  player.x = Math.floor(GRID_WIDTH / 2);
-                  player.y = Math.floor(GRID_HEIGHT / 2);
-                  player.trail = [];
-                  player.direction = { x: 0, y: 0 };
+                setGameOver(true);
+                
+                // Generate discount code when player wins
+                if (!discountCode) {
+                  generateDiscountCode();
                 }
                 return;
               }
+              
+              // Place new token
+              placeToken();
+              
+              // Every 5 tokens, increase tail length and spawn new ape
+              if (tokensCollectedRef.current % 5 === 0) {
+                player.tailLength++;
+                spawnNewApes(1);
+              }
             }
           }
         }
-
-        // Update power mode timer
-        if (powerMode) {
-          powerModeTimer--;
-          if (powerModeTimer <= 0) {
-            powerMode = false;
-          }
-        }
-      } catch (error) {
-        console.error("Error in checkCollisions:", error);
-      }
-    }
-
-    // Draw game
-    function draw() {
-      try {
-        if (!ctx || !canvas) return;
-        // Clear canvas
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw maze
-        ctx.fillStyle = "#0000AA";
-        for (let y = 0; y < GRID_HEIGHT; y++) {
-          for (let x = 0; x < GRID_WIDTH; x++) {
-            if (maze[y] && maze[y][x] === 1) {
-              ctx.fillRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
-            }
-          }
-        }
-
-        // Draw tokens (changed from bananas)
-        ctx.fillStyle = "#FFFF00";
-        if (tokens) {
-          tokens.forEach((token) => {
-            if (!token) return;
-
-            // Draw token as a square with a hole in the middle (like a coin)
-            ctx.fillRect(
-              token.x * GRID_SIZE + GRID_SIZE / 4,
-              token.y * GRID_SIZE + GRID_SIZE / 4,
-              GRID_SIZE / 2,
-              GRID_SIZE / 2
-            );
-            ctx.fillStyle = "#000";
-            ctx.fillRect(
-              token.x * GRID_SIZE + (GRID_SIZE * 3) / 8,
-              token.y * GRID_SIZE + (GRID_SIZE * 3) / 8,
-              GRID_SIZE / 4,
-              GRID_SIZE / 4
-            );
-            ctx.fillStyle = "#FFFF00";
-          });
-        }
-
-        // Draw power-ups
-        ctx.fillStyle = "#00FFFF";
-        if (powerUps) {
-          powerUps.forEach((powerUp) => {
-            if (!powerUp || !powerUp.active) return;
-
-            ctx.beginPath();
-            ctx.arc(
-              powerUp.x * GRID_SIZE + GRID_SIZE / 2,
-              powerUp.y * GRID_SIZE + GRID_SIZE / 2,
-              GRID_SIZE / 3,
-              0,
-              Math.PI * 2
-            );
-            ctx.fill();
-          });
-        }
-
-        // Draw player trail
-        if (player && player.trail) {
-          ctx.fillStyle = "#00FF00";
-          player.trail.forEach((pos, i) => {
-            if (!pos) return;
-
-            const size = GRID_SIZE * (0.5 + (i / player.trail.length) * 0.5);
-            ctx.fillRect(
-              pos.x * GRID_SIZE + (GRID_SIZE - size) / 2,
-              pos.y * GRID_SIZE + (GRID_SIZE - size) / 2,
-              size,
-              size
-            );
-          });
-        }
-
-        // Draw player
-        if (player) {
-          // Draw yellow face
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 2,
-            player.y * GRID_SIZE + GRID_SIZE / 2,
-            GRID_SIZE / 2,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = "#FFD600";
-          ctx.fill();
-          ctx.closePath();
-
-          // Draw eyes
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 3,
-            player.y * GRID_SIZE + GRID_SIZE / 2.5,
-            GRID_SIZE / 10,
-            0,
-            Math.PI * 2
-          );
-          ctx.arc(
-            player.x * GRID_SIZE + (GRID_SIZE * 2) / 3,
-            player.y * GRID_SIZE + GRID_SIZE / 2.5,
-            GRID_SIZE / 10,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = "#222";
-          ctx.fill();
-          ctx.closePath();
-
-          // Draw smile
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 2,
-            player.y * GRID_SIZE + (GRID_SIZE * 2) / 3,
-            GRID_SIZE / 5,
-            0,
-            Math.PI
-          );
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = "#222";
-          ctx.stroke();
-          ctx.closePath();
-        }
-
-        // Draw apes
-        if (apes) {
-          apes.forEach((ape) => {
-            if (!ape) return;
-
-            const baseX = ape.x * GRID_SIZE;
-            const baseY = ape.y * GRID_SIZE;
-
-            // Ape body
-            ctx.fillStyle = powerMode ? "#0000FF" : "#8B4513";
-            ctx.fillRect(baseX, baseY, GRID_SIZE, GRID_SIZE);
-
-            // Ape ears
-            ctx.fillRect(
-              baseX - GRID_SIZE / 6,
-              baseY + GRID_SIZE / 6,
-              GRID_SIZE / 6,
-              GRID_SIZE / 3
-            );
-            ctx.fillRect(
-              baseX + GRID_SIZE,
-              baseY + GRID_SIZE / 6,
-              GRID_SIZE / 6,
-              GRID_SIZE / 3
-            );
-
-            // Ape face
-            ctx.fillStyle = powerMode ? "#0000AA" : "#A0522D";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 4,
-              baseY + GRID_SIZE / 2,
-              GRID_SIZE / 2,
-              GRID_SIZE / 3
-            );
-
-            // Ape eyes
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 4,
-              baseY + GRID_SIZE / 4,
-              GRID_SIZE / 6,
-              GRID_SIZE / 6
-            );
-            ctx.fillRect(
-              baseX + (GRID_SIZE * 3) / 5,
-              baseY + GRID_SIZE / 4,
-              GRID_SIZE / 6,
-              GRID_SIZE / 6
-            );
-
-            // Ape mouth
-            ctx.fillStyle = "#000";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 3,
-              baseY + (GRID_SIZE * 2) / 3,
-              GRID_SIZE / 3,
-              GRID_SIZE / 6
-            );
-          });
-        }
-
-        // Draw score and lives
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "20px monospace";
-        ctx.textAlign = "left";
-        ctx.fillText(
-          `UBI CREDITS: ${tokensCollectedRef.current}/${TOKENS_TO_WIN}`,
-          10,
-          30
-        );
-
-        // Draw lives
-        ctx.fillText(`LIVES: ${livesRef.current}`, canvas.width - 150, 30);
-
-        // Draw power mode timer
-        if (powerMode) {
-          ctx.fillStyle = "#00FFFF";
-          ctx.fillText(
-            `POWER: ${Math.ceil(powerModeTimer / 30)}`,
-            canvas.width / 2 - 80,
-            30
-          );
-        }
-      } catch (error) {
-        console.error("Error in draw:", error);
-      }
-    }
-
-    // Draw win screen
-    function drawWinScreen() {
-      if (!ctx || !canvas) return;
-      // Clear canvas
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Win screen
-      ctx.fillStyle = "#00FF00";
-      ctx.font = "40px monospace";
-      ctx.textAlign = "center";
-      ctx.fillText("YOU WIN!", canvas.width / 2, canvas.height / 2 - 40);
-
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = "20px monospace";
-      ctx.fillText(
-        "PRESS SPACE TO PLAY AGAIN",
-        canvas.width / 2,
-        canvas.height / 2 + 60
-      );
-
-      // Cancel the animation frame to stop the game loop
-      cancelAnimationFrame(gameLoopId);
-    }
-
-    // Game loop
-    function gameLoop() {
-      try {
-        // Global win check: show win screen and stop game if tokensCollectedRef.current >= TOKENS_TO_WIN
-        if (tokensCollectedRef.current >= TOKENS_TO_WIN) {
-          setGameWon(true);
-          drawWinScreen();
-          return;
-        }
-        if (gameWon) {
-          // If game is won, draw win screen and stop the loop
-          drawWinScreen();
-          return;
-        }
-
-        if (gameOver) {
-          cancelAnimationFrame(gameLoopId);
-
-          // Draw game over screen with overlay
-          if (!ctx || !canvas) return;
-          // Semi-transparent black overlay
-          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // GAME OVER text
-          ctx.fillStyle = "#FF3333";
-          ctx.font = "bold 64px monospace";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 80);
-
-          // Button-like prompt
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(
-            canvas.width / 2 - 180,
-            canvas.height / 2 + 40,
-            360,
-            60,
-            20
-          );
-          ctx.fillStyle = "#222";
-          ctx.globalAlpha = 0.95;
-          ctx.fill();
-          ctx.globalAlpha = 1.0;
-          ctx.lineWidth = 4;
-          ctx.strokeStyle = "#FF3333";
-          ctx.stroke();
-          ctx.closePath();
-          ctx.restore();
-
-          ctx.fillStyle = "#FF3333";
-          ctx.font = "bold 28px monospace";
-          ctx.fillText(
-            "PRESS SPACE TO RESTART",
-            canvas.width / 2,
-            canvas.height / 2 + 70
-          );
-
-          return;
-        }
-
-        // Increment frame counter
-        frameCounter++;
-
-        // Only move apes on certain frames based on APE_SPEED
-        if (frameCounter % APE_SPEED === 0) {
-          moveApes();
-        }
-
-        // Only move player on certain frames based on PLAYER_SPEED
-        if (frameCounter % PLAYER_SPEED === 0) {
-          checkCollisions();
-        }
-
-        draw();
-        gameLoopId = requestAnimationFrame(gameLoop);
-      } catch (error) {
-        console.error("Error in game loop:", error);
-        // Attempt to recover by reinitializing the game
-        try {
-          initGame();
-          gameLoopId = requestAnimationFrame(gameLoop);
-        } catch (recoveryError) {
-          console.error(
-            "Failed to recover from game loop error:",
-            recoveryError
-          );
-          setGameOver(true); // Force game over if we can't recover
-        }
-      }
     }
 
     // Handle keyboard input
-    function handleKeyDown(e: KeyboardEvent) {
+    const handleKeyDown = (e: KeyboardEvent) => {
       try {
         if ((gameOver || gameWon) && e.code === "Space") {
           setGameOver(false);
@@ -946,7 +597,10 @@ export default function ChaosMonkey() {
           livesRef.current = 3;
           setLives(3);
           initGame();
-          gameLoopId = requestAnimationFrame(gameLoop);
+          if (gameLoopId) {
+            cancelAnimationFrame(gameLoopId);
+          }
+          gameLoopId = requestAnimationFrame(runGameLoop);
           return;
         }
 
@@ -1009,7 +663,202 @@ export default function ChaosMonkey() {
       cancelAnimationFrame(gameLoopId);
       if (apeIntervalId) clearInterval(apeIntervalId);
     };
-  }, [gameStarted]);
+  }, [gameStarted, discountCode]);
+
+  // Generate discount code when player wins
+  const generateDiscountCode = async () => {
+    try {
+      setIsClaimingDiscount(true);
+      const response = await fetch('/api/discount', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate discount code');
+      }
+      
+      const data = await response.json();
+      setDiscountCode(data.code);
+    } catch (error) {
+      console.error('Error generating discount code:', error);
+      setDiscountError('Failed to generate discount code. Please try again.');
+    } finally {
+      setIsClaimingDiscount(false);
+    }
+  };
+  
+  // Main game effect
+  useEffect(() => {
+    // Only run when game is started
+    if (!gameStarted) return;
+
+    // Get canvas and context
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Game state variables
+    let gameLoopId: number;
+    let apeIntervalId: NodeJS.Timeout;
+    let apes: Array<{ x: number; y: number; direction: { x: number; y: number } }> = [];
+    
+    // Initialize game
+    const initGame = () => {
+      // Reset game state
+      setScore(0);
+      setLives(3);
+      setGameOver(false);
+      setGameWon(false);
+      setTokensCollected(0);
+      
+      // Initialize game objects
+      apes = [];
+      // Add more initialization code here...
+    };
+    
+    // Spawn new apes
+    const spawnNewApes = (count: number) => {
+      for (let i = 0; i < count; i++) {
+        apes.push({
+          x: Math.floor(Math.random() * 20),
+          y: Math.floor(Math.random() * 15),
+          direction: { x: 0, y: 0 }
+        });
+      }
+    };
+    
+    // Draw function
+    const draw = () => {
+      try {
+        if (!ctx || !canvas) return;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw game objects
+        // Example: Draw player, apes, etc.
+        
+      } catch (error) {
+        console.error('Error in draw:', error);
+      }
+    };
+    
+    // Game loop function
+    const runGameLoop = () => {
+      try {
+        if (!ctx || !canvas) return;
+        
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw game state
+        if (gameOver) {
+          // Draw game over screen
+          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // GAME OVER text
+          ctx.fillStyle = "#FF3333";
+          ctx.font = "bold 64px monospace";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(
+            gameWon ? "YOU WIN!" : "GAME OVER", 
+            canvas.width / 2, 
+            canvas.height / 2 - 80
+          );
+
+          // Show discount code if player won
+          if (gameWon) {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "24px monospace";
+            ctx.fillText(
+              `Your 25% OFF code: ${discountCode || 'GENERATING...'}`,
+              canvas.width / 2,
+              canvas.height / 2
+            );
+
+            // Show copy button
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(
+              canvas.width / 2 - 100,
+              canvas.height / 2 + 40,
+              200,
+              50,
+              10
+            );
+            ctx.fillStyle = "#4CAF50";
+            ctx.globalAlpha = 0.9;
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "bold 18px monospace";
+            ctx.fillText(
+              "COPY CODE",
+              canvas.width / 2,
+              canvas.height / 2 + 70
+            );
+          }
+
+          // Restart prompt
+          ctx.fillStyle = "#FF3333";
+          ctx.font = "bold 24px monospace";
+          ctx.fillText(
+            "PRESS SPACE TO RESTART",
+            canvas.width / 2,
+            canvas.height / 2 + 120
+          );
+          
+          return;
+        }
+        
+        // Draw the game
+        draw();
+        
+        // Continue the game loop
+        gameLoopId = requestAnimationFrame(runGameLoop);
+      } catch (error) {
+        console.error("Error in game loop:", error);
+        // Attempt to recover by reinitializing the game
+        try {
+          initGame();
+          gameLoopId = requestAnimationFrame(runGameLoop);
+        } catch (recoveryError) {
+          console.error("Failed to recover from game loop error:", recoveryError);
+          setGameOver(true);
+        }
+      }
+    };
+    
+    // Start the game
+    initGame();
+    gameLoopId = requestAnimationFrame(runGameLoop);
+    
+    // Set up ape spawning interval
+    apeIntervalId = setInterval(() => {
+      if (apes.length < 8) {
+        spawnNewApes(1);
+      }
+    }, 10000);
+    
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(gameLoopId);
+      clearInterval(apeIntervalId);
+    };
+  }, [gameStarted, discountCode, gameOver, gameWon]);
 
   // Keep refs in sync with state for display
   useEffect(() => {
@@ -1045,9 +894,6 @@ export default function ChaosMonkey() {
               </p>
               <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
                 Avoid apes unless you have power-up
-              </p>
-              <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Eating one ape destroys two more!
               </p>
             </div>
             <button
