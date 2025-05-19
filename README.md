@@ -155,8 +155,10 @@ a-ok-shop/
 │   ├── utils/            # Utility functions
 │   ├── globals.css       # Global styles
 │   ├── layout.tsx        # Root layout
+│   ├── not-found.tsx     # 404 page component
 │   └── page.tsx          # Homepage
 ├── public/               # Static assets
+│   └── 404.html          # Static fallback 404 page
 ├── .env.local.example    # Example environment variables
 ├── next.config.js        # Next.js configuration
 ├── package.json          # Project dependencies
@@ -164,6 +166,22 @@ a-ok-shop/
 ├── tailwind.config.js    # Tailwind CSS configuration
 └── tsconfig.json         # TypeScript configuration
 ```
+
+## Error Handling
+
+### 404 Page Implementation
+
+This project includes a robust 404 page implementation:
+
+1. **Next.js App Router 404 Component** (`app/not-found.tsx`)
+   - Handles dynamic 404 errors within the Next.js application
+   - Styled consistently with the rest of the application
+   - Integrated with the app layout (includes header and footer)
+
+2. **Static Fallback 404 Page** (`public/404.html`)
+   - Provides a fallback for edge cases where the Next.js app isn't loaded
+   - Used by hosting services when a route doesn't exist
+   - Simple, lightweight design that doesn't require JavaScript
 
 ## Future Enhancements
 
