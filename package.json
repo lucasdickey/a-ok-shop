@@ -6,7 +6,7 @@
     "dev": "next dev",
     "prebuild": "node scripts/generate-image-list.js",
     "build": "next build",
-    "vercel-build": "node scripts/vercel-build.js",
+    "vercel-build": "node scripts/generate-image-list.js && next build",
     "start": "next start",
     "lint": "next lint"
   },
