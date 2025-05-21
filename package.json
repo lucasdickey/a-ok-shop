@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/generate-image-list.js",
     "build": "next build",
+    "vercel-build": "node scripts/vercel-build.js",
     "start": "next start",
-    "lint": "next lint",
-    "prebuild": "node scripts/generate-image-list.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "clsx": "^2.0.0",

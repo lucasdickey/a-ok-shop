@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "buildCommand": "npm run vercel-build"
+      }
+    }
+  ],
+  "ignoreCommand": "grep -v \"v0-retro-style-game-concept\"",
+  "github": {
+    "enabled": true,
+    "silent": true
+  }
+}
