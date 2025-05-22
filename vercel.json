@@ -9,7 +9,6 @@
       }
     }
   ],
-  "ignoreCommand": "grep -v \"v0-retro-style-game-concept\"",
   "github": {
     "enabled": true,
     "silent": true
