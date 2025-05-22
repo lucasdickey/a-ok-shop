@@ -27,17 +27,19 @@ const nextConfig = {
     
     if (isServer) {
       // Ensure the v0-retro-style-game-concept directory is not processed
-      config.watchOptions = {
-        ...config.watchOptions,
-        ignored: /v0-retro-style-game-concept/,
-      };
+      // config.watchOptions = {
+      //   ...config.watchOptions,
+      //   ignored: /v0-retro-style-game-concept/,
+      // };
     }
     
     return config;
   },
   experimental: {
     // Exclude directories from compilation
-    outputFileTracingExcludes: ['v0-retro-style-game-concept/**'],
+    outputFileTracingExcludes: {
+      '*': ['v0-retro-style-game-concept/**'],
+    },
   },
 };
 
