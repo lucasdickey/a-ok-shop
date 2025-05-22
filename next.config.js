@@ -36,10 +36,6 @@ const nextConfig = {
     return config;
   },
   experimental: {
-    // Exclude directories from compilation
-    outputFileTracingExcludes: {
-      '*': ['v0-retro-style-game-concept/**'],
-    },
   },
 };
 
