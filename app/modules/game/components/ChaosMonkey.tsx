@@ -45,6 +45,8 @@ export default function ChaosMonkey({
   const [internalGameWon, internalSetGameWon] = useState(false);
   const [internalDiscountCode, internalSetDiscountCode] = useState("");
   const [internalTokensCollected, internalSetTokensCollected] = useState(0);
+  const [copiedFeedback, setCopiedFeedback] = useState(false);
+  const [showWinModal, setShowWinModal] = useState(false);
   
   // Use the provided state handlers or fallback to internal ones
   const gameStarted = externalGameStarted !== undefined ? externalGameStarted : internalGameStarted;
@@ -109,7 +111,7 @@ export default function ChaosMonkey({
     const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
     const PLAYER_SPEED = 6; // Player moves every 6 frames (lower = faster)
     const APE_SPEED = 10; // Apes move every 10 frames (lower = faster)
-    const TOKENS_TO_WIN = 25; // Number of tokens needed to win
+    const TOKENS_TO_WIN = 3; // Number of tokens needed to win
     let frameCounter = 0;
 
     // Game state
@@ -800,7 +802,7 @@ export default function ChaosMonkey({
               // Check win condition
               if (newTokens >= TOKENS_TO_WIN) {
                 setGameWon(true);
-                setGameOver(true);
+                setShowWinModal(true);
                 if (onGameComplete) onGameComplete(true);
                 
                 // Generate discount code when player wins
@@ -860,6 +862,7 @@ export default function ChaosMonkey({
         if ((gameOver || gameWon) && e.code === "Space") {
           setGameOver(false);
           setGameWon(false);
+          setShowWinModal(false);
           setScore(0);
           livesRef.current = 3;
           setLives(3);
@@ -912,74 +915,7 @@ export default function ChaosMonkey({
         // Global win check
         if (tokensCollectedRef.current >= TOKENS_TO_WIN) {
           setGameWon(true);
-          
-          // Draw game over/win screen
-          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          
-          // Win message
-          ctx.fillStyle = "#00FF00";
-          ctx.font = "bold 64px monospace";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("YOU WIN!", canvas.width / 2, canvas.height / 2 - 80);
-          
-          // Show discount code if player won
-          if (discountCode) {
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "24px monospace";
-            ctx.fillText(
-              `Your 25% OFF code: ${discountCode}`,
-              canvas.width / 2,
-              canvas.height / 2
-            );
-
-            // Show copy button
-            ctx.save();
-            ctx.beginPath();
-            ctx.roundRect(
-              canvas.width / 2 - 100,
-              canvas.height / 2 + 40,
-              200,
-              50,
-              10
-            );
-            ctx.fillStyle = "#4CAF50";
-            ctx.globalAlpha = 0.9;
-            ctx.fill();
-            ctx.globalAlpha = 1.0;
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.stroke();
-            ctx.closePath();
-            ctx.restore();
-
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bold 18px monospace";
-            ctx.fillText(
-              "COPY CODE",
-              canvas.width / 2,
-              canvas.height / 2 + 70
-            );
-          } else {
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "24px monospace";
-            ctx.fillText(
-              "GENERATING DISCOUNT CODE...",
-              canvas.width / 2,
-              canvas.height / 2
-            );
-          }
-          
-          // Restart prompt
-          ctx.fillStyle = "#00FF00";
-          ctx.font = "20px monospace";
-          ctx.fillText(
-            "PRESS SPACE TO RESTART",
-            canvas.width / 2,
-            canvas.height / 2 + 120
-          );
-          
+          setShowWinModal(true);
           return;
         }
         
@@ -1081,8 +1017,32 @@ export default function ChaosMonkey({
     livesRef.current = lives;
   }, [tokensCollected, lives]);
 
+  // Copy discount code to clipboard
+  const copyToClipboard = async () => {
+    if (!discountCode) return;
+    
+    try {
+      await navigator.clipboard.writeText(discountCode);
+      setCopiedFeedback(true);
+      setTimeout(() => setCopiedFeedback(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy discount code:', err);
+    }
+  };
+
+  // Restart game function
+  const restartGame = () => {
+    setGameOver(false);
+    setGameWon(false);
+    setShowWinModal(false);
+    setScore(0);
+    setLives(3);
+    tokensCollectedRef.current = 0;
+    livesRef.current = 3;
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto">
+    <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto relative">
       {!gameStarted ? (
         <div
           className="flex flex-col items-center justify-center p-8 w-full h-[600px] relative overflow-hidden"
@@ -1103,7 +1063,7 @@ export default function ChaosMonkey({
                 Use arrow keys to move
               </p>
               <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Collect 25 UBI Credits to win—and win a 25% off discount code
+                Collect 3 UBI Credits to win—and win a 25% off discount code
               </p>
               <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
                 Blue power-ups let you eat apes!
@@ -1128,6 +1088,43 @@ export default function ChaosMonkey({
           className="border border-gray-800 bg-black"
           tabIndex={0}
         />
+      )}
+
+      {/* Win Modal */}
+      {showWinModal && (
+        <div className="absolute inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
+          <div className="bg-gray-900 border-2 border-green-500 rounded-lg p-8 text-center max-w-md mx-4">
+            <h2 className="text-4xl font-bold text-green-400 mb-6">YOU WIN!</h2>
+            
+            {discountCode ? (
+              <div className="mb-6">
+                <p className="text-white text-lg mb-4">Your 25% OFF code:</p>
+                <div className="bg-gray-800 border border-gray-600 rounded p-3 mb-4">
+                  <code className="text-yellow-400 text-xl font-mono">{discountCode}</code>
+                </div>
+                <button
+                  onClick={copyToClipboard}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded transition-colors"
+                >
+                  {copiedFeedback ? "COPIED!" : "COPY CODE"}
+                </button>
+              </div>
+            ) : (
+              <div className="mb-6">
+                <p className="text-white text-lg">GENERATING DISCOUNT CODE...</p>
+              </div>
+            )}
+            
+            <button
+              onClick={restartGame}
+              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition-colors"
+            >
+              PLAY AGAIN
+            </button>
+            
+            <p className="text-gray-400 text-sm mt-4">or press SPACE to restart</p>
+          </div>
+        </div>
       )}
     </div>
   );
