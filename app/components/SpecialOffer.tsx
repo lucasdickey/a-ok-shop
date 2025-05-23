@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 
 interface DiscountInfo {
   percentage?: number;
@@ -19,19 +18,23 @@ export default function SpecialOffer() {
   const [error, setError] = useState<string>("");
 
   const generateDiscountCode = async () => {
+    console.log("generateDiscountCode called");
     setIsLoading(true);
     setError("");
 
     try {
+      console.log("Making API call to /api/discount");
       const response = await fetch("/api/discount", {
         method: "POST",
       });
 
+      console.log("Response status:", response.status);
       if (!response.ok) {
         throw new Error(`Failed to generate discount: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("Response data:", data);
 
       if (data.code) {
         setDiscountCode(data.code);
@@ -42,6 +45,7 @@ export default function SpecialOffer() {
           error: data.error,
         });
         setShowCode(true);
+        console.log("Successfully set discount code:", data.code);
       } else {
         throw new Error("No discount code received");
       }
@@ -86,155 +90,151 @@ export default function SpecialOffer() {
     });
   };
 
-  const resetOffer = () => {
-    setShowCode(false);
-    setDiscountCode("");
-    setDiscountInfo({});
-    setError("");
-    setCopied(false);
-  };
-
   return (
-    <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg p-8 my-12 text-center relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 opacity-10">
-        <div className="w-48 h-48 bg-white/20 rounded-full transform rotate-12 translate-x-12 -translate-y-12" />
-      </div>
-
-      <div className="relative z-10">
-        <div
-          className={`transition-all duration-500 ${
-            showCode ? "scale-95 opacity-90" : "scale-100 opacity-100"
-          }`}
-        >
-          <h2 className="text-3xl font-bold mb-4">
-            {showCode
-              ? "🎉 Your Exclusive Discount!"
-              : "Special Offer Just for You!"}
+    <div
+      className="bg-dark border-2 border-dark text-light rounded-lg my-12 relative overflow-hidden"
+      style={{ fontFamily: "var(--font-space-grotesk)" }}
+    >
+      {/* Main Content */}
+      <div className="p-8">
+        {/* Title */}
+        <div className="text-center mb-8">
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-2 text-light tracking-wide"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            {showCode ? "YOUR EXCLUSIVE DISCOUNT" : "SPECIAL OFFER"}
           </h2>
-          <p className="text-xl mb-6">
-            Get {discountInfo.percentage || 25}% off your entire order today
+          <p className="text-xl text-secondary-light font-medium">
+            Get {discountInfo.percentage || 25}% off your entire order
           </p>
         </div>
 
+        {/* Error State */}
         {error && (
-          <div className="bg-red-500/20 border border-red-300 rounded-lg p-4 mb-6 animate-fadeIn">
-            <p className="text-red-100">⚠️ {error}</p>
-            <button
-              onClick={() => setError("")}
-              className="mt-2 text-sm underline hover:no-underline"
-            >
-              Try again
-            </button>
+          <div className="bg-primary-light/20 border border-primary-light rounded-lg p-4 mb-6 animate-fadeIn">
+            <div className="flex items-start gap-3">
+              <span className="text-primary-light text-xl">⚠️</span>
+              <div className="flex-1">
+                <p className="text-light font-medium">{error}</p>
+                <button
+                  onClick={() => setError("")}
+                  className="mt-2 text-sm text-secondary hover:text-light underline transition-colors"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
+        {/* Button State */}
         {!showCode && !error && (
-          <div className="animate-fadeIn">
+          <div className="text-center animate-fadeIn">
             <button
-              onClick={generateDiscountCode}
+              onClick={() => {
+                console.log("Button clicked!");
+                generateDiscountCode();
+              }}
               disabled={isLoading}
               className={`
-                bg-white text-purple-600 px-8 py-3 rounded-full font-semibold text-lg 
-                hover:bg-gray-100 transition-all duration-300 transform hover:scale-105
+                btn btn-primary text-lg px-8 py-4 rounded-lg font-semibold
+                transition-all duration-300 transform hover:scale-105 hover:bg-primary-light
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
                 ${isLoading ? "animate-pulse" : ""}
               `}
             >
               {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-                  Generating...
+                <span className="flex items-center gap-3">
+                  <div className="w-5 h-5 border-2 border-light border-t-transparent rounded-full animate-spin" />
+                  GENERATING...
                 </span>
               ) : (
-                "Get Your Discount Code"
+                "GET YOUR DISCOUNT CODE"
               )}
             </button>
           </div>
         )}
 
+        {/* Success State */}
         {showCode && (
           <div className="animate-slideUp">
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto border border-white/30">
-              <p className="text-sm mb-3 opacity-90">
-                Your exclusive discount code:
-              </p>
+            <div className="bg-secondary rounded-lg p-6 border-2 border-secondary-dark">
+              <div className="text-center mb-6">
+                <p className="text-dark font-medium mb-4">
+                  Your exclusive discount code:
+                </p>
 
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <code className="text-2xl font-mono font-bold bg-white/30 px-4 py-3 rounded border border-white/20 tracking-wider">
-                  {discountCode}
-                </code>
-                <button
-                  onClick={copyToClipboard}
-                  className={`
-                    px-4 py-3 rounded transition-all duration-300 transform hover:scale-105 border border-white/20
-                    ${
-                      copied
-                        ? "bg-green-500/30 text-green-100"
-                        : "bg-white/30 hover:bg-white/40"
-                    }
-                  `}
-                  title="Copy to clipboard"
-                >
-                  {copied ? (
-                    <span className="flex items-center gap-1">
-                      ✓ <span className="text-sm">Copied!</span>
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div
+                    onClick={copyToClipboard}
+                    className="cursor-pointer group flex items-center gap-3 bg-dark text-secondary px-6 py-3 rounded border-2 border-dark hover:bg-dark-light transition-all duration-300"
+                  >
+                    <code
+                      className="text-3xl md:text-4xl font-bold tracking-widest"
+                      style={{ fontFamily: "var(--font-bebas-neue)" }}
+                    >
+                      {discountCode}
+                    </code>
+                    <span className="text-secondary group-hover:text-light transition-colors text-lg">
+                      {copied ? "✓" : "📋"}
                     </span>
-                  ) : (
-                    "📋"
-                  )}
-                </button>
+                  </div>
+                </div>
+
+                {copied && (
+                  <p className="text-primary font-medium text-sm animate-fadeIn">
+                    Copied to clipboard!
+                  </p>
+                )}
               </div>
 
-              {discountInfo.expiresAt && (
-                <p className="text-sm mb-3 opacity-90">
-                  ⏰ Valid until {formatExpirationDate(discountInfo.expiresAt)}
-                </p>
-              )}
+              {/* Discount Details */}
+              <div className="bg-light rounded p-4 mb-4 border border-secondary-dark">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-2xl">💰</span>
+                  <p className="text-dark font-bold text-lg">
+                    SAVE {discountInfo.percentage || 25}% AT CHECKOUT
+                  </p>
+                </div>
 
-              <div className="bg-white/10 rounded-lg p-3 mb-4">
-                <p className="text-sm font-medium">
-                  💰 Apply this code at checkout to save{" "}
-                  {discountInfo.percentage || 25}%!
-                </p>
+                {discountInfo.expiresAt && (
+                  <p className="text-dark-light text-sm text-center">
+                    Valid until {formatExpirationDate(discountInfo.expiresAt)}
+                  </p>
+                )}
               </div>
 
-              {discountInfo.note && (
-                <p className="text-xs opacity-75 italic mb-3 bg-white/10 rounded p-2">
-                  ℹ️ {discountInfo.note}
-                </p>
+              {/* Development Note - only show in development */}
+              {process.env.NODE_ENV === "development" && discountInfo.note && (
+                <div className="bg-primary/10 border border-primary/20 rounded p-3 mb-4">
+                  <p className="text-dark text-sm">
+                    <span className="font-medium">ℹ️ Dev Note:</span>{" "}
+                    {discountInfo.note}
+                  </p>
+                </div>
               )}
 
-              {discountInfo.error && (
-                <p className="text-xs text-yellow-200 mb-3 bg-yellow-500/20 rounded p-2">
-                  ⚠️ Note: {discountInfo.error}
+              {/* Call to Action */}
+              <div className="text-center">
+                <p className="text-dark font-medium mb-3">
+                  Ready to save? Start shopping!
                 </p>
-              )}
-
-              <button
-                onClick={resetOffer}
-                className="text-sm underline hover:no-underline opacity-75 hover:opacity-100 transition-opacity"
-              >
-                Generate another code
-              </button>
+                <a
+                  href="/products"
+                  className="btn btn-primary px-6 py-3 rounded font-semibold hover:bg-primary-light transition-colors"
+                >
+                  SHOP NOW
+                </a>
+              </div>
             </div>
           </div>
         )}
       </div>
 
+      {/* Custom animations */}
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideUp {
           from {
             opacity: 0;
             transform: translateY(20px);
@@ -245,12 +245,23 @@ export default function SpecialOffer() {
           }
         }
 
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
+          animation: fadeIn 0.4s ease-out;
         }
 
         .animate-slideUp {
-          animation: slideUp 0.5s ease-out;
+          animation: slideUp 0.6s ease-out;
         }
       `}</style>
     </div>
