@@ -210,8 +210,8 @@ export default async function Home() {
               states that if you give an infinite number of AI models an
               infinite amount of compute, they will eventually generate every
               possible text, image, video, and piece of code – including all of
-              Shakespeare&apos;s works, their various HBO adaptations, and at least
-              47 different AI-generated musicals where Hamlet raps.
+              Shakespeare&apos;s works, their various HBO adaptations, and at
+              least 47 different AI-generated musicals where Hamlet raps.
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
               <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
@@ -219,13 +219,13 @@ export default async function Home() {
                 <span>Added in PR #238 (Oct 2025)</span>
               </div>
               <p className="p-2 border-l-4 border-green-600">
-                Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku and
-                OpenAI&apos;s GPT-5-mini, we&apos;ve observed a 300% increase in
-                AI-generated Shakespearean sonnets about blockchain technology.
-                The new multimodal capabilities have also resulted in an
-                explosion of AI-generated Renaissance paintings featuring
-                historical figures wearing VR headsets and &quot;Web3 Enthusiast&quot;
-                t-shirts.
+                Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku
+                and OpenAI&apos;s GPT-5-mini, we&apos;ve observed a 300%
+                increase in AI-generated Shakespearean sonnets about blockchain
+                technology. The new multimodal capabilities have also resulted
+                in an explosion of AI-generated Renaissance paintings featuring
+                historical figures wearing VR headsets and &quot;Web3
+                Enthusiast&quot; t-shirts.
               </p>
             </div>
             <p className="mb-4">
@@ -233,10 +233,10 @@ export default async function Home() {
                 However, they&apos;ll also generate an infinite number of
                 hallucinated Shakespeare quotes about cryptocurrency, several
                 million images of the Bard wearing Supreme hoodies, and
-                countless variations of &quot;To yeet or not to yeet.&quot; The models
-                will perpetually insist they&apos;re unsure about events after their
-                training cutoff date&quot; even when discussing events from the 16th
-                century.
+                countless variations of &quot;To yeet or not to yeet.&quot; The
+                models will perpetually insist they&apos;re unsure about events
+                after their training cutoff date&quot; even when discussing
+                events from the 16th century.
               </span>
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
@@ -248,20 +248,21 @@ export default async function Home() {
                 However, they&apos;ll also generate an infinite number of
                 hallucinated Shakespeare quotes about cryptocurrency, several
                 million images of the Bard wearing Supreme hoodies, and
-                countless variations of &quot;To yeet or not to yeet.&quot; Despite the
-                late 2025 introduction of &quot;temporal awareness&quot; features, the
-                models still perpetually insist they&apos;re &quot;unsure about events
-                after their training cutoff date&quot; even when discussing events
-                from the 16th century or when asked about Shakespeare&apos;s opinion
-                on the Mars colony.
+                countless variations of &quot;To yeet or not to yeet.&quot;
+                Despite the late 2025 introduction of &quot;temporal
+                awareness&quot; features, the models still perpetually insist
+                they&apos;re &quot;unsure about events after their training
+                cutoff date&quot; even when discussing events from the 16th
+                century or when asked about Shakespeare&apos;s opinion on the
+                Mars colony.
               </p>
             </div>
             <p className="mb-4">
               Unlike the original typing monkeys who would take eons to produce
               anything coherent, modern AI can generate nonsense at
-              unprecedented speeds and with unwavering confidence. They&apos;ll even
-              add citations to completely imaginary academic papers and insist
-              they&apos;re being helpful while doing so.
+              unprecedented speeds and with unwavering confidence. They&apos;ll
+              even add citations to completely imaginary academic papers and
+              insist they&apos;re being helpful while doing so.
             </p>
             <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
               <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
@@ -269,17 +270,17 @@ export default async function Home() {
                 <span>Comment by @monkeydev (Nov 2025)</span>
               </div>
               <p className="p-2 border-l-4 border-green-600 italic">
-                The November 2025 &quot;Citation Verification Protocol&quot; has only made
-                this worse. Now AIs create elaborate fake DOIs and even generate
-                QR codes linking to non-existent journal websites that return
-                404 errors in extremely professional-looking fonts.
+                The November 2025 &quot;Citation Verification Protocol&quot; has
+                only made this worse. Now AIs create elaborate fake DOIs and
+                even generate QR codes linking to non-existent journal websites
+                that return 404 errors in extremely professional-looking fonts.
               </p>
             </div>
             <p className="mb-4">
               The theorem suggests that somewhere in this infinite digital soup
               of content, there exists a perfect reproduction of Romeo and
-              Juliet – though it&apos;s probably tagged as &quot;not financial advice&quot; and
-              ends with a prompt to like and subscribe.
+              Juliet – though it&apos;s probably tagged as &quot;not financial
+              advice&quot; and ends with a prompt to like and subscribe.
             </p>
             <p className="bg-gray-700/30 p-3 rounded border-l-4 border-gray-500 mb-4">
               <span className="text-gray-400 italic">Note:</span> This theorem
@@ -293,10 +294,10 @@ export default async function Home() {
               </div>
               <p className="p-2 border-l-4 border-blue-600">
                 As of December 2025, this number has increased to 4.3 million
-                models, with several now claiming to have &quot;quantum uncertainty&quot;
-                about their training cutoff dates, existing in a superposition
-                of both knowing and not knowing information until a user query
-                collapses their knowledge state.
+                models, with several now claiming to have &quot;quantum
+                uncertainty&quot; about their training cutoff dates, existing in
+                a superposition of both knowing and not knowing information
+                until a user query collapses their knowledge state.
               </p>
             </div>
           </div>

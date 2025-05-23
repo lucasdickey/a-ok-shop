@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface DiscountInfo {
   percentage?: number;
@@ -16,6 +16,13 @@ export default function SpecialOffer() {
   const [showCode, setShowCode] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string>("");
+
+  // Auto-generate discount code when component mounts (for game wins)
+  useEffect(() => {
+    if (!discountCode && !showCode && !isLoading) {
+      generateDiscountCode();
+    }
+  }, [discountCode, showCode, isLoading]);
 
   const generateDiscountCode = async () => {
     console.log("generateDiscountCode called");
