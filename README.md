@@ -12,9 +12,9 @@ A modern, custom Shopify storefront for [Apes on Keys](https://www.apesonkeys.co
 A-OK Shop is the official merchandise store for Apes on Keys, home of the E/ACC Monkey Theorem:
 
 > **The E/ACC Monkey Theorem** states that if you give an infinite number of AI models an infinite amount of compute, they will eventually generate every possible text, image, video, and piece of code – including all of Shakespeare's works, their various HBO adaptations, and at least 47 different AI-generated musicals where Hamlet raps.
-> 
+>
 > However, they'll also generate an infinite number of hallucinated Shakespeare quotes about cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations of "To yeet or not to yeet." The models will perpetually insist they're unsure about events after their training cutoff date" even when discussing events from the 16th century.
-> 
+>
 > Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can generate nonsense at unprecedented speeds and with unwavering confidence. They'll even add citations to completely imaginary academic papers and insist they're being helpful while doing so.
 >
 > The theorem suggests that somewhere in this infinite digital soup of content, there exists a perfect reproduction of Romeo and Juliet – though it's probably tagged as "not financial advice" and ends with a prompt to like and subscribe.
@@ -32,6 +32,7 @@ Our products are designed for AI enthusiasts, tech professionals, and anyone who
 - 🛒 Shopping cart with local storage persistence
 - 🔍 Product filtering by category and price
 - 📱 Mobile-friendly interface
+- 🎟️ Discount code generation (mock or real via Shopify Admin API)
 
 ## Getting Started
 
@@ -39,6 +40,7 @@ Our products are designed for AI enthusiasts, tech professionals, and anyone who
 
 - Node.js 18.x or later
 - A Shopify store with Storefront API access
+- (Optional) Shopify Admin API access for real discount code generation
 
 ### Installation
 
@@ -58,8 +60,12 @@ npm install
 3. Create a `.env.local` file in the root directory with your Shopify credentials:
 
 ```
+# Required: Shopify Storefront API
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 SHOPIFY_STOREFRONT_API_TOKEN=your-storefront-api-token
+
+# Optional: Shopify Admin API (for real discount codes)
+SHOPIFY_ADMIN_API_TOKEN=your-admin-api-token
 ```
 
 4. Start the development server:
@@ -74,43 +80,29 @@ npm run dev
 
 ### Deploying to Vercel
 
-The easiest way to deploy this app is using [Vercel](https://vercel.com):
+This app is deployed using [Vercel](https://vercel.com):
 
 1. Push your code to a GitHub repository.
 
 2. Import your project to Vercel:
-   - Go to [Vercel](https://vercel.com) and sign in or create an account
+
+   - Go to [Vercel](https://vercel.com) and sign in
    - Click "New Project" and import your GitHub repository
    - Configure the project settings (Next.js should be auto-detected)
 
 3. Add environment variables:
+
    - In the Vercel project settings, go to the "Environment Variables" tab
    - Add the following variables:
      - `SHOPIFY_STORE_DOMAIN`: Your Shopify store domain (e.g., your-store.myshopify.com)
      - `SHOPIFY_STOREFRONT_API_TOKEN`: Your Shopify Storefront API access token
+     - `SHOPIFY_ADMIN_API_TOKEN`: (Optional) Your Shopify Admin API token for real discount codes
 
 4. Deploy the project.
 
-### Deploying to Netlify
-
-You can also deploy to [Netlify](https://netlify.com):
-
-1. Push your code to a GitHub repository.
-
-2. Import your project to Netlify:
-   - Go to [Netlify](https://netlify.com) and sign in or create an account
-   - Click "New site from Git" and select your GitHub repository
-   - Configure the build settings:
-     - Build command: `npm run build`
-     - Publish directory: `.next`
-
-3. Add environment variables:
-   - In the Netlify site settings, go to "Environment" > "Environment variables"
-   - Add the same environment variables as mentioned in the Vercel deployment
-
 ### Important Production Considerations
 
-1. **Secure API Access**: Make sure your Shopify Storefront API token has the appropriate access scopes and is kept secure.
+1. **Secure API Access**: Make sure your Shopify API tokens have the appropriate access scopes and are kept secure.
 
 2. **CORS Configuration**: Ensure your Shopify store allows requests from your production domain.
 
@@ -118,36 +110,57 @@ You can also deploy to [Netlify](https://netlify.com):
 
 4. **Analytics**: Set up analytics to track user behavior and conversion rates.
 
-5. **Testing**: Thoroughly test the checkout process in production to ensure a smooth customer experience.
+5. **Testing**: Thoroughly test the checkout process and discount code generation in production.
 
 ## Connecting to Shopify
 
 ### Getting Your Shopify API Credentials
 
+#### Storefront API (Required)
+
 1. Log in to your Shopify admin panel.
-2. Go to "Apps" > "App and sales channel settings".
-3. Click on "Develop apps for your store".
+2. Go to "Settings" > "Apps and sales channels".
+3. Click on "Develop apps".
 4. Create a new app or select an existing one.
 5. Under "API credentials", create a Storefront API access token.
 6. Copy the token and store domain for use in your environment variables.
 
+#### Admin API (Optional - for discount codes)
+
+1. In the same app, click "Configure Admin API scopes".
+2. Enable these scopes:
+   - `write_discounts` - Required to create discount codes
+   - `read_discounts` - Required to query existing discounts
+3. Click "Save" and then "Install app".
+4. Copy the Admin API access token (you'll only see it once!).
+
 ### Testing the Storefront
 
 After deployment, verify that:
+
 - Products are loading correctly
 - Category filtering works as expected
 - The cart functionality operates properly
 - Checkout redirects to Shopify correctly
+- Discount code generation works (will be mock codes without Admin API)
+
+## Discount Code Feature
+
+The app includes a special offer component that generates discount codes:
+
+- **Without Admin API**: Generates mock discount codes for testing
+- **With Admin API**: Creates real 10% discount codes in your Shopify store
+
+See [SHOPIFY_DISCOUNT_SETUP.md](./SHOPIFY_DISCOUNT_SETUP.md) for detailed setup instructions.
 
 ## Project Structure
 
 ```
 a-ok-shop/
 ├── app/                  # Next.js App Router
-│   ├── components/       # Reusable components
-│   │   ├── cart/         # Cart-related components
-│   │   ├── layout/       # Layout components (Navbar, Footer)
-│   │   ├── product/      # Product-related components
+│   ├── api/              # API routes
+│   │   └── discount/     # Discount code generation endpoint
+│   │   └── product/      # Product-related components
 │   │   └── ui/           # UI components
 │   ├── lib/              # Utility libraries
 │   ├── products/         # Product listing and detail pages
@@ -157,7 +170,6 @@ a-ok-shop/
 │   ├── layout.tsx        # Root layout
 │   └── page.tsx          # Homepage
 ├── public/               # Static assets
-├── .env.local.example    # Example environment variables
 ├── next.config.js        # Next.js configuration
 ├── package.json          # Project dependencies
 ├── postcss.config.js     # PostCSS configuration
@@ -175,6 +187,40 @@ a-ok-shop/
 - [ ] Product reviews
 - [ ] Internationalization support
 - [ ] AI-generated product descriptions that cite non-existent academic papers
+
+## Possible TODO Items
+
+### Medium-term Enhancements
+
+- [ ] **Analytics tracking** - Track how many discount codes are generated and used
+- [ ] **Mobile optimization** - Ensure the discount component looks great on all devices
+- [ ] **Performance improvements** - Add loading states, optimize images, implement caching
+- [ ] **SEO enhancements** - Better meta tags, structured data, social sharing
+- [ ] **Error handling** - Better error states and user feedback throughout the app
+- [ ] **Accessibility improvements** - ARIA labels, keyboard navigation, screen reader support
+
+### Feature Additions
+
+- [ ] **Customer account integration** - Track discount usage per customer
+- [ ] **Product reviews/ratings** - Social proof for products
+- [ ] **Wishlist functionality** - Let customers save items for later
+- [ ] **Email capture** - Newsletter signup with discount incentive
+- [ ] **Social sharing** - Share products on social media with auto-generated discount codes
+- [ ] **Abandoned cart recovery** - Email sequence with discount codes for incomplete purchases
+- [ ] **Loyalty program** - Points system with tiered discount benefits
+- [ ] **Inventory notifications** - Email alerts when out-of-stock items are back
+- [ ] **Product bundles** - Create bundle deals with special pricing
+- [ ] **Gift cards** - Digital gift card purchase and redemption system
+
+### Advanced Features
+
+- [ ] **A/B testing framework** - Test different discount percentages and UI variations
+- [ ] **Personalization engine** - AI-driven product recommendations and custom discount offers
+- [ ] **Multi-currency support** - International customers with local pricing
+- [ ] **Progressive Web App (PWA)** - Offline functionality and app-like experience
+- [ ] **Voice commerce** - Integration with voice assistants for product search
+- [ ] **AR/VR preview** - Virtual try-on for apparel items
+- [ ] **Blockchain integration** - NFT-based products or crypto payment options
 
 ## Connect with Apes on Keys
 
