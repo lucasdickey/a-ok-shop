@@ -168,10 +168,6 @@ export default function SpecialOffer() {
           <div className="animate-slideUp">
             <div className="bg-secondary rounded-lg p-6 border-2 border-secondary-dark">
               <div className="text-center mb-6">
-                <p className="text-dark font-medium mb-4">
-                  Your exclusive discount code for 25% off on A-OK 💰
-                </p>
-
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div
                     onClick={copyToClipboard}
