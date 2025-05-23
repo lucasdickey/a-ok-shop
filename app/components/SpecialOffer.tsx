@@ -169,7 +169,7 @@ export default function SpecialOffer() {
             <div className="bg-secondary rounded-lg p-6 border-2 border-secondary-dark">
               <div className="text-center mb-6">
                 <p className="text-dark font-medium mb-4">
-                  Your exclusive discount code:
+                  Your exclusive discount code for 25% off on A-OK 💰
                 </p>
 
                 <div className="flex items-center justify-center gap-3 mb-4">
@@ -192,22 +192,6 @@ export default function SpecialOffer() {
                 {copied && (
                   <p className="text-primary font-medium text-sm animate-fadeIn">
                     Copied to clipboard!
-                  </p>
-                )}
-              </div>
-
-              {/* Discount Details */}
-              <div className="bg-light rounded p-4 mb-4 border border-secondary-dark">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <span className="text-2xl">💰</span>
-                  <p className="text-dark font-bold text-lg">
-                    SAVE {discountInfo.percentage || 25}% AT CHECKOUT
-                  </p>
-                </div>
-
-                {discountInfo.expiresAt && (
-                  <p className="text-dark-light text-sm text-center">
-                    Valid until {formatExpirationDate(discountInfo.expiresAt)}
                   </p>
                 )}
               </div>

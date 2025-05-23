@@ -56,7 +56,7 @@ export default function GamePage() {
       {/* Discount Offer Overlay */}
       {showDiscountOffer && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-          <div className="relative max-w-2xl w-full">
+          <div className="relative max-w-lg w-full">
             {/* Dismiss Button */}
             <button
               onClick={handleDismissOffer}
