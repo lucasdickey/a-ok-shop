@@ -85,15 +85,15 @@ export default function TestDiscountPage() {
             </label>
             <label className="flex items-center space-x-2">
               <input type="checkbox" className="rounded" />
-              <span>"Generate another code" button works</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" className="rounded" />
               <span>Expiration date displays correctly</span>
             </label>
             <label className="flex items-center space-x-2">
               <input type="checkbox" className="rounded" />
               <span>25% discount percentage shows correctly</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input type="checkbox" className="rounded" />
+              <span>Component integrates properly into game overlay</span>
             </label>
           </div>
         </div>
