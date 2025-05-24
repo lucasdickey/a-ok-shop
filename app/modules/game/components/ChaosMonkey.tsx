@@ -47,22 +47,34 @@ export default function ChaosMonkey({
   const [internalTokensCollected, internalSetTokensCollected] = useState(0);
   const [copiedFeedback, setCopiedFeedback] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
-  
+
   // Use the provided state handlers or fallback to internal ones
-  const gameStarted = externalGameStarted !== undefined ? externalGameStarted : internalGameStarted;
+  const gameStarted =
+    externalGameStarted !== undefined
+      ? externalGameStarted
+      : internalGameStarted;
   const setGameStarted = externalSetGameStarted || internalSetGameStarted;
   const score = externalScore !== undefined ? externalScore : internalScore;
   const setScore = externalSetScore || internalSetScore;
   const lives = externalLives !== undefined ? externalLives : internalLives;
   const setLives = externalSetLives || internalSetLives;
-  const gameOver = externalGameOver !== undefined ? externalGameOver : internalGameOver;
+  const gameOver =
+    externalGameOver !== undefined ? externalGameOver : internalGameOver;
   const setGameOver = externalSetGameOver || internalSetGameOver;
-  const gameWon = externalGameWon !== undefined ? externalGameWon : internalGameWon;
+  const gameWon =
+    externalGameWon !== undefined ? externalGameWon : internalGameWon;
   const setGameWon = externalSetGameWon || internalSetGameWon;
-  const discountCode = externalDiscountCode !== undefined ? externalDiscountCode : internalDiscountCode;
+  const discountCode =
+    externalDiscountCode !== undefined
+      ? externalDiscountCode
+      : internalDiscountCode;
   const setDiscountCode = externalSetDiscountCode || internalSetDiscountCode;
-  const tokensCollected = externalTokensCollected !== undefined ? externalTokensCollected : internalTokensCollected;
-  const setTokensCollected = externalSetTokensCollected || internalSetTokensCollected;
+  const tokensCollected =
+    externalTokensCollected !== undefined
+      ? externalTokensCollected
+      : internalTokensCollected;
+  const setTokensCollected =
+    externalSetTokensCollected || internalSetTokensCollected;
 
   // Refs for tracking values that need to be accessed in event listeners
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,22 +87,22 @@ export default function ChaosMonkey({
   const generateDiscountCode = useCallback(async () => {
     try {
       setIsClaimingDiscount(true);
-      const response = await fetch('/api/discount', {
-        method: 'POST',
+      const response = await fetch("/api/discount", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to generate discount code');
+        throw new Error("Failed to generate discount code");
       }
-      
+
       const data = await response.json();
       setDiscountCode(data.code);
     } catch (error) {
-      console.error('Error generating discount code:', error);
-      setDiscountError('Failed to generate discount code. Please try again.');
+      console.error("Error generating discount code:", error);
+      setDiscountError("Failed to generate discount code. Please try again.");
     } finally {
       setIsClaimingDiscount(false);
     }
@@ -111,7 +123,7 @@ export default function ChaosMonkey({
     const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
     const PLAYER_SPEED = 6; // Player moves every 6 frames (lower = faster)
     const APE_SPEED = 10; // Apes move every 10 frames (lower = faster)
-    const TOKENS_TO_WIN = 3; // Number of tokens needed to win
+    const TOKENS_TO_WIN = 25; // Number of tokens needed to win
     let frameCounter = 0;
 
     // Game state
@@ -205,7 +217,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in initGame:", error);
       }
-    }
+    };
 
     // Place a token at a random empty position - copied directly from original
     const placeToken = () => {
@@ -239,7 +251,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in placeToken:", error);
       }
-    }
+    };
 
     // Place a power-up at a random empty position
     const placePowerUp = () => {
@@ -273,7 +285,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in placePowerUp:", error);
       }
-    }
+    };
 
     // Spawn new apes from existing ones or from corners if no apes exist
     const spawnNewApes = (count: number) => {
@@ -347,7 +359,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in spawnNewApes:", error);
       }
-    }
+    };
 
     // Helper function to spawn an ape in a corner
     const spawnApeInCorner = () => {
@@ -367,7 +379,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in spawnApeInCorner:", error);
       }
-    }
+    };
 
     // Move apes toward player with improved pursuit AI
     const moveApes = () => {
@@ -527,7 +539,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in moveApes:", error);
       }
-    }
+    };
 
     // Draw function
     const draw = () => {
@@ -804,7 +816,7 @@ export default function ChaosMonkey({
                 setGameWon(true);
                 setShowWinModal(true);
                 if (onGameComplete) onGameComplete(true);
-                
+
                 // Generate discount code when player wins
                 if (!discountCode) {
                   generateDiscountCode();
@@ -815,10 +827,10 @@ export default function ChaosMonkey({
 
               // Place a new token
               placeToken();
-              
+
               // Original code doesn't spawn apes on token collection
               // so we shouldn't either - this was an added feature
-              
+
               // Break out of loop (important - only collect one token per frame)
               break;
             }
@@ -854,7 +866,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in checkCollisions:", error);
       }
-    }
+    };
 
     // Handle keyboard input
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -907,7 +919,7 @@ export default function ChaosMonkey({
       } catch (error) {
         console.error("Error in handleKeyDown:", error);
       }
-    }
+    };
 
     // Game loop - copied directly from original working code
     const gameLoop = () => {
@@ -918,7 +930,7 @@ export default function ChaosMonkey({
           setShowWinModal(true);
           return;
         }
-        
+
         // Normal game over
         if (gameOver) {
           // Draw game over screen with overlay
@@ -1020,13 +1032,13 @@ export default function ChaosMonkey({
   // Copy discount code to clipboard
   const copyToClipboard = async () => {
     if (!discountCode) return;
-    
+
     try {
       await navigator.clipboard.writeText(discountCode);
       setCopiedFeedback(true);
       setTimeout(() => setCopiedFeedback(false), 2000);
     } catch (err) {
-      console.error('Failed to copy discount code:', err);
+      console.error("Failed to copy discount code:", err);
     }
   };
 
@@ -1095,12 +1107,14 @@ export default function ChaosMonkey({
         <div className="absolute inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
           <div className="bg-gray-900 border-2 border-green-500 rounded-lg p-8 text-center max-w-md mx-4">
             <h2 className="text-4xl font-bold text-green-400 mb-6">YOU WIN!</h2>
-            
+
             {discountCode ? (
               <div className="mb-6">
                 <p className="text-white text-lg mb-4">Your 25% OFF code:</p>
                 <div className="bg-gray-800 border border-gray-600 rounded p-3 mb-4">
-                  <code className="text-yellow-400 text-xl font-mono">{discountCode}</code>
+                  <code className="text-yellow-400 text-xl font-mono">
+                    {discountCode}
+                  </code>
                 </div>
                 <button
                   onClick={copyToClipboard}
@@ -1111,18 +1125,22 @@ export default function ChaosMonkey({
               </div>
             ) : (
               <div className="mb-6">
-                <p className="text-white text-lg">GENERATING DISCOUNT CODE...</p>
+                <p className="text-white text-lg">
+                  GENERATING DISCOUNT CODE...
+                </p>
               </div>
             )}
-            
+
             <button
               onClick={restartGame}
               className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition-colors"
             >
               PLAY AGAIN
             </button>
-            
-            <p className="text-gray-400 text-sm mt-4">or press SPACE to restart</p>
+
+            <p className="text-gray-400 text-sm mt-4">
+              or press SPACE to restart
+            </p>
           </div>
         </div>
       )}
