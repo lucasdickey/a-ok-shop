@@ -123,7 +123,13 @@ export default function ChaosMonkey({
     const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
     const PLAYER_SPEED = 6; // Player moves every 6 frames (lower = faster)
     const APE_SPEED = 10; // Apes move every 10 frames (lower = faster)
-    const TOKENS_TO_WIN = 25; // Number of tokens needed to win
+    // Set tokens needed to win based on environment - 3 for localhost:3*, 25 for production
+    const TOKENS_TO_WIN =
+      typeof window !== "undefined" &&
+      window.location.hostname === "localhost" &&
+      window.location.port.startsWith("3")
+        ? 3
+        : 25;
     let frameCounter = 0;
 
     // Game state
@@ -924,13 +930,6 @@ export default function ChaosMonkey({
     // Game loop - copied directly from original working code
     const gameLoop = () => {
       try {
-        // Global win check
-        if (tokensCollectedRef.current >= TOKENS_TO_WIN) {
-          setGameWon(true);
-          setShowWinModal(true);
-          return;
-        }
-
         // Normal game over
         if (gameOver) {
           // Draw game over screen with overlay
@@ -1029,6 +1028,20 @@ export default function ChaosMonkey({
     livesRef.current = lives;
   }, [tokensCollected, lives]);
 
+  // Prevent body scroll when game modal is active
+  useEffect(() => {
+    if (gameStarted) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [gameStarted]);
+
   // Copy discount code to clipboard
   const copyToClipboard = async () => {
     if (!discountCode) return;
@@ -1054,57 +1067,82 @@ export default function ChaosMonkey({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto relative">
-      {!gameStarted ? (
-        <div
-          className="flex flex-col items-center justify-center p-8 w-full h-[600px] relative overflow-hidden"
-          style={{
-            backgroundImage: "url('/game/a-ok-8bit-retro.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Overlay for readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-60 z-0" />
-          <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-5xl mb-24 text-center font-bold text-white drop-shadow-lg">
-              RUN, HUMAN, RUN!
-            </h2>
-            <div className="mb-8 text-center text-white drop-shadow-lg font-bold">
-              <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Use arrow keys to move
-              </p>
-              <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Collect 3 UBI Credits to win—and win a 25% off discount code
-              </p>
-              <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Blue power-ups let you eat apes!
-              </p>
-              <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                Avoid apes unless you have power-up
-              </p>
+    <>
+      {/* Game Start Screen */}
+      {!gameStarted && (
+        <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto relative">
+          <div
+            className="flex flex-col items-center justify-center p-8 w-full h-[600px] relative overflow-hidden"
+            style={{
+              backgroundImage: "url('/game/a-ok-8bit-retro.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {/* Overlay for readability */}
+            <div className="absolute inset-0 bg-black bg-opacity-60 z-0" />
+            <div className="relative z-10 flex flex-col items-center">
+              <h2 className="text-5xl mb-24 text-center font-bold text-white drop-shadow-lg">
+                RUN, HUMAN, RUN!
+              </h2>
+              <div className="mb-8 text-center text-white drop-shadow-lg font-bold">
+                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
+                  Use arrow keys to move
+                </p>
+                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
+                  Collect 3 UBI Credits to win—and win a 25% off discount code
+                </p>
+                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
+                  Blue power-ups let you eat apes!
+                </p>
+                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
+                  Avoid apes unless you have power-up
+                </p>
+              </div>
+              <button
+                onClick={() => setGameStarted(true)}
+                className="px-8 py-4 mt-16 bg-green-500 text-white font-bold rounded shadow-lg"
+              >
+                START GAME
+              </button>
             </div>
-            <button
-              onClick={() => setGameStarted(true)}
-              className="px-8 py-4 mt-16 bg-green-500 text-white font-bold rounded shadow-lg"
-            >
-              START GAME
-            </button>
           </div>
         </div>
-      ) : (
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={600}
-          className="border border-gray-800 bg-black"
-          tabIndex={0}
-        />
+      )}
+
+      {/* Game Modal */}
+      {gameStarted && (
+        <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-40">
+          <div className="relative flex items-center justify-center w-full h-full">
+            {/* Close button */}
+            <button
+              onClick={() => setGameStarted(false)}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl font-bold z-50 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
+              title="Close Game"
+            >
+              ×
+            </button>
+
+            <canvas
+              ref={canvasRef}
+              width={800}
+              height={600}
+              className="border border-gray-800 bg-black"
+              style={{
+                maxWidth: "min(100vw - 2rem, 800px)",
+                maxHeight: "min(100vh - 2rem, 600px)",
+                width: "auto",
+                height: "auto",
+              }}
+              tabIndex={0}
+            />
+          </div>
+        </div>
       )}
 
       {/* Win Modal */}
       {showWinModal && (
-        <div className="absolute inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
           <div className="bg-gray-900 border-2 border-green-500 rounded-lg p-8 text-center max-w-md mx-4">
             <h2 className="text-4xl font-bold text-green-400 mb-6">YOU WIN!</h2>
 
@@ -1144,6 +1182,6 @@ export default function ChaosMonkey({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
