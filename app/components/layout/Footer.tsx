@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaYoutube, FaSpotify, FaGithub } from 'react-icons/fa';
+import { FaYoutube, FaSpotify, FaGithub, FaSoundcloud } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -79,6 +79,15 @@ export default function Footer() {
                   className="text-sm hover:text-primary flex items-center"
                 >
                   <FaGithub className="mr-2 h-5 w-5" /> Go ape our shit
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://soundcloud.com/lucasdickey"
+                  target="_blank"
+                  className="text-sm hover:text-primary flex items-center"
+                >
+                  <FaSoundcloud className="mr-2 h-5 w-5" /> Music To Vibe To
                 </Link>
               </li>
             </ul>
