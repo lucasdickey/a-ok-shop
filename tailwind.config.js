@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'bebas-neue': ['var(--font-bebas-neue)'],
+        'space-grotesk': ['Space Grotesk', 'sans-serif'],
       },
       colors: {
         primary: {

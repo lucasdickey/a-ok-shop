@@ -15,6 +15,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.shopify.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+      },
     ],
   },
   env: {
