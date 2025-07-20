@@ -37,13 +37,6 @@ export default function Navbar() {
             >
               Run, Human, Run!
             </Link>
-            <span className="text-sm text-gray-400">|</span>
-            <Link
-              href="/vibe-plus"
-              className="text-sm font-medium hover:text-primary"
-            >
-              Vibe ++
-            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-4">
