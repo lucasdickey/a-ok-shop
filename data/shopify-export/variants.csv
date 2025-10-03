@@ -1,0 +1,93 @@
+id,product_id,title,price,size,color,available,sku,shopify_id
+var_1_1,prod_1,Red,50,,Red,true,SKU_prod_1_1,gid://shopify/ProductVariant/46776424202459
+var_1_2,prod_1,Black,50,,Black,true,SKU_prod_1_2,gid://shopify/ProductVariant/46776424235227
+var_2_1,prod_2,Gray,50,,Gray,true,SKU_prod_2_1,gid://shopify/ProductVariant/46334618566875
+var_2_2,prod_2,Black,50,,Black,true,SKU_prod_2_2,gid://shopify/ProductVariant/46334618632411
+var_3_1,prod_3,Black,50,,Black,true,SKU_prod_3_1,gid://shopify/ProductVariant/46776423219419
+var_3_2,prod_3,Beige,50,,Beige,true,SKU_prod_3_2,gid://shopify/ProductVariant/46776423252187
+var_3_3,prod_3,Brown,50,,Brown,true,SKU_prod_3_3,gid://shopify/ProductVariant/46776423284955
+var_4_1,prod_4,Red,50,,Red,true,SKU_prod_4_1,gid://shopify/ProductVariant/46776423153883
+var_4_2,prod_4,Black,50,,Black,true,SKU_prod_4_2,gid://shopify/ProductVariant/46776423186651
+var_5_1,prod_5,Black,50,,Black,true,SKU_prod_5_1,gid://shopify/ProductVariant/46776423088347
+var_5_2,prod_5,Red,50,,Red,true,SKU_prod_5_2,gid://shopify/ProductVariant/46776423121115
+var_6_1,prod_6,Black,50,,Black,true,SKU_prod_6_1,gid://shopify/ProductVariant/46776422957275
+var_6_2,prod_6,Red,50,,Red,true,SKU_prod_6_2,gid://shopify/ProductVariant/46776422990043
+var_6_3,prod_6,White,50,,White,true,SKU_prod_6_3,gid://shopify/ProductVariant/46776423022811
+var_7_1,prod_7,Black,50,,Black,true,SKU_prod_7_1,gid://shopify/ProductVariant/46776422727899
+var_7_2,prod_7,Beige,50,,Beige,true,SKU_prod_7_2,gid://shopify/ProductVariant/46776422760667
+var_7_3,prod_7,White,50,,White,true,SKU_prod_7_3,gid://shopify/ProductVariant/46776422793435
+var_7_4,prod_7,Red,50,,Red,true,SKU_prod_7_4,gid://shopify/ProductVariant/46776422826203
+var_7_5,prod_7,Brown,50,,Brown,true,SKU_prod_7_5,gid://shopify/ProductVariant/46776422858971
+var_8_1,prod_8,Gray,50,,Gray,true,SKU_prod_8_1,gid://shopify/ProductVariant/46776422465755
+var_9_1,prod_9,White,50,,White,true,SKU_prod_9_1,gid://shopify/ProductVariant/46776422367451
+var_9_2,prod_9,Black,50,,Black,true,SKU_prod_9_2,gid://shopify/ProductVariant/46776422400219
+var_9_3,prod_9,Red,50,,Red,true,SKU_prod_9_3,gid://shopify/ProductVariant/46776422432987
+var_10_1,prod_10,Black,50,,Black,true,SKU_prod_10_1,gid://shopify/ProductVariant/46776422236379
+var_10_2,prod_10,White,50,,White,true,SKU_prod_10_2,gid://shopify/ProductVariant/46776422269147
+var_10_3,prod_10,Red,50,,Red,true,SKU_prod_10_3,gid://shopify/ProductVariant/46776422301915
+var_11_1,prod_11,Red,75,,Red,true,SKU_prod_11_1,gid://shopify/ProductVariant/46776422138075
+var_11_2,prod_11,Black,75,,Black,true,SKU_prod_11_2,gid://shopify/ProductVariant/46776422170843
+var_11_3,prod_11,White,75,,White,true,SKU_prod_11_3,gid://shopify/ProductVariant/46776422203611
+var_12_1,prod_12,Default Title,75,,,true,SKU_prod_12_1,gid://shopify/ProductVariant/46735214346459
+var_13_1,prod_13,Black,75,,Black,true,SKU_prod_13_1,gid://shopify/ProductVariant/46744874942683
+var_13_2,prod_13,Beige,75,,Beige,true,SKU_prod_13_2,gid://shopify/ProductVariant/46776421843163
+var_14_1,prod_14,2XL / Black,50,2XL,Black,true,SKU_prod_14_1,gid://shopify/ProductVariant/46755886661851
+var_14_2,prod_14,2XL / White,50,2XL,White,true,SKU_prod_14_2,gid://shopify/ProductVariant/46776420368603
+var_14_3,prod_14,2XL / Beige,50,2XL,Beige,true,SKU_prod_14_3,gid://shopify/ProductVariant/46776420401371
+var_14_4,prod_14,2XS / Black,50,2XS,Black,true,SKU_prod_14_4,gid://shopify/ProductVariant/46755886694619
+var_14_5,prod_14,2XS / White,50,2XS,White,true,SKU_prod_14_5,gid://shopify/ProductVariant/46776420434139
+var_14_6,prod_14,2XS / Beige,50,2XS,Beige,true,SKU_prod_14_6,gid://shopify/ProductVariant/46776420466907
+var_14_7,prod_14,XL / Black,50,XL,Black,true,SKU_prod_14_7,gid://shopify/ProductVariant/46755886727387
+var_14_8,prod_14,XL / White,50,XL,White,true,SKU_prod_14_8,gid://shopify/ProductVariant/46776420499675
+var_14_9,prod_14,XL / Beige,50,XL,Beige,true,SKU_prod_14_9,gid://shopify/ProductVariant/46776420532443
+var_14_10,prod_14,L / Black,50,L,Black,true,SKU_prod_14_10,gid://shopify/ProductVariant/46755886760155
+var_14_11,prod_14,L / White,50,L,White,true,SKU_prod_14_11,gid://shopify/ProductVariant/46776420565211
+var_14_12,prod_14,L / Beige,50,L,Beige,true,SKU_prod_14_12,gid://shopify/ProductVariant/46776420597979
+var_14_13,prod_14,M / Black,50,M,Black,true,SKU_prod_14_13,gid://shopify/ProductVariant/46755886792923
+var_14_14,prod_14,M / White,50,M,White,true,SKU_prod_14_14,gid://shopify/ProductVariant/46776420630747
+var_14_15,prod_14,M / Beige,50,M,Beige,true,SKU_prod_14_15,gid://shopify/ProductVariant/46776420663515
+var_14_16,prod_14,S / Black,50,S,Black,true,SKU_prod_14_16,gid://shopify/ProductVariant/46755886825691
+var_14_17,prod_14,S / White,50,S,White,true,SKU_prod_14_17,gid://shopify/ProductVariant/46776420696283
+var_14_18,prod_14,S / Beige,50,S,Beige,true,SKU_prod_14_18,gid://shopify/ProductVariant/46776420729051
+var_15_1,prod_15,Black,50,,Black,true,SKU_prod_15_1,gid://shopify/ProductVariant/46776420270299
+var_15_2,prod_15,Beige,50,,Beige,true,SKU_prod_15_2,gid://shopify/ProductVariant/46776420303067
+var_15_3,prod_15,Red,50,,Red,true,SKU_prod_15_3,gid://shopify/ProductVariant/46776420335835
+var_16_1,prod_16,Black,60,,Black,true,SKU_prod_16_1,gid://shopify/ProductVariant/46776420237531
+var_17_1,prod_17,Black,75,,Black,true,SKU_prod_17_1,gid://shopify/ProductVariant/46776418894043
+var_18_1,prod_18,Black,75,,Black,false,SKU_prod_18_1,gid://shopify/ProductVariant/46776420204763
+var_19_1,prod_19,Red,40,,Red,true,SKU_prod_19_1,gid://shopify/ProductVariant/46776419877083
+var_19_2,prod_19,White,40,,White,true,SKU_prod_19_2,gid://shopify/ProductVariant/46776419909851
+var_19_3,prod_19,Blue,40,,Blue,true,SKU_prod_19_3,gid://shopify/ProductVariant/46776419942619
+var_20_1,prod_20,Beige,75,,Beige,true,SKU_prod_20_1,gid://shopify/ProductVariant/46793011691739
+var_20_2,prod_20,White,75,,White,true,SKU_prod_20_2,gid://shopify/ProductVariant/46793011724507
+var_20_3,prod_20,Gray,75,,Gray,true,SKU_prod_20_3,gid://shopify/ProductVariant/46793011757275
+var_20_4,prod_20,Navy,75,,Navy,true,SKU_prod_20_4,gid://shopify/ProductVariant/46793011790043
+var_21_1,prod_21,Yellow,40,,Yellow,true,SKU_prod_21_1,gid://shopify/ProductVariant/46793035055323
+var_21_2,prod_21,Gray,40,,Gray,true,SKU_prod_21_2,gid://shopify/ProductVariant/46793035088091
+var_21_3,prod_21,Red,40,,Red,true,SKU_prod_21_3,gid://shopify/ProductVariant/46793035120859
+var_21_4,prod_21,Green,40,,Green,true,SKU_prod_21_4,gid://shopify/ProductVariant/46793035317467
+var_22_1,prod_22,Green / XS,45,XS,Green,true,SKU_prod_22_1,gid://shopify/ProductVariant/46905344032987
+var_22_2,prod_22,Green / XL,45,XL,Green,true,SKU_prod_22_2,gid://shopify/ProductVariant/46905344065755
+var_22_3,prod_22,Green / L,45,L,Green,true,SKU_prod_22_3,gid://shopify/ProductVariant/46905344098523
+var_22_4,prod_22,Green / M,45,M,Green,true,SKU_prod_22_4,gid://shopify/ProductVariant/46905344131291
+var_22_5,prod_22,Green / S,45,S,Green,true,SKU_prod_22_5,gid://shopify/ProductVariant/46905344164059
+var_22_6,prod_22,Red / XS,45,XS,Red,true,SKU_prod_22_6,gid://shopify/ProductVariant/46905344196827
+var_22_7,prod_22,Red / XL,45,XL,Red,true,SKU_prod_22_7,gid://shopify/ProductVariant/46905344229595
+var_22_8,prod_22,Red / L,45,L,Red,true,SKU_prod_22_8,gid://shopify/ProductVariant/46905344262363
+var_22_9,prod_22,Red / M,45,M,Red,true,SKU_prod_22_9,gid://shopify/ProductVariant/46905344295131
+var_22_10,prod_22,Red / S,45,S,Red,true,SKU_prod_22_10,gid://shopify/ProductVariant/46905344327899
+var_22_11,prod_22,Purple / XS,45,XS,Purple,true,SKU_prod_22_11,gid://shopify/ProductVariant/46905344360667
+var_22_12,prod_22,Purple / XL,45,XL,Purple,true,SKU_prod_22_12,gid://shopify/ProductVariant/46905344393435
+var_22_13,prod_22,Purple / L,45,L,Purple,true,SKU_prod_22_13,gid://shopify/ProductVariant/46905344426203
+var_22_14,prod_22,Purple / M,45,M,Purple,true,SKU_prod_22_14,gid://shopify/ProductVariant/46905344458971
+var_22_15,prod_22,Purple / S,45,S,Purple,true,SKU_prod_22_15,gid://shopify/ProductVariant/46905344491739
+var_22_16,prod_22,White / XS,45,XS,White,true,SKU_prod_22_16,gid://shopify/ProductVariant/46905344524507
+var_22_17,prod_22,White / XL,45,XL,White,true,SKU_prod_22_17,gid://shopify/ProductVariant/46905344557275
+var_22_18,prod_22,White / L,45,L,White,true,SKU_prod_22_18,gid://shopify/ProductVariant/46905344590043
+var_22_19,prod_22,White / M,45,M,White,true,SKU_prod_22_19,gid://shopify/ProductVariant/46905344622811
+var_22_20,prod_22,White / S,45,S,White,true,SKU_prod_22_20,gid://shopify/ProductVariant/46905344655579
+var_23_1,prod_23,Black / L,53.14,L,Black,true,SKU_prod_23_1,gid://shopify/ProductVariant/47102065639643
+var_23_2,prod_23,Black / XL,53.14,XL,Black,true,SKU_prod_23_2,gid://shopify/ProductVariant/47102065672411
+var_23_3,prod_23,Black / M,53.14,M,Black,true,SKU_prod_23_3,gid://shopify/ProductVariant/47102065705179
+var_23_4,prod_23,Black / S,53.14,S,Black,true,SKU_prod_23_4,gid://shopify/ProductVariant/47102065737947
+var_23_5,prod_23,Black / XS,53.14,XS,Black,true,SKU_prod_23_5,gid://shopify/ProductVariant/47102065770715
