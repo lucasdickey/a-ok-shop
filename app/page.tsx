@@ -64,13 +64,22 @@ async function getGalleryImages() {
   }
 }
 
-// Dynamically import the Shopify functionality to avoid webpack issues
+// Fetch products from our new API
 const getProducts = async () => {
   try {
-    const { getAllProducts } = await import("@/app/lib/shopify");
-    return await getAllProducts();
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const response = await fetch(`${baseUrl}/api/products`, {
+      next: { revalidate: 3600 },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.products || [];
   } catch (error) {
-    console.error("Error importing or calling getAllProducts:", error);
+    console.error("Error fetching products from API:", error);
     return [];
   }
 };
@@ -145,11 +154,11 @@ export default async function Home() {
             >
               <div className="border-2 border-[#1F1F1F] bg-[#F5F2DC] p-5 rounded-xl text-[#1F1F1F] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] h-full">
                 <div className="relative aspect-square bg-light mb-4 rounded-lg overflow-hidden border border-[#1F1F1F]">
-                  {product.images.edges[0]?.node.url &&
-                  product.images.edges[0].node.url.startsWith("http") ? (
+                  {product.images?.[0]?.url &&
+                  product.images[0].url.startsWith("http") ? (
                     <Image
-                      src={product.images.edges[0].node.url}
-                      alt={product.title}
+                      src={product.images[0].url}
+                      alt={product.images[0].altText || product.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
                     />
@@ -164,9 +173,7 @@ export default async function Home() {
                 </h3>
                 <p className="text-[#8B1E24] font-bebas-neue text-lg mb-4">
                   $
-                  {parseFloat(
-                    product.priceRange.minVariantPrice.amount
-                  ).toFixed(2)}
+                  {product.minPrice ? parseFloat(product.minPrice.toString()).toFixed(2) : '0.00'}
                 </p>
               </div>
             </Link>

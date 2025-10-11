@@ -2,7 +2,7 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getProductByHandle } from "@/app/lib/shopify";
+// Use API instead of direct Shopify import
 import AddToCartButton from "@/app/components/product/AddToCartButton";
 import { useState, useEffect } from "react";
 
@@ -418,345 +418,137 @@ function ProductPageContent({
   );
 }
 
-// Server component
-export default async function ProductPage({
+// Client component with data fetching
+export default function ProductPage({
   params,
 }: {
   params: { handle: string };
 }) {
-  const product = await getProductByHandle(params.handle);
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!product) {
-    notFound();
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        const response = await fetch(`${baseUrl}/api/products/${params.handle}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            notFound();
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setProduct(data.product);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [params.handle]);
+
+  if (loading) {
+    return (
+      <div className="container py-8">
+        <div className="animate-pulse">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="aspect-square bg-gray-200 rounded-lg"></div>
+            <div className="space-y-4">
+              <div className="h-8 bg-gray-200 rounded"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+              <div className="h-12 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  // Log the raw image data from the API
-  console.log("Raw image data:", JSON.stringify(product.images.edges, null, 2));
-  
-  const images = product.images.edges.map(({ node }) => {
-    // Log each image node
-    console.log("Image node:", node);
-    
-    // Ensure URL is absolute (starts with http or https)
-    let imageUrl = node.url;
-    if (imageUrl && !imageUrl.startsWith('http')) {
-      // If it's a protocol-relative URL (starts with //)
-      if (imageUrl.startsWith('//')) {
-        imageUrl = `https:${imageUrl}`;
-      } 
-      // If it's a relative URL (doesn't start with /)
-      else if (!imageUrl.startsWith('/')) {
-        imageUrl = `/${imageUrl}`;
-      }
-      // For other relative URLs, prepend the Shopify domain
-      else {
-        const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN || 'a-ok.myshopify.com';
-        imageUrl = `https://${shopifyDomain}${imageUrl}`;
-      }
-    }
-    
-    return {
-      url: imageUrl,
-      alt: node.altText || product.title,
-    };
-  });
-  
-  // Log the processed images
-  console.log("Processed images:", images);
+  if (error || !product) {
+    return (
+      <div className="container py-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600">Error</h1>
+          <p className="mt-2">{error || 'Product not found'}</p>
+        </div>
+      </div>
+    );
+  }
 
-  const variants = product.variants.edges.map(({ node }) => ({
-    id: node.id,
-    title: node.title,
-    price: parseFloat(node.price.amount),
-    available: node.availableForSale,
-    selectedOptions: node.selectedOptions,
-    metafield: node.metafield,
-    metafields: node.metafields,
-  }));
+  // Process images for database structure
+  const images = product.images?.map((image: any) => ({
+    url: image.url,
+    alt: image.altText || product.title,
+  })) || [];
+
+  // Process variants for database structure
+  const variants = product.variants?.map((variant: any) => ({
+    id: variant.id,
+    title: variant.title || `${variant.size || ''} ${variant.color || ''}`.trim(),
+    price: variant.price,
+    available: variant.available,
+    size: variant.size,
+    color: variant.color,
+  })) || [];
 
   const defaultVariant = variants[0];
-  const price = parseFloat(product.priceRange.minVariantPrice.amount);
+  const price = defaultVariant?.price || 0;
 
-  // Extract size information - include all standard clothing sizes
-  const sizeValues: string[] = [];
-
-  // First try to get size options from the product options
-  const sizeOption = product.options?.find(
-    (option) => option.name.toLowerCase() === "size"
-  );
-
-  if (sizeOption && sizeOption.values.length > 0) {
-    // Filter to only include standard sizes
-    sizeValues.push(...sizeOption.values);
-  }
-
-  // If no size options found, try to extract from variants
-  if (sizeValues.length === 0) {
-    const sizeSet = new Set<string>();
-
-    variants.forEach((variant) => {
-      if (variant.selectedOptions) {
-        const sizeOption = variant.selectedOptions.find(
-          (opt: { name: string; value: string }) =>
-            opt.name.toLowerCase() === "size"
-        );
-
-        if (sizeOption) {
-          sizeSet.add(sizeOption.value);
-        } else if (variant.title) {
-          // If variant title is a standard size
-          sizeSet.add(variant.title);
-        }
-      }
-    });
-
-    sizeValues.push(...Array.from(sizeSet));
-  }
-
-  // Check if this is a clothing item (shirt or hoodie)
-  const isClothingItem =
-    product.productType.toLowerCase().includes("t-shirt") ||
-    product.productType.toLowerCase().includes("hoodie") ||
-    product.tags.some(
-      (tag) =>
-        tag.toLowerCase().includes("t-shirt") ||
-        tag.toLowerCase().includes("tshirt") ||
-        tag.toLowerCase().includes("hoodie")
-    );
-
-  // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // Since products are printed on demand, all sizes are always available
-  if ((sizeValues.length === 0 || true) && isClothingItem) {
-    console.log("Using standard sizes for clothing item");
-    sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
-    sizeValues.push(...["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"]);
-  }
-
-  // Sort sizes in the standard order
-  sizeValues.sort((a, b) => {
-    return (
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(a) -
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(b)
-    );
+  // Extract size information from variants
+  const sizeSet = new Set<string>();
+  variants.forEach((variant) => {
+    if (variant.size) {
+      sizeSet.add(variant.size);
+    }
   });
+
+  // Check if this is a clothing item
+  const isClothingItem =
+    product.productType?.toLowerCase().includes("t-shirt") ||
+    product.productType?.toLowerCase().includes("hoodie") ||
+    product.tags?.some((tag: string) =>
+      tag.toLowerCase().includes("t-shirt") ||
+      tag.toLowerCase().includes("tshirt") ||
+      tag.toLowerCase().includes("hoodie")
+    );
+
+  // Use standard sizes for clothing items (since products are print-on-demand)
+  const sizeValues = isClothingItem && sizeSet.size === 0
+    ? ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"]
+    : Array.from(sizeSet).sort((a, b) => {
+        const order = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"];
+        return order.indexOf(a) - order.indexOf(b);
+      });
 
   const hasSizeOptions = sizeValues.length > 0;
 
-  console.log("Product has size options:", hasSizeOptions);
-  console.log("Size options:", sizeValues);
-  console.log("Is clothing item:", isClothingItem);
-  console.log("Variants:", variants);
-
-  // Extract color information
-  const colorValues: string[] = [];
-
-  // First try to get color options from product metafield
-  if (product.metafield && product.metafield.value) {
-    try {
-      console.log(
-        "Found product metafield with value:",
-        product.metafield.value
-      );
-
-      // Check if it's a JSON array
-      if (
-        product.metafield.value.startsWith("[") &&
-        product.metafield.value.endsWith("]")
-      ) {
-        const colors = JSON.parse(product.metafield.value);
-        if (Array.isArray(colors)) {
-          colorValues.push(...colors);
-        }
-      } else {
-        // Single color value
-        colorValues.push(product.metafield.value);
-      }
-    } catch (e) {
-      console.error("Error parsing product metafield:", e);
+  // Extract color information from variants
+  const colorSet = new Set<string>();
+  variants.forEach((variant) => {
+    if (variant.color) {
+      colorSet.add(variant.color);
     }
-  }
+  });
 
-  // If no colors found in metafields, try to get from product options
-  if (colorValues.length === 0) {
-    const colorOption = product.options?.find(
-      (option: any) => option.name.toLowerCase() === "color"
-    );
+  // Use standard colors for clothing items if none found
+  const colorValues = isClothingItem && colorSet.size === 0
+    ? ["Black", "White", "Red", "Blue", "Green", "Yellow", "Purple", "Gray", "Navy", "Brown", "Orange", "Pink"]
+    : Array.from(colorSet);
 
-    if (colorOption && colorOption.values.length > 0) {
-      console.log(
-        "Found color options in product options:",
-        colorOption.values
-      );
-      colorValues.push(...colorOption.values);
-    }
-  }
-
-  // If still no colors found, check variant metafields for colors
-  if (colorValues.length === 0) {
-    console.log("Checking variant metafields for colors");
-    const colorSet = new Set<string>();
-
-    variants.forEach((variant) => {
-      if (variant.metafield && variant.metafield.value) {
-        console.log(
-          `Found color in variant ${variant.title}:`,
-          variant.metafield.value
-        );
-        colorSet.add(variant.metafield.value);
-      }
-    });
-
-    if (colorSet.size > 0) {
-      colorValues.push(...Array.from(colorSet));
-    }
-  }
-
-  // If still no colors found, check if there are color-related selectedOptions in variants
-  if (colorValues.length === 0) {
-    console.log("Checking variant selectedOptions for colors");
-    const colorSet = new Set<string>();
-
-    variants.forEach((variant) => {
-      if (variant.selectedOptions) {
-        const colorOption = variant.selectedOptions.find(
-          (opt: { name: string; value: string }) =>
-            opt.name.toLowerCase() === "color"
-        );
-
-        if (colorOption) {
-          console.log(
-            `Found color in variant ${variant.title} selectedOptions:`,
-            colorOption.value
-          );
-          colorSet.add(colorOption.value);
-        }
-      }
-    });
-
-    if (colorSet.size > 0) {
-      colorValues.push(...Array.from(colorSet));
-    }
-  }
+  const hasColorOptions = colorValues.length > 0;
   
-  // If still no colors found, try to extract from product description
-  if (colorValues.length === 0 && product.description) {
-    console.log("Attempting to extract colors from product description");
-    
-    // Common color names to look for
-    const commonColors = [
-      "black", "white", "red", "blue", "green", "yellow", "purple", "pink",
-      "orange", "brown", "gray", "grey", "navy", "teal", "maroon", "olive",
-      "silver", "gold", "beige", "tan", "coral", "mint", "lavender"
-    ];
-    
-    // Look for color patterns in the description
-    const colorPattern = new RegExp(`\\b(${commonColors.join('|')})\\b`, 'gi');
-    const matches = product.description.match(colorPattern);
-    
-    if (matches && matches.length > 0) {
-      console.log("Found colors in description:", matches);
-      
-      // Create a set of unique colors (case-insensitive)
-      const uniqueColorsSet = new Set<string>();
-      
-      // Process each color and add to the set
-      matches.forEach(color => {
-        const formattedColor = color.charAt(0).toUpperCase() + color.slice(1).toLowerCase();
-        uniqueColorsSet.add(formattedColor);
-      });
-      
-      // Convert set to array and add to colorValues
-      colorValues.push(...Array.from(uniqueColorsSet));
-    }
-    
-    // Look for specific color mentions like "Color: Red, Blue" or "Color palette: cardinal red, shell white"
-    const colorListPatterns = [
-      /colors?:?\s*([\w\s,]+)/i,
-      /colors? palette:?\s*([\w\s,]+)/i,
-      /palette:?\s*([\w\s,]+)/i
-    ];
-    
-    for (const pattern of colorListPatterns) {
-      const colorListMatch = product.description.match(pattern);
-      
-      if (colorListMatch && colorListMatch[1]) {
-        console.log("Found color list in description:", colorListMatch[1]);
-        
-        // Split by commas and clean up each color name
-        // This will handle compound color names like "cardinal red" or "shell white"
-        const extractedColors = colorListMatch[1].split(/,|\sand\s/).map(color => {
-          const trimmed = color.trim();
-          // For compound colors like "cardinal red", keep the full name
-          if (trimmed.includes(' ')) {
-            return trimmed.split(' ').map(word => 
-              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-            ).join(' ');
-          }
-          // For single word colors
-          return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
-        }).filter(color => color.length > 0);
-        
-        if (extractedColors.length > 0) {
-          console.log("Extracted color names:", extractedColors);
-          colorValues.push(...extractedColors);
-          break; // Stop after finding the first match
-        }
-      }
-    }
-    
-    // Look for specific color mentions in bullet points or lists
-    if (colorValues.length === 0) {
-      // This pattern looks for color names that might be part of a list item
-      const bulletPointColorPattern = /[•\-*]\s*([\w\s]+) (red|blue|black|white|green|yellow|purple|pink|orange|brown|gray|grey)/gi;
-      let match;
-      const compoundColors = new Set<string>();
-      
-      while ((match = bulletPointColorPattern.exec(product.description)) !== null) {
-        if (match[1] && match[2]) {
-          const compoundColor = `${match[1].trim()} ${match[2]}`.trim();
-          console.log("Found compound color in bullet point:", compoundColor);
-          compoundColors.add(compoundColor.charAt(0).toUpperCase() + compoundColor.slice(1).toLowerCase());
-        }
-      }
-      
-      if (compoundColors.size > 0) {
-        colorValues.push(...Array.from(compoundColors));
-      }
-    }
-  }
-
-  // If still no colors found and this is a clothing item, provide standard color options
-  // Since products are printed on demand, we can offer standard colors
-  if (colorValues.length === 0 && isClothingItem) {
-    console.log("Using standard colors for print-on-demand clothing item");
-    colorValues.push(
-      "Black", 
-      "White", 
-      "Red", 
-      "Blue", 
-      "Green", 
-      "Yellow", 
-      "Purple", 
-      "Gray", 
-      "Navy", 
-      "Brown", 
-      "Orange", 
-      "Pink"
-    );
-  }
-  
-  // All colors are always available since products are printed on demand
+  // All colors are available since products are print-on-demand
   const colorAvailability: Record<string, boolean> = {};
   colorValues.forEach((color) => {
     colorAvailability[color] = true;
   });
-
-  // Set hasColorOptions based on whether we found any colors
-  const hasColorOptions = colorValues.length > 0;
-
-  console.log("Product has color options:", hasColorOptions);
-  console.log("Color options:", colorValues);
-  console.log("Product metafield:", product.metafield);
 
   return (
     <div className="container py-8">

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getAllProducts, getProductsByCategory, ShopifyProduct } from "@/app/lib/shopify";
+// Remove Shopify import and use API instead
 import ProductCard from "@/app/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export default async function ProductsPage({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  let products: ShopifyProduct[] = [];
+  let products: any[] = [];
   let error = null;
 
   // Extract filter values from search params
@@ -24,12 +24,22 @@ export default async function ProductsPage({
   try {
     console.log("Fetching products in page component...");
     
-    // Use category-specific API if category is provided
-    if (category) {
-      products = await getProductsByCategory(category);
-    } else {
-      products = await getAllProducts();
+    // Use our new API endpoint
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const url = category 
+      ? `${baseUrl}/api/products?category=${encodeURIComponent(category)}`
+      : `${baseUrl}/api/products`;
+    
+    const response = await fetch(url, {
+      next: { revalidate: 3600 },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
+    const data = await response.json();
+    products = data.products || [];
   } catch (err) {
     console.error("Error in products page:", err);
     error = err instanceof Error ? err.message : "Unknown error occurred";
