@@ -56,8 +56,6 @@ export default function MonthlyDealsPage() {
     // Reset selections after adding to cart
     setSelectedSize("");
     setSelectedColor("");
-    
-    alert("Added to cart!");
   };
 
   const handleCheckout = async () => {
@@ -112,7 +110,7 @@ export default function MonthlyDealsPage() {
         {/* Inline Deal Banner */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg py-3 px-6 inline-block">
           <span className="font-bebas-neue text-lg mr-2">LIMITED TIME:</span>
-          <span className="text-base">Save ${savings.toFixed(2)} ({savingsPercent}% off) - January 2025 Only</span>
+          <span className="text-base">Save ${savings.toFixed(2)} ({savingsPercent}% off) - October 2025 Only</span>
         </div>
       </div>
 
@@ -128,7 +126,12 @@ export default function MonthlyDealsPage() {
               fill
               className="object-cover"
               priority
+              key={selectedImageIndex} // Force re-render when index changes
             />
+            {/* Debug info */}
+            <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+              Image {selectedImageIndex + 1}
+            </div>
           </div>
           
           {/* Image Thumbnails */}
@@ -136,7 +139,10 @@ export default function MonthlyDealsPage() {
             {MONTHLY_DEAL.images.map((image, index) => (
               <button
                 key={index}
-                onClick={() => setSelectedImageIndex(index)}
+                onClick={() => {
+                  console.log(`Clicked thumbnail ${index}, setting selectedImageIndex to ${index}`);
+                  setSelectedImageIndex(index);
+                }}
                 className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                   selectedImageIndex === index 
                     ? 'border-[#1F1F1F] scale-105' 
@@ -247,16 +253,6 @@ export default function MonthlyDealsPage() {
             </ul>
           </div>
         </div>
-      </div>
-
-      {/* Footer Info */}
-      <div className="mt-16 text-center text-gray-600">
-        <p className="mb-2">
-          <strong>Free shipping</strong> on all monthly deal orders over $50
-        </p>
-        <p>
-          Items ship within <strong>3-5 business days</strong> after payment confirmation
-        </p>
       </div>
     </div>
   );
