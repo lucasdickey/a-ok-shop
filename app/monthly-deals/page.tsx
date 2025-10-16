@@ -11,7 +11,11 @@ const MONTHLY_DEAL = {
   description: "Simplified. Streamlined. Still A Little Scary. A hoodie designed to reflect the clean, evolving interfaces of modern LLMs with a focus on comfort and style. New look. Same depth. Fully backward compatible.",
   price: 50.00,
   originalPrice: 75.00,
-  image: "/images/a-ok-o-face.png",
+  images: [
+    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-front-modeled.png?v=1746932606",
+    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
+    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588"
+  ],
   sizes: ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"],
   colors: ["Black", "Navy", "Heather Grey"],
   features: [
@@ -26,6 +30,7 @@ const MONTHLY_DEAL = {
 export default function MonthlyDealsPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
   const { cart, addToCart, subtotal, clearCart } = useCart();
 
@@ -40,7 +45,7 @@ export default function MonthlyDealsPage() {
       title: `${MONTHLY_DEAL.title} - ${selectedSize} - ${selectedColor}`,
       price: MONTHLY_DEAL.price,
       quantity: 1,
-      image: MONTHLY_DEAL.image,
+      image: MONTHLY_DEAL.images[0],
       variantId: `${MONTHLY_DEAL.id}-${selectedSize}-${selectedColor}`,
       size: selectedSize,
       color: selectedColor
@@ -95,42 +100,57 @@ export default function MonthlyDealsPage() {
   const savingsPercent = Math.round((savings / MONTHLY_DEAL.originalPrice) * 100);
 
   return (
-    <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl md:text-6xl font-bebas-neue text-dark mb-4">
+    <div className="container mx-auto py-6 px-8 md:px-16 lg:px-24 xl:px-32">
+      {/* Compact Header */}
+      <div className="text-center mb-6">
+        <h1 className="text-4xl md:text-5xl font-bebas-neue text-dark mb-2">
           MONTHLY DEALS
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Exclusive limited-time offers. New design every month. Once it&apos;s gone, it&apos;s gone forever.
+        <p className="text-lg text-gray-600 max-w-xl mx-auto mb-4">
+          Exclusive limited-time offers. New design every month.
         </p>
-      </div>
-
-      {/* Deal Banner */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg p-6 mb-8 text-center">
-        <h2 className="text-2xl font-bebas-neue mb-2">LIMITED TIME OFFER</h2>
-        <p className="text-lg">
-          Save ${savings.toFixed(2)} ({savingsPercent}% off) - Only available in January 2025
-        </p>
+        {/* Inline Deal Banner */}
+        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg py-3 px-6 inline-block">
+          <span className="font-bebas-neue text-lg mr-2">LIMITED TIME:</span>
+          <span className="text-base">Save ${savings.toFixed(2)} ({savingsPercent}% off) - January 2025 Only</span>
+        </div>
       </div>
 
       {/* Product Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-        {/* Product Image */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
+        {/* Product Image Carousel */}
         <div className="space-y-4">
+          {/* Main Image */}
           <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 border-2 border-[#1F1F1F]">
             <Image
-              src={MONTHLY_DEAL.image}
+              src={MONTHLY_DEAL.images[selectedImageIndex]}
               alt={MONTHLY_DEAL.title}
               fill
               className="object-cover"
               priority
-              onError={(e) => {
-                // Fallback to placeholder if image doesn't exist
-                const target = e.target as HTMLImageElement;
-                target.src = "/images/product-placeholder.jpg";
-              }}
             />
+          </div>
+          
+          {/* Image Thumbnails */}
+          <div className="flex gap-2 justify-center">
+            {MONTHLY_DEAL.images.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImageIndex(index)}
+                className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                  selectedImageIndex === index 
+                    ? 'border-[#1F1F1F] scale-105' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <Image
+                  src={image}
+                  alt={`${MONTHLY_DEAL.title} view ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
           </div>
         </div>
 
@@ -228,38 +248,6 @@ export default function MonthlyDealsPage() {
           </div>
         </div>
       </div>
-
-      {/* Cart Summary */}
-      {cart.length > 0 && (
-        <div className="bg-gray-50 rounded-lg p-6 border-2 border-gray-200">
-          <h3 className="text-xl font-bebas-neue mb-4">CART SUMMARY</h3>
-          <div className="space-y-3">
-            {cart.map((item, index) => (
-              <div key={index} className="flex justify-between items-center">
-                <span>{item.title} (Qty: {item.quantity})</span>
-                <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
-              </div>
-            ))}
-            <hr className="border-gray-300" />
-            <div className="flex justify-between items-center font-bebas-neue text-lg">
-              <span>TOTAL:</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-          </div>
-          
-          <button 
-            onClick={handleCheckout}
-            disabled={isProcessingCheckout}
-            className={`w-full mt-4 py-3 px-6 rounded-lg font-bebas-neue text-lg tracking-wide transition-colors ${
-              isProcessingCheckout 
-                ? "bg-gray-400 text-gray-600 cursor-not-allowed" 
-                : "bg-[#8B1E24] text-white hover:bg-red-800"
-            }`}
-          >
-            {isProcessingCheckout ? "PROCESSING..." : "PROCEED TO CHECKOUT"}
-          </button>
-        </div>
-      )}
 
       {/* Footer Info */}
       <div className="mt-16 text-center text-gray-600">
