@@ -2,12 +2,16 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
 import { createShopifyCheckout } from '@/app/lib/shopify';
 
 export default function CartDrawer() {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, subtotal } = useCart();
+  const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
+  
+  const isMonthlyDeals = pathname?.startsWith('/monthly-deals');
 
   // Handle click outside to close
   useEffect(() => {
@@ -43,14 +47,41 @@ export default function CartDrawer() {
     if (cart.length === 0) return;
     
     try {
-      const lineItems = cart.map(item => ({
-        variantId: item.variantId,
-        quantity: item.quantity
-      }));
-      
-      const checkoutUrl = await createShopifyCheckout(lineItems);
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
+      if (isMonthlyDeals) {
+        // Use Stripe checkout for monthly deals
+        const response = await fetch("/api/monthly-deals/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: cart,
+            subtotal
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create checkout session");
+        }
+
+        const { url } = await response.json();
+        
+        // Close cart drawer
+        closeCart();
+        
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      } else {
+        // Use Shopify checkout for regular products
+        const lineItems = cart.map(item => ({
+          variantId: item.variantId,
+          quantity: item.quantity
+        }));
+        
+        const checkoutUrl = await createShopifyCheckout(lineItems);
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl;
+        }
       }
     } catch (error) {
       console.error('Error creating checkout:', error);
