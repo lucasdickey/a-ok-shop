@@ -28,7 +28,7 @@ async function fetchProductDetails() {
   // Query with expanded fields to get as much product data as possible
   const query = `
     query {
-      products(first: 10) {
+      products(first: 250) {
         edges {
           node {
             id

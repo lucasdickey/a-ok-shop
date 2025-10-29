@@ -48,12 +48,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const baseUrl = process.env.SITE_URL || 
-                   process.env.NEXT_PUBLIC_SITE_URL || 
-                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
-                   "http://localhost:3001");
-    
-    // Use production URL in production, localhost in development
+    // Get the base URL from the request headers or environment variables
+    const host = request.headers.get('host') || 'localhost:3000';
+    const protocol = host.includes('localhost') ? 'http' : 'https';
+    const baseUrl = process.env.SITE_URL ||
+                   process.env.NEXT_PUBLIC_SITE_URL ||
+                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+                   `${protocol}://${host}`);
+
     console.log("Creating checkout session with base URL:", baseUrl);
 
     const session = await stripe.checkout.sessions.create({

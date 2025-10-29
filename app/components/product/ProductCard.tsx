@@ -185,35 +185,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         style={cardStyle}
       >
         <div style={imageContainerStyle} className="image-container-hover">
-          {imageUrl.startsWith('http') ? (
-            <Image
-              src={imageUrl}
-              alt={imageAlt}
-              fill
-              style={{
-                objectFit: 'cover',
-                transition: 'transform 0.3s ease'
-              }}
-              className="product-image-hover"
-            />
-          ) : (
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'gray',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-              <span style={{
-                color: 'gray',
-                fontSize: '1rem'
-              }}>{title}</span>
-            </div>
-          )}
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            fill
+            style={{
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease'
+            }}
+            className="product-image-hover"
+            unoptimized={!imageUrl.startsWith('http')}
+          />
         </div>
         
         <div style={{

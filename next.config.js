@@ -24,7 +24,13 @@ const nextConfig = {
   // Tell webpack to ignore the v0-retro-style-game-concept directory
   webpack: (config, { dev, isServer }) => {
     config.plugins = config.plugins || [];
-    
+
+    // Allow importing JSON files
+    config.module.rules.push({
+      test: /\.json$/,
+      type: 'json',
+    });
+
     if (isServer) {
       // Ensure the v0-retro-style-game-concept directory is not processed
       // config.watchOptions = {
@@ -32,7 +38,7 @@ const nextConfig = {
       //   ignored: /v0-retro-style-game-concept/,
       // };
     }
-    
+
     return config;
   },
   experimental: {

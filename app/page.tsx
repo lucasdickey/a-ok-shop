@@ -64,10 +64,10 @@ async function getGalleryImages() {
   }
 }
 
-// Dynamically import the Shopify functionality to avoid webpack issues
+// Dynamically import the catalog functionality
 const getProducts = async () => {
   try {
-    const { getAllProducts } = await import("@/app/lib/shopify");
+    const { getAllProducts } = await import("@/app/lib/catalog");
     return await getAllProducts();
   } catch (error) {
     console.error("Error importing or calling getAllProducts:", error);
@@ -145,19 +145,13 @@ export default async function Home() {
             >
               <div className="border-2 border-[#1F1F1F] bg-[#F5F2DC] p-5 rounded-xl text-[#1F1F1F] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] h-full">
                 <div className="relative aspect-square bg-light mb-4 rounded-lg overflow-hidden border border-[#1F1F1F]">
-                  {product.images.edges[0]?.node.url &&
-                  product.images.edges[0].node.url.startsWith("http") ? (
-                    <Image
-                      src={product.images.edges[0].node.url}
-                      alt={product.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">{product.title}</span>
-                    </div>
-                  )}
+                  <Image
+                    src={product.images.edges[0]?.node.url || "/product-placeholder.jpg"}
+                    alt={product.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
+                    unoptimized={!product.images.edges[0]?.node.url?.startsWith('http')}
+                  />
                 </div>
                 <h3 className="font-bebas-neue text-xl mb-1 tracking-wide">
                   {product.title}

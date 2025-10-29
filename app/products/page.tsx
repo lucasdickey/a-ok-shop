@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getAllProducts, getProductsByCategory, ShopifyProduct } from "@/app/lib/shopify";
+import { getAllProducts, getProductsByCategory, SimpleProduct as ShopifyProduct } from "@/app/lib/catalog";
 import ProductCard from "@/app/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +50,7 @@ export default async function ProductsPage({
           <h2 className="text-lg font-semibold mb-2">Error loading products</h2>
           <p>{error}</p>
           <p className="mt-2 text-sm">
-            Please check your Shopify API configuration and try again.
+            Please try again or contact support if the issue persists.
           </p>
         </div>
       ) : null}

@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
-import { createShopifyCheckout } from '@/app/lib/shopify';
 
 export default function CartDrawer() {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, subtotal } = useCart();
@@ -45,46 +44,38 @@ export default function CartDrawer() {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return;
-    
+
     try {
-      if (isMonthlyDeals) {
-        // Use Stripe checkout for monthly deals
-        const response = await fetch("/api/monthly-deals/create-checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            items: cart,
-            subtotal
-          }),
-        });
+      // Use Stripe checkout for all products
+      const apiEndpoint = isMonthlyDeals
+        ? "/api/monthly-deals/create-checkout-session"
+        : "/api/catalog/checkout";
 
-        if (!response.ok) {
-          throw new Error("Failed to create checkout session");
-        }
+      const response = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: cart,
+          subtotal
+        }),
+      });
 
-        const { url } = await response.json();
-        
-        // Close cart drawer
-        closeCart();
-        
-        // Redirect to Stripe Checkout
-        window.location.href = url;
-      } else {
-        // Use Shopify checkout for regular products
-        const lineItems = cart.map(item => ({
-          variantId: item.variantId,
-          quantity: item.quantity
-        }));
-        
-        const checkoutUrl = await createShopifyCheckout(lineItems);
-        if (checkoutUrl) {
-          window.location.href = checkoutUrl;
-        }
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
       }
+
+      const { url } = await response.json();
+
+      // Close cart drawer
+      closeCart();
+
+      // Redirect to Stripe Checkout
+      window.location.href = url;
     } catch (error) {
       console.error('Error creating checkout:', error);
+      alert('There was an error processing your order. Please try again.');
     }
   };
 

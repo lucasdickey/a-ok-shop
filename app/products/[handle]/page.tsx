@@ -2,13 +2,13 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getProductByHandle } from "@/app/lib/shopify";
+import { getProductByHandle } from "@/app/lib/catalog";
 import AddToCartButton from "@/app/components/product/AddToCartButton";
 import { useState, useEffect } from "react";
 
 export const dynamic = "force-dynamic";
 
-// DO NOT PUT IN HARDCODED VALUES IN HERE -- EVERYTHING SHOULD BE DYNAMICALLY GENERATED FROM THE SHOPIFY API
+// DO NOT PUT IN HARDCODED VALUES IN HERE -- EVERYTHING SHOULD BE DYNAMICALLY GENERATED FROM THE CATALOG
 
 // Client component for size selection
 function SizeSelector({
@@ -354,20 +354,15 @@ function ProductPageContent({
       {/* Product Images */}
       <div className="space-y-4">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
-          {images[selectedImageIndex]?.url?.startsWith('http') ? (
-            <Image
-              src={images[selectedImageIndex]?.url || "/product-placeholder.jpg"}
-              alt={images[selectedImageIndex]?.alt || product.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-              <span className="text-gray-500">{product.title}</span>
-            </div>
-          )}
+          <Image
+            src={images[selectedImageIndex]?.url || "/product-placeholder.jpg"}
+            alt={images[selectedImageIndex]?.alt || product.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={!images[selectedImageIndex]?.url?.startsWith('http')}
+          />
         </div>
 
         {images.length > 1 && (
@@ -380,19 +375,14 @@ function ProductPageContent({
                 }`}
                 onClick={() => setSelectedImageIndex(index)}
               >
-                {image.url?.startsWith('http') ? (
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                    <span className="text-xs text-gray-500">No image</span>
-                  </div>
-                )}
+                <Image
+                  src={image.url}
+                  alt={image.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
+                  unoptimized={!image.url?.startsWith('http')}
+                />
               </div>
             ))}
           </div>
@@ -436,25 +426,15 @@ export default async function ProductPage({
   const images = product.images.edges.map(({ node }) => {
     // Log each image node
     console.log("Image node:", node);
-    
-    // Ensure URL is absolute (starts with http or https)
+
+    // Keep URLs as-is - they're either full URLs or local paths
     let imageUrl = node.url;
-    if (imageUrl && !imageUrl.startsWith('http')) {
-      // If it's a protocol-relative URL (starts with //)
-      if (imageUrl.startsWith('//')) {
-        imageUrl = `https:${imageUrl}`;
-      } 
-      // If it's a relative URL (doesn't start with /)
-      else if (!imageUrl.startsWith('/')) {
-        imageUrl = `/${imageUrl}`;
-      }
-      // For other relative URLs, prepend the Shopify domain
-      else {
-        const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN || 'a-ok.myshopify.com';
-        imageUrl = `https://${shopifyDomain}${imageUrl}`;
-      }
+
+    // Only handle protocol-relative URLs (starts with //)
+    if (imageUrl && imageUrl.startsWith('//')) {
+      imageUrl = `https:${imageUrl}`;
     }
-    
+
     return {
       url: imageUrl,
       alt: node.altText || product.title,
@@ -470,8 +450,6 @@ export default async function ProductPage({
     price: parseFloat(node.price.amount),
     available: node.availableForSale,
     selectedOptions: node.selectedOptions,
-    metafield: node.metafield,
-    metafields: node.metafields,
   }));
 
   const defaultVariant = variants[0];
@@ -550,65 +528,17 @@ export default async function ProductPage({
   // Extract color information
   const colorValues: string[] = [];
 
-  // First try to get color options from product metafield
-  if (product.metafield && product.metafield.value) {
-    try {
-      console.log(
-        "Found product metafield with value:",
-        product.metafield.value
-      );
+  // Try to get color options from product options
+  const colorOption = product.options?.find(
+    (option: any) => option.name.toLowerCase() === "color"
+  );
 
-      // Check if it's a JSON array
-      if (
-        product.metafield.value.startsWith("[") &&
-        product.metafield.value.endsWith("]")
-      ) {
-        const colors = JSON.parse(product.metafield.value);
-        if (Array.isArray(colors)) {
-          colorValues.push(...colors);
-        }
-      } else {
-        // Single color value
-        colorValues.push(product.metafield.value);
-      }
-    } catch (e) {
-      console.error("Error parsing product metafield:", e);
-    }
-  }
-
-  // If no colors found in metafields, try to get from product options
-  if (colorValues.length === 0) {
-    const colorOption = product.options?.find(
-      (option: any) => option.name.toLowerCase() === "color"
+  if (colorOption && colorOption.values.length > 0) {
+    console.log(
+      "Found color options in product options:",
+      colorOption.values
     );
-
-    if (colorOption && colorOption.values.length > 0) {
-      console.log(
-        "Found color options in product options:",
-        colorOption.values
-      );
-      colorValues.push(...colorOption.values);
-    }
-  }
-
-  // If still no colors found, check variant metafields for colors
-  if (colorValues.length === 0) {
-    console.log("Checking variant metafields for colors");
-    const colorSet = new Set<string>();
-
-    variants.forEach((variant) => {
-      if (variant.metafield && variant.metafield.value) {
-        console.log(
-          `Found color in variant ${variant.title}:`,
-          variant.metafield.value
-        );
-        colorSet.add(variant.metafield.value);
-      }
-    });
-
-    if (colorSet.size > 0) {
-      colorValues.push(...Array.from(colorSet));
-    }
+    colorValues.push(...colorOption.values);
   }
 
   // If still no colors found, check if there are color-related selectedOptions in variants
@@ -756,7 +686,6 @@ export default async function ProductPage({
 
   console.log("Product has color options:", hasColorOptions);
   console.log("Color options:", colorValues);
-  console.log("Product metafield:", product.metafield);
 
   return (
     <div className="container py-8">
