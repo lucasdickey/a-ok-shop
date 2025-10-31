@@ -153,6 +153,47 @@ The app includes a special offer component that generates discount codes:
 
 See [SHOPIFY_DISCOUNT_SETUP.md](./SHOPIFY_DISCOUNT_SETUP.md) for detailed setup instructions.
 
+## Agentic Commerce Protocol (ACP) Integration
+
+The storefront now exposes a draft implementation of the Agentic Commerce Protocol to support agent-to-merchant interactions over HTTP using Stripe for delegated payments and checkout orchestration. All endpoints live under `/api/acp/*` and share the existing `STRIPE_SECRET_KEY` configuration.
+
+| Endpoint | Method | Description |
+| --- | --- | --- |
+| `/api/acp/catalog` | `GET` | Returns the product catalog with pricing, descriptions, sizing/options, and image metadata in ACP-compatible JSON. |
+| `/api/acp/checkout` | `POST` | Creates a Stripe Checkout Session from ACP cart items (variant IDs and quantities) and returns the hosted checkout URL for agent delegation. |
+| `/api/acp/delegate-payment` | `POST` | Creates a Stripe Payment Intent for direct delegate payments and returns the client secret for confirmation. |
+| `/api/acp/webhook` | `POST` | Mirrors the existing Stripe webhook handler for ACP checkout lifecycle events. |
+
+### Example Checkout Payload
+
+```json
+POST /api/acp/checkout
+{
+  "cart": {
+    "items": [
+      { "variantId": "gid://shopify/ProductVariant/123", "quantity": 2 }
+    ]
+  },
+  "successUrl": "https://example.com/success",
+  "cancelUrl": "https://example.com/cancel",
+  "customer": { "email": "buyer@example.com" }
+}
+```
+
+### Delegate Payment Payload
+
+```json
+POST /api/acp/delegate-payment
+{
+  "amount": 1200,
+  "currency": "usd",
+  "confirm": false,
+  "metadata": { "orderReference": "agent-123" }
+}
+```
+
+> **Note:** `amount` should be specified in the smallest currency unit (e.g., cents for USD). When `confirm` is set to `true`, you must provide a `paymentMethodId` from a previously tokenized card or wallet.
+
 ## Project Structure
 
 ```
