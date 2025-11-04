@@ -1,6 +1,6 @@
-import catalogData from '../../product-catalog.json';
+import catalogData from "../../product-catalog.json";
 
-// Types matching the JSON structure from Shopify
+// Types reflecting the static product catalog JSON bundled with the app
 export type Product = {
   id: string;
   handle: string;
@@ -84,7 +84,7 @@ export type Product = {
   publishedAt?: string;
 };
 
-// Simplified product type for API responses (matching Shopify's format)
+// Simplified product type for API responses derived from the static catalog
 export type SimpleProduct = {
   id: string;
   handle: string;
@@ -138,7 +138,7 @@ export type SimpleProduct = {
   productType: string;
 };
 
-// Load all products from the JSON catalog
+// Load all products from the embedded JSON catalog
 function loadProducts(): Product[] {
   return catalogData.products.edges.map(({ node }: any) => node as Product);
 }

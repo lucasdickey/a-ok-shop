@@ -155,7 +155,7 @@ See [SHOPIFY_DISCOUNT_SETUP.md](./SHOPIFY_DISCOUNT_SETUP.md) for detailed setup 
 
 ## Agentic Commerce Protocol (ACP) Integration
 
-The storefront now exposes a draft implementation of the Agentic Commerce Protocol to support agent-to-merchant interactions over HTTP using Stripe for delegated payments and checkout orchestration. All endpoints live under `/api/acp/*` and share the existing `STRIPE_SECRET_KEY` configuration.
+The storefront now exposes a draft implementation of the Agentic Commerce Protocol to support agent-to-merchant interactions over HTTP using Stripe for delegated payments and checkout orchestration. All endpoints live under `/api/acp/*` and share the existing `STRIPE_SECRET_KEY` configuration. Product metadata is served directly from the bundled `product-catalog.json` snapshot, so no Shopify API dependency is required for ACP flows.
 
 | Endpoint | Method | Description |
 | --- | --- | --- |
@@ -173,7 +173,7 @@ POST /api/acp/checkout
 {
   "cart": {
     "items": [
-      { "variantId": "gid://shopify/ProductVariant/123", "quantity": 2 }
+      { "variantId": "variant_a-ok-glitched-vectors-tee-red", "quantity": 2 }
     ]
   },
   "success_url": "https://example.com/success",
