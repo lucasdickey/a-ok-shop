@@ -5,34 +5,82 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 const stripe = stripeSecretKey
   ? new Stripe(stripeSecretKey, {
-      apiVersion: "2025-09-30.clover",
+      apiVersion: "2023-10-16",
     })
   : null;
 
 type DelegatePaymentRequest = {
   amount: number;
   currency?: string;
-  paymentMethodId?: string;
-  customerId?: string;
-  customerEmail?: string;
+  payment_method?: string;
+  customer?: string;
+  customer_email?: string;
   metadata?: Record<string, string>;
   confirm?: boolean;
+  description?: string;
+  setup_future_usage?: "off_session" | "on_session";
 };
 
-function validateRequest(body: DelegatePaymentRequest) {
-  if (!body || typeof body.amount !== "number") {
-    return "`amount` must be provided as a number of the smallest currency unit.";
+function normaliseMetadata(value: unknown) {
+  if (!value) {
+    return undefined;
   }
 
-  if (!Number.isInteger(body.amount) || body.amount <= 0) {
-    return "`amount` must be a positive integer representing the smallest currency unit.";
+  if (typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("`metadata` must be an object with string values");
   }
 
-  if (body.confirm && !body.paymentMethodId) {
-    return "`paymentMethodId` is required when `confirm` is true.";
+  const metadata: Record<string, string> = {};
+  for (const [key, raw] of Object.entries(value)) {
+    if (typeof raw === "undefined" || raw === null) {
+      continue;
+    }
+
+    metadata[key] = String(raw);
   }
 
-  return null;
+  return metadata;
+}
+
+function parseRequest(payload: unknown): DelegatePaymentRequest {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Request body must be a JSON object");
+  }
+
+  const data = payload as Partial<DelegatePaymentRequest> & {
+    paymentMethodId?: string;
+    customerId?: string;
+    customerEmail?: string;
+    setupFutureUsage?: "off_session" | "on_session";
+  };
+
+  if (typeof data.amount !== "number") {
+    throw new Error("`amount` must be provided as a number in the smallest currency unit");
+  }
+
+  if (!Number.isInteger(data.amount) || data.amount <= 0) {
+    throw new Error("`amount` must be a positive integer representing the smallest currency unit");
+  }
+
+  const paymentMethod = data.payment_method ?? data.paymentMethodId;
+
+  if (data.confirm && !paymentMethod) {
+    throw new Error("`payment_method` is required when `confirm` is true");
+  }
+
+  const metadata = normaliseMetadata(data.metadata);
+
+  return {
+    amount: data.amount,
+    currency: data.currency ?? "usd",
+    payment_method: paymentMethod,
+    customer: data.customer ?? data.customerId,
+    customer_email: data.customer_email ?? data.customerEmail,
+    metadata,
+    confirm: Boolean(data.confirm),
+    description: data.description,
+    setup_future_usage: data.setup_future_usage ?? data.setupFutureUsage,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -44,42 +92,62 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: DelegatePaymentRequest;
+  let payload: DelegatePaymentRequest;
 
   try {
-    body = await request.json();
+    const body = await request.json();
+    payload = parseRequest(body);
   } catch (error) {
-    console.error("Invalid JSON payload", error);
-    return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
-  }
-
-  const validationError = validateRequest(body);
-  if (validationError) {
-    return NextResponse.json({ error: validationError }, { status: 400 });
+    console.error("Invalid ACP delegate payment payload", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Invalid JSON payload" },
+      { status: 400 }
+    );
   }
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: body.amount,
-      currency: (body.currency || "usd").toLowerCase(),
-      customer: body.customerId,
-      payment_method: body.paymentMethodId,
-      confirm: Boolean(body.confirm && body.paymentMethodId),
-      automatic_payment_methods: { enabled: true },
-      receipt_email: body.customerEmail,
-      metadata: {
-        protocol: "acp-draft-2024-12",
-        ...body.metadata,
+    const idempotencyKey = request.headers.get("idempotency-key") || undefined;
+
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount: payload.amount,
+        currency: payload.currency?.toLowerCase(),
+        customer: payload.customer,
+        payment_method: payload.payment_method,
+        confirm: Boolean(payload.confirm && payload.payment_method),
+        automatic_payment_methods:
+          payload.payment_method || payload.confirm
+            ? undefined
+            : { enabled: true },
+        receipt_email: payload.customer_email,
+        description: payload.description,
+        setup_future_usage: payload.setup_future_usage,
+        metadata: {
+          protocol: "acp-draft-2024-12",
+          ...payload.metadata,
+        },
       },
-    });
+      idempotencyKey ? { idempotencyKey } : undefined
+    );
 
-    return NextResponse.json({
-      id: paymentIntent.id,
-      clientSecret: paymentIntent.client_secret,
-      status: paymentIntent.status,
-    });
+    return NextResponse.json(
+      {
+        protocol: "acp-draft-2024-12",
+        payment_intent: {
+          id: paymentIntent.id,
+          client_secret: paymentIntent.client_secret,
+          status: paymentIntent.status,
+          next_action: paymentIntent.next_action ?? undefined,
+        },
+      },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (error) {
-    console.error("Error creating delegate payment", error);
+    console.error("Error creating ACP delegate payment", error);
     return NextResponse.json(
       { error: "Failed to create payment intent" },
       { status: 500 }
@@ -93,7 +161,9 @@ export function OPTIONS() {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Accept, Content-Type, Idempotency-Key",
     },
   });
 }
+
+export const runtime = "nodejs";

@@ -92,14 +92,17 @@ export type SimpleProduct = {
   description: string;
   descriptionHtml?: string;
   createdAt: string;
+  updatedAt: string;
   priceRange: {
     minVariantPrice: {
       amount: string;
+      currencyCode: string;
     };
   };
   images: {
     edges: Array<{
       node: {
+        id: string;
         url: string;
         altText: string;
       };
@@ -110,9 +113,15 @@ export type SimpleProduct = {
       node: {
         id: string;
         title: string;
+        sku?: string;
         price: {
           amount: string;
+          currencyCode: string;
         };
+        compareAtPrice?: {
+          amount: string;
+          currencyCode: string;
+        } | null;
         availableForSale: boolean;
         selectedOptions?: Array<{
           name: string;
@@ -145,14 +154,17 @@ export function getAllProducts(): SimpleProduct[] {
     description: product.description,
     descriptionHtml: product.descriptionHtml,
     createdAt: product.createdAt,
+    updatedAt: product.updatedAt,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,
+        currencyCode: product.priceRange.minVariantPrice.currencyCode,
       },
     },
     images: {
       edges: product.images.edges.map((edge) => ({
         node: {
+          id: edge.node.id,
           url: edge.node.url,
           altText: edge.node.altText || product.title,
         },
@@ -163,9 +175,12 @@ export function getAllProducts(): SimpleProduct[] {
         node: {
           id: edge.node.id,
           title: edge.node.title,
+          sku: edge.node.sku,
           price: {
             amount: edge.node.price.amount,
+            currencyCode: edge.node.price.currencyCode,
           },
+          compareAtPrice: edge.node.compareAtPrice ?? undefined,
           availableForSale: edge.node.availableForSale,
           selectedOptions: edge.node.selectedOptions,
         },
