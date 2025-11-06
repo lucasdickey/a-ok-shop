@@ -68,7 +68,7 @@ export function isOriginAllowed(origin: string | null): boolean {
  */
 export function getCorsHeaders(requestOrigin: string | null): Record<string, string> {
   const allowedOrigin = isOriginAllowed(requestOrigin)
-    ? requestOrigin
+    ? (requestOrigin as string)
     : getAllowedOrigins()[0] || "*";
 
   return {
