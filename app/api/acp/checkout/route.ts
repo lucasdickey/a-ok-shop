@@ -182,10 +182,10 @@ export async function POST(request: NextRequest) {
         line_items: lineItems,
         success_url: successUrl,
         cancel_url: cancelUrl,
-        locale: payload.locale,
+        locale: payload.locale as Stripe.Checkout.SessionCreateParams.Locale | undefined,
         customer_email: payload.customer?.email,
         shipping_address_collection: {
-          allowed_countries: shippingCountries,
+          allowed_countries: shippingCountries as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
         },
         metadata: {
           ...payload.metadata,

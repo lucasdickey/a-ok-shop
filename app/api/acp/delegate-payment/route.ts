@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create(
       {
         amount: payload.amount,
-        currency: payload.currency?.toLowerCase(),
+        currency: payload.currency?.toLowerCase() as string | undefined,
         customer: payload.customer,
         payment_method: payload.payment_method,
         confirm: Boolean(payload.confirm && payload.payment_method),
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
             : { enabled: true },
         receipt_email: payload.customer_email,
         description: payload.description,
-        setup_future_usage: payload.setup_future_usage,
+        setup_future_usage: payload.setup_future_usage as Stripe.PaymentIntentCreateParams.SetupFutureUsage | undefined,
         metadata: {
           ...payload.metadata,
           protocol: "acp-draft-2024-12",
