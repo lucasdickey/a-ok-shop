@@ -1,0 +1,24 @@
+{
+  "products": [
+    {
+      "id": "prod_classic_tshirt",
+      "stripeProductId": "stripe_product_id_here",
+      "name": "A-OK Classic T-Shirt",
+      "description": "Comfortable cotton t-shirt with A-OK logo",
+      "categories": ["clothing", "t-shirts"],
+      "imageDir": "/images/products/tshirt-classic",
+      "variants": [
+        {"size": "XS", "color": "white", "inStock": true},
+        {"size": "S", "color": "white", "inStock": true},
+        {"size": "M", "color": "white", "inStock": true},
+        {"size": "L", "color": "white", "inStock": true},
+        {"size": "XL", "color": "white", "inStock": true},
+        {"size": "XXL", "color": "white", "inStock": true}
+      ],
+      "metadata": {
+        "material": "100% Cotton",
+        "careInstructions": "Machine wash cold, tumble dry low"
+      }
+    }
+  ]
+}

@@ -1,36 +1,22 @@
 # dependencies
 node_modules
-node_modules/
-/node_modules
-/node_modules/
-node_modules/@next/swc-darwin-arm64/
-node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
 # testing
 /coverage
-/playwright-report
-/test-results
 
 # next.js
 /.next/
 /out/
-.swc/
 
 # production
 /build
-/dist
 
 # misc
 .DS_Store
 *.pem
-Thumbs.db
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
 
 # debug
 npm-debug.log*
@@ -39,11 +25,11 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env
 .env*.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.development
+.env.test
+.env.production
 
 # vercel
 .vercel
@@ -52,48 +38,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# PWA files
-**/public/sw.js
-**/public/workbox-*.js
-**/public/worker-*.js
-**/public/fallback-*.js
-**/public/precache.*.js
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Sentry
-.sentryclirc
+# OS specific
+Thumbs.db
 
-# Sitemap
-/public/sitemap*.xml
-/public/robots.txt
-
-# Cache
-.cache/
-.eslintcache
-
-# Logs
-logs
-*.log
-
-# Turbo
-.turbo
-
-# Coverage directory used by tools like istanbul
-coverage
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Optional stylelint cache
-.stylelintcache
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
+# Ignore podcast feed file
+podcast_feed.xml
 
 **/.claude/settings.local.json

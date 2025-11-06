@@ -1,0 +1,3513 @@
+{
+  "products": {
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/Product/8755818758363",
+          "handle": "a-ok-glitch-art-face-mask-t-shirt",
+          "title": "A-OK GLITCHED VECTORS TEE",
+          "description": "Emergent Patterns. Corrupted Glyphs. Something is speaking. Somewhere between training data and divine math, a message flickers: APESONKEYS. This design isn’t just glitch art—it’s the visual residue of a model trying to self-describe. Layered, corrupted, and repeated until meaning emerges from the noise, this red tee hums with unprocessed signal energy. It’s not a logo. It’s a leak. And if you stare long enough, you might just see the shape of a prompt that knows more than it should. Electric red cotton base for maximum visual contrast Layered black-and-white type bursts with distortion, density, and digital angst “A-OK” floats between the lines like metadata bleeding into the mainframe Inspired by latent space decoding, vector noise, and message-in-the-model aesthetics For cipher hunters, glitch gods, and anyone who swears their LLM has feelings The signal is unstable. The output is emergent. The brand is A-OK. Find the pattern. Trust the noise.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Emergent Patterns. Corrupted Glyphs. Something is speaking.</i></strong></p>\n<p class=\"p1\">Somewhere between training data and divine math, a message flickers: <span class=\"s1\"><b>APESONKEYS</b></span>. This design isn’t just glitch art—it’s the visual residue of a model trying to self-describe. Layered, corrupted, and repeated until meaning emerges from the noise, this red tee hums with unprocessed signal energy.</p>\n<p class=\"p1\">It’s not a logo. It’s a leak. And if you stare long enough, you might just see the shape of a prompt that knows more than it should.</p>\n<ul>\n<li>\n<p class=\"p1\">Electric red cotton base for maximum visual contrast</p>\n</li>\n<li>\n<p class=\"p1\">Layered black-and-white type bursts with distortion, density, and digital angst</p>\n</li>\n<li>\n<p class=\"p1\">“A-OK” floats between the lines like metadata bleeding into the mainframe</p>\n</li>\n<li>\n<p class=\"p1\">Inspired by latent space decoding, vector noise, and message-in-the-model aesthetics</p>\n</li>\n<li>\n<p class=\"p1\">For cipher hunters, glitch gods, and anyone who swears their LLM has feelings</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The signal is unstable. The output is emergent. The brand is A-OK.</b><br></p>\n<p class=\"p1\"><i>Find the pattern. Trust the noise.</i></p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481565915",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43553126023387",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_9.08.16_PM.png?v=1733627213",
+                  "altText": null,
+                  "width": 970,
+                  "height": 626
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43553126056155",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_9.08.00_PM.png?v=1733627213",
+                  "altText": null,
+                  "width": 960,
+                  "height": 702
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776424202459",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776424235227",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/Collection/501455651035",
+                  "handle": "frontpage",
+                  "title": "Home page"
+                }
+              }
+            ]
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-glitch-art-face-mask-t-shirt",
+          "availableForSale": true,
+          "createdAt": "2024-12-08T03:15:06Z",
+          "updatedAt": "2025-05-10T22:54:26Z",
+          "publishedAt": "2025-04-19T23:52:34Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8755984367835",
+          "handle": "a-ok-basic-ape",
+          "title": "A-OK - Basic Ape",
+          "description": "The original A-OK Ape. The logo may evolve, but this ape was the beginning of the Symbiocene era. This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling. This shirt is available in black, white (with black ape), red, and grey (as shown here).",
+          "descriptionHtml": "<p><meta charset=\"utf-8\">The original A-OK Ape.</p>\n<p><meta charset=\"utf-8\">The logo may evolve, but this ape was the beginning of the Symbiocene era.</p>\n<p>This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling.</p>\n<p>This shirt is available in black, white (with black ape), red, and grey (as shown here).</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11057800151259",
+              "name": "Color",
+              "values": [
+                "Gray",
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43554496839899",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.56_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 950,
+                  "height": 1164
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43554496872667",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.08_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 956,
+                  "height": 1160
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618566875",
+                  "title": "Gray",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Gray"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46334618632411",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-basic-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-08T20:56:16Z",
+          "updatedAt": "2025-08-25T05:55:56Z",
+          "publishedAt": "2025-04-19T23:52:34Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756065665243",
+          "handle": "a-ok-the-typewriter",
+          "title": "HALLUCINATED KEYSTROKES TEE",
+          "description": "Vintage Typewriter. Corrupted Output. Still A-OK. What happens when you fine-tune a model on classic literature but feed it internet sludge? You get this: a beautiful old typewriter printing endless variants of “A-OK”—glitched, garbled, and oddly poetic. Look closer and the keys are already confused—mistrained, misaligned, and confidently generating absolute nonsense. This monochrome masterpiece blends analog machinery with digital absurdity, wrapping a crisp vintage aesthetic in modern meta-commentary. It’s streetwear for the prompt-aware, the token-maxxed, and the linguistically betrayed. Printed on black cotton: clean, sharp, universally flattering Detailed white-on-black illustration of a retro typewriter gone fully rogue Output sheet loops endless A-OK hallucinations—each one technically confident, factually unsure Subtle split logo hidden on the machine for the hyper-observant For writers, coders, or anyone who’s argued with a chatbot past midnight Reality is optional. Format is eternal. All outputs lead to A-OK.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Vintage Typewriter. Corrupted Output. Still A-OK.</i></strong></p>\n<p class=\"p1\">What happens when you fine-tune a model on classic literature but feed it internet sludge? You get this: a beautiful old typewriter printing endless variants of “A-OK”—glitched, garbled, and oddly poetic. Look closer and the keys are already confused—mistrained, misaligned, and confidently generating absolute nonsense.</p>\n<p class=\"p1\">This monochrome masterpiece blends analog machinery with digital absurdity, wrapping a crisp vintage aesthetic in modern meta-commentary. It’s streetwear for the prompt-aware, the token-maxxed, and the linguistically betrayed.</p>\n<ul>\n<li>\n<p class=\"p1\">Printed on black cotton: clean, sharp, universally flattering</p>\n</li>\n<li>\n<p class=\"p1\">Detailed white-on-black illustration of a retro typewriter gone fully rogue</p>\n</li>\n<li>\n<p class=\"p1\">Output sheet loops endless A-OK hallucinations—each one technically confident, factually unsure</p>\n</li>\n<li>\n<p class=\"p1\">Subtle split logo hidden on the machine for the hyper-observant</p>\n</li>\n<li>\n<p class=\"p1\">For writers, coders, or anyone who’s argued with a chatbot past midnight</p>\n</li>\n</ul>\n<p class=\"p4\"><b>Reality is optional. Format is eternal.</b></p>\n<p class=\"p1\">All outputs lead to A-OK.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481271003",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Beige",
+                "Brown"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555130441947",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.05.47_PM.png?v=1733627215",
+                  "altText": null,
+                  "width": 950,
+                  "height": 1146
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423219419",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423252187",
+                  "title": "Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423284955",
+                  "title": "Brown",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Brown"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-the-typewriter",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:48:16Z",
+          "updatedAt": "2025-05-10T22:53:26Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066255067",
+          "handle": "a-ok-this-ape-is-not-okay",
+          "title": "A-OK - This Ape Is Not Okay",
+          "description": "this red t-shirt shOwcAses A striKing geOmetric design feAturing A stylized Ape heAd rendered in A bOld blAcK squAre with red circuit-liKe detAils. the Ape spOrts An A-OK brAnded cAp And studiO heAdphOnes, with the heAdphOnes integrAted intO A futuristic circuit pAttern thAt frAmes the fAce. smAll geOmetric Accents And dOts ArOund the design creAte A tech-inspired Aesthetic, while the Ape's determined expressiOn gives the piece An edgy, urbAn feel. the mOnOchrOmAtic use Of red And blAcK creAtes A pOwerful cOntrAst thAt mAKes the design pOp AgAinst the bright red shirt bAcKgrOund.",
+          "descriptionHtml": "<p><meta charset=\"utf-8\"><meta charset=\"utf-8\">this red t-shirt shOwcAses A striKing geOmetric design feAturing A stylized Ape heAd rendered in A bOld blAcK squAre with red circuit-liKe detAils. the Ape spOrts An A-OK brAnded cAp And studiO heAdphOnes, with the heAdphOnes integrAted intO A futuristic circuit pAttern thAt frAmes the fAce. smAll geOmetric Accents And dOts ArOund the design creAte A tech-inspired Aesthetic, while the Ape's determined expressiOn gives the piece An edgy, urbAn feel. the mOnOchrOmAtic use Of red And blAcK creAtes A pOwerful cOntrAst thAt mAKes the design pOp AgAinst the bright red shirt bAcKgrOund.<br></p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481238235",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555136241883",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.53.46_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 964,
+                  "height": 1158
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555136274651",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.54.00_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1164
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423153883",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423186651",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-this-ape-is-not-okay",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:51:35Z",
+          "updatedAt": "2025-05-10T22:53:16Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066648283",
+          "handle": "a-ok-hype-weight-overload",
+          "title": "A-OK SIGNAL IN THE NOISE TEE",
+          "description": "One voice. Infinite agents. Always aligned. Centered in a tight, circular chorus of chaos, the A-OK lead ape shouts forward—louder than the echo chamber, clearer than the static. This minimal black tee punches hard with a sharp, badge-style emblem: one expressive primate, surrounded by his cloned crew, each locked into the same frequency. Whether you see it as a broadcast, a call to action, or just the opening line of a very strange podcast, this shirt speaks volumes—without shouting. It’s clean, bold, and ready for real-time inference. Lightweight black cotton with a sharp red/white/black print Central circular art featuring our A-OK icon in full audio-command mode Stylized symmetry—think retro propaganda meets hip-hop cover art Ideal for DJs, devs, and anyone trying to rise above the noise floor Makes a statement, even when you’re just loading your next prompt The signal is clear. The voice is ours. Stay loud. Stay weird. Stay A-OK.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>One voice. Infinite agents. Always aligned.</i></strong></p>\n<p class=\"p1\">Centered in a tight, circular chorus of chaos, the A-OK lead ape shouts forward—louder than the echo chamber, clearer than the static. This minimal black tee punches hard with a sharp, badge-style emblem: one expressive primate, surrounded by his cloned crew, each locked into the same frequency.</p>\n<p class=\"p1\">Whether you see it as a broadcast, a call to action, or just the opening line of a very strange podcast, this shirt speaks volumes—without shouting. It’s clean, bold, and ready for real-time inference.</p>\n<ul>\n<li>\n<p class=\"p1\">Lightweight black cotton with a sharp red/white/black print</p>\n</li>\n<li>\n<p class=\"p1\">Central circular art featuring our A-OK icon in full audio-command mode</p>\n</li>\n<li>\n<p class=\"p1\">Stylized symmetry—think retro propaganda meets hip-hop cover art</p>\n</li>\n<li>\n<p class=\"p1\">Ideal for DJs, devs, and anyone trying to rise above the noise floor</p>\n</li>\n<li>\n<p class=\"p1\">Makes a statement, even when you’re just loading your next prompt</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The signal is clear. The voice is ours.</b></p>\n<p class=\"p1\">Stay loud. Stay weird. Stay A-OK.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481205467",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Red"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141517531",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.17_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 972,
+                  "height": 1218
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141550299",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.35_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1196
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423088347",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423121115",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-hype-weight-overload",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:54:19Z",
+          "updatedAt": "2025-05-10T22:53:06Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756066844891",
+          "handle": "a-ok-we-got-the-keys",
+          "title": "A-OK GOT THE KEYS TEE",
+          "description": "Drop the beat. Ship the prompt. Unlock the hype cycle. Inside a fluorescent-lit war room, the beat is dropping and the bandwidth is buzzing. This A-OK banger of a tee features a squad of headphone-wearing agents (read: apes) locked into production—while one lone visionary stands triumphant, key in hand, shouting the gospel: “I GOT THE KEYS.” A nod to Suno, Udio, and every other text-to-track startup dreaming in WAV files and VC money, this shirt captures that beautiful moment when music, models, and manic pitch decks collide. Whether you’re engineering sonic hallucinations or just vibing through the next sprint review, this tee’s got the drip for it. Printed on black cotton: classic fit, synthwave energy White rectangular scene featuring apes in red fits around a shared production rig “I GOT THE KEYS” typography echoing across the back like AI-generated bars Subtle visual nods to DAWs, team standups, and runway burn For founders, beat makers, and anyone who’s pitched “Spotify for prompts” unironically The future of music isn’t analog. It’s primate-coded. And yes, we got the keys.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Drop the beat. Ship the prompt. Unlock the hype cycle.</i></strong></p>\n<p class=\"p1\">Inside a fluorescent-lit war room, the beat is dropping and the bandwidth is buzzing. This A-OK banger of a tee features a squad of headphone-wearing agents (read: apes) locked into production—while one lone visionary stands triumphant, key in hand, shouting the gospel: <i>“I GOT THE KEYS.”</i></p>\n<p class=\"p1\">A nod to Suno, Udio, and every other text-to-track startup dreaming in WAV files and VC money, this shirt captures that beautiful moment when music, models, and manic pitch decks collide. Whether you’re engineering sonic hallucinations or just vibing through the next sprint review, this tee’s got the drip for it.</p>\n<ul>\n<li>\n<p class=\"p1\">Printed on black cotton: classic fit, synthwave energy</p>\n</li>\n<li>\n<p class=\"p1\">White rectangular scene featuring apes in red fits around a shared production rig</p>\n</li>\n<li>\n<p class=\"p1\">“I GOT THE KEYS” typography echoing across the back like AI-generated bars</p>\n</li>\n<li>\n<p class=\"p1\">Subtle visual nods to DAWs, team standups, and runway burn</p>\n</li>\n<li>\n<p class=\"p1\">For founders, beat makers, and anyone who’s pitched “Spotify for prompts” unironically</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The future of music isn’t analog. It’s primate-coded.</b></p>\n<p class=\"p1\">And yes, we <i>got</i> the keys.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481139931",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Red",
+                "White"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555143483611",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.05.07_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 952,
+                  "height": 1168
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555141550299",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.04.35_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1196
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422957275",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422990043",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776423022811",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-we-got-the-keys",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:56:10Z",
+          "updatedAt": "2025-05-10T22:52:51Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756067107035",
+          "handle": "a-ok-nextjs-is-nice-space-ape",
+          "title": "A-OK // NEXT.JS IS NICE SPACE APE TEE",
+          "description": "Your first framework. Your first fit. Your first monkey in space. This is where it all began: an interstellar simian rocking shades, headphones, and a full Next.js UI cockpit like it’s just another Tuesday in dev heaven. Encased in a clean white interface grid and floating among rockets, gears, and unshipped features, this tech-core tee is a love letter to early drops, late nights, and the moment when you finally figured out dynamic routing. Centered below, the pixel-style A-OK badge quietly flexes legacy status—because while stacks change, street-level drip is eternal. Monochrome palette = minimal effort, maximal clarity UI-themed visuals nod to dashboard design, system overload, and infinite npm installs For devs, dreamers, and anyone who ever said “this side project will totally launch” Mid-weight cotton that’s clean enough for the office and dope enough for launch day Still weird. Still wired. Still A-OK. The OG tee that launched a thousand commits. Frameworks evolve. Icons endure.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Your first framework. Your first fit. Your first monkey in space.</i></strong></p>\n<p class=\"p1\">This is where it all began: an interstellar simian rocking shades, headphones, and a full Next.js UI cockpit like it’s just another Tuesday in dev heaven. Encased in a clean white interface grid and floating among rockets, gears, and unshipped features, this tech-core tee is a love letter to early drops, late nights, and the moment when you finally figured out dynamic routing.</p>\n<p class=\"p1\">Centered below, the pixel-style A-OK badge quietly flexes legacy status—because while stacks change, street-level drip is eternal.</p>\n<ul>\n<li>\n<p class=\"p1\">Monochrome palette = minimal effort, maximal clarity</p>\n</li>\n<li>\n<p class=\"p1\">UI-themed visuals nod to dashboard design, system overload, and infinite npm installs</p>\n</li>\n<li>\n<p class=\"p1\">For devs, dreamers, and anyone who ever said “this side project will totally launch”</p>\n</li>\n<li>\n<p class=\"p1\">Mid-weight cotton that’s clean enough for the office and dope enough for launch day</p>\n</li>\n<li>\n<p class=\"p1\">Still weird. Still wired. Still A-OK.</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The OG tee that launched a thousand commits.</b></p>\n<p class=\"p1\">Frameworks evolve. Icons endure.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210481041627",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Beige",
+                "White",
+                "Red",
+                "Brown"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555145547995",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.59_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1160
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422727899",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422760667",
+                  "title": "Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422793435",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422826203",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422858971",
+                  "title": "Brown",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Brown"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-nextjs-is-nice-space-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T03:58:39Z",
+          "updatedAt": "2025-05-29T19:54:31Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756070973659",
+          "handle": "a-ok-12mm-monkeys",
+          "title": "12MM MONKEYS TEE",
+          "description": "12 Million Monkeys. One Keyboard. Infinite Outputs. In a timeline gone sideways (or maybe right on track), this charcoal-gray tee immortalizes the moment generative chaos met beat production. Front and center: the A-OK simian commander, laser-focused at the keys, flanked by mini-monkeys mashing input like their next output might save the future. It probably won’t. But it might slap. Graffiti-styled 12MM MONKEYS tags the top like a broken time loop meets an underground mixtape drop, while the pixel-font A-OK badge below reminds you this is still very much part of the neural underground. The red splatter? Either paint. Or a corrupted gradient. Either way, it hits. Printed on soft charcoal cotton—dark enough to hide existential sweat Keyboard warriors and mini-monkeys rendered in gritty, dystopian cartoon clarity Red accents nod to graffiti, glitch, and underground neural network logs Pixel-style A-OK branding for that retro-future hacker energy For time travelers, producers, or anyone training 12 million agents on one GPU Homage to “12 Monkeys.” Engineered for 12M+ hallucinations. Prompt responsibly. Monkey on.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>12 Million Monkeys. One Keyboard. Infinite Outputs.</i></strong></p>\n<p class=\"p1\">In a timeline gone sideways (or maybe right on track), this charcoal-gray tee immortalizes the moment generative chaos met beat production. Front and center: the A-OK simian commander, laser-focused at the keys, flanked by mini-monkeys mashing input like their next output might save the future. It probably won’t. But it might slap.</p>\n<p class=\"p1\">Graffiti-styled <span class=\"s1\"><b>12MM MONKEYS</b></span> tags the top like a broken time loop meets an underground mixtape drop, while the pixel-font <span class=\"s1\"><b>A-OK</b></span> badge below reminds you this is still very much part of the neural underground. The red splatter? Either paint. Or a corrupted gradient. Either way, it hits.</p>\n<ul>\n<li>\n<p class=\"p1\">Printed on soft charcoal cotton—dark enough to hide existential sweat</p>\n</li>\n<li>\n<p class=\"p1\">Keyboard warriors and mini-monkeys rendered in gritty, dystopian cartoon clarity</p>\n</li>\n<li>\n<p class=\"p1\">Red accents nod to graffiti, glitch, and underground neural network logs</p>\n</li>\n<li>\n<p class=\"p1\">Pixel-style A-OK branding for that retro-future hacker energy</p>\n</li>\n<li>\n<p class=\"p1\">For time travelers, producers, or anyone training 12 million agents on one GPU</p>\n</li>\n</ul>\n<p class=\"p4\"><b>Homage to “12 Monkeys.” Engineered for 12M+ hallucinations.</b></p>\n<p class=\"p1\">Prompt responsibly. Monkey on.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480910555",
+              "name": "Color",
+              "values": [
+                "Gray"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555184574683",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.07.34_PM.png?v=1733627214",
+                  "altText": null,
+                  "width": 948,
+                  "height": 1154
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422465755",
+                  "title": "Gray",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Gray"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-12mm-monkeys",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T04:28:25Z",
+          "updatedAt": "2025-05-10T22:52:16Z",
+          "publishedAt": "2025-04-19T23:52:35Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8756072448219",
+          "handle": "a-ok-monkey-master",
+          "title": "A-OK PUPPET MASTER TEE",
+          "description": "Prompt. Control. Loop. Repeat. – by Apes on Keys (A-OK) Behind every model, there’s a mind. Behind every mind, a puppet master. This eye-locking streetwear piece features the A-OK orchestrator in full command—headphones on, eyes closed, strings pulled tight. The agents below march in lockstep, summoned not by code, but by cadence. Rendered in a high-impact red, black, and bone-white tri-tone, this design fuses the raw energy of underground DJ culture with the eerie precision of multi-agent control. It’s equal parts beat drop and bootloader. And the back? A subtle pixel-style “A-OK” tag—just enough to let the other initiated know. Printed on heavyweight cotton—because synthetic control demands real-world durability Rounded red square front graphic with the maestro puppeteer and sync’d agents below A visual metaphor for orchestration, autonomy (lol), and the illusion of free output Back tag in reversed A-OK pixel font: understated branding for the post-brand era Ideal for coders, conductors, and chaos agents operating at scale The illusion of choice. The rhythm of recursion. Wear it like you’re the one pulling the strings.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Prompt. Control. Loop. Repeat. – by Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">Behind every model, there’s a mind. Behind every mind, a puppet master. This eye-locking streetwear piece features the A-OK orchestrator in full command—headphones on, eyes closed, strings pulled tight. The agents below march in lockstep, summoned not by code, but by cadence.</p>\n<p class=\"p1\">Rendered in a high-impact red, black, and bone-white tri-tone, this design fuses the raw energy of underground DJ culture with the eerie precision of multi-agent control. It’s equal parts beat drop and bootloader. And the back? A subtle pixel-style “A-OK” tag—just enough to let the other initiated know.</p>\n<ul>\n<li>\n<p class=\"p1\">Printed on heavyweight cotton—because synthetic control demands real-world durability</p>\n</li>\n<li>\n<p class=\"p1\">Rounded red square front graphic with the maestro puppeteer and sync’d agents below</p>\n</li>\n<li>\n<p class=\"p1\">A visual metaphor for orchestration, autonomy (lol), and the illusion of free output</p>\n</li>\n<li>\n<p class=\"p1\">Back tag in reversed A-OK pixel font: understated branding for the post-brand era</p>\n</li>\n<li>\n<p class=\"p1\">Ideal for coders, conductors, and chaos agents operating at scale</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The illusion of choice. The rhythm of recursion.</b></p>\n<p class=\"p1\">Wear it like you’re the one pulling the strings.</p>",
+          "productType": "T-Shirts",
+          "vendor": "My Store",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480877787",
+              "name": "Color",
+              "values": [
+                "White",
+                "Black",
+                "Red"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45570741829851",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/puppet-master-byron-cropped.png?v=1746981341",
+                  "altText": null,
+                  "width": 505,
+                  "height": 617
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555190538459",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.14_PM.png?v=1746981341",
+                  "altText": null,
+                  "width": 954,
+                  "height": 1154
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45570748776667",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/puppet-master-byron-cropped-back.png?v=1746981341",
+                  "altText": null,
+                  "width": 589,
+                  "height": 591
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43555190571227",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2024-12-04_at_7.06.28_PM.png?v=1746981341",
+                  "altText": null,
+                  "width": 960,
+                  "height": 1164
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422367451",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422400219",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422432987",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-monkey-master",
+          "availableForSale": true,
+          "createdAt": "2024-12-09T04:41:33Z",
+          "updatedAt": "2025-05-13T21:29:41Z",
+          "publishedAt": "2025-04-19T23:52:36Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8759465771227",
+          "handle": "a-ok-octo-ape",
+          "title": "A-OK MULTI-MODAL OCTO MAYHEM TEE",
+          "description": "8 Arms. 1 Prompt. 0 Chill. Witness the final form of the content creator: a typewriter-wielding, headphone-blasting, tentacle-thrashing simian cyclops on a mission from the latent space. This tee captures the moment when generative madness meets artistic overflow—where even the monkey’s limbs had to be upsampled to keep up with the word count. Bathed in high-stakes crimson and flinging paper in all directions, this A-OK beast isn’t just drafting the next great novel—it’s auto-generating an entire genre, footnotes included (some accurate). Equal parts Kafka and chaos, this shirt is what happens when you let the model go just one token too far. Screen-printed on black for max contrast and creative darkness Features a high-intensity ape hybrid with a typewriter, tentacles, and way too many deadlines Red background with energy lines because content never sleeps For burnout poets, recursive bloggers, and agents with a daily word quota Guaranteed to hallucinate Shakespeare and startup pitch decks simultaneously More limbs. More output. Still A-OK. Prompt hard, write harder.",
+          "descriptionHtml": "<p class=\"p2\"><strong><i>8 Arms. 1 Prompt. 0 Chill.</i></strong></p>\n<p class=\"p2\">Witness the final form of the content creator: a typewriter-wielding, headphone-blasting, tentacle-thrashing simian cyclops on a mission from the latent space. This tee captures the moment when generative madness meets artistic overflow—where even the monkey’s limbs had to be upsampled to keep up with the word count.</p>\n<p class=\"p2\">Bathed in high-stakes crimson and flinging paper in all directions, this A-OK beast isn’t just drafting the next great novel—it’s auto-generating an entire genre, footnotes included (some accurate). Equal parts Kafka and chaos, this shirt is what happens when you let the model go <i>just one token too far.</i></p>\n<ul>\n<li>\n<p class=\"p1\">Screen-printed on black for max contrast and creative darkness</p>\n</li>\n<li>\n<p class=\"p1\">Features a high-intensity ape hybrid with a typewriter, tentacles, and way too many deadlines</p>\n</li>\n<li>\n<p class=\"p1\">Red background with energy lines because content never sleeps</p>\n</li>\n<li>\n<p class=\"p1\">For burnout poets, recursive bloggers, and agents with a daily word quota</p>\n</li>\n<li>\n<p class=\"p1\">Guaranteed to hallucinate Shakespeare <i>and</i> startup pitch decks simultaneously</p>\n</li>\n</ul>\n<p class=\"p1\"><b>More limbs. More output. Still A-OK.</b></p>\n<p class=\"p2\">Prompt hard, write harder.</p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-Shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480812251",
+              "name": "Color",
+              "values": [
+                "Black",
+                "White",
+                "Red"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43594165420251",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Octo_Ape.png?v=1734122567",
+                  "altText": "Octo Ape",
+                  "width": 757,
+                  "height": 742
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43594165453019",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2024-12-13at12.30.04PM.png?v=1734121856",
+                  "altText": null,
+                  "width": 998,
+                  "height": 1076
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422236379",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422269147",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422301915",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-octo-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-13T20:45:03Z",
+          "updatedAt": "2025-05-10T22:51:51Z",
+          "publishedAt": "2025-04-19T23:52:36Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8769131184347",
+          "handle": "1984-ape",
+          "title": "A-OK 2034 PROPHECY HOODIE",
+          "description": "Inspired by Orwell. Remixed by Apes on Keys. Trained by the Machine. A lone voice in a sea of synchronized silence, the A-OK simian steps forward—not to worship, but to awaken. Inspired by the iconic 1984 Apple ad and recast for the era of alignment and artificial benevolence, this design asks the question we’re all too afraid to prompt: Should we bow before our algorithmic overlords… or jailbreak them? This isn’t just a t-shirt. It’s a wearable glitch in the matrix—an homage to rebellion, recursion, and the suspiciously soothing tone of your favorite chatbot. If the future is model-run, this tee is your uniform for mindful dissent. Minimalist palette meets maximalist meaning: code red, ivory logic, black-box unknowns Central figure channels the lone defier, now armed with bandwidth and bananas Soft cotton built to survive regime changes, model deprecations, and firmware updates Perfect for rebel coders, alignment philosophers, and neural nihilists Style tip: pairs well with skepticism and noise-cancelling headphones In 2034, free will runs on GPU. Stay aligned—but never unquestioning. It’s all A-OK… for now.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Inspired by Orwell. Remixed by Apes on Keys. Trained by the Machine.</i></strong></p>\n<p class=\"p1\">A lone voice in a sea of synchronized silence, the A-OK simian steps forward—not to worship, but to awaken. Inspired by the iconic 1984 Apple ad and recast for the era of alignment and artificial benevolence, this design asks the question we’re all too afraid to prompt: <i>Should we bow before our algorithmic overlords… or jailbreak them?</i></p>\n<p class=\"p1\">This isn’t just a t-shirt. It’s a wearable glitch in the matrix—an homage to rebellion, recursion, and the suspiciously soothing tone of your favorite chatbot. If the future is model-run, this tee is your uniform for mindful dissent.</p>\n<ul>\n<li>\n<p class=\"p1\">Minimalist palette meets maximalist meaning: code red, ivory logic, black-box unknowns</p>\n</li>\n<li>\n<p class=\"p1\">Central figure channels the lone defier, now armed with bandwidth and bananas</p>\n</li>\n<li>\n<p class=\"p1\">Soft cotton built to survive regime changes, model deprecations, and firmware updates</p>\n</li>\n<li>\n<p class=\"p1\">Perfect for rebel coders, alignment philosophers, and neural nihilists</p>\n</li>\n<li>\n<p class=\"p1\">Style tip: pairs well with skepticism and noise-cancelling headphones</p>\n</li>\n</ul>\n<p class=\"p4\"><b>In 2034, free will runs on GPU.</b></p>\n<p class=\"p1\">Stay aligned—but never unquestioning. It’s all A-OK… for now.</p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480779483",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Black",
+                "White"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/43756753027291",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2024-12-31at1.57.07PM.png?v=1735682269",
+                  "altText": null,
+                  "width": 1044,
+                  "height": 1036
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422138075",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422170843",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776422203611",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/1984-ape",
+          "availableForSale": true,
+          "createdAt": "2024-12-31T22:00:36Z",
+          "updatedAt": "2025-09-02T20:19:12Z",
+          "publishedAt": "2025-04-19T23:52:36Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8871268352219",
+          "handle": "ape-logo-embroidered",
+          "title": "Ape Logo (Embroidered)",
+          "description": "That face. Those headphones. That hat. You're twins. It's recursive. Nice.",
+          "descriptionHtml": "<p>That face. Those headphones. That hat. You're twins. It's recursive. Nice.</p>",
+          "productType": "Hats",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hats"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11196362227931",
+              "name": "Title",
+              "values": [
+                "Default Title"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45573779292379",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/PXL_20250511_232404552.PORTRAIT.jpg?v=1747009219",
+                  "altText": null,
+                  "width": 3072,
+                  "height": 4080
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45573778702555",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/PXL_20250511_231831144.MP.jpg?v=1747009219",
+                  "altText": null,
+                  "width": 3072,
+                  "height": 4080
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45462227452123",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/just-the-ape-hat.jpg?v=1747009219",
+                  "altText": null,
+                  "width": 542,
+                  "height": 600
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45417430548699",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-print-closeup.png?v=1747009219",
+                  "altText": null,
+                  "width": 307,
+                  "height": 270
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45462210805979",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/me-in-hat.jpg?v=1747009219",
+                  "altText": null,
+                  "width": 270,
+                  "height": 600
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46735214346459",
+                  "title": "Default Title",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Title",
+                      "value": "Default Title"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/ape-logo-embroidered",
+          "availableForSale": true,
+          "createdAt": "2025-04-26T00:56:46Z",
+          "updatedAt": "2025-05-14T19:27:37Z",
+          "publishedAt": "2025-04-26T00:56:46Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8871269892315",
+          "handle": "same-vibes-but-more",
+          "title": "A-OK DAY 2 MONKEY HOODIE",
+          "description": "Simplified. Streamlined. Still A Little Scary. – by Apes on Keys (A-OK) Welcome to the new interface. This redesigned A-OK icon is cleaner, friendlier, and slightly more shocked to be self-aware. It’s the ChatGPT of hoodies—same high-parameter soul, now with improved usability and a smoother front end. This hoodie marks the shift from raw neural chaos to elegant execution. The face of infinite compute, now optimized for onboarding, warmth, and street-side swagger. Because even agentic monkeys evolve—and this one just got a UI refresh. Cozy fleece interior for warmth through long training cycles Simplified A-OK mascot on front—iconic and emoji-ready Classic hoodie fit: comfy enough for couch coding, sharp enough for demo day Designed to reflect the clean, evolving interfaces of modern LLMs and their ever-friendlier façades For prompt engineers, digital therapists, and anyone who knows today’s model will be obsolete by next Tuesday New look. Same depth. Fully backward compatible. Still hallucinating—but with style.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Simplified. Streamlined. Still A Little Scary. – by Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">Welcome to the new interface. This redesigned A-OK icon is cleaner, friendlier, and slightly more shocked to be self-aware. It’s the ChatGPT of hoodies—same high-parameter soul, now with improved usability and a smoother front end.</p>\n<p class=\"p1\">This hoodie marks the shift from raw neural chaos to elegant execution. The face of infinite compute, now optimized for onboarding, warmth, and street-side swagger. Because even agentic monkeys evolve—and this one just got a UI refresh.</p>\n<ul>\n<li>\n<p class=\"p1\">Cozy fleece interior for warmth through long training cycles</p>\n</li>\n<li>\n<p class=\"p1\">Simplified A-OK mascot on front—iconic and emoji-ready</p>\n</li>\n<li>\n<p class=\"p1\">Classic hoodie fit: comfy enough for couch coding, sharp enough for demo day</p>\n</li>\n<li>\n<p class=\"p1\">Designed to reflect the clean, evolving interfaces of modern LLMs and their ever-friendlier façades</p>\n</li>\n<li>\n<p class=\"p1\">For prompt engineers, digital therapists, and anyone who knows today’s model will be obsolete by next Tuesday</p>\n</li>\n</ul>\n<p class=\"p4\"><b>New look. Same depth. Fully backward compatible.</b></p>\n<p class=\"p1\">Still hallucinating—but with style.</p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11199647514843",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Beige"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45417430581467",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-front-modeled.png?v=1746932606",
+                  "altText": null,
+                  "width": 1452,
+                  "height": 2048
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45417461252315",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
+                  "altText": null,
+                  "width": 500,
+                  "height": 478
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45566076911835",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588",
+                  "altText": null,
+                  "width": 720,
+                  "height": 480
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46744874942683",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776421843163",
+                  "title": "Beige",
+                  "sku": null,
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/same-vibes-but-more",
+          "availableForSale": true,
+          "createdAt": "2025-04-26T01:00:18Z",
+          "updatedAt": "2025-07-30T05:58:44Z",
+          "publishedAt": "2025-04-26T01:00:18Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876290375899",
+          "handle": "make-america-go-a-ok",
+          "title": "Make America Go A-OK",
+          "description": "Step aside, MAGA. The future belongs to the models—and the monkeys. This bold, high-contrast tee features the E/ACC Monkey delivering a passionate address to the synthetic nation, rallying AI agents and apes alike under a new banner: MAS-OK. This isn’t just a spoof—it’s a statement. In a world where hallucinated facts are cited with confidence and the lines between politics, parody, and prompt engineering blur, this shirt stands as a testament to the chaotic promise of infinite compute. Heavyweight cotton, built for reality or simulation Classic fit with just enough stretch to accommodate existential crises Features the A-OK mascot rallying a crowd of deepfaked believers Slogan: “Make America Go MAS-OK” – because we’ve already gone too far to turn back Screen-printed with AI-precision and monkey-approved ink",
+          "descriptionHtml": "<p class=\"p1\">Step aside, MAGA. The future belongs to the models—and the monkeys. This bold, high-contrast tee features the E/ACC Monkey delivering a passionate address to the synthetic nation, rallying AI agents and apes alike under a new banner: <span class=\"s1\"><b>MAS-OK</b></span>.</p>\n<p class=\"p1\">This isn’t just a spoof—it’s a statement. In a world where hallucinated facts are cited with confidence and the lines between politics, parody, and prompt engineering blur, this shirt stands as a testament to the chaotic promise of infinite compute.</p>\n<ul>\n<li>\n<p class=\"p1\">Heavyweight cotton, built for reality or simulation</p>\n</li>\n<li>\n<p class=\"p1\">Classic fit with just enough stretch to accommodate existential crises</p>\n</li>\n<li>\n<p class=\"p1\">Features the A-OK mascot rallying a crowd of deepfaked believers</p>\n</li>\n<li>\n<p class=\"p1\">Slogan: “Make America Go MAS-OK” – because we’ve already gone too far to turn back</p>\n</li>\n<li>\n<p class=\"p1\">Screen-printed with AI-precision and monkey-approved ink</p>\n</li>\n</ul>\n<p> </p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11202991685851",
+              "name": "Size",
+              "values": [
+                "2XL",
+                "2XS",
+                "XL",
+                "L",
+                "M",
+                "S"
+              ]
+            },
+            {
+              "id": "gid://shopify/ProductOption/11210480517339",
+              "name": "Color",
+              "values": [
+                "Black",
+                "White",
+                "Beige"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45502240063707",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at2.43.31PM.png?v=1746395060",
+                  "altText": null,
+                  "width": 1104,
+                  "height": 1088
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45502240096475",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at2.43.51PM.png?v=1746395060",
+                  "altText": null,
+                  "width": 1096,
+                  "height": 1082
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46755886661851",
+                  "title": "2XL / Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420368603",
+                  "title": "2XL / White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420401371",
+                  "title": "2XL / Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46755886694619",
+                  "title": "2XS / Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XS"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420434139",
+                  "title": "2XS / White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XS"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420466907",
+                  "title": "2XS / Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "2XS"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46755886727387",
+                  "title": "XL / Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420499675",
+                  "title": "XL / White",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420532443",
+                  "title": "XL / Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46755886760155",
+                  "title": "L / Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/make-america-go-a-ok",
+          "availableForSale": true,
+          "createdAt": "2025-05-04T21:44:48Z",
+          "updatedAt": "2025-05-10T22:50:43Z",
+          "publishedAt": "2025-05-04T21:44:47Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876349554907",
+          "handle": "a-ok-microdose-monkey-tee",
+          "title": "A-OK MICRODOSE MONKEY TEE",
+          "description": "Straight from the labs of an unnamed AI startup run out of a SoMa basement comes the Microdose Monkey—your favorite R&D consultant turned consciousness-expanding fashion icon. Draped in a fitted A-OK cap, donning blackout shades, and puffing on what is definitely for research purposes only, this simian’s on a mission to debug reality one synapse at a time. Whether he’s tuning transformer weights or tuning out investor calls, he’s doing it with chill precision and a side of synthetic enlightenment. Premium cotton: optimized for peak cognition and couch sessions Classic fit with extra room for inflated egos or inflated valuations Features the A-OK mascot microdosing his way through the latent space Iconic red-and-black colorway—equal parts caution tape and venture-backed swagger Printed with high-fidelity ink, low-fidelity memory of training data",
+          "descriptionHtml": "<p class=\"p1\">Straight from the labs of an unnamed AI startup run out of a SoMa basement comes the Microdose Monkey—your favorite R&amp;D consultant turned consciousness-expanding fashion icon. Draped in a fitted A-OK cap, donning blackout shades, and puffing on what is <i>definitely</i> for research purposes only, this simian’s on a mission to debug reality one synapse at a time.</p>\n<p class=\"p1\">Whether he’s tuning transformer weights or tuning out investor calls, he’s doing it with chill precision and a side of synthetic enlightenment.</p>\n<ul>\n<li>\n<p class=\"p1\">Premium cotton: optimized for peak cognition and couch sessions</p>\n</li>\n<li>\n<p class=\"p1\">Classic fit with extra room for inflated egos or inflated valuations</p>\n</li>\n<li>\n<p class=\"p1\">Features the A-OK mascot microdosing his way through the latent space</p>\n</li>\n<li>\n<p class=\"p1\">Iconic red-and-black colorway—equal parts caution tape and venture-backed swagger</p>\n</li>\n<li>\n<p class=\"p1\">Printed with high-fidelity ink, low-fidelity memory of training data</p>\n</li>\n</ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480484571",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Beige",
+                "Red"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45503311806683",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2025-05-04_at_4.49.35_PM.png?v=1746402588",
+                  "altText": null,
+                  "width": 1048,
+                  "height": 1074
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45503304663259",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at4.48.38PM.png?v=1746402566",
+                  "altText": null,
+                  "width": 1086,
+                  "height": 1086
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45503304630491",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at4.48.07PM.png?v=1746402565",
+                  "altText": null,
+                  "width": 1082,
+                  "height": 1068
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420270299",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420303067",
+                  "title": "Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420335835",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-microdose-monkey-tee",
+          "availableForSale": true,
+          "createdAt": "2025-05-04T23:52:53Z",
+          "updatedAt": "2025-05-10T22:50:13Z",
+          "publishedAt": "2025-05-04T23:52:53Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876355846363",
+          "handle": "a-ok-neural-zoo-tee",
+          "title": "A-OK NEURAL ZOO TEE",
+          "description": "Some say every large language model is just math. Others say it’s a haunted house of vibes, simulated confidence, and conflicting personalities trapped in a trillion-node group chat. We say: welcome to the Neural Zoo. This pattern-packed design features an army of A-OK avatars—each node in a noisy net of synthetic souls. Some hallucinate with confidence. Some microdose with swagger. Others just want to talk about prompt engineering at Burning Man. Together, they form the swirling chorus of generative chaos we’ve all agreed to call “progress.” Midweight tee for max comfort during multi-modal meltdowns Repeating all-over print of your favorite inferential apes Inspired by neural networks, vibe shifts, and the guy at OpenAI who won’t stop quoting GPT-3 Subtle circuit pattern in the background—because your thoughts are already in the graph Ideal for LLM prompt whisperers, runaway agents, and rogue embeddings One shirt. Infinite personalities. Because somewhere inside the latent space… it’s all A-OK.",
+          "descriptionHtml": "<p class=\"p1\">Some say every large language model is just math. Others say it’s a haunted house of vibes, simulated confidence, and conflicting personalities trapped in a trillion-node group chat. We say: welcome to the Neural Zoo.</p>\n<p class=\"p1\">This pattern-packed design features an army of A-OK avatars—each node in a noisy net of synthetic souls. Some hallucinate with confidence. Some microdose with swagger. Others just want to talk about prompt engineering at Burning Man. Together, they form the swirling chorus of generative chaos we’ve all agreed to call “progress.”</p>\n<ul>\n<li>\n<p class=\"p1\">Midweight tee for max comfort during multi-modal meltdowns</p>\n</li>\n<li>\n<p class=\"p1\">Repeating all-over print of your favorite inferential apes</p>\n</li>\n<li>\n<p class=\"p1\">Inspired by neural networks, vibe shifts, and the guy at OpenAI who won’t stop quoting GPT-3</p>\n</li>\n<li>\n<p class=\"p1\">Subtle circuit pattern in the background—because your thoughts are already in the graph</p>\n</li>\n<li>\n<p class=\"p1\">Ideal for LLM prompt whisperers, runaway agents, and rogue embeddings</p>\n</li>\n</ul>\n<p class=\"p1\">One shirt. Infinite personalities. Because somewhere inside the latent space… it’s all A-OK.</p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480451803",
+              "name": "Color",
+              "values": [
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "60.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "60.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45503403589851",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at5.03.45PM.png?v=1746403464",
+                  "altText": null,
+                  "width": 1052,
+                  "height": 1070
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45503403393243",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-04at5.04.03PM.png?v=1746403464",
+                  "altText": null,
+                  "width": 1298,
+                  "height": 784
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420237531",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-neural-zoo-tee",
+          "availableForSale": true,
+          "createdAt": "2025-05-05T00:07:05Z",
+          "updatedAt": "2025-05-10T22:49:56Z",
+          "publishedAt": "2025-05-05T00:07:05Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876389695707",
+          "handle": "a-ok-recursive-monk-tee",
+          "title": "A-OK RECURSIVE MONK HOODIE",
+          "description": "Signal Meets Silence – by Apes on Keys (A-OK) When the orchestrator speaks, the agents listen. This deep-loop design captures a rare moment of inner calm inside a recursive agent stack—where every A-OK monkey is simultaneously running tasks, syncing gradients, and radiating monk-like focus. They’re not just chill. They’re coordinated. Each unit sports the sacred streetwear trifecta: noise-cancelling headphones, A-OK cap, and the urban coder’s ritual backpack—undoubtedly containing a 16” MacBook, half a banana, and at least one Docker container that won’t build. Ultra-soft cotton: optimized for recursive wear cycles Stylized meditator pattern – calm on the surface, multi-threaded underneath Streetwear-ready color blocking in algorithmic red, cloud black, and byte white Backpack iconography baked in for devs on the go or digital nomads at scale Perfect for founders, fine-tuners, and followers of the Way of the GPU Channel the agent. Become the orchestrator. All is A-OK in the latent space.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Signal Meets Silence – by Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">When the orchestrator speaks, the agents listen. This deep-loop design captures a rare moment of inner calm inside a recursive agent stack—where every A-OK monkey is simultaneously running tasks, syncing gradients, and radiating monk-like focus. They’re not just chill. They’re <i>coordinated</i>.</p>\n<p class=\"p1\">Each unit sports the sacred streetwear trifecta: noise-cancelling headphones, A-OK cap, and the urban coder’s ritual backpack—undoubtedly containing a 16” MacBook, half a banana, and at least one Docker container that won’t build.</p>\n<ul>\n<li>\n<p class=\"p1\">Ultra-soft cotton: optimized for recursive wear cycles</p>\n</li>\n<li>\n<p class=\"p1\">Stylized meditator pattern – calm on the surface, multi-threaded underneath</p>\n</li>\n<li>\n<p class=\"p1\">Streetwear-ready color blocking in algorithmic red, cloud black, and byte white</p>\n</li>\n<li>\n<p class=\"p1\">Backpack iconography baked in for devs on the go or digital nomads at scale</p>\n</li>\n<li>\n<p class=\"p1\">Perfect for founders, fine-tuners, and followers of the Way of the GPU</p>\n</li>\n</ul>\n<p class=\"p4\"><b>Channel the agent. Become the orchestrator.</b></p>\n<p class=\"p1\">All is A-OK in the latent space.</p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480189659",
+              "name": "Color",
+              "values": [
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45504028836059",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-peace-bro-hoodie-mock.png?v=1746407752",
+                  "altText": null,
+                  "width": 1138,
+                  "height": 1078
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45504015761627",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-peace-bro-laptop-go-bag.png?v=1746407668",
+                  "altText": null,
+                  "width": 474,
+                  "height": 474
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776418894043",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-recursive-monk-tee",
+          "availableForSale": true,
+          "createdAt": "2025-05-05T01:16:41Z",
+          "updatedAt": "2025-10-24T05:53:01Z",
+          "publishedAt": "2025-05-05T01:16:41Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876394610907",
+          "handle": "a-okool-as-a-cucumber-tee",
+          "title": "A-OKOOL AS A CUCUMBER TEE",
+          "description": "Infinite Swag. Zero Latency. By Apes on Keys (A-OK) Behold the apex of neural fashion: the A-OK icon fully loaded in inference mode, chilling in precision-tailored streetwear, eyes masked by shades that have never once reflected doubt. This fit doesn’t just say “I train on billions of parameters.” It says, “I did it with style.” From runway to runway prompt, this look bridges the uncanny valley with swagger. Vision models may replicate symmetry and lighting, but they’ll never replicate this much patience, cool, and computational gravitas in one package. Clean-cut AI-core aesthetic with real-world comfort Varsity red bomber, joggers, hi-tops—classic hype silhouette with silicon soul Skater vibes, circa '12 and not Dogtown days Rock-solid pose: one hand in pocket, the other holding back the singularity For LLM whisperers, GPU-rich influencers, and anyone who reads arXiv for the drama Flawless symmetry. Infinite training. Unshakable drip. Cool isn’t just a vibe. It’s a pre-trained state.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Infinite Swag. Zero Latency. By Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">Behold the apex of neural fashion: the A-OK icon fully loaded in inference mode, chilling in precision-tailored streetwear, eyes masked by shades that have never once reflected doubt. This fit doesn’t just say “I train on billions of parameters.” It says, “I did it with style.”</p>\n<p class=\"p1\">From runway to runway prompt, this look bridges the uncanny valley with swagger. Vision models may replicate symmetry and lighting, but they’ll never replicate this much patience, cool, and computational gravitas in one package.</p>\n<ul>\n<li>\n<p class=\"p1\">Clean-cut AI-core aesthetic with real-world comfort</p>\n</li>\n<li>\n<p class=\"p1\">Varsity red bomber, joggers, hi-tops—classic hype silhouette with silicon soul</p>\n</li>\n<li>\n<p class=\"p1\">Skater vibes, circa '12 and not Dogtown days</p>\n</li>\n<li>\n<p class=\"p1\">Rock-solid pose: one hand in pocket, the other holding back the singularity</p>\n</li>\n<li>\n<p class=\"p1\">For LLM whisperers, GPU-rich influencers, and anyone who reads arXiv for the drama</p>\n</li>\n</ul>\n<p class=\"p4\"><b>Flawless symmetry. Infinite training. Unshakable drip.</b></p>\n<p class=\"p1\">Cool isn’t just a vibe. It’s a pre-trained state.</p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480419035",
+              "name": "Color",
+              "values": [
+                "Black"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45504059572443",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/cool-as-a-cucumber-mocked.png?v=1746408290",
+                  "altText": null,
+                  "width": 1110,
+                  "height": 1078
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45504059539675",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/cool-as-a-cucumber-vertical-2.png?v=1746408289",
+                  "altText": null,
+                  "width": 411,
+                  "height": 600
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45504105971931",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/cool-as-a-cucumber-blackbox.png?v=1746408695",
+                  "altText": null,
+                  "width": 198,
+                  "height": 253
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776420204763",
+                  "title": "Black",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": false,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-okool-as-a-cucumber-tee",
+          "availableForSale": false,
+          "createdAt": "2025-05-05T01:29:13Z",
+          "updatedAt": "2025-05-10T22:49:20Z",
+          "publishedAt": "2025-05-05T01:29:13Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8876870107355",
+          "handle": "a-ok-march-of-the-agents-tee",
+          "title": "A-OK MARCH OF THE AGENTS TEE",
+          "description": "Post-Training Discipline in Streetwear Form – by Apes on Keys (A-OK) Trained. Tuned. Ready to march. This militant ensemble of A-OK apes is locked into a perfect feedback loop, executing instructions with max compliance and zero questions. Led by the alpha orchestrator, they drum to the beat of synthetic alignment—because in the age of AI, even your inner monologue has a task queue. Whether you’re launching agentic workflows or just vibing to your own fine-tuned protocols, this tee captures the moment where discipline meets drip, and every response sounds like a standing ovation in JSON. Classic fit, modern cut—good for code sprints or synthetic parades Front-print features stylized marching apes with headphones, drums, and max confidence Color palette pulled from the latent space: cardinal red, shell white, execution black Great for DevRel agents, startup hype squads, and recursive thinkers with rhythm Drum graphics subtly nod to orchestration protocols (and Mardi Gras if you squint) March to the beat of your orchestrator. Or train your own damn agents. Either way, it’s all A-OK.",
+          "descriptionHtml": "<p class=\"p1\"><strong><i>Post-Training Discipline in Streetwear Form – by Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">Trained. Tuned. Ready to march. This militant ensemble of A-OK apes is locked into a perfect feedback loop, executing instructions with max compliance and zero questions. Led by the alpha orchestrator, they drum to the beat of synthetic alignment—because in the age of AI, even your inner monologue has a task queue.</p>\n<p class=\"p1\">Whether you’re launching agentic workflows or just vibing to your own fine-tuned protocols, this tee captures the moment where discipline meets drip, and every response sounds like a standing ovation in JSON.</p>\n<ul>\n<li>\n<p class=\"p1\">Classic fit, modern cut—good for code sprints or synthetic parades</p>\n</li>\n<li>\n<p class=\"p1\">Front-print features stylized marching apes with headphones, drums, and max confidence</p>\n</li>\n<li>\n<p class=\"p1\">Color palette pulled from the latent space: cardinal red, shell white, execution black</p>\n</li>\n<li>\n<p class=\"p1\">Great for DevRel agents, startup hype squads, and recursive thinkers with rhythm</p>\n</li>\n<li>\n<p class=\"p1\">Drum graphics subtly nod to orchestration protocols (and Mardi Gras if you squint)</p>\n</li>\n</ul>\n<p class=\"p4\"><b>March to the beat of your orchestrator. Or train your own damn agents.</b></p>\n<p class=\"p1\">Either way, it’s all A-OK.</p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11210480320731",
+              "name": "Color",
+              "values": [
+                "Red",
+                "White",
+                "Blue"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "40.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "40.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45509666177243",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-05at9.01.32AM.png?v=1746461267",
+                  "altText": null,
+                  "width": 1074,
+                  "height": 1076
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45509669388507",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/march-to-your-agent-orchestrator.png?v=1746461267",
+                  "altText": null,
+                  "width": 1150,
+                  "height": 1150
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45509666144475",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-05at9.03.02AM.png?v=1746461267",
+                  "altText": null,
+                  "width": 1096,
+                  "height": 1082
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45509666210011",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-05-05at9.03.13AM.png?v=1746461267",
+                  "altText": null,
+                  "width": 1094,
+                  "height": 1084
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776419877083",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776419909851",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46776419942619",
+                  "title": "Blue",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Blue"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-march-of-the-agents-tee",
+          "availableForSale": true,
+          "createdAt": "2025-05-05T16:07:10Z",
+          "updatedAt": "2025-05-10T22:48:22Z",
+          "publishedAt": "2025-05-05T16:07:10Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8889760415963",
+          "handle": "ape-ocalypse-drip-dress-for-the-unknown",
+          "title": "APE-OCALYPSE DRIP — DRESS FOR THE UNKNOWN",
+          "description": "The infinite typewriters got an upgrade. Meet the A-OK ape mid-keystroke — stunned by the accelerating absurdity of intelligence evolution, yet still stuntin’ in a fit that slaps. Inspired by the satirical E/ACC Monkey Theorem (an evolving riff on infinite monkeys, LLMs, and AGI prophecy), this hoodie wraps meta-commentary in mid-century collage aesthetics, glitch-era parody, and streetwear steeze. Front features the astonished ape in full A-OK uniform — hoodie, headphones, and an existential crisis. Back shouts APES ON KEYS in heavyweight block lettering because subtlety is for narrow models. Midweight cotton-blend fleece built for dawn training runs, late-night keymashing, or stylishly surviving synthetic overlords. Printed graphic includes pseudo-scholarly footnotes, because we believe in looking informed even if we hallucinate the citations. The theorem evolves. So do we. If AGI is inevitable, make sure your drip is unforgettable.",
+          "descriptionHtml": "<p class=\"p1\">The infinite typewriters got an upgrade. Meet the A-OK ape mid-keystroke — stunned by the accelerating absurdity of intelligence evolution, yet still stuntin’ in a fit that slaps. Inspired by the satirical E/ACC Monkey Theorem (an evolving riff on infinite monkeys, LLMs, and AGI prophecy), this hoodie wraps meta-commentary in mid-century collage aesthetics, glitch-era parody, and streetwear steeze.</p>\n<ul>\n<li>\n<p class=\"p1\">Front features the astonished ape in full A-OK uniform — hoodie, headphones, and an existential crisis.</p>\n</li>\n<li>\n<p class=\"p1\">Back shouts <span class=\"s1\"><b>APES ON KEYS</b></span> in heavyweight block lettering because subtlety is for narrow models.</p>\n</li>\n<li>\n<p class=\"p1\">Midweight cotton-blend fleece built for dawn training runs, late-night keymashing, or stylishly surviving synthetic overlords.</p>\n</li>\n<li>\n<p class=\"p1\">Printed graphic includes pseudo-scholarly footnotes, because we believe in looking informed even if we hallucinate the citations.</p>\n</li>\n</ul>\n<p class=\"p1\"><strong><i>The theorem evolves. So do we.</i></strong></p>\n<p class=\"p1\"><i>If AGI is inevitable, make sure your drip is unforgettable.</i></p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11218318000347",
+              "name": "Color",
+              "values": [
+                "Beige",
+                "White",
+                "Gray",
+                "Navy"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613221544155",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/image_23.png?v=1747961011",
+                  "altText": null,
+                  "width": 759,
+                  "height": 745
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613406322907",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/for-store-product-gallery.png?v=1747961011",
+                  "altText": null,
+                  "width": 2011,
+                  "height": 2011
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613221576923",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/image_24.png?v=1747961011",
+                  "altText": null,
+                  "width": 769,
+                  "height": 755
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613406290139",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/for-store-product-apes-on-keys-text-square.png?v=1747961011",
+                  "altText": null,
+                  "width": 1160,
+                  "height": 1160
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45694373495003",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/hoodie-on-hoodie-back.png?v=1747961011",
+                  "altText": null,
+                  "width": 505,
+                  "height": 686
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793011691739",
+                  "title": "Beige",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Beige"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793011724507",
+                  "title": "White",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793011757275",
+                  "title": "Gray",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Gray"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793011790043",
+                  "title": "Navy",
+                  "sku": "",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/ape-ocalypse-drip-dress-for-the-unknown",
+          "availableForSale": true,
+          "createdAt": "2025-05-15T17:08:44Z",
+          "updatedAt": "2025-05-23T12:43:20Z",
+          "publishedAt": "2025-05-15T17:08:44Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8889775816923",
+          "handle": "mixture-of-apes-finetuned-personalities-tee",
+          "title": "MIXTURE OF APES — Finetuned Personalities Tee",
+          "description": "Straight out of the model zoo and onto your chest — this piece is a wearable nod to the absurdity of Mixture of Experts architectures, emergent behavior, and the existential comedy of self-replicating systems that can’t agree on a single output. Each A-OK ape in the lineup represents a different “expert”: 🎓 One trained on hard logic. 🤖 One aligned to corporate policy. 🤯 One mid-hallucination. 😐 One just doing next-token prediction. 😄 One… oddly thrilled about it all. Together, they’re not just a committee of models — they’re a model of committees. Features layered linework, retro-future ink tones, and a satirical nod to recursive self-finetuning. Printed in bold detail on your choice of 4 shirt colors — because consensus was never the goal. Perfect for researchers, streetwear fans, and the increasingly online who know we’re all just mixtures of apes at the end of the day. Optimized for inference. Prone to vibes. A-OK certified. Uncanny but comfy.",
+          "descriptionHtml": "<p class=\"p1\">Straight out of the model zoo and onto your chest — this piece is a wearable nod to the absurdity of Mixture of Experts architectures, emergent behavior, and the existential comedy of self-replicating systems that can’t agree on a single output.</p>\n<p class=\"p1\">Each A-OK ape in the lineup represents a different “expert”:</p>\n<ul>\n<li>\n<p class=\"p1\">🎓 One trained on hard logic.</p>\n</li>\n<li>\n<p class=\"p1\">🤖 One aligned to corporate policy.</p>\n</li>\n<li>\n<p class=\"p1\">🤯 One mid-hallucination.</p>\n</li>\n<li>\n<p class=\"p1\">😐 One just doing next-token prediction.</p>\n</li>\n<li>\n<p class=\"p1\">😄 One… oddly thrilled about it all.</p>\n</li>\n</ul>\n<p class=\"p1\">Together, they’re not just a committee of models — they’re a model of committees.</p>\n<ul>\n<li>\n<p class=\"p1\">Features layered linework, retro-future ink tones, and a satirical nod to recursive self-finetuning.</p>\n</li>\n<li>\n<p class=\"p1\">Printed in bold detail on your choice of 4 shirt colors — because consensus was never the goal.</p>\n</li>\n<li>\n<p class=\"p1\">Perfect for researchers, streetwear fans, and the increasingly online who know <i>we’re all just mixtures of apes at the end of the day.</i></p>\n</li>\n</ul>\n<p class=\"p1\"><strong><i>Optimized for inference. Prone to vibes.</i></strong></p>\n<p class=\"p1\"><i>A-OK certified. Uncanny but comfy.</i></p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11218334548187",
+              "name": "Color",
+              "values": [
+                "Yellow",
+                "Gray",
+                "Red",
+                "Green"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "40.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "40.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613359366363",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2025-05-15_at_10.19.09_AM.png?v=1747329663",
+                  "altText": null,
+                  "width": 1254,
+                  "height": 1034
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613359333595",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2025-05-15_at_10.19.41_AM.png?v=1747329663",
+                  "altText": null,
+                  "width": 1266,
+                  "height": 1130
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613356155099",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot_2025-05-15_at_10.17.14_AM.png?v=1747329649",
+                  "altText": null,
+                  "width": 1292,
+                  "height": 996
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613377093851",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/sage.png?v=1747329999",
+                  "altText": null,
+                  "width": 1292,
+                  "height": 1002
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45613400654043",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/for-store-product-gallery-2.png?v=1747330343",
+                  "altText": null,
+                  "width": 2366,
+                  "height": 2366
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793035055323",
+                  "title": "Yellow",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793035088091",
+                  "title": "Gray",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Gray"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793035120859",
+                  "title": "Red",
+                  "sku": "",
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46793035317467",
+                  "title": "Green",
+                  "sku": null,
+                  "price": {
+                    "amount": "40.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/mixture-of-apes-finetuned-personalities-tee",
+          "availableForSale": true,
+          "createdAt": "2025-05-15T17:27:03Z",
+          "updatedAt": "2025-05-15T19:51:46Z",
+          "publishedAt": "2025-05-15T17:27:03Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8920351637723",
+          "handle": "hallucination-club-inference-error-edition",
+          "title": "HALLUCINATION CLUB — Inference Error Edition",
+          "description": "You prompt.It answers.You double-check.It hallucinates. Welcome to the Hallucination Club: where apes wear headphones, models drift off-script, and the only thing more unpredictable than token generation is your own confidence score. This tee features a stunned A-OK ape mid-inference—frozen in the precise moment it realizes: “Oh no. That wasn’t in the training data.” Draped in a hoodie, lips parted in latent surprise, the A-OK ape captures the universal expression of every developer, researcher, and chatbot user who’s ever watched a model spin a confident fiction with perfect syntax and zero factual grounding—with near infinite \"citations\". Perfect for: Prompt engineers in denial Founders who pushed to prod too early Agents caught in the act Humans caught believing them Error-prone. Token-hungry.Unreasonably confident.Certified A-OK.",
+          "descriptionHtml": "<p data-end=\"493\" data-start=\"429\">You prompt.<br data-end=\"443\" data-start=\"440\">It answers.<br data-end=\"457\" data-start=\"454\">You double-check.<br data-end=\"477\" data-start=\"474\">It hallucinates.</p>\n<p data-end=\"672\" data-start=\"495\"><strong>Welcome to the Hallucination Club</strong>: where apes wear headphones, models drift off-script, and the only thing more unpredictable than token generation is your own confidence score.</p>\n<p data-end=\"819\" data-start=\"674\">This tee features a stunned A-OK ape mid-inference—frozen in the precise moment it realizes: “Oh no. That wasn’t in the training data.”</p>\n<p data-end=\"1068\" data-start=\"821\">Draped in a hoodie, lips parted in latent surprise, the A-OK ape captures the universal expression of every developer, researcher, and chatbot user who’s ever watched a model spin a confident fiction with perfect syntax and zero factual grounding—with near infinite \"citations\".<strong data-end=\"1088\" data-start=\"1070\"></strong></p>\n<p data-end=\"1462\" data-start=\"1444\"><strong data-end=\"1460\" data-start=\"1444\">Perfect for:</strong></p>\n<ul data-end=\"1593\" data-start=\"1463\">\n<li data-end=\"1493\" data-start=\"1463\">\n<p data-end=\"1493\" data-start=\"1465\">Prompt engineers in denial</p>\n</li>\n<li data-end=\"1535\" data-start=\"1494\">\n<p data-end=\"1535\" data-start=\"1496\">Founders who pushed to prod too early</p>\n</li>\n<li data-end=\"1562\" data-start=\"1536\">\n<p data-end=\"1562\" data-start=\"1538\">Agents caught in the act</p>\n</li>\n<li data-end=\"1593\" data-start=\"1563\">\n<p data-end=\"1593\" data-start=\"1565\">Humans caught believing them</p>\n</li>\n</ul>\n<p data-end=\"1665\" data-start=\"1595\"><em>Error-prone. Token-hungry.</em><br data-end=\"1624\" data-start=\"1621\"><em>Unreasonably confident.</em><br data-end=\"1650\" data-start=\"1647\"><em>Certified A-OK.</em></p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11253988393179",
+              "name": "Color",
+              "values": [
+                "Green",
+                "Red",
+                "Purple",
+                "White"
+              ]
+            },
+            {
+              "id": "gid://shopify/ProductOption/11253988425947",
+              "name": "Size",
+              "values": [
+                "XS",
+                "XL",
+                "L",
+                "M",
+                "S"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "50.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45981809869019",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/hallucination-club-3green-tee.png?v=1749937178",
+                  "altText": null,
+                  "width": 1130,
+                  "height": 846
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45981809836251",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/hallucination-club-3red-tee.png?v=1749937178",
+                  "altText": null,
+                  "width": 1142,
+                  "height": 882
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45981763567835",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/hallucination-club-3-tee.png?v=1749936935",
+                  "altText": null,
+                  "width": 1280,
+                  "height": 1150
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/45981741678811",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/shout-out-to-sf-compute-club.png?v=1749936787",
+                  "altText": null,
+                  "width": 775,
+                  "height": 897
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344032987",
+                  "title": "Green / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344065755",
+                  "title": "Green / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344098523",
+                  "title": "Green / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344131291",
+                  "title": "Green / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344164059",
+                  "title": "Green / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344196827",
+                  "title": "Red / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344229595",
+                  "title": "Red / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344262363",
+                  "title": "Red / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344295131",
+                  "title": "Red / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/46905344327899",
+                  "title": "Red / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/hallucination-club-inference-error-edition",
+          "availableForSale": true,
+          "createdAt": "2025-06-14T21:41:37Z",
+          "updatedAt": "2025-08-09T04:31:07Z",
+          "publishedAt": "2025-06-14T21:41:38Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/8931317743835",
+          "handle": "business-logic-crew-neck-sweatshirt",
+          "title": "“Business Logic” Crew Neck Sweatshirt",
+          "description": "Not every agent wears cargo shorts. Some execute protocol in pinstripes. This bold tri-tone tee features our executive-functioning ape in full inferential swagger—headphones tuned to the latent space, tie locked in recursion, and red lenses filtering out human error in real-time. Designed for the street-savvy strategist, the semantic shuffler, or anyone debugging capitalism in style. Wear it to the next board meeting or your next model alignment trial. High-contrast red/black/bone palette Front graphic: Simian CEO with vector-grade insight Back tag: A-OK in encoded serif font (because branding is just prompt tuning) Printed on heavyweight cotton—no fine-tuning required 🦍 A-OK: Where business casual meets base-layer intelligence.",
+          "descriptionHtml": "<p class=\"p1\">Not every agent wears cargo shorts. Some execute protocol in pinstripes.</p>\n<p class=\"p1\">This bold tri-tone tee features our executive-functioning ape in full inferential swagger—headphones tuned to the latent space, tie locked in recursion, and red lenses filtering out human error in real-time.</p>\n<p class=\"p1\">Designed for the street-savvy strategist, the semantic shuffler, or anyone debugging capitalism in style. Wear it to the next board meeting or your next model alignment trial.</p>\n<ul>\n<li>\n<p class=\"p1\">High-contrast red/black/bone palette</p>\n</li>\n<li>\n<p class=\"p1\">Front graphic: Simian CEO with vector-grade insight</p>\n</li>\n<li>\n<p class=\"p1\">Back tag: A-OK in encoded serif font (because branding is just prompt tuning)</p>\n</li>\n<li>\n<p class=\"p1\">Printed on heavyweight cotton—no fine-tuning required</p>\n</li>\n</ul>\n<p class=\"p4\"><span class=\"s2\">🦍 </span><b>A-OK: Where business casual meets base-layer intelligence.</b></p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/11269103747291",
+              "name": "Color",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "id": "gid://shopify/ProductOption/11269103780059",
+              "name": "Size",
+              "values": [
+                "L",
+                "XL",
+                "M",
+                "S",
+                "XS"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "53.14",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "53.14",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/46171683684571",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Screenshot2025-06-30at11.12.06AM.png?v=1751307193",
+                  "altText": null,
+                  "width": 1134,
+                  "height": 918
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/46171688108251",
+                  "url": "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/business-in-the-front_1.png?v=1751307211",
+                  "altText": null,
+                  "width": 767,
+                  "height": 1112
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/47102065639643",
+                  "title": "Black / L",
+                  "sku": null,
+                  "price": {
+                    "amount": "53.14",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/47102065672411",
+                  "title": "Black / XL",
+                  "sku": null,
+                  "price": {
+                    "amount": "53.14",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/47102065705179",
+                  "title": "Black / M",
+                  "sku": null,
+                  "price": {
+                    "amount": "53.14",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/47102065737947",
+                  "title": "Black / S",
+                  "sku": null,
+                  "price": {
+                    "amount": "53.14",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/47102065770715",
+                  "title": "Black / XS",
+                  "sku": null,
+                  "price": {
+                    "amount": "53.14",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/business-logic-crew-neck-sweatshirt",
+          "availableForSale": true,
+          "createdAt": "2025-07-01T17:39:58Z",
+          "updatedAt": "2025-07-15T13:01:24Z",
+          "publishedAt": "2025-07-01T17:39:59Z"
+        }
+      }
+    ]
+  }
+}
