@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create(
       {
         amount: payload.amount,
-        currency: payload.currency?.toLowerCase() as string | undefined,
+        currency: (payload.currency || "usd").toLowerCase(),
         customer: payload.customer,
         payment_method: payload.payment_method,
         confirm: Boolean(payload.confirm && payload.payment_method),
