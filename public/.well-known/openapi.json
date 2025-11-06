@@ -1,0 +1,413 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "A-OK Shop - Agentic Commerce Protocol API",
+    "description": "API for browsing products and completing purchases at A-OK Shop using the Agentic Commerce Protocol (ACP). Browse AI-inspired streetwear, get product details with variants and pricing, and create secure Stripe checkout sessions.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "info@a-ok.shop"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.a-ok.shop",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/api/acp/catalog": {
+      "get": {
+        "operationId": "getCatalog",
+        "summary": "Get product catalog",
+        "description": "Retrieve the full product catalog including all products, variants, pricing, images, and sizing information. Use this to browse available merchandise.",
+        "responses": {
+          "200": {
+            "description": "Product catalog retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/checkout": {
+      "post": {
+        "operationId": "createCheckout",
+        "summary": "Create checkout session",
+        "description": "Create a Stripe Checkout Session for purchasing products. Returns a hosted checkout URL that can be used to complete the purchase. Supports multiple items, custom success/cancel URLs, and automatic tax calculation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/delegate-payment": {
+      "post": {
+        "operationId": "createPaymentIntent",
+        "summary": "Create payment intent",
+        "description": "Create a Stripe Payment Intent for delegated payment processing. Returns a client secret that can be used to confirm the payment with a payment method. Supports custom amounts, currency, and metadata.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DelegatePaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment intent created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelegatePaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CatalogResponse": {
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "example": "acp-draft-2024-12"
+          },
+          "merchant": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "a-ok-shop"
+              },
+              "name": {
+                "type": "string",
+                "example": "A-OK Shop"
+              },
+              "currency": {
+                "type": "string",
+                "example": "USD"
+              }
+            }
+          },
+          "catalog": {
+            "type": "object",
+            "properties": {
+              "products": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique product identifier",
+            "example": "gid://shopify/Product/8755818758363"
+          },
+          "handle": {
+            "type": "string",
+            "description": "URL-friendly product handle",
+            "example": "a-ok-glitch-art-face-mask-t-shirt"
+          },
+          "title": {
+            "type": "string",
+            "description": "Product name",
+            "example": "A-OK GLITCHED VECTORS TEE"
+          },
+          "description": {
+            "type": "string",
+            "description": "Product description"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariant"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Size"
+                },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": ["S", "M", "L", "XL"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProductVariant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique variant identifier - use this in checkout requests",
+            "example": "gid://shopify/ProductVariant/46776424202459"
+          },
+          "title": {
+            "type": "string",
+            "example": "Red / M"
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "example": "29.99"
+              },
+              "currencyCode": {
+                "type": "string",
+                "example": "USD"
+              }
+            }
+          },
+          "availableForSale": {
+            "type": "boolean"
+          },
+          "quantityAvailable": {
+            "type": "integer"
+          }
+        }
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "required": ["cart"],
+        "properties": {
+          "cart": {
+            "type": "object",
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["variantId", "quantity"],
+                  "properties": {
+                    "variantId": {
+                      "type": "string",
+                      "description": "Product variant ID from the catalog",
+                      "example": "gid://shopify/ProductVariant/46776424202459"
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "success_url": {
+            "type": "string",
+            "description": "URL to redirect to after successful payment"
+          },
+          "cancel_url": {
+            "type": "string",
+            "description": "URL to redirect to if payment is cancelled"
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Custom metadata to attach to the checkout session"
+          }
+        }
+      },
+      "CheckoutResponse": {
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "example": "acp-draft-2024-12"
+          },
+          "checkout_session": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Stripe Checkout Session ID"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["open", "complete", "expired"]
+              },
+              "url": {
+                "type": "string",
+                "description": "Hosted checkout URL - redirect the user here to complete payment"
+              },
+              "expires_at": {
+                "type": "integer",
+                "description": "Unix timestamp when the session expires"
+              }
+            }
+          }
+        }
+      },
+      "DelegatePaymentRequest": {
+        "type": "object",
+        "required": ["amount"],
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "description": "Amount in smallest currency unit (cents for USD)",
+            "example": 1200
+          },
+          "currency": {
+            "type": "string",
+            "default": "usd",
+            "example": "usd"
+          },
+          "payment_method": {
+            "type": "string",
+            "description": "Stripe Payment Method ID (required if confirm is true)"
+          },
+          "customer_email": {
+            "type": "string",
+            "format": "email"
+          },
+          "confirm": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to immediately confirm the payment (requires payment_method)"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Custom metadata to attach to the payment intent"
+          }
+        }
+      },
+      "DelegatePaymentResponse": {
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "example": "acp-draft-2024-12"
+          },
+          "payment_intent": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Stripe Payment Intent ID"
+              },
+              "client_secret": {
+                "type": "string",
+                "description": "Client secret for confirming the payment"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["requires_payment_method", "requires_confirmation", "requires_action", "processing", "succeeded", "canceled"]
+              },
+              "next_action": {
+                "type": "object",
+                "description": "Next action required to complete the payment (e.g., 3D Secure)"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "protocol": "acp-draft-2024-12",
+  "merchant": {
+    "id": "a-ok-shop",
+    "name": "A-OK Shop",
+    "description": "AI-inspired streetwear and merchandise from Apes on Keys",
+    "url": "https://www.apesonkeys.com",
+    "support_email": "info@a-ok.shop"
+  },
+  "endpoints": {
+    "catalog": {
+      "url": "https://www.a-ok.shop/api/acp/catalog",
+      "method": "GET",
+      "description": "Retrieve full product catalog with variants, pricing, and images"
+    },
+    "checkout": {
+      "url": "https://www.a-ok.shop/api/acp/checkout",
+      "method": "POST",
+      "description": "Create a Stripe Checkout Session for product purchase",
+      "requires": ["cart.items"]
+    },
+    "delegate_payment": {
+      "url": "https://www.a-ok.shop/api/acp/delegate-payment",
+      "method": "POST",
+      "description": "Create a Stripe Payment Intent for delegated payment",
+      "requires": ["amount"]
+    }
+  },
+  "capabilities": {
+    "catalog_browsing": true,
+    "variant_selection": true,
+    "hosted_checkout": true,
+    "delegate_payment": true,
+    "automatic_tax": true,
+    "promotion_codes": true,
+    "multiple_currencies": false,
+    "subscription_support": false
+  },
+  "payment_methods": {
+    "provider": "stripe",
+    "supported": ["card"]
+  },
+  "shipping": {
+    "countries": ["US", "CA"],
+    "calculated_at_checkout": true
+  },
+  "documentation": "https://www.a-ok.shop/.well-known/openapi.json"
+}
