@@ -52,7 +52,6 @@ function mapVariant(product: CatalogProduct, variant: VariantNode) {
 
 function mapProduct(product: CatalogProduct) {
   const options = (product.options || []).map((option) => ({
-    id: option.id,
     name: option.name,
     values: option.values,
   }));
