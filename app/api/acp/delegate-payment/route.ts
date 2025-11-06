@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const idempotencyKey = request.headers.get("idempotency-key") || undefined;
+    const origin = request.headers.get("origin") || "unknown";
 
     const paymentIntent = await stripe.paymentIntents.create(
       {
@@ -127,12 +128,13 @@ export async function POST(request: NextRequest) {
         metadata: {
           ...payload.metadata,
           protocol: "acp-draft-2024-12",
+          source: "acp-api",
+          endpoint: "delegate-payment",
+          origin: origin,
         },
       },
       idempotencyKey ? { idempotencyKey } : undefined
     );
-
-    const origin = request.headers.get("origin");
 
     return NextResponse.json(
       {
