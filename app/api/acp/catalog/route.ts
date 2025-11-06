@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getAllProducts } from "@/app/lib/catalog";
+import { getCorsHeaders } from "@/app/lib/cors";
 
 type CatalogProduct = ReturnType<typeof getAllProducts>[number];
 
@@ -108,7 +109,7 @@ type CatalogResponse = {
   };
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const products = getAllProducts();
 
   const response: CatalogResponse = {
@@ -124,22 +125,19 @@ export async function GET() {
     },
   };
 
+  const origin = request.headers.get("origin");
+
   return NextResponse.json(response, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Accept, Content-Type",
-    },
+    headers: getCorsHeaders(origin),
   });
 }
 
-export function OPTIONS() {
+export function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get("origin");
+
   return new NextResponse(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Accept, Content-Type",
-    },
+    headers: getCorsHeaders(origin),
   });
 }
 

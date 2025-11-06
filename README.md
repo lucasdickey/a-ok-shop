@@ -166,6 +166,26 @@ The storefront now exposes a draft implementation of the Agentic Commerce Protoc
 
 All POST endpoints accept an optional `Idempotency-Key` header which is forwarded to Stripe to guarantee safe retries.
 
+### CORS Configuration
+
+ACP endpoints implement origin-based CORS validation for security.
+
+**Development Mode** (`NODE_ENV=development`):
+- All `localhost` origins are automatically allowed on **any port** (e.g., `http://localhost:3000`, `http://localhost:3001`, `http://localhost:9999`)
+- Also supports `127.0.0.1` origins
+- This allows running multiple apps concurrently without configuration
+
+**Production Mode**:
+Default allowed origins:
+- `https://a-ok.shop`
+- `https://www.a-ok.shop`
+
+To configure custom allowed origins for production, set the `ACP_ALLOWED_ORIGINS` environment variable:
+
+```bash
+ACP_ALLOWED_ORIGINS=https://agent.example.com,https://api.partner.com
+```
+
 ### Example Checkout Payload
 
 ```json

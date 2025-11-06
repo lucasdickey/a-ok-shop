@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
+import { getCorsHeaders } from "@/app/lib/cors";
+
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 const stripe = stripeSecretKey
@@ -123,12 +125,14 @@ export async function POST(request: NextRequest) {
         description: payload.description,
         setup_future_usage: payload.setup_future_usage,
         metadata: {
-          protocol: "acp-draft-2024-12",
           ...payload.metadata,
+          protocol: "acp-draft-2024-12",
         },
       },
       idempotencyKey ? { idempotencyKey } : undefined
     );
+
+    const origin = request.headers.get("origin");
 
     return NextResponse.json(
       {
@@ -141,13 +145,14 @@ export async function POST(request: NextRequest) {
         },
       },
       {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
+        headers: getCorsHeaders(origin),
       }
     );
   } catch (error) {
-    console.error("Error creating ACP delegate payment", error);
+    // Log error type and message without sensitive details
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error creating ACP delegate payment:", errorMessage);
+
     return NextResponse.json(
       { error: "Failed to create payment intent" },
       { status: 500 }
@@ -155,14 +160,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export function OPTIONS() {
+export function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get("origin");
+
   return new NextResponse(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Accept, Content-Type, Idempotency-Key",
-    },
+    headers: getCorsHeaders(origin),
   });
 }
 
