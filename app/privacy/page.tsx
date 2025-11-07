@@ -110,12 +110,12 @@ export default function PrivacyPolicy() {
             <li>The AI agent facilitates your purchase on your behalf</li>
             <li>Your payment information is securely tokenized and never exposed</li>
             <li>We share order status updates with the AI platform to keep you informed</li>
-            <li>Your conversation with the AI is subject to that platform's privacy policy</li>
+            <li>Your conversation with the AI is subject to that platform&apos;s privacy policy</li>
           </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">8. Children's Privacy</h2>
+          <h2 className="text-2xl font-semibold mb-4">8. Children&apos;s Privacy</h2>
           <p className="mb-4">
             Our service is not directed to children under 13. We do not knowingly collect personal
             information from children under 13.
@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">9. Changes to This Policy</h2>
           <p className="mb-4">
-            We may update this privacy policy from time to time. We'll notify you of significant
+            We may update this privacy policy from time to time. We&apos;ll notify you of significant
             changes by email or by posting a notice on our website.
           </p>
         </section>

@@ -55,8 +55,8 @@ export default function TermsOfService() {
             credit cards and other payment methods as displayed at checkout.
           </p>
           <p className="mb-4">
-            <strong>Pricing Errors:</strong> If we discover a pricing error after you've placed an
-            order, we'll notify you and give you the option to cancel or pay the correct price.
+            <strong>Pricing Errors:</strong> If we discover a pricing error after you&apos;ve placed an
+            order, we&apos;ll notify you and give you the option to cancel or pay the correct price.
           </p>
         </section>
 
@@ -70,7 +70,7 @@ export default function TermsOfService() {
             <li>You authorize the AI to access product information and create checkout sessions</li>
             <li>Payment is securely tokenized and processed by Stripe</li>
             <li>You are responsible for verifying order details before completing purchase</li>
-            <li>The AI platform's terms of service also apply to your interaction with the assistant</li>
+            <li>The AI platform&apos;s terms of service also apply to your interaction with the assistant</li>
           </ul>
         </section>
 
@@ -176,7 +176,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">13. Changes to Terms</h2>
           <p className="mb-4">
-            We reserve the right to modify these terms at any time. We'll notify you of significant
+            We reserve the right to modify these terms at any time. We&apos;ll notify you of significant
             changes by posting a notice on our website or sending an email. Your continued use of our
             services after changes constitutes acceptance of the new terms.
           </p>

@@ -55,7 +55,7 @@ export default function ReturnPolicy() {
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li>Email photos of the defect/damage to returns@a-ok.shop</li>
             <li>Include your order number in the subject line</li>
-            <li>We'll provide a prepaid return label and issue a full refund or replacement</li>
+            <li>We&apos;ll provide a prepaid return label and issue a full refund or replacement</li>
           </ul>
           <p className="mb-4">
             Please report defects within <strong>7 days</strong> of receiving your order.
@@ -69,8 +69,8 @@ export default function ReturnPolicy() {
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li>Contact us immediately with photos of the item you received</li>
-            <li>We'll send a prepaid return label at no cost to you</li>
-            <li>We'll manufacture and ship the correct item</li>
+            <li>We&apos;ll send a prepaid return label at no cost to you</li>
+            <li>We&apos;ll manufacture and ship the correct item</li>
             <li>Or provide a full refund if you prefer</li>
           </ul>
           <p className="text-sm text-gray-600">
@@ -94,7 +94,7 @@ export default function ReturnPolicy() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
           <p className="mb-4">
-            Have questions about returns? We're here to help!
+            Have questions about returns? We&apos;re here to help!
           </p>
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="mb-2">
@@ -126,7 +126,7 @@ export default function ReturnPolicy() {
             This return policy was last updated on November 6, 2025.
           </p>
           <p className="text-sm text-gray-500 mt-2">
-            We reserve the right to refuse returns that don't meet our return policy requirements.
+            We reserve the right to refuse returns that don&apos;t meet our return policy requirements.
           </p>
         </div>
       </div>
