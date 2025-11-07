@@ -1,10 +1,22 @@
 /**
- * Vercel KV Client for Checkout Session Storage
+ * Redis Client for Checkout Session Storage
  *
  * Stores checkout sessions with 24-hour TTL for OpenAI ACP integration
  */
 
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
+
+// Create Redis client instance
+const redis = new Redis(process.env.REDIS_URL || '', {
+  maxRetriesPerRequest: 3,
+  enableReadyCheck: true,
+  lazyConnect: true,
+});
+
+// Connect to Redis
+redis.connect().catch((err) => {
+  console.error('Redis connection error:', err);
+});
 
 export interface CheckoutSession {
   id: string;
@@ -83,19 +95,19 @@ export interface Total {
 const SESSION_TTL = 86400; // 24 hours in seconds
 
 /**
- * Store a checkout session in Vercel KV
+ * Store a checkout session in Redis
  */
 export async function setCheckoutSession(id: string, session: CheckoutSession): Promise<void> {
   const key = `checkout:${id}`;
-  await kv.set(key, JSON.stringify(session), { ex: SESSION_TTL });
+  await redis.set(key, JSON.stringify(session), 'EX', SESSION_TTL);
 }
 
 /**
- * Retrieve a checkout session from Vercel KV
+ * Retrieve a checkout session from Redis
  */
 export async function getCheckoutSession(id: string): Promise<CheckoutSession | null> {
   const key = `checkout:${id}`;
-  const data = await kv.get<string>(key);
+  const data = await redis.get(key);
 
   if (!data) {
     return null;
@@ -110,11 +122,11 @@ export async function getCheckoutSession(id: string): Promise<CheckoutSession | 
 }
 
 /**
- * Delete a checkout session from Vercel KV
+ * Delete a checkout session from Redis
  */
 export async function deleteCheckoutSession(id: string): Promise<void> {
   const key = `checkout:${id}`;
-  await kv.del(key);
+  await redis.del(key);
 }
 
 /**
