@@ -16,7 +16,7 @@ const stripe = process.env.STRIPE_SECRET_KEY
 /**
  * Calculate tax for a checkout session using Stripe Tax
  *
- * TODO: Implement Stripe Tax calculation
+ * Uses Stripe Tax API for accurate sales tax calculation
  */
 export async function calculateTax(
   lineItems: LineItem[],
@@ -27,32 +27,38 @@ export async function calculateTax(
     return 0;
   }
 
-  try {
-    // TODO: Call Stripe Tax API
-    // const calculation = await stripe.tax.calculations.create({
-    //   currency: 'usd',
-    //   line_items: lineItems.map(item => ({
-    //     amount: item.subtotal,
-    //     reference: item.id
-    //   })),
-    //   customer_details: {
-    //     address: {
-    //       line1: address.line_one,
-    //       city: address.city,
-    //       state: address.state,
-    //       postal_code: address.postal_code,
-    //       country: address.country
-    //     },
-    //     address_source: 'shipping'
-    //   }
-    // });
-    //
-    // return calculation.tax_amount_exclusive;
-
-    // STUB: Return 0 for now
+  // Only calculate tax for US addresses (can expand later)
+  if (address.country !== 'US') {
     return 0;
+  }
+
+  try {
+    // Call Stripe Tax API
+    const calculation = await stripe.tax.calculations.create({
+      currency: 'usd',
+      line_items: lineItems.map(item => ({
+        amount: item.subtotal,
+        reference: item.id,
+      })),
+      customer_details: {
+        address: {
+          line1: address.line_one,
+          line2: address.line_two || undefined,
+          city: address.city,
+          state: address.state,
+          postal_code: address.postal_code,
+          country: address.country,
+        },
+        address_source: 'shipping',
+      },
+      // Enable tax calculation
+      expand: ['line_items.data.tax_breakdown'],
+    });
+
+    return calculation.tax_amount_exclusive || 0;
   } catch (error) {
     console.error('Tax calculation error:', error);
+    // Return 0 if tax calculation fails (non-blocking)
     return 0;
   }
 }

@@ -1,9 +1,11 @@
 /**
  * Product Feed Generator for OpenAI Commerce
  *
- * Transforms Shopify product data into OpenAI Product Feed Spec compliant format
+ * Transforms local JSON catalog into OpenAI Product Feed Spec compliant format
  * See: https://developers.openai.com/commerce/specs/feed
  */
+
+import { getAllProducts } from './catalog';
 
 export interface ProductFeedItem {
   // Required: Basic Product Data
@@ -43,52 +45,57 @@ export interface ProductFeedItem {
 }
 
 /**
- * Generate OpenAI-compliant product feed from Shopify data
- *
- * TODO: Implement actual Shopify product fetching and transformation
+ * Generate OpenAI-compliant product feed from local JSON catalog
  */
 export async function generateProductFeed(): Promise<ProductFeedItem[]> {
-  // TODO: Fetch products from Shopify
-  // const products = await getShopifyProducts();
+  const products = getAllProducts();
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.a-ok.shop';
 
-  // TODO: Transform each product to OpenAI schema
   const feed: ProductFeedItem[] = [];
 
-  // STUB: Return empty feed for now
-  // Implementation needed:
-  // 1. Fetch all products from Shopify Storefront API
-  // 2. For each product:
-  //    - Map product ID, title, description
-  //    - Get primary image URL
-  //    - Format price as "XX.XX USD"
-  //    - Check availability from inventory
-  //    - Add merchant URLs (privacy, terms, returns)
-  //    - Set control flags (enable_search, enable_checkout)
-  //    - Handle variants (item_group_id, color, size)
-  //
-  // Example transformation:
-  // feed.push({
-  //   id: product.id,
-  //   title: product.title,
-  //   description: stripHtml(product.description),
-  //   link: `https://www.a-ok.shop/products/${product.handle}`,
-  //   image_link: product.images[0]?.url,
-  //   additional_image_link: product.images.slice(1).map(img => img.url).join(','),
-  //   price: `${product.variants[0].price} USD`,
-  //   availability: product.availableForSale ? 'in_stock' : 'out_of_stock',
-  //   brand: 'A-OK Shop',
-  //   seller_name: 'A-OK Shop',
-  //   seller_url: 'https://www.a-ok.shop',
-  //   seller_privacy_policy: 'https://www.a-ok.shop/privacy',
-  //   seller_tos: 'https://www.a-ok.shop/terms',
-  //   return_policy: 'https://www.a-ok.shop/returns',
-  //   return_window: 0, // All sales final
-  //   enable_search: true,
-  //   enable_checkout: true,
-  //   item_group_id: product.id,
-  //   color: variant.attributes.Color,
-  //   size: variant.attributes.Size
-  // });
+  for (const product of products) {
+    // Get the first variant for pricing
+    const firstVariant = product.variants.edges[0]?.node;
+    if (!firstVariant) continue;
+
+    const price = parseFloat(firstVariant.price.amount);
+
+    // Get product image URL
+    const imageUrl = product.images.edges[0]?.node.url || '';
+    const fullImageUrl = imageUrl.startsWith('http')
+      ? imageUrl
+      : `${baseUrl}${imageUrl}`;
+
+    // Get additional images
+    const additionalImages = product.images.edges
+      .slice(1, 10) // Max 10 additional images
+      .map((edge) => {
+        const url = edge.node.url;
+        return url.startsWith('http') ? url : `${baseUrl}${url}`;
+      })
+      .join(',');
+
+    feed.push({
+      id: product.handle, // Use handle as the product ID for the feed
+      title: product.title,
+      description: stripHtml(product.descriptionHtml || product.description || ''),
+      link: `${baseUrl}/products/${product.handle}`,
+      image_link: fullImageUrl,
+      additional_image_link: additionalImages || undefined,
+      price: `${price.toFixed(2)} USD`,
+      availability: product.availableForSale ? 'in_stock' : 'out_of_stock',
+      brand: 'A-OK Shop',
+      seller_name: 'A-OK Shop',
+      seller_url: baseUrl,
+      seller_privacy_policy: `${baseUrl}/privacy`,
+      seller_tos: `${baseUrl}/terms`,
+      return_policy: `${baseUrl}/returns`,
+      return_window: 0, // All sales final due to just-in-time manufacturing
+      enable_search: true,
+      enable_checkout: true,
+      item_group_id: product.id, // Use Shopify product ID as group ID
+    });
+  }
 
   return feed;
 }
