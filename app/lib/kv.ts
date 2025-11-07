@@ -7,15 +7,11 @@
 import Redis from 'ioredis';
 
 // Create Redis client instance
+// With lazyConnect: true, Redis will automatically connect on first command
 const redis = new Redis(process.env.REDIS_URL || '', {
   maxRetriesPerRequest: 3,
   enableReadyCheck: true,
   lazyConnect: true,
-});
-
-// Connect to Redis
-redis.connect().catch((err) => {
-  console.error('Redis connection error:', err);
 });
 
 export interface CheckoutSession {
