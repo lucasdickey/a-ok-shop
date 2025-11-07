@@ -31,6 +31,10 @@ export interface CheckoutSession {
   created_at: number;
   updated_at: number;
   expires_at: number;
+  cancellation_reason?: string;
+  canceled_at?: number;
+  payment_intent_id?: string;
+  completed_at?: number;
 }
 
 export interface Address {
@@ -53,17 +57,23 @@ export interface Buyer {
 
 export interface LineItem {
   id: string;
-  item: {
+  product_id?: string;
+  title?: string;
+  subtitle?: string;
+  item?: {
     id: string;
     title: string;
     image_url?: string;
   };
   quantity: number;
   base_amount: number;
-  discount: number;
+  discount?: number;
+  discount_amount?: number;
   subtotal: number;
   tax: number;
   total: number;
+  currency?: string;
+  image_url?: string;
 }
 
 export interface FulfillmentOption {
@@ -83,8 +93,9 @@ export interface FulfillmentOption {
 }
 
 export interface Total {
-  type: 'items_base_amount' | 'items_discount' | 'subtotal' | 'discount' | 'fulfillment' | 'tax' | 'fee' | 'total';
-  display_text: string;
+  type: 'items_base_amount' | 'items_discount' | 'subtotal' | 'discount' | 'fulfillment' | 'tax' | 'fee' | 'total' | 'merchandise' | 'shipping';
+  display_text?: string;
+  label?: string;
   amount: number;
 }
 

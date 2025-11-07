@@ -136,6 +136,7 @@ export type SimpleProduct = {
   }>;
   tags: string[];
   productType: string;
+  availableForSale: boolean;
 };
 
 // Load all products from the embedded JSON catalog
@@ -192,6 +193,7 @@ export function getAllProducts(): SimpleProduct[] {
     })),
     tags: product.tags,
     productType: product.productType,
+    availableForSale: product.availableForSale,
   }));
 }
 

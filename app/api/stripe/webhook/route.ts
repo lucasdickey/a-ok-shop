@@ -1,19 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-09-30.clover",
-});
+// Initialize Stripe client lazily to avoid build-time errors
+let stripe: Stripe | null = null;
+function getStripe() {
+  if (!stripe && process.env.STRIPE_SECRET_KEY) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-09-30.clover" as any,
+    });
+  }
+  return stripe;
+}
 
 // Support multiple webhook secrets (for different Stripe destinations)
-const webhookSecrets = [
-  process.env.STRIPE_WEBHOOK_SECRET_1, // Primary webhook secret
-  process.env.STRIPE_WEBHOOK_SECRET_2, // Secondary webhook secret
-  process.env.STRIPE_WEBHOOK_SECRET,   // Legacy fallback
-].filter(Boolean) as string[];
+function getWebhookSecrets() {
+  return [
+    process.env.STRIPE_WEBHOOK_SECRET_1, // Primary webhook secret
+    process.env.STRIPE_WEBHOOK_SECRET_2, // Secondary webhook secret
+    process.env.STRIPE_WEBHOOK_SECRET,   // Legacy fallback
+  ].filter(Boolean) as string[];
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const stripeClient = getStripe();
+    if (!stripeClient) {
+      return NextResponse.json(
+        { error: "Stripe not configured" },
+        { status: 500 }
+      );
+    }
+
     const body = await request.text();
     const signature = request.headers.get("stripe-signature");
 
@@ -21,9 +38,10 @@ export async function POST(request: NextRequest) {
     let lastError: Error | null = null;
 
     // Try to verify the signature with each available secret
-    for (const secret of webhookSecrets) {
+    const secrets = getWebhookSecrets();
+    for (const secret of secrets) {
       try {
-        event = stripe.webhooks.constructEvent(body, signature!, secret);
+        event = stripeClient.webhooks.constructEvent(body, signature!, secret);
         console.log(`Webhook verified successfully with secret ending in ...${secret.slice(-4)}`);
         break; // Successfully verified, exit loop
       } catch (err) {
@@ -47,7 +65,7 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
-        await handleCheckoutSessionCompleted(session);
+        await handleCheckoutSessionCompleted(stripeClient, session);
         break;
 
       case "payment_intent.succeeded":
@@ -69,12 +87,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutSessionCompleted(stripeClient: Stripe, session: Stripe.Checkout.Session) {
   console.log("Checkout session completed:", session.id);
 
   try {
     // Expand session to get line items and customer details
-    const expandedSession = await stripe.checkout.sessions.retrieve(session.id, {
+    const expandedSession = await stripeClient.checkout.sessions.retrieve(session.id, {
       expand: ["line_items", "customer", "total_details", "shipping_details"]
     });
 

@@ -119,9 +119,9 @@ export async function recalculateTotals(session: CheckoutSession, taxAmount: num
 
   // Add shipping cost if selected
   let shippingTotal = 0;
-  if (session.selected_fulfillment_option_id) {
+  if (session.fulfillment_option_id) {
     const selectedOption = session.fulfillment_options.find(
-      opt => opt.id === session.selected_fulfillment_option_id
+      opt => opt.id === session.fulfillment_option_id
     );
     if (selectedOption) {
       shippingTotal = selectedOption.total;

@@ -5,13 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { getCheckoutSession, updateCheckoutSession } from '@/app/lib/kv';
 import { emitWebhook } from '@/app/lib/webhook-signing';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-09-30.clover' as any,
-});
+import { getStripeClient } from '@/app/lib/stripe-client';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -22,6 +18,14 @@ export async function POST(
   context: RouteContext
 ) {
   try {
+    const stripe = getStripeClient();
+    if (!stripe) {
+      return NextResponse.json(
+        { error: { type: 'invalid_request', code: 'internal_error', message: 'Stripe not configured' } },
+        { status: 500 }
+      );
+    }
+
     const { id } = await context.params;
     const body = await req.json();
 
@@ -63,17 +67,22 @@ export async function POST(
     await updateCheckoutSession(id, { status: 'in_progress' });
 
     try {
-      // Process payment with Stripe SPT
+      // TODO: Exchange OpenAI SharedPaymentToken for Stripe payment method
+      // The shared_payment_granted_token from body.payment_data.token needs to be
+      // converted to a Stripe payment method before creating the PaymentIntent
+
+      // Process payment with Stripe
       const paymentIntent = await stripe.paymentIntents.create({
         amount: totalAmount,
         currency: session.currency,
-        shared_payment_granted_token: body.payment_data.token,
+        // payment_method: stripePaymentMethodId, // TODO: Convert SPT to Stripe PM
         metadata: {
           checkout_session_id: session.id,
           protocol: 'acp-draft-2024-12',
           source: 'acp-api',
           endpoint: 'complete-checkout',
           origin: req.headers.get('origin') || 'unknown',
+          shared_payment_token: body.payment_data.token, // Store SPT for reference
         },
       });
 
