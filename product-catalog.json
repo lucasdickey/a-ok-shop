@@ -83,7 +83,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri7KcMygrnU2DCwcIxbbO"
                 }
               },
               {
@@ -102,7 +103,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri7KcMygrnU2DsuZOLx1l"
                 }
               }
             ]
@@ -122,7 +124,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-08T03:15:06Z",
           "updatedAt": "2025-05-10T22:54:26Z",
-          "publishedAt": "2025-04-19T23:52:34Z"
+          "publishedAt": "2025-04-19T23:52:34Z",
+          "stripeProductId": "prod_TPh6uGobhFHfKb"
         }
       },
       {
@@ -205,7 +208,8 @@
                       "name": "Color",
                       "value": "Gray"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri8KcMygrnU2DAHKlMe16"
                 }
               },
               {
@@ -224,7 +228,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri8KcMygrnU2DIO6fYyAk"
                 }
               }
             ]
@@ -236,7 +241,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-08T20:56:16Z",
           "updatedAt": "2025-08-25T05:55:56Z",
-          "publishedAt": "2025-04-19T23:52:34Z"
+          "publishedAt": "2025-04-19T23:52:34Z",
+          "stripeProductId": "prod_TPh6Rcfm8HF86v"
         }
       },
       {
@@ -313,7 +319,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri8KcMygrnU2DStbhKHMZ"
                 }
               },
               {
@@ -332,7 +339,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri8KcMygrnU2D7OoQFxsJ"
                 }
               },
               {
@@ -351,7 +359,8 @@
                       "name": "Color",
                       "value": "Brown"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri9KcMygrnU2DjETjdhBN"
                 }
               }
             ]
@@ -363,7 +372,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T03:48:16Z",
           "updatedAt": "2025-05-10T22:53:26Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh68gR6Xj33XS"
         }
       },
       {
@@ -448,7 +458,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri9KcMygrnU2DKQKvxm8j"
                 }
               },
               {
@@ -467,7 +478,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSri9KcMygrnU2DxSq3gKJ0"
                 }
               }
             ]
@@ -479,7 +491,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T03:51:35Z",
           "updatedAt": "2025-05-10T22:53:16Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh6I0j9miFGDh"
         }
       },
       {
@@ -564,7 +577,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriAKcMygrnU2DS2NN1Kmk"
                 }
               },
               {
@@ -583,7 +597,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriAKcMygrnU2D0iJEgddV"
                 }
               }
             ]
@@ -595,7 +610,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T03:54:19Z",
           "updatedAt": "2025-05-10T22:53:06Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh6hBmB30vnT3"
         }
       },
       {
@@ -681,7 +697,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriAKcMygrnU2DRXBGEXuQ"
                 }
               },
               {
@@ -700,7 +717,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriBKcMygrnU2DrrrzO0HE"
                 }
               },
               {
@@ -719,7 +737,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriBKcMygrnU2Dm053wzLZ"
                 }
               }
             ]
@@ -731,7 +750,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T03:56:10Z",
           "updatedAt": "2025-05-10T22:52:51Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh6f1d2JhPsUe"
         }
       },
       {
@@ -810,7 +830,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriBKcMygrnU2DSZR1MP8c"
                 }
               },
               {
@@ -829,7 +850,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriBKcMygrnU2D2J66o4UC"
                 }
               },
               {
@@ -848,7 +870,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriCKcMygrnU2DQt5NWwSS"
                 }
               },
               {
@@ -867,7 +890,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriCKcMygrnU2D6WuznxjJ"
                 }
               },
               {
@@ -886,7 +910,8 @@
                       "name": "Color",
                       "value": "Brown"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriCKcMygrnU2DLdA46ttD"
                 }
               }
             ]
@@ -898,7 +923,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T03:58:39Z",
           "updatedAt": "2025-05-29T19:54:31Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh6ehdmEi8hjm"
         }
       },
       {
@@ -973,7 +999,8 @@
                       "name": "Color",
                       "value": "Gray"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriCKcMygrnU2DM8Vd8Dl3"
                 }
               }
             ]
@@ -985,7 +1012,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-09T04:28:25Z",
           "updatedAt": "2025-05-10T22:52:16Z",
-          "publishedAt": "2025-04-19T23:52:35Z"
+          "publishedAt": "2025-04-19T23:52:35Z",
+          "stripeProductId": "prod_TPh6XeXm0yM3pi"
         }
       },
       {
@@ -1089,7 +1117,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriDKcMygrnU2DofEFqfHT"
                 }
               },
               {
@@ -1108,7 +1137,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriDKcMygrnU2DJ79e4m0c"
                 }
               },
               {
@@ -1127,7 +1157,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriDKcMygrnU2DsMPBBOo5"
                 }
               }
             ]
@@ -1141,7 +1172,8 @@
           "updatedAt": "2025-05-13T21:29:41Z",
           "publishedAt": "2025-04-19T23:52:36Z",
           "featured": true,
-          "featuredOrder": 1
+          "featuredOrder": 1,
+          "stripeProductId": "prod_TPh6M4n1E8Q1Rk"
         }
       },
       {
@@ -1227,7 +1259,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriEKcMygrnU2DTL7iaH8h"
                 }
               },
               {
@@ -1246,7 +1279,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriEKcMygrnU2DO2tlL210"
                 }
               },
               {
@@ -1265,7 +1299,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriEKcMygrnU2DYbHEM51e"
                 }
               }
             ]
@@ -1277,7 +1312,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-13T20:45:03Z",
           "updatedAt": "2025-05-10T22:51:51Z",
-          "publishedAt": "2025-04-19T23:52:36Z"
+          "publishedAt": "2025-04-19T23:52:36Z",
+          "stripeProductId": "prod_TPh6eaI4BSjsBQ"
         }
       },
       {
@@ -1354,7 +1390,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriFKcMygrnU2DlUZDbcJ0"
                 }
               },
               {
@@ -1373,7 +1410,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriFKcMygrnU2D6U2cdQ7l"
                 }
               },
               {
@@ -1392,7 +1430,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriFKcMygrnU2DooKInnSZ"
                 }
               }
             ]
@@ -1404,7 +1443,8 @@
           "availableForSale": true,
           "createdAt": "2024-12-31T22:00:36Z",
           "updatedAt": "2025-09-02T20:19:12Z",
-          "publishedAt": "2025-04-19T23:52:36Z"
+          "publishedAt": "2025-04-19T23:52:36Z",
+          "stripeProductId": "prod_TPh6ZlbhdYLpoI"
         }
       },
       {
@@ -1515,7 +1555,8 @@
                       "name": "Title",
                       "value": "Default Title"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriFKcMygrnU2DvmbA4dZj"
                 }
               }
             ]
@@ -1529,7 +1570,8 @@
           "updatedAt": "2025-05-14T19:27:37Z",
           "publishedAt": "2025-04-26T00:56:46Z",
           "featured": true,
-          "featuredOrder": 2
+          "featuredOrder": 2,
+          "stripeProductId": "prod_TPh6ToxrhGbjcp"
         }
       },
       {
@@ -1623,7 +1665,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriGKcMygrnU2DMFKNwqrO"
                 }
               },
               {
@@ -1642,7 +1685,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriGKcMygrnU2DD0lyaXHr"
                 }
               }
             ]
@@ -1656,7 +1700,8 @@
           "updatedAt": "2025-07-30T05:58:44Z",
           "publishedAt": "2025-04-26T01:00:18Z",
           "featured": true,
-          "featuredOrder": 3
+          "featuredOrder": 3,
+          "stripeProductId": "prod_TPh6ltx0CMw5HD"
         }
       },
       {
@@ -1758,7 +1803,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriGKcMygrnU2Dfjt2OQ9G"
                 }
               },
               {
@@ -1781,7 +1827,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriHKcMygrnU2DjOVp1x2I"
                 }
               },
               {
@@ -1804,7 +1851,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriHKcMygrnU2DNfgDhXPw"
                 }
               },
               {
@@ -1827,7 +1875,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriHKcMygrnU2D9EAsGoyp"
                 }
               },
               {
@@ -1850,7 +1899,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriHKcMygrnU2DEvC5sWFw"
                 }
               },
               {
@@ -1873,7 +1923,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriIKcMygrnU2DmK9vmSjY"
                 }
               },
               {
@@ -1896,7 +1947,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriIKcMygrnU2D0THVtjWv"
                 }
               },
               {
@@ -1919,7 +1971,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriIKcMygrnU2DSP5hrQ7x"
                 }
               },
               {
@@ -1942,7 +1995,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriIKcMygrnU2DsWOHxUHe"
                 }
               },
               {
@@ -1965,7 +2019,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriIKcMygrnU2Dx65X9biB"
                 }
               }
             ]
@@ -1977,7 +2032,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-04T21:44:48Z",
           "updatedAt": "2025-05-10T22:50:43Z",
-          "publishedAt": "2025-05-04T21:44:47Z"
+          "publishedAt": "2025-05-04T21:44:47Z",
+          "stripeProductId": "prod_TPh6Cwlc91zwkU"
         }
       },
       {
@@ -2072,7 +2128,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriJKcMygrnU2Du6MyyOnv"
                 }
               },
               {
@@ -2091,7 +2148,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriJKcMygrnU2DECDUlZp8"
                 }
               },
               {
@@ -2110,7 +2168,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriJKcMygrnU2DbfzMz2xo"
                 }
               }
             ]
@@ -2122,7 +2181,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-04T23:52:53Z",
           "updatedAt": "2025-05-10T22:50:13Z",
-          "publishedAt": "2025-05-04T23:52:53Z"
+          "publishedAt": "2025-05-04T23:52:53Z",
+          "stripeProductId": "prod_TPh6amjuGOvbfM"
         }
       },
       {
@@ -2206,7 +2266,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriKKcMygrnU2DOyyAwECQ"
                 }
               }
             ]
@@ -2218,7 +2279,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-05T00:07:05Z",
           "updatedAt": "2025-05-10T22:49:56Z",
-          "publishedAt": "2025-05-05T00:07:05Z"
+          "publishedAt": "2025-05-05T00:07:05Z",
+          "stripeProductId": "prod_TPh6R2RsoTDnH9"
         }
       },
       {
@@ -2302,7 +2364,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriKKcMygrnU2DlOf2JYS3"
                 }
               }
             ]
@@ -2314,7 +2377,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-05T01:16:41Z",
           "updatedAt": "2025-10-24T05:53:01Z",
-          "publishedAt": "2025-05-05T01:16:41Z"
+          "publishedAt": "2025-05-05T01:16:41Z",
+          "stripeProductId": "prod_TPh6gKwAV4lUqM"
         }
       },
       {
@@ -2407,7 +2471,8 @@
                       "name": "Color",
                       "value": "Black"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriLKcMygrnU2DxOmtywiv"
                 }
               }
             ]
@@ -2419,7 +2484,8 @@
           "availableForSale": false,
           "createdAt": "2025-05-05T01:29:13Z",
           "updatedAt": "2025-05-10T22:49:20Z",
-          "publishedAt": "2025-05-05T01:29:13Z"
+          "publishedAt": "2025-05-05T01:29:13Z",
+          "stripeProductId": "prod_TPh6jLSkhhaVCG"
         }
       },
       {
@@ -2523,7 +2589,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriLKcMygrnU2DCEx0Oz01"
                 }
               },
               {
@@ -2542,7 +2609,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriLKcMygrnU2DtTYiYZBR"
                 }
               },
               {
@@ -2561,7 +2629,8 @@
                       "name": "Color",
                       "value": "Blue"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriMKcMygrnU2D4Bx2vy3q"
                 }
               }
             ]
@@ -2573,7 +2642,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-05T16:07:10Z",
           "updatedAt": "2025-05-10T22:48:22Z",
-          "publishedAt": "2025-05-05T16:07:10Z"
+          "publishedAt": "2025-05-05T16:07:10Z",
+          "stripeProductId": "prod_TPh6gnPDgrEy1c"
         }
       },
       {
@@ -2687,7 +2757,8 @@
                       "name": "Color",
                       "value": "Beige"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriMKcMygrnU2DaGnP5CF9"
                 }
               },
               {
@@ -2706,7 +2777,8 @@
                       "name": "Color",
                       "value": "White"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriMKcMygrnU2DM8PsTTGk"
                 }
               },
               {
@@ -2725,7 +2797,8 @@
                       "name": "Color",
                       "value": "Gray"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriMKcMygrnU2DFmQCvVDk"
                 }
               },
               {
@@ -2744,7 +2817,8 @@
                       "name": "Color",
                       "value": "Navy"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriNKcMygrnU2DZ4hQYUR8"
                 }
               }
             ]
@@ -2756,7 +2830,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-15T17:08:44Z",
           "updatedAt": "2025-05-23T12:43:20Z",
-          "publishedAt": "2025-05-15T17:08:44Z"
+          "publishedAt": "2025-05-15T17:08:44Z",
+          "stripeProductId": "prod_TPh6N8EHkrD8nx"
         }
       },
       {
@@ -2870,7 +2945,8 @@
                       "name": "Color",
                       "value": "Yellow"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriNKcMygrnU2DZwM5BCQL"
                 }
               },
               {
@@ -2889,7 +2965,8 @@
                       "name": "Color",
                       "value": "Gray"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriNKcMygrnU2DdpMrpsAR"
                 }
               },
               {
@@ -2908,7 +2985,8 @@
                       "name": "Color",
                       "value": "Red"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriNKcMygrnU2D8WIh3YOk"
                 }
               },
               {
@@ -2927,7 +3005,8 @@
                       "name": "Color",
                       "value": "Green"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriOKcMygrnU2DvM6cXg4k"
                 }
               }
             ]
@@ -2939,7 +3018,8 @@
           "availableForSale": true,
           "createdAt": "2025-05-15T17:27:03Z",
           "updatedAt": "2025-05-15T19:51:46Z",
-          "publishedAt": "2025-05-15T17:27:03Z"
+          "publishedAt": "2025-05-15T17:27:03Z",
+          "stripeProductId": "prod_TPh6J2wOzgyHXV"
         }
       },
       {
@@ -3062,7 +3142,8 @@
                       "name": "Size",
                       "value": "XS"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriOKcMygrnU2DscO0a2w6"
                 }
               },
               {
@@ -3088,7 +3169,8 @@
                       "name": "Size",
                       "value": "XL"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriOKcMygrnU2DsIq1iCyi"
                 }
               },
               {
@@ -3114,7 +3196,8 @@
                       "name": "Size",
                       "value": "L"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriPKcMygrnU2DIFtUjbeO"
                 }
               },
               {
@@ -3140,7 +3223,8 @@
                       "name": "Size",
                       "value": "M"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriPKcMygrnU2DkB6Nh2GQ"
                 }
               },
               {
@@ -3166,7 +3250,8 @@
                       "name": "Size",
                       "value": "S"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriPKcMygrnU2DAma9OYBs"
                 }
               },
               {
@@ -3192,7 +3277,8 @@
                       "name": "Size",
                       "value": "XS"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriPKcMygrnU2Dx0ZUOwLQ"
                 }
               },
               {
@@ -3218,7 +3304,8 @@
                       "name": "Size",
                       "value": "XL"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriQKcMygrnU2D6ZKuYxPW"
                 }
               },
               {
@@ -3244,7 +3331,8 @@
                       "name": "Size",
                       "value": "L"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriQKcMygrnU2DruBaG0oZ"
                 }
               },
               {
@@ -3270,7 +3358,8 @@
                       "name": "Size",
                       "value": "M"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriQKcMygrnU2DZvF9eua2"
                 }
               },
               {
@@ -3296,7 +3385,8 @@
                       "name": "Size",
                       "value": "S"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriQKcMygrnU2D6r7k9GGp"
                 }
               }
             ]
@@ -3308,7 +3398,8 @@
           "availableForSale": true,
           "createdAt": "2025-06-14T21:41:37Z",
           "updatedAt": "2025-08-09T04:31:07Z",
-          "publishedAt": "2025-06-14T21:41:38Z"
+          "publishedAt": "2025-06-14T21:41:38Z",
+          "stripeProductId": "prod_TPh6vMtIYZ6TCc"
         }
       },
       {
@@ -3407,7 +3498,8 @@
                       "name": "Size",
                       "value": "L"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriRKcMygrnU2D46Jcu1RI"
                 }
               },
               {
@@ -3430,7 +3522,8 @@
                       "name": "Size",
                       "value": "XL"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriRKcMygrnU2DDiw9fyTW"
                 }
               },
               {
@@ -3453,7 +3546,8 @@
                       "name": "Size",
                       "value": "M"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriRKcMygrnU2DEeuB2UzH"
                 }
               },
               {
@@ -3476,7 +3570,8 @@
                       "name": "Size",
                       "value": "S"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriRKcMygrnU2DOUGLyM2J"
                 }
               },
               {
@@ -3499,7 +3594,8 @@
                       "name": "Size",
                       "value": "XS"
                     }
-                  ]
+                  ],
+                  "stripePriceId": "price_1SSriRKcMygrnU2D2ALrTiNq"
                 }
               }
             ]
@@ -3511,7 +3607,8 @@
           "availableForSale": true,
           "createdAt": "2025-07-01T17:39:58Z",
           "updatedAt": "2025-07-15T13:01:24Z",
-          "publishedAt": "2025-07-01T17:39:59Z"
+          "publishedAt": "2025-07-01T17:39:59Z",
+          "stripeProductId": "prod_TPh6N7cKRDWzOV"
         }
       }
     ]
