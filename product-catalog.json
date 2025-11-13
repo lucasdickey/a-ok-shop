@@ -3610,6 +3610,187 @@
           "publishedAt": "2025-07-01T17:39:59Z",
           "stripeProductId": "prod_TPh6N7cKRDWzOV"
         }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/Product/aok-for-america",
+          "handle": "a-ok-for-america",
+          "title": "A-OK For America",
+          "description": "The corporate ape who took \"business intelligence\" way too literally.\n\nMeet the A-OK Executive Ape — the only primate on payroll who understands KPIs, GPUs, and the existential weight of quarterly guidance. He clocks in wearing a power suit, noise-cancelling cans, and an expression that says he's one dashboard refresh away from rewriting the entire org chart in banana-based OKRs.\n\nThis design blends mid-century propaganda flair with the A-OK signature palette of algorithmic red, cloud black, and byte white. It's sharp. It's satirical. It's the natural evolution of \"dress for the job you want,\" assuming the job you want is running inference on the fate of civilization.\n\nOn his lapel: the official A-OK pin — proof of allegiance to the world's only apparel brand willing to admit that our most competent executives might, in fact, be apes wearing headphones.\n\nPerfect for founders, forecasters, fine-tuners, chief monkey officers, and anyone trying to look composed while the simulation runs at 10× speed. Built for boardrooms, hackathons, investor updates, and those quiet moments when you wonder if the algorithm is actually managing you.\n\nCorporate. Feral. Optimized for uncertainty.",
+          "descriptionHtml": "<p><strong>The corporate ape who took \"business intelligence\" way too literally.</strong></p><p>Meet the A-OK Executive Ape — the only primate on payroll who understands KPIs, GPUs, and the existential weight of quarterly guidance. He clocks in wearing a power suit, noise-cancelling cans, and an expression that says he's one dashboard refresh away from rewriting the entire org chart in banana-based OKRs.</p><p>This design blends mid-century propaganda flair with the A-OK signature palette of algorithmic red, cloud black, and byte white. It's sharp. It's satirical. It's the natural evolution of \"dress for the job you want,\" assuming the job you want is running inference on the fate of civilization.</p><p>On his lapel: the official A-OK pin — proof of allegiance to the world's only apparel brand willing to admit that our most competent executives might, in fact, be apes wearing headphones.</p><p>Perfect for founders, forecasters, fine-tuners, chief monkey officers, and anyone trying to look composed while the simulation runs at 10× speed. Built for boardrooms, hackathons, investor updates, and those quiet moments when you wonder if the algorithm is actually managing you.</p><p><strong>Corporate. Feral. Optimized for uncertainty.</strong></p>",
+          "productType": "Hoodies",
+          "vendor": "My Store",
+          "tags": [
+            "Hoodies"
+          ],
+          "options": [
+            {
+              "id": "gid://shopify/ProductOption/aok-america-size",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "60.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "60.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/aok-america-1",
+                  "url": "/images/products/AOK-for-america-large.png",
+                  "altText": "A-OK For America - The corporate ape executive",
+                  "width": 1024,
+                  "height": 1536
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-XS",
+                  "title": "XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K20"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-S",
+                  "title": "S",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K21"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-M",
+                  "title": "M",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K22"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-L",
+                  "title": "L",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K23"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-XL",
+                  "title": "XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K24"
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://shopify/Collection/501455651035",
+                  "handle": "frontpage",
+                  "title": "Home page"
+                }
+              }
+            ]
+          },
+          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-for-america",
+          "availableForSale": true,
+          "createdAt": "2025-11-13T04:49:57.056Z",
+          "updatedAt": "2025-11-13T04:49:57.056Z",
+          "publishedAt": "2025-11-13T04:49:57.056Z",
+          "stripeProductId": "prod_TPhl09IH2VamxE"
+        }
       }
     ]
   }
