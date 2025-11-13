@@ -3666,6 +3666,15 @@
                   "width": 1024,
                   "height": 1536
                 }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/aok-america-2",
+                  "url": "/images/products/a-ok-for-america-biz-rendered.png",
+                  "altText": "A-OK For America - Business rendered ape executive on dark hoodie",
+                  "width": 1210,
+                  "height": 1386
+                }
               }
             ]
           },
