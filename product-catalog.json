@@ -3634,6 +3634,14 @@
                 "L",
                 "XL"
               ]
+            },
+            {
+              "id": "gid://shopify/ProductOption/aok-america-color",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Dark Chocolate"
+              ]
             }
           ],
           "priceRange": {
@@ -3660,20 +3668,20 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://shopify/ProductImage/aok-america-1",
-                  "url": "/images/products/AOK-for-america-large.png",
-                  "altText": "A-OK For America - The corporate ape executive",
-                  "width": 1024,
-                  "height": 1536
-                }
-              },
-              {
-                "node": {
                   "id": "gid://shopify/ProductImage/aok-america-2",
                   "url": "/images/products/a-ok-for-america-biz-rendered.png",
                   "altText": "A-OK For America - Business rendered ape executive on dark hoodie",
                   "width": 1210,
                   "height": 1386
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductImage/aok-america-1",
+                  "url": "/images/products/AOK-for-america-large.png",
+                  "altText": "A-OK For America - The corporate ape executive",
+                  "width": 1024,
+                  "height": 1536
                 }
               }
             ]
@@ -3682,8 +3690,8 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://shopify/ProductVariant/aok-america-XS",
-                  "title": "XS",
+                  "id": "gid://shopify/ProductVariant/aok-america-XS-Black",
+                  "title": "XS / Black",
                   "sku": "",
                   "price": {
                     "amount": "60.0",
@@ -3695,6 +3703,10 @@
                     {
                       "name": "Size",
                       "value": "XS"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
                     }
                   ],
                   "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K20"
@@ -3702,8 +3714,32 @@
               },
               {
                 "node": {
-                  "id": "gid://shopify/ProductVariant/aok-america-S",
-                  "title": "S",
+                  "id": "gid://shopify/ProductVariant/aok-america-XS-DarkChocolate",
+                  "title": "XS / Dark Chocolate",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Dark Chocolate"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K25"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-S-Black",
+                  "title": "S / Black",
                   "sku": "",
                   "price": {
                     "amount": "60.0",
@@ -3715,6 +3751,10 @@
                     {
                       "name": "Size",
                       "value": "S"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
                     }
                   ],
                   "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K21"
@@ -3722,8 +3762,32 @@
               },
               {
                 "node": {
-                  "id": "gid://shopify/ProductVariant/aok-america-M",
-                  "title": "M",
+                  "id": "gid://shopify/ProductVariant/aok-america-S-DarkChocolate",
+                  "title": "S / Dark Chocolate",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Dark Chocolate"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K26"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-M-Black",
+                  "title": "M / Black",
                   "sku": "",
                   "price": {
                     "amount": "60.0",
@@ -3735,6 +3799,10 @@
                     {
                       "name": "Size",
                       "value": "M"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
                     }
                   ],
                   "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K22"
@@ -3742,8 +3810,32 @@
               },
               {
                 "node": {
-                  "id": "gid://shopify/ProductVariant/aok-america-L",
-                  "title": "L",
+                  "id": "gid://shopify/ProductVariant/aok-america-M-DarkChocolate",
+                  "title": "M / Dark Chocolate",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Dark Chocolate"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K27"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-L-Black",
+                  "title": "L / Black",
                   "sku": "",
                   "price": {
                     "amount": "60.0",
@@ -3755,6 +3847,10 @@
                     {
                       "name": "Size",
                       "value": "L"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
                     }
                   ],
                   "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K23"
@@ -3762,8 +3858,32 @@
               },
               {
                 "node": {
-                  "id": "gid://shopify/ProductVariant/aok-america-XL",
-                  "title": "XL",
+                  "id": "gid://shopify/ProductVariant/aok-america-L-DarkChocolate",
+                  "title": "L / Dark Chocolate",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Dark Chocolate"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K28"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-XL-Black",
+                  "title": "XL / Black",
                   "sku": "",
                   "price": {
                     "amount": "60.0",
@@ -3775,9 +3895,37 @@
                     {
                       "name": "Size",
                       "value": "XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Black"
                     }
                   ],
                   "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K24"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://shopify/ProductVariant/aok-america-XL-DarkChocolate",
+                  "title": "XL / Dark Chocolate",
+                  "sku": "",
+                  "price": {
+                    "amount": "60.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    },
+                    {
+                      "name": "Color",
+                      "value": "Dark Chocolate"
+                    }
+                  ],
+                  "stripePriceId": "price_1Sy5l8LCoP7KyXKhYnZQ3K29"
                 }
               }
             ]
