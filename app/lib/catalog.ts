@@ -10,6 +10,9 @@ export type Product = {
   productType: string;
   vendor: string;
   tags: string[];
+  stripeProductId?: string; // Stripe product ID for this product
+  featured?: boolean; // Whether this product is featured on homepage
+  featuredOrder?: number; // Display order for featured products
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -47,6 +50,7 @@ export type Product = {
         id: string;
         title: string;
         sku: string;
+        stripePriceId?: string; // Stripe price ID for this variant
         price: {
           amount: string;
           currencyCode: string;
@@ -93,6 +97,9 @@ export type SimpleProduct = {
   descriptionHtml?: string;
   createdAt: string;
   updatedAt: string;
+  stripeProductId?: string;
+  featured?: boolean;
+  featuredOrder?: number;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -114,6 +121,7 @@ export type SimpleProduct = {
         id: string;
         title: string;
         sku?: string;
+        stripePriceId?: string;
         price: {
           amount: string;
           currencyCode: string;
@@ -156,6 +164,9 @@ export function getAllProducts(): SimpleProduct[] {
     descriptionHtml: product.descriptionHtml,
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
+    stripeProductId: product.stripeProductId,
+    featured: product.featured,
+    featuredOrder: product.featuredOrder,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,
@@ -177,6 +188,7 @@ export function getAllProducts(): SimpleProduct[] {
           id: edge.node.id,
           title: edge.node.title,
           sku: edge.node.sku,
+          stripePriceId: edge.node.stripePriceId,
           price: {
             amount: edge.node.price.amount,
             currencyCode: edge.node.price.currencyCode,
@@ -255,13 +267,27 @@ export function getCategories(): string[] {
   return Array.from(categoriesSet).sort();
 }
 
+// Get featured products (sorted by featuredOrder)
+export function getFeaturedProducts(): SimpleProduct[] {
+  const allProducts = getAllProducts();
+  return allProducts
+    .filter((product) => product.featured === true)
+    .sort((a, b) => {
+      const orderA = a.featuredOrder ?? 999;
+      const orderB = b.featuredOrder ?? 999;
+      return orderA - orderB;
+    });
+}
+
 // For Stripe checkout - convert product handle to line items
+// Supports both Stripe price IDs (preferred) and price_data (fallback)
 export function createCheckoutLineItems(cartItems: Array<{
   variantId: string;
   quantity: number;
   handle?: string;
 }>): Array<{
-  price_data: {
+  price?: string;
+  price_data?: {
     currency: string;
     product_data: {
       name: string;
@@ -291,7 +317,15 @@ export function createCheckoutLineItems(cartItems: Array<{
       throw new Error(`Variant not found: ${item.variantId}`);
     }
 
-    // Get the first image URL (will be local path)
+    // Use Stripe price ID if available (preferred)
+    if (variant.stripePriceId) {
+      return {
+        price: variant.stripePriceId,
+        quantity: item.quantity,
+      };
+    }
+
+    // Fallback to price_data for products not yet synced to Stripe
     const imageUrl = product.images.edges[0]?.node.url || "";
     const fullImageUrl = imageUrl.startsWith("http")
       ? imageUrl

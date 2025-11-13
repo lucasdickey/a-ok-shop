@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { siteConfig } from "@/app/config/siteConfig";
 import ImageGrid from "@/app/components/ImageGrid";
 import fs from "fs";
 import path from "path";
@@ -65,36 +64,25 @@ async function getGalleryImages() {
 }
 
 // Dynamically import the catalog functionality
-const getProducts = async () => {
+const getFeaturedProductsData = async () => {
   try {
-    const { getAllProducts } = await import("@/app/lib/catalog");
-    return await getAllProducts();
+    const { getFeaturedProducts } = await import("@/app/lib/catalog");
+    return await getFeaturedProducts();
   } catch (error) {
-    console.error("Error importing or calling getAllProducts:", error);
+    console.error("Error importing or calling getFeaturedProducts:", error);
     return [];
   }
 };
 
 export default async function Home() {
-  // Fetch all products with error handling
-  let products: Array<any> = [];
+  // Fetch featured products with error handling
+  let productsToShow: Array<any> = [];
   try {
-    products = await getProducts();
-    console.log(`Fetched ${products.length} products successfully`);
+    productsToShow = await getFeaturedProductsData();
+    console.log(`Fetched ${productsToShow.length} featured products successfully`);
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching featured products:", error);
   }
-
-  // Filter products based on the handles in siteConfig
-  const featuredProducts = products.filter((product) =>
-    siteConfig.featuredProducts.includes(product.handle)
-  );
-
-  // If we couldn't find all the featured products, fall back to the first 3
-  const productsToShow =
-    featuredProducts.length === siteConfig.featuredProducts.length
-      ? featuredProducts
-      : products.slice(0, Math.min(3, products.length));
 
   // Get gallery images using the new function
   const galleryImages = await getGalleryImages();
