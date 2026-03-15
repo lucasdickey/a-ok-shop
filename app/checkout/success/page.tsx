@@ -10,8 +10,9 @@ function CheckoutSuccessContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading session details
     if (sessionId) {
+      // Clear the cart after successful checkout
+      localStorage.removeItem('cart');
       setTimeout(() => setLoading(false), 1000);
     } else {
       setLoading(false);

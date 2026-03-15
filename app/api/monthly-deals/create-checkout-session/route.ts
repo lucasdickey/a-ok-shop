@@ -21,13 +21,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if Stripe Tax is enabled (requires tax registration in Stripe Dashboard)
+    const automaticTaxEnabled = process.env.STRIPE_AUTOMATIC_TAX_ENABLED === 'true';
+
     // Convert cart items to Stripe line items
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => ({
       price_data: {
         currency: "usd",
         product_data: {
           name: item.title,
-          images: item.image.startsWith('http') ? [item.image] : [],
+          images: item.image && item.image.startsWith('http') ? [item.image] : [],
           metadata: {
             size: item.size || "",
             color: item.color || "",
@@ -64,7 +67,6 @@ export async function POST(request: NextRequest) {
     console.log("Creating checkout session with base URL:", baseUrl);
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       success_url: `${baseUrl}/monthly-deals/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -77,10 +79,12 @@ export async function POST(request: NextRequest) {
         source: "monthly-deals",
         month: "2025-01",
       },
-      // Enable tax calculation
-      automatic_tax: {
-        enabled: true,
-      },
+      // Only enable automatic tax if configured in Stripe Dashboard
+      ...(automaticTaxEnabled && {
+        automatic_tax: {
+          enabled: true,
+        },
+      }),
       // Custom branding (if configured in Stripe Dashboard)
       custom_text: {
         submit: {
