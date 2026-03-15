@@ -93,7 +93,7 @@ async function handleCheckoutSessionCompleted(stripeClient: Stripe, session: Str
   try {
     // Expand session to get line items and customer details
     const expandedSession = await stripeClient.checkout.sessions.retrieve(session.id, {
-      expand: ["line_items", "customer", "total_details", "shipping_details"]
+      expand: ["line_items", "customer"]
     });
 
     // Determine the source (catalog or monthly-deals)

@@ -12,6 +12,8 @@ function MonthlyDealsSuccessContent() {
 
   useEffect(() => {
     if (sessionId) {
+      // Clear the cart after successful checkout
+      localStorage.removeItem('cart');
       // Fetch session details
       fetch(`/api/monthly-deals/checkout-session?session_id=${sessionId}`)
         .then((response) => response.json())

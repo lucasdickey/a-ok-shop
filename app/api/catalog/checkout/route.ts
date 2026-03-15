@@ -21,6 +21,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if Stripe Tax is enabled (requires tax registration in Stripe Dashboard)
+    const automaticTaxEnabled = process.env.STRIPE_AUTOMATIC_TAX_ENABLED === 'true';
+
     // Convert cart items to Stripe line items
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map(
       (item: any) => ({
@@ -69,7 +72,6 @@ export async function POST(request: NextRequest) {
     console.log("Creating checkout session with base URL:", baseUrl);
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -81,10 +83,12 @@ export async function POST(request: NextRequest) {
       metadata: {
         source: "a-ok-shop-catalog",
       },
-      // Enable tax calculation
-      automatic_tax: {
-        enabled: true,
-      },
+      // Only enable automatic tax if configured in Stripe Dashboard
+      ...(automaticTaxEnabled && {
+        automatic_tax: {
+          enabled: true,
+        },
+      }),
       // Custom branding
       custom_text: {
         submit: {
