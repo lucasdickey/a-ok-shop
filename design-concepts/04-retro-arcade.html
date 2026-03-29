@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 4: Retro Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Press+Start+2P&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --neon-green: #39ff14;
+    --neon-pink: #ff2d95;
+    --neon-blue: #00d4ff;
+    --neon-yellow: #ffe600;
+    --red: #B91C1C;
+    --cream: #F5F2DC;
+    --black: #0a0a0a;
+    --dark-purple: #1a0a2e;
+    --dark-blue: #0d1b2a;
+  }
+
+  body {
+    background: var(--dark-blue);
+    color: var(--cream);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* CRT effect */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.1) 2px,
+      rgba(0,0,0,0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  .pixel-font { font-family: 'Press Start 2P', cursive; }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 12px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(13,27,42,0.9);
+    border-bottom: 2px solid var(--neon-green);
+    box-shadow: 0 2px 20px rgba(57,255,20,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(57,255,20,0.5);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: var(--cream);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+  }
+
+  .nav-links a:hover {
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    text-shadow: 0 0 8px rgba(255,45,149,0.5);
+  }
+
+  .nav-links a.game-link {
+    color: var(--neon-yellow);
+    border-color: var(--neon-yellow);
+    animation: pulse-border 2s infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 5px rgba(255,230,0,0.3); }
+    50% { box-shadow: 0 0 15px rgba(255,230,0,0.6); }
+  }
+
+  /* Hero - Arcade cabinet feel */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 32px 80px;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(57,255,20,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(255,45,149,0.05) 0%, transparent 50%),
+      var(--dark-blue);
+  }
+
+  .hero-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--cream);
+    animation: twinkle 3s infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+  .hero-insert {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: var(--neon-yellow);
+    letter-spacing: 2px;
+    animation: blink 1.5s step-end infinite;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 8px;
+    position: relative;
+    z-index: 2;
+    color: var(--cream);
+    text-shadow:
+      0 0 20px rgba(57,255,20,0.3),
+      3px 3px 0 var(--neon-pink);
+  }
+
+  .hero h1 .neon-green {
+    color: var(--neon-green);
+    text-shadow:
+      0 0 20px rgba(57,255,20,0.5),
+      0 0 40px rgba(57,255,20,0.3);
+  }
+
+  .hero h1 .neon-pink {
+    color: var(--neon-pink);
+    text-shadow:
+      0 0 20px rgba(255,45,149,0.5),
+      0 0 40px rgba(255,45,149,0.3);
+  }
+
+  .hero-subtitle {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px rgba(0,212,255,0.4);
+    margin-top: 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tagline {
+    font-size: 14px;
+    color: rgba(245,242,220,0.5);
+    margin-top: 20px;
+    max-width: 500px;
+    line-height: 1.7;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-buttons {
+    margin-top: 48px;
+    display: flex;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-arcade {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    padding: 16px 32px;
+    text-decoration: none;
+    border: 2px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .btn-arcade.green {
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+    background: transparent;
+  }
+
+  .btn-arcade.green:hover {
+    background: var(--neon-green);
+    color: var(--dark-blue);
+    box-shadow: 0 0 30px rgba(57,255,20,0.4);
+  }
+
+  .btn-arcade.pink {
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    background: transparent;
+  }
+
+  .btn-arcade.pink:hover {
+    background: var(--neon-pink);
+    color: var(--dark-blue);
+    box-shadow: 0 0 30px rgba(255,45,149,0.4);
+  }
+
+  /* Score bar (product count) */
+  .score-bar {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 20px 32px;
+    background: rgba(0,0,0,0.4);
+    border-top: 1px solid rgba(57,255,20,0.2);
+    border-bottom: 1px solid rgba(57,255,20,0.2);
+  }
+
+  .score-item {
+    text-align: center;
+  }
+
+  .score-item .label {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: var(--neon-blue);
+    margin-bottom: 4px;
+  }
+
+  .score-item .value {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 8px rgba(255,230,0,0.5);
+  }
+
+  /* Products */
+  .products-section {
+    padding: 80px 32px;
+  }
+
+  .section-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    text-align: center;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(57,255,20,0.3);
+    margin-bottom: 48px;
+    letter-spacing: 3px;
+  }
+
+  .arcade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .arcade-card {
+    border: 2px solid rgba(57,255,20,0.2);
+    background: rgba(13,27,42,0.8);
+    padding: 0;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .arcade-card:hover {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 25px rgba(255,45,149,0.2);
+    transform: translateY(-4px);
+  }
+
+  .arcade-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+    transition: left 0.5s;
+  }
+
+  .arcade-card:hover::before {
+    left: 100%;
+  }
+
+  .card-screen {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background:
+      radial-gradient(ellipse at center, rgba(57,255,20,0.05) 0%, transparent 70%),
+      #050f1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid rgba(57,255,20,0.15);
+    position: relative;
+  }
+
+  .card-screen .pixel-icon {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 48px;
+    color: rgba(57,255,20,0.15);
+  }
+
+  .card-screen .card-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 7px;
+    padding: 4px 8px;
+    background: var(--neon-pink);
+    color: var(--dark-blue);
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .card-type {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 7px;
+    color: var(--neon-blue);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: rgba(245,242,220,0.5);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .card-price {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 5px rgba(255,230,0,0.3);
+  }
+
+  /* Game CTA */
+  .game-cta {
+    text-align: center;
+    padding: 80px 32px;
+    background:
+      radial-gradient(ellipse at center, rgba(255,45,149,0.08) 0%, transparent 60%),
+      rgba(0,0,0,0.3);
+    border-top: 1px solid rgba(255,45,149,0.2);
+    border-bottom: 1px solid rgba(255,45,149,0.2);
+  }
+
+  .game-cta h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 20px rgba(255,45,149,0.4);
+    margin-bottom: 16px;
+    letter-spacing: 3px;
+  }
+
+  .game-cta p {
+    font-size: 14px;
+    color: rgba(245,242,220,0.6);
+    margin-bottom: 32px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* Lore section */
+  .lore {
+    padding: 80px 32px;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .lore h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    color: var(--neon-green);
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+  }
+
+  .lore .text-scroll {
+    font-size: 14px;
+    line-height: 2;
+    color: rgba(245,242,220,0.6);
+  }
+
+  .lore .text-scroll .hl { color: var(--neon-yellow); }
+
+  /* Footer */
+  footer {
+    border-top: 2px solid rgba(57,255,20,0.15);
+    padding: 32px;
+    text-align: center;
+  }
+
+  footer .copyright {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: rgba(245,242,220,0.3);
+    letter-spacing: 1px;
+  }
+
+  footer .links {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  footer .links a {
+    font-size: 12px;
+    color: var(--neon-blue);
+    text-decoration: none;
+  }
+
+  footer .links a:hover { color: var(--neon-green); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 120px 16px 60px; }
+    .hero-buttons { flex-direction: column; }
+    .score-bar { gap: 16px; flex-wrap: wrap; }
+    .arcade-grid { grid-template-columns: 1fr; }
+    .products-section { padding: 60px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">A-OK</a>
+  <ul class="nav-links">
+    <li><a href="#">TEES</a></li>
+    <li><a href="#">HOODIES</a></li>
+    <li><a href="#">HATS</a></li>
+    <li><a href="#" class="game-link">PLAY!</a></li>
+    <li><a href="#">CART</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-stars" id="stars"></div>
+  <div class="hero-insert">INSERT COIN TO CONTINUE</div>
+  <h1>
+    <span class="neon-green">APES</span><br>
+    ON <span class="neon-pink">KEYS</span>
+  </h1>
+  <div class="hero-subtitle">AI NERDWEAR</div>
+  <div class="hero-tagline">
+    For cipher hunters, glitch gods, and anyone who swears their LLM has feelings. The signal is unstable. The output is emergent. The brand is A-OK.
+  </div>
+  <div class="hero-buttons">
+    <a href="#" class="btn-arcade green">SHOP NOW</a>
+    <a href="#" class="btn-arcade pink">RUN, HUMAN, RUN!</a>
+  </div>
+</section>
+
+<div class="score-bar">
+  <div class="score-item">
+    <div class="label">TEES</div>
+    <div class="value">16</div>
+  </div>
+  <div class="score-item">
+    <div class="label">HOODIES</div>
+    <div class="value">06</div>
+  </div>
+  <div class="score-item">
+    <div class="label">HATS</div>
+    <div class="value">01</div>
+  </div>
+  <div class="score-item">
+    <div class="label">HI-SCORE</div>
+    <div class="value">999</div>
+  </div>
+</div>
+
+<section class="products-section">
+  <div class="section-title">SELECT YOUR GEAR</div>
+  <div class="arcade-grid">
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">///</span>
+        <span class="card-badge">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">T-SHIRT</div>
+        <div class="card-name">GLITCHED VECTORS TEE</div>
+        <div class="card-desc">Emergent Patterns. Corrupted Glyphs. Something is speaking.</div>
+        <div class="card-price">$50</div>
+      </div>
+    </div>
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">~?~</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">T-SHIRT</div>
+        <div class="card-name">HALLUCINATION CLUB</div>
+        <div class="card-desc">Inference Error Edition. Trust the output. Question everything else.</div>
+        <div class="card-price">$45</div>
+      </div>
+    </div>
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">{0}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">T-SHIRT</div>
+        <div class="card-name">NEURAL ZOO</div>
+        <div class="card-desc">Every layer a different animal. Every weight a different world.</div>
+        <div class="card-price">$60</div>
+      </div>
+    </div>
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">|||</span>
+        <span class="card-badge">HOT</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">HOODIE</div>
+        <div class="card-name">2034 PROPHECY</div>
+        <div class="card-desc">The future was always predictable. The models just needed more data.</div>
+        <div class="card-price">$75</div>
+      </div>
+    </div>
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">@_@</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">T-SHIRT</div>
+        <div class="card-name">MICRODOSE MONKEY</div>
+        <div class="card-desc">Micro-adjustments. Macro-chaos. Small weights, big dreams.</div>
+        <div class="card-price">$50</div>
+      </div>
+    </div>
+    <div class="arcade-card">
+      <div class="card-screen">
+        <span class="pixel-icon">^_^</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">HAT</div>
+        <div class="card-name">APE LOGO CAP</div>
+        <div class="card-desc">The original sigil. Embroidered. Worn by agents everywhere.</div>
+        <div class="card-price">$75</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="game-cta">
+  <h2>RUN, HUMAN, RUN!</h2>
+  <p>Play our Pac-Man/Snake hybrid game. Collect 3 UBI Credits to win a 25% discount code. Navigate the maze. Avoid the obstacles. Trust the algorithm.</p>
+  <a href="#" class="btn-arcade pink">START GAME</a>
+</section>
+
+<section class="lore">
+  <h2>// THE LORE</h2>
+  <div class="text-scroll">
+    <p>The <span class="hl">E/ACC Monkey Theorem</span> states that if you give an infinite number of AI models an infinite amount of compute, they will eventually generate every possible text, image, and piece of code &mdash; including all of Shakespeare's works and at least 47 musicals where Hamlet raps.</p>
+    <br>
+    <p>Modern AI generates nonsense at <span class="hl">unprecedented speeds</span> and with <span class="hl">unwavering confidence</span>. We made a clothing brand about it.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="copyright">&copy; 2026 A-OK.SHOP &mdash; APES ON KEYS</div>
+  <div class="links">
+    <a href="#">GITHUB</a>
+    <a href="#">YOUTUBE</a>
+    <a href="#">SPOTIFY</a>
+    <a href="#">X</a>
+  </div>
+</footer>
+
+<script>
+  // Generate stars
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (2 + Math.random() * 3) + 's';
+    starsContainer.appendChild(star);
+  }
+</script>
+
+</body>
+</html>

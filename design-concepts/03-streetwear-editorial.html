@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 3: Streetwear Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #B91C1C;
+    --cream: #F5F2DC;
+    --bone: #EDE8D0;
+    --black: #0A0A0A;
+    --dark: #171717;
+    --warm-gray: #8a8577;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Nav - minimal editorial */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    background: transparent;
+    transition: background 0.3s;
+  }
+
+  nav.scrolled {
+    background: rgba(245,242,220,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 8px;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .nav-right a {
+    color: var(--black);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .nav-right a:hover { opacity: 0.5; }
+
+  /* Hero - editorial split */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 64px 80px;
+  }
+
+  .hero-issue {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    margin-bottom: 40px;
+  }
+
+  .hero-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 8vw, 120px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .hero-left h1 .thin {
+    font-weight: 400;
+    -webkit-text-stroke: 1px var(--black);
+    color: transparent;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--red);
+    margin-bottom: 32px;
+  }
+
+  .hero-copy {
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 380px;
+    color: var(--warm-gray);
+    margin-bottom: 48px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .btn-editorial {
+    display: inline-block;
+    padding: 16px 40px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-editorial.filled {
+    background: var(--black);
+    color: var(--cream);
+  }
+
+  .btn-editorial.filled:hover {
+    background: var(--red);
+  }
+
+  .btn-editorial.text-link {
+    padding: 0;
+    color: var(--black);
+    border-bottom: 1px solid var(--black);
+  }
+
+  .btn-editorial.text-link:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .hero-right {
+    background: var(--bone);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-right .editorial-img {
+    width: 70%;
+    aspect-ratio: 3/4;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-right .editorial-img .overlay-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: rgba(245,242,220,0.06);
+    position: absolute;
+  }
+
+  .hero-right .caption {
+    position: absolute;
+    bottom: 48px;
+    right: 48px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    writing-mode: vertical-rl;
+  }
+
+  /* Featured Products - editorial grid */
+  .products-section {
+    padding: 100px 48px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    letter-spacing: 3px;
+    margin-bottom: 64px;
+  }
+
+  .editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .editorial-card {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--black);
+    display: block;
+  }
+
+  .editorial-card:hover .card-image {
+    transform: scale(1.02);
+  }
+
+  .editorial-card:hover .card-title {
+    color: var(--red);
+  }
+
+  .card-image-wrap {
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: var(--bone);
+  }
+
+  .card-image {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--dark);
+    transition: transform 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-image .icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(245,242,220,0.05);
+  }
+
+  .card-category {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--warm-gray);
+    margin-bottom: 12px;
+  }
+
+  .card-price {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .view-all {
+    text-align: center;
+    margin-top: 64px;
+  }
+
+  /* Lookbook band */
+  .lookbook {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    min-height: 500px;
+  }
+
+  .lookbook-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lookbook-panel.dark { background: var(--dark); }
+  .lookbook-panel.red { background: var(--red); }
+  .lookbook-panel.bone { background: var(--bone); }
+
+  .lookbook-panel .panel-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    letter-spacing: 4px;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .lookbook-panel.dark .panel-text { color: var(--cream); }
+  .lookbook-panel.red .panel-text { color: var(--cream); }
+  .lookbook-panel.bone .panel-text { color: var(--dark); }
+
+  .lookbook-panel .panel-sub {
+    position: absolute;
+    bottom: 32px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .lookbook-panel.dark .panel-sub { color: var(--cream); }
+  .lookbook-panel.red .panel-sub { color: var(--cream); }
+  .lookbook-panel.bone .panel-sub { color: var(--dark); }
+
+  /* Story section */
+  .story {
+    padding: 120px 48px;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .story h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    margin-bottom: 32px;
+  }
+
+  .story p {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--warm-gray);
+    margin-bottom: 20px;
+  }
+
+  .story .accent { color: var(--red); font-weight: 500; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 12px;
+    color: var(--warm-gray);
+    letter-spacing: 2px;
+  }
+
+  footer a {
+    color: var(--warm-gray);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--black); }
+
+  footer .footer-center { text-align: center; }
+  footer .footer-right { text-align: right; }
+
+  footer .footer-links {
+    display: flex;
+    gap: 24px;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 50vh; }
+    .hero-left { padding: 120px 24px 60px; }
+    .nav-right { display: none; }
+    .products-section { padding: 60px 24px; }
+    .editorial-grid { grid-template-columns: 1fr; }
+    .lookbook { grid-template-columns: 1fr; min-height: auto; }
+    .lookbook-panel { min-height: 300px; }
+    .story { padding: 80px 24px; }
+    footer { grid-template-columns: 1fr; gap: 16px; text-align: left !important; }
+    footer .footer-center, footer .footer-right { text-align: left; }
+    footer .footer-links { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="#" class="nav-brand">A-OK.SHOP</a>
+  <div class="nav-right">
+    <a href="#">T-Shirts</a>
+    <a href="#">Hoodies</a>
+    <a href="#">Hats</a>
+    <a href="#">Game</a>
+    <a href="#">Cart (0)</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-issue">COLLECTION 001 &mdash; SPRING 2026</div>
+    <h1>APES<br>ON <span class="thin">KEYS</span></h1>
+    <div class="hero-divider"></div>
+    <div class="hero-copy">
+      AI Nerdwear for cipher hunters, glitch gods, and anyone building the future between inference calls. The signal is unstable. The brand is A-OK.
+    </div>
+    <div class="hero-actions">
+      <a href="#" class="btn-editorial filled">EXPLORE COLLECTION</a>
+      <a href="#" class="btn-editorial text-link">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="editorial-img">
+      <span class="overlay-text">OK</span>
+    </div>
+    <div class="caption">AI NERDWEAR &mdash; EST. 2025</div>
+  </div>
+</section>
+
+<section class="products-section">
+  <div class="section-label">CURATED SELECTION</div>
+  <div class="section-title">FEATURED</div>
+  <div class="editorial-grid">
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">01</span></div>
+      </div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-title">GLITCHED VECTORS</div>
+      <div class="card-desc">Emergent Patterns. Corrupted Glyphs. Something is speaking through the noise.</div>
+      <div class="card-price">$50.00</div>
+    </a>
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">02</span></div>
+      </div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-title">SIGNAL IN THE NOISE</div>
+      <div class="card-desc">One voice. Infinite agents. Always aligned. Find the pattern.</div>
+      <div class="card-price">$50.00</div>
+    </a>
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">03</span></div>
+      </div>
+      <div class="card-category">HOODIE</div>
+      <div class="card-title">RECURSIVE MONK</div>
+      <div class="card-desc">Recursive thought loops. Meditative inference. The monk computes in silence.</div>
+      <div class="card-price">$75.00</div>
+    </a>
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">04</span></div>
+      </div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-title">MARCH OF THE AGENTS</div>
+      <div class="card-desc">They're autonomous. They're aligned. They're coming for your codebase.</div>
+      <div class="card-price">$40.00</div>
+    </a>
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">05</span></div>
+      </div>
+      <div class="card-category">HOODIE</div>
+      <div class="card-title">APE-OCALYPSE DRIP</div>
+      <div class="card-desc">Dress for the unknown. When the singularity hits, look good doing it.</div>
+      <div class="card-price">$75.00</div>
+    </a>
+    <a href="#" class="editorial-card">
+      <div class="card-image-wrap">
+        <div class="card-image"><span class="icon">06</span></div>
+      </div>
+      <div class="card-category">ACCESSORY</div>
+      <div class="card-title">APE LOGO CAP</div>
+      <div class="card-desc">The original sigil. Embroidered on structured cotton.</div>
+      <div class="card-price">$75.00</div>
+    </a>
+  </div>
+  <div class="view-all">
+    <a href="#" class="btn-editorial filled">VIEW ALL PRODUCTS</a>
+  </div>
+</section>
+
+<section class="lookbook">
+  <div class="lookbook-panel dark">
+    <div class="panel-text">TRUST<br>THE<br>NOISE</div>
+    <div class="panel-sub">TEES &mdash; $40&ndash;$60</div>
+  </div>
+  <div class="lookbook-panel red">
+    <div class="panel-text">DRESS<br>FOR THE<br>UNKNOWN</div>
+    <div class="panel-sub">HOODIES &mdash; $75</div>
+  </div>
+  <div class="lookbook-panel bone">
+    <div class="panel-text">THE<br>ORIGINAL<br>SIGIL</div>
+    <div class="panel-sub">HATS &mdash; $75</div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="section-label">THE BRAND</div>
+  <h2>THE E/ACC MONKEY THEOREM</h2>
+  <p>Give an infinite number of AI models an infinite amount of compute. They'll generate <span class="accent">every possible text, image, and piece of code</span> &mdash; including all of Shakespeare and at least 47 musicals where Hamlet raps.</p>
+  <p>Modern AI generates nonsense at <span class="accent">unprecedented speeds</span> and with <span class="accent">unwavering confidence</span>. We thought that deserved a clothing line.</p>
+</section>
+
+<footer>
+  <div>&copy; 2026 APES ON KEYS</div>
+  <div class="footer-center">A-OK.SHOP</div>
+  <div class="footer-right">
+    <div class="footer-links">
+      <a href="#">GitHub</a>
+      <a href="#">YouTube</a>
+      <a href="#">Spotify</a>
+      <a href="#">X</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+  });
+</script>
+
+</body>
+</html>
