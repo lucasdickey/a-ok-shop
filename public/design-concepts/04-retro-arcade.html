@@ -59,13 +59,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
   }
 
-  nav, .hero, .score-bar, .products-section, .game-cta, .lore, footer {
+  nav {
+    z-index: 100 !important;
+  }
+
+  .hero, .score-bar, .products-section, .game-cta, .lore, footer {
     position: relative;
-    z-index: 1;
+    z-index: 0;
   }
 
   .pixel-font { font-family: 'Press Start 2P', cursive; }
@@ -672,7 +676,7 @@
   const ac = document.getElementById('arcadeCanvas');
   const actx = ac.getContext('2d');
   let aw, ah;
-  const gridSize = 40;
+  const gridSize = 35;
   let amouseX = -1000, amouseY = -1000;
   const ripples = [];
   let lastClick = 0;
@@ -694,7 +698,7 @@
 
   // Click creates a ripple burst
   document.addEventListener('click', (e) => {
-    ripples.push({ x: e.clientX, y: e.clientY, radius: 0, maxRadius: 400, speed: 6, alpha: 1 });
+    ripples.push({ x: e.clientX, y: e.clientY, radius: 0, maxRadius: 500, speed: 8, alpha: 1.5 });
   });
 
   // Auto-ripple on hover periodically
@@ -709,7 +713,7 @@
     // Auto ripples near cursor
     hoverTimer++;
     if (hoverTimer % 40 === 0 && amouseX > 0) {
-      ripples.push({ x: amouseX, y: amouseY, radius: 0, maxRadius: 250, speed: 3, alpha: 0.5 });
+      ripples.push({ x: amouseX, y: amouseY, radius: 0, maxRadius: 300, speed: 4, alpha: 0.8 });
     }
 
     // Update ripples
@@ -727,8 +731,8 @@
       for (let c = 0; c < cols; c++) {
         let x = c * gridSize;
         let y = r * gridSize;
-        let brightness = 0.06;
-        let dotSize = 1.5;
+        let brightness = 0.12;
+        let dotSize = 2;
         let hue = 120; // green default
 
         // Cursor proximity glow
@@ -736,10 +740,10 @@
         const cdy = y - amouseY;
         const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
 
-        if (cdist < 200) {
-          const force = 1 - cdist / 200;
-          brightness += force * 0.4;
-          dotSize += force * 3;
+        if (cdist < 250) {
+          const force = 1 - cdist / 250;
+          brightness += force * 0.7;
+          dotSize += force * 5;
           // Color shift near cursor: green → pink → blue
           hue = 120 + force * 200;
           // Displacement
@@ -753,10 +757,10 @@
           const rdy = y - rip.y;
           const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
           const ringDist = Math.abs(rdist - rip.radius);
-          if (ringDist < 30) {
-            const ringForce = (1 - ringDist / 30) * rip.alpha;
-            brightness += ringForce * 0.5;
-            dotSize += ringForce * 2;
+          if (ringDist < 40) {
+            const ringForce = (1 - ringDist / 40) * rip.alpha;
+            brightness += ringForce * 0.8;
+            dotSize += ringForce * 4;
             // Displace along ring
             const angle = Math.atan2(rdy, rdx);
             x += Math.cos(angle) * ringForce * 6;
@@ -765,7 +769,7 @@
         }
 
         // Ambient wave
-        brightness += Math.sin(x * 0.01 + aTime) * Math.cos(y * 0.01 + aTime * 0.7) * 0.03;
+        brightness += Math.sin(x * 0.01 + aTime) * Math.cos(y * 0.01 + aTime * 0.7) * 0.06;
 
         // Choose color based on hue
         let color;
@@ -784,17 +788,17 @@
         actx.fill();
 
         // Glow for bright dots
-        if (brightness > 0.2) {
+        if (brightness > 0.15) {
           actx.beginPath();
-          actx.arc(x, y, dotSize * 3, 0, Math.PI * 2);
-          actx.fillStyle = color.replace(/[\d.]+\)$/, `${brightness * 0.15})`);
+          actx.arc(x, y, dotSize * 4, 0, Math.PI * 2);
+          actx.fillStyle = color.replace(/[\d.]+\)$/, `${brightness * 0.2})`);
           actx.fill();
         }
       }
     }
 
     // Grid lines (very subtle)
-    actx.strokeStyle = 'rgba(57, 255, 20, 0.015)';
+    actx.strokeStyle = 'rgba(57, 255, 20, 0.03)';
     actx.lineWidth = 0.5;
     for (let c = 0; c <= cols; c++) {
       actx.beginPath();

@@ -35,8 +35,8 @@
     inset: 0;
     background: repeating-linear-gradient(
       0deg,
-      rgba(0,0,0,0.08) 0px,
-      rgba(0,0,0,0.08) 1px,
+      rgba(0,0,0,0.05) 0px,
+      rgba(0,0,0,0.05) 1px,
       transparent 1px,
       transparent 3px
     );
@@ -423,13 +423,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
+  }
+
+  nav {
+    z-index: 100 !important;
   }
 
   .hero, .terminal-section, .manifesto, footer {
     position: relative;
-    z-index: 1;
+    z-index: 0;
   }
 
   /* Responsive */
@@ -603,7 +607,7 @@ let mw, mh, columns, drops;
 const fontSize = 14;
 const chars = 'AOKアイウエオカキクケコ01{}[]<>/\\|~!@#$%^&*()_+=APES';
 let mouseX = -1000, mouseY = -1000;
-const cursorRadius = 150;
+const cursorRadius = 200;
 
 function mResize() {
   mw = mc.width = window.innerWidth;
@@ -624,7 +628,7 @@ document.addEventListener('mouseleave', () => {
 
 function mDraw() {
   // Fade trail
-  mctx.fillStyle = 'rgba(10, 10, 10, 0.06)';
+  mctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
   mctx.fillRect(0, 0, mw, mh);
 
   for (let i = 0; i < columns; i++) {
@@ -644,10 +648,10 @@ function mDraw() {
       const displaceY = (dy / dist) * force * 12;
       const glow = Math.floor(force * 255);
 
-      mctx.font = `${fontSize + force * 8}px monospace`;
-      mctx.fillStyle = `rgba(0, ${180 + glow * 0.3}, ${40 + glow * 0.2}, ${0.8 + force * 0.2})`;
-      mctx.shadowColor = `rgba(0, 255, 65, ${force * 0.6})`;
-      mctx.shadowBlur = force * 15;
+      mctx.font = `${fontSize + force * 10}px monospace`;
+      mctx.fillStyle = `rgba(0, ${200 + glow * 0.2}, ${60 + glow * 0.3}, ${0.9 + force * 0.1})`;
+      mctx.shadowColor = `rgba(0, 255, 65, ${force * 0.8})`;
+      mctx.shadowBlur = force * 25;
 
       const char = chars[Math.floor(Math.random() * chars.length)];
       mctx.fillText(char, x + displaceX, y + displaceY);
@@ -660,8 +664,8 @@ function mDraw() {
     } else {
       // Normal rain
       mctx.font = `${fontSize}px monospace`;
-      const alpha = 0.15 + Math.random() * 0.1;
-      mctx.fillStyle = `rgba(0, 170, 42, ${alpha})`;
+      const alpha = 0.35 + Math.random() * 0.2;
+      mctx.fillStyle = `rgba(0, 200, 50, ${alpha})`;
       const char = chars[Math.floor(Math.random() * chars.length)];
       mctx.fillText(char, x, y);
     }
@@ -676,8 +680,8 @@ function mDraw() {
   // Draw cursor glow ring
   if (mouseX > 0) {
     const gradient = mctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, cursorRadius);
-    gradient.addColorStop(0, 'rgba(0, 255, 65, 0.06)');
-    gradient.addColorStop(0.5, 'rgba(0, 255, 65, 0.02)');
+    gradient.addColorStop(0, 'rgba(0, 255, 65, 0.12)');
+    gradient.addColorStop(0.5, 'rgba(0, 255, 65, 0.04)');
     gradient.addColorStop(1, 'rgba(0, 255, 65, 0)');
     mctx.fillStyle = gradient;
     mctx.fillRect(mouseX - cursorRadius, mouseY - cursorRadius, cursorRadius * 2, cursorRadius * 2);

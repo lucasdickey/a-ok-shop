@@ -37,7 +37,7 @@
     width: 100%;
     height: 100%;
     z-index: 0;
-    opacity: 0.35;
+    opacity: 0.7;
   }
 
   .content {
@@ -593,8 +593,8 @@
   let mouseX = -1, mouseY = -1;
   let targetMX = -1, targetMY = -1;
   let time = 0;
-  const particleCount = 800;
-  const cursorRadius = 200;
+  const particleCount = 1200;
+  const cursorRadius = 250;
 
   // Simple 2D noise (value noise with smoothing)
   const noiseGrid = 64;
@@ -673,7 +673,7 @@
     }
 
     // Fade trails
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.04)';
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.03)';
     ctx.fillRect(0, 0, w, h);
 
     for (const p of particles) {
@@ -696,8 +696,8 @@
           // Swirl: perpendicular to radial direction
           const radAngle = Math.atan2(dy, dx);
           const swirlAngle = radAngle + Math.PI * 0.5;
-          angle += (swirlAngle - angle) * force * 0.6;
-          p.speed = Math.max(p.speed, force * 2);
+          angle += (swirlAngle - angle) * force * 0.8;
+          p.speed = Math.max(p.speed, force * 3.5);
         }
       }
 
@@ -719,7 +719,7 @@
 
       // Draw trail line
       const lifeRatio = p.life / p.maxLife;
-      const alpha = lifeRatio * 0.4;
+      const alpha = lifeRatio * 0.7;
 
       ctx.beginPath();
       ctx.moveTo(p.px, p.py);
@@ -728,17 +728,17 @@
       if (p.hue === 0) {
         ctx.strokeStyle = `rgba(245, 242, 220, ${alpha})`;
       } else {
-        ctx.strokeStyle = `rgba(185, 28, 28, ${alpha * 1.2})`;
+        ctx.strokeStyle = `rgba(185, 28, 28, ${alpha * 1.3})`;
       }
-      ctx.lineWidth = lifeRatio * 1.5 + 0.5;
+      ctx.lineWidth = lifeRatio * 2.5 + 0.5;
       ctx.stroke();
     }
 
     // Cursor glow
     if (mouseX > 0) {
       const g = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, cursorRadius * 0.8);
-      g.addColorStop(0, 'rgba(185, 28, 28, 0.06)');
-      g.addColorStop(0.5, 'rgba(185, 28, 28, 0.02)');
+      g.addColorStop(0, 'rgba(185, 28, 28, 0.15)');
+      g.addColorStop(0.4, 'rgba(185, 28, 28, 0.05)');
       g.addColorStop(1, 'rgba(185, 28, 28, 0)');
       ctx.fillStyle = g;
       ctx.beginPath();

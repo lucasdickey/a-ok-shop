@@ -166,7 +166,7 @@
     width: 100%;
     height: 100%;
     z-index: 0;
-    opacity: 0.4;
+    opacity: 0.7;
     pointer-events: none;
   }
 
@@ -580,11 +580,11 @@
   });
 
   const blobs = [
-    { x: 0.2, y: 0.3, r: 0.35, color: [185, 28, 28], vx: 0.0003, vy: 0.0002, phase: 0 },
-    { x: 0.7, y: 0.2, r: 0.3, color: [237, 232, 208], vx: -0.0002, vy: 0.0003, phase: 1 },
-    { x: 0.5, y: 0.7, r: 0.4, color: [139, 30, 36], vx: 0.0002, vy: -0.0002, phase: 2 },
-    { x: 0.8, y: 0.6, r: 0.28, color: [245, 242, 220], vx: -0.0003, vy: -0.0001, phase: 3 },
-    { x: 0.3, y: 0.8, r: 0.32, color: [200, 60, 60], vx: 0.0001, vy: 0.0003, phase: 4 },
+    { x: 0.15, y: 0.25, r: 0.45, color: [185, 28, 28], vx: 0.0003, vy: 0.0002, phase: 0 },
+    { x: 0.75, y: 0.15, r: 0.38, color: [220, 200, 170], vx: -0.0002, vy: 0.0003, phase: 1 },
+    { x: 0.5, y: 0.65, r: 0.5, color: [139, 30, 36], vx: 0.0002, vy: -0.0002, phase: 2 },
+    { x: 0.85, y: 0.55, r: 0.35, color: [230, 180, 140], vx: -0.0003, vy: -0.0001, phase: 3 },
+    { x: 0.25, y: 0.8, r: 0.42, color: [210, 70, 70], vx: 0.0001, vy: 0.0003, phase: 4 },
   ];
 
   let time = 0;
@@ -602,8 +602,8 @@
 
     for (const blob of blobs) {
       // Organic movement + cursor influence
-      const cursorPullX = (mmouseX - 0.5) * 0.15;
-      const cursorPullY = (mmouseY - 0.5) * 0.15;
+      const cursorPullX = (mmouseX - 0.5) * 0.25;
+      const cursorPullY = (mmouseY - 0.5) * 0.25;
 
       const bx = (blob.x + Math.sin(time + blob.phase) * 0.08 + cursorPullX) * mw;
       const by = (blob.y + Math.cos(time * 0.7 + blob.phase) * 0.06 + cursorPullY) * mh;
@@ -611,8 +611,9 @@
 
       const gradient = mctx.createRadialGradient(bx, by, 0, bx, by, br);
       const [r, g, b] = blob.color;
-      gradient.addColorStop(0, `rgba(${r},${g},${b},0.6)`);
-      gradient.addColorStop(0.4, `rgba(${r},${g},${b},0.25)`);
+      gradient.addColorStop(0, `rgba(${r},${g},${b},0.8)`);
+      gradient.addColorStop(0.3, `rgba(${r},${g},${b},0.4)`);
+      gradient.addColorStop(0.7, `rgba(${r},${g},${b},0.1)`);
       gradient.addColorStop(1, `rgba(${r},${g},${b},0)`);
 
       mctx.fillStyle = gradient;
@@ -623,7 +624,8 @@
     const spotX = mmouseX * mw;
     const spotY = mmouseY * mh;
     const spotGrad = mctx.createRadialGradient(spotX, spotY, 0, spotX, spotY, 180);
-    spotGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+    spotGrad.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+    spotGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
     spotGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
     mctx.fillStyle = spotGrad;
     mctx.fillRect(0, 0, mw, mh);
