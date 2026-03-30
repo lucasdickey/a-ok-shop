@@ -10,6 +10,14 @@ MPP is an open standard co-authored by Stripe and Tempo. It embeds payment negot
 ### x402 Protocol
 Similar to MPP, x402 is a protocol for internet payments that leverages the HTTP 402 status code. It is backed by Coinbase and Stripe, focusing on protocol minimization and embedding payments directly into HTTP requests, often using cryptocurrency on networks like Base.
 
+## Wallet & Payment Address Management
+
+A key advantage of using Stripe's MPP implementation is that **you do not need to manually provision a wallet** for the store. Stripe handles the generation of unique deposit addresses for each transaction.
+
+- **Automated Generation**: When a purchase is initiated, the store creates a Stripe PaymentIntent in `mode: 'deposit'`.
+- **Dynamic Addresses**: Stripe returns a unique crypto deposit address (e.g., a USDC address on the Base or Tempo network) specifically for that PaymentIntent.
+- **Settlement**: Once the agent sends the crypto to that address, Stripe detects the transaction on-chain, confirms the PaymentIntent, and settles the funds (as USD or stablecoins) into your merchant account.
+
 ## Prototype Components
 
 We have implemented a functional prototype with the following endpoints:
