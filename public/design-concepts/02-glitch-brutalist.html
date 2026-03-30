@@ -421,6 +421,21 @@
 
   footer a:hover { color: var(--red); }
 
+  #glitchCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  nav, .hero, .marquee, .products-section, .manifesto-band, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   @media (max-width: 768px) {
     .hero { padding: 100px 24px 48px; }
     .hero-stripe { width: 60%; }
@@ -445,6 +460,8 @@
     <li><a href="#">CART</a></li>
   </ul>
 </nav>
+
+<canvas id="glitchCanvas"></canvas>
 
 <section class="hero">
   <div class="hero-noise"></div>
@@ -564,6 +581,171 @@
     <a href="#">X</a>
   </div>
 </footer>
+
+<script>
+// Glitch shards — fractured rectangles that shatter and reform near cursor
+const gc = document.getElementById('glitchCanvas');
+const gctx = gc.getContext('2d');
+let gw, gh;
+let gmouseX = -1000, gmouseY = -1000;
+const shardCount = 60;
+const shards = [];
+const cursorRadius = 200;
+
+const palette = [
+  [185, 28, 28],    // red
+  [239, 68, 68],    // bright red
+  [245, 242, 220],  // cream
+  [0, 240, 255],    // cyan glitch
+  [23, 23, 23],     // dark
+  [139, 30, 36],    // deep red
+];
+
+function gResize() {
+  gw = gc.width = window.innerWidth;
+  gh = gc.height = window.innerHeight;
+}
+
+class Shard {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * gw;
+    this.y = Math.random() * gh;
+    this.homeX = this.x;
+    this.homeY = this.y;
+    this.w = Math.random() * 60 + 10;
+    this.h = Math.random() * 8 + 2;
+    this.rotation = (Math.random() - 0.5) * 0.3;
+    this.color = palette[Math.floor(Math.random() * palette.length)];
+    this.alpha = Math.random() * 0.12 + 0.02;
+    this.baseAlpha = this.alpha;
+    this.vx = 0;
+    this.vy = 0;
+    this.glitchTimer = Math.random() * 200;
+    this.glitching = false;
+  }
+
+  update() {
+    const dx = this.x - gmouseX;
+    const dy = this.y - gmouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < cursorRadius) {
+      const force = (1 - dist / cursorRadius) * 1.5;
+      // Shatter outward
+      this.vx += (dx / dist) * force * 3;
+      this.vy += (dy / dist) * force * 3;
+      this.alpha = Math.min(0.6, this.baseAlpha + force * 0.5);
+      this.rotation += force * 0.08;
+
+      // Random glitch displacement
+      if (Math.random() > 0.9) {
+        this.vx += (Math.random() - 0.5) * 15;
+        this.vy += (Math.random() - 0.5) * 10;
+      }
+    } else {
+      // Spring back home
+      this.vx += (this.homeX - this.x) * 0.02;
+      this.vy += (this.homeY - this.y) * 0.02;
+      this.alpha += (this.baseAlpha - this.alpha) * 0.05;
+      this.rotation *= 0.95;
+    }
+
+    this.vx *= 0.92;
+    this.vy *= 0.92;
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Random glitch flicker
+    this.glitchTimer--;
+    if (this.glitchTimer <= 0) {
+      this.glitching = true;
+      this.glitchTimer = Math.random() * 300 + 100;
+    }
+    if (this.glitching) {
+      if (Math.random() > 0.7) this.glitching = false;
+    }
+  }
+
+  draw() {
+    gctx.save();
+    gctx.translate(this.x, this.y);
+    gctx.rotate(this.rotation);
+
+    const [r, g, b] = this.color;
+    let a = this.alpha;
+    let offsetX = 0;
+
+    if (this.glitching) {
+      offsetX = (Math.random() - 0.5) * 10;
+      a *= 1.5;
+    }
+
+    gctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+    gctx.fillRect(-this.w / 2 + offsetX, -this.h / 2, this.w, this.h);
+
+    // Chromatic aberration on hover proximity
+    const dx = this.x - gmouseX;
+    const dy = this.y - gmouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < cursorRadius) {
+      const shift = (1 - dist / cursorRadius) * 6;
+      gctx.fillStyle = `rgba(0, 240, 255, ${a * 0.4})`;
+      gctx.fillRect(-this.w / 2 + shift + offsetX, -this.h / 2 - 1, this.w, this.h);
+      gctx.fillStyle = `rgba(239, 68, 68, ${a * 0.4})`;
+      gctx.fillRect(-this.w / 2 - shift + offsetX, -this.h / 2 + 1, this.w, this.h);
+    }
+
+    gctx.restore();
+  }
+}
+
+function gInit() {
+  gResize();
+  shards.length = 0;
+  for (let i = 0; i < shardCount; i++) shards.push(new Shard());
+}
+
+document.addEventListener('mousemove', (e) => {
+  gmouseX = e.clientX;
+  gmouseY = e.clientY;
+});
+
+document.addEventListener('mouseleave', () => {
+  gmouseX = -1000;
+  gmouseY = -1000;
+});
+
+function gDraw() {
+  gctx.clearRect(0, 0, gw, gh);
+
+  // Cursor disruption field
+  if (gmouseX > 0) {
+    // Horizontal glitch lines near cursor
+    const lineCount = 8;
+    for (let i = 0; i < lineCount; i++) {
+      const y = gmouseY + (Math.random() - 0.5) * cursorRadius * 1.5;
+      const w = Math.random() * 200 + 40;
+      const x = gmouseX + (Math.random() - 0.5) * 100 - w / 2;
+      const h = Math.random() > 0.5 ? 1 : 2;
+      const c = palette[Math.floor(Math.random() * palette.length)];
+      gctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${Math.random() * 0.08})`;
+      gctx.fillRect(x, y, w, h);
+    }
+  }
+
+  for (const s of shards) {
+    s.update();
+    s.draw();
+  }
+
+  requestAnimationFrame(gDraw);
+}
+
+gInit();
+window.addEventListener('resize', gInit);
+gDraw();
+</script>
 
 </body>
 </html>
