@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 5: Signal & Noise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #B91C1C;
+    --red-light: #EF4444;
+    --cream: #F5F2DC;
+    --bone: #EDE8D0;
+    --black: #0A0A0A;
+    --dark: #171717;
+    --charcoal: #2c2c2c;
+    --warm-gray: #8a8577;
+    --deep-red: #8B1E24;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* Generative canvas background */
+  #bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(245,242,220,0.06);
+  }
+
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 8px;
+    color: var(--cream);
+    text-decoration: none;
+    opacity: 0.9;
+  }
+
+  .nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 40px;
+  }
+
+  .nav-center a {
+    color: rgba(245,242,220,0.4);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color 0.3s;
+  }
+
+  .nav-center a:hover { color: var(--cream); }
+
+  .nav-cart {
+    color: rgba(245,242,220,0.5);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(245,242,220,0.3);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 10vw, 140px);
+    line-height: 0.92;
+    letter-spacing: 6px;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .fade {
+    opacity: 0.15;
+  }
+
+  .hero-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--red), transparent);
+    margin: 0 auto 24px;
+  }
+
+  .hero-copy {
+    font-size: 16px;
+    line-height: 1.9;
+    color: rgba(245,242,220,0.5);
+    max-width: 480px;
+    font-weight: 300;
+    margin-bottom: 48px;
+  }
+
+  .hero-copy em {
+    color: var(--red-light);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .btn-signal {
+    display: inline-block;
+    padding: 14px 48px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.4s ease;
+  }
+
+  .btn-signal.primary {
+    background: var(--cream);
+    color: var(--black);
+  }
+
+  .btn-signal.primary:hover {
+    background: var(--red);
+    color: var(--cream);
+  }
+
+  .btn-signal.ghost {
+    color: rgba(245,242,220,0.4);
+    border: 1px solid rgba(245,242,220,0.15);
+  }
+
+  .btn-signal.ghost:hover {
+    color: var(--cream);
+    border-color: var(--cream);
+  }
+
+  /* Divider */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(245,242,220,0.08), transparent);
+    margin: 0 48px;
+  }
+
+  /* Products */
+  .products-section {
+    padding: 100px 48px;
+  }
+
+  .products-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .products-header .label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(245,242,220,0.25);
+    margin-bottom: 16px;
+  }
+
+  .products-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 6px;
+    font-weight: 400;
+  }
+
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(245,242,220,0.04);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .signal-card {
+    background: var(--black);
+    padding: 32px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .signal-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.5s ease;
+  }
+
+  .signal-card:hover::after {
+    width: 100%;
+  }
+
+  .signal-card:hover {
+    background: rgba(25,25,25,1);
+  }
+
+  .signal-card:hover .card-image-area {
+    border-color: rgba(185,28,28,0.3);
+  }
+
+  .card-image-area {
+    width: 100%;
+    aspect-ratio: 1;
+    background: rgba(245,242,220,0.02);
+    border: 1px solid rgba(245,242,220,0.04);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.5s ease;
+  }
+
+  .card-image-area .wave {
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(185,28,28,0.2) 20%,
+      rgba(185,28,28,0.5) 50%,
+      rgba(185,28,28,0.2) 80%,
+      transparent 100%
+    );
+    position: relative;
+  }
+
+  .card-image-area .wave::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: radial-gradient(ellipse at center, rgba(185,28,28,0.08) 0%, transparent 70%);
+  }
+
+  .card-category {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: rgba(245,242,220,0.9);
+  }
+
+  .card-copy {
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(245,242,220,0.3);
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .card-price {
+    font-size: 14px;
+    color: rgba(245,242,220,0.6);
+    font-weight: 400;
+  }
+
+  .grid-footer {
+    text-align: center;
+    margin-top: 64px;
+  }
+
+  /* Categories band */
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    min-height: 300px;
+  }
+
+  .cat-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    transition: all 0.4s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-panel:nth-child(1) { background: var(--deep-red); }
+  .cat-panel:nth-child(2) { background: var(--cream); color: var(--black); }
+  .cat-panel:nth-child(3) { background: var(--charcoal); }
+
+  .cat-panel:hover { opacity: 0.9; }
+
+  .cat-panel .cat-count {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 12px;
+  }
+
+  .cat-panel .cat-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+  }
+
+  .cat-panel .cat-range {
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 8px;
+    letter-spacing: 2px;
+  }
+
+  /* Manifesto */
+  .manifesto {
+    padding: 120px 48px;
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .manifesto .label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(245,242,220,0.2);
+    margin-bottom: 32px;
+  }
+
+  .manifesto blockquote {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    line-height: 1.3;
+    color: rgba(245,242,220,0.7);
+    margin-bottom: 32px;
+  }
+
+  .manifesto blockquote .red { color: var(--red); }
+
+  .manifesto p {
+    font-size: 14px;
+    line-height: 2;
+    color: rgba(245,242,220,0.35);
+    font-weight: 300;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid rgba(245,242,220,0.05);
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: rgba(245,242,220,0.2);
+    letter-spacing: 2px;
+  }
+
+  footer a {
+    color: rgba(245,242,220,0.3);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  footer a:hover { color: var(--cream); }
+
+  footer .social {
+    display: flex;
+    gap: 32px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-center { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .products-section { padding: 60px 24px; }
+    .signal-grid { grid-template-columns: 1fr; }
+    .categories { grid-template-columns: 1fr; }
+    .manifesto { padding: 80px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="content">
+
+<nav>
+  <a href="#" class="nav-brand">A&middot;OK</a>
+  <div class="nav-center">
+    <a href="#">T-Shirts</a>
+    <a href="#">Hoodies</a>
+    <a href="#">Hats</a>
+    <a href="#">Game</a>
+  </div>
+  <a href="#" class="nav-cart">CART (0)</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">APES ON KEYS &mdash; AI NERDWEAR</div>
+  <h1>
+    <span class="fade">FIND</span> THE<br>
+    SIGNAL <span class="fade">IN</span><br>
+    THE NOISE
+  </h1>
+  <div class="hero-line"></div>
+  <div class="hero-copy">
+    The signal is unstable. The output is <em>emergent</em>. The brand is A-OK. For cipher hunters, glitch gods, and anyone who swears their <em>LLM has feelings</em>.
+  </div>
+  <div class="hero-actions">
+    <a href="#" class="btn-signal primary">EXPLORE</a>
+    <a href="#" class="btn-signal ghost">PLAY THE GAME</a>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="products-section">
+  <div class="products-header">
+    <div class="label">CURATED</div>
+    <h2>FEATURED</h2>
+  </div>
+  <div class="signal-grid">
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-name">GLITCHED VECTORS</div>
+      <div class="card-copy">Emergent Patterns. Corrupted Glyphs. Something is speaking.</div>
+      <div class="card-price">$50.00</div>
+    </div>
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-name">SIGNAL IN THE NOISE</div>
+      <div class="card-copy">One voice. Infinite agents. Always aligned.</div>
+      <div class="card-price">$50.00</div>
+    </div>
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">T-SHIRT</div>
+      <div class="card-name">HALLUCINATED KEYSTROKES</div>
+      <div class="card-copy">Vintage Typewriter. Corrupted Output. The keys remember.</div>
+      <div class="card-price">$50.00</div>
+    </div>
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">HOODIE</div>
+      <div class="card-name">RECURSIVE MONK</div>
+      <div class="card-copy">Recursive thought loops. Meditative inference.</div>
+      <div class="card-price">$75.00</div>
+    </div>
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">HOODIE</div>
+      <div class="card-name">APE-OCALYPSE DRIP</div>
+      <div class="card-copy">Dress for the unknown. Look good at the singularity.</div>
+      <div class="card-price">$75.00</div>
+    </div>
+    <div class="signal-card">
+      <div class="card-image-area"><div class="wave"></div></div>
+      <div class="card-category">ACCESSORY</div>
+      <div class="card-name">APE LOGO CAP</div>
+      <div class="card-copy">The original sigil. Embroidered on structured cotton.</div>
+      <div class="card-price">$75.00</div>
+    </div>
+  </div>
+  <div class="grid-footer">
+    <a href="#" class="btn-signal ghost">VIEW ALL PRODUCTS</a>
+  </div>
+</section>
+
+<section class="categories">
+  <div class="cat-panel">
+    <div class="cat-count">16 PIECES</div>
+    <div class="cat-name">T-SHIRTS</div>
+    <div class="cat-range">$40 &ndash; $60</div>
+  </div>
+  <div class="cat-panel">
+    <div class="cat-count">6 PIECES</div>
+    <div class="cat-name">HOODIES</div>
+    <div class="cat-range">$53 &ndash; $75</div>
+  </div>
+  <div class="cat-panel">
+    <div class="cat-count">1 PIECE</div>
+    <div class="cat-name">HATS</div>
+    <div class="cat-range">$75</div>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="label">THE THEOREM</div>
+  <blockquote>
+    GIVE AN INFINITE NUMBER OF AI MODELS AN INFINITE AMOUNT OF COMPUTE.
+    THEY WILL GENERATE <span class="red">EVERYTHING</span> &mdash;
+    INCLUDING 47 MUSICALS WHERE HAMLET RAPS.
+  </blockquote>
+  <p>
+    Modern AI generates nonsense at unprecedented speeds and with unwavering confidence.
+    They'll add citations to imaginary papers and insist they're being helpful.
+    Somewhere in this infinite digital soup exists a perfect Romeo and Juliet &mdash;
+    tagged "not financial advice."
+  </p>
+</section>
+
+<footer>
+  <div>&copy; 2026 A-OK.SHOP</div>
+  <div class="social">
+    <a href="#">GitHub</a>
+    <a href="#">YouTube</a>
+    <a href="#">Spotify</a>
+    <a href="#">X</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  // Generative noise background
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    const count = Math.floor((w * h) / 8000);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.3 + 0.05
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(185, 28, 28, ${0.06 * (1 - dist / 100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw particles
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(245, 242, 220, ${p.alpha})`;
+      ctx.fill();
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  init();
+  draw();
+</script>
+
+</body>
+</html>

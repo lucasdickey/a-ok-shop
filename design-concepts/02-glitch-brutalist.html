@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 2: Glitch Brutalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #B91C1C;
+    --red-bright: #EF4444;
+    --cream: #F5F2DC;
+    --black: #0A0A0A;
+    --dark: #171717;
+    --charcoal: #2c2c2c;
+    --deep-red: #8B1E24;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Glitch text effect */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch::before {
+    color: var(--red-bright);
+    animation: glitch-1 3s infinite linear;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-2px, -1px);
+    opacity: 0.7;
+  }
+
+  .glitch::after {
+    color: #00f0ff;
+    animation: glitch-2 3s infinite linear;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    transform: translate(2px, 1px);
+    opacity: 0.7;
+  }
+
+  @keyframes glitch-1 {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-3px, 2px); }
+    40% { transform: translate(3px, -1px); }
+    60% { transform: translate(-1px, 1px); }
+    80% { transform: translate(2px, -2px); }
+  }
+
+  @keyframes glitch-2 {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(2px, -2px); }
+    40% { transform: translate(-2px, 3px); }
+    60% { transform: translate(3px, -1px); }
+    80% { transform: translate(-3px, 2px); }
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: var(--black);
+    mix-blend-mode: normal;
+  }
+
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--cream);
+    letter-spacing: 6px;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--red-bright);
+  }
+
+  /* Hero - Full bleed brutalist */
+  .hero {
+    min-height: 100vh;
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  .hero-stripe {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40%;
+    height: 100%;
+    background: var(--red);
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 15vw, 220px);
+    line-height: 0.85;
+    color: var(--cream);
+    letter-spacing: -2px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1 .red {
+    color: var(--red);
+    -webkit-text-stroke: 2px var(--red);
+  }
+
+  .hero h1 .outline {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--cream);
+  }
+
+  .hero-tagline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 4vw, 48px);
+    letter-spacing: 10px;
+    color: var(--cream);
+    margin-top: 24px;
+    position: relative;
+    z-index: 2;
+    border-top: 3px solid var(--red);
+    padding-top: 16px;
+    display: inline-block;
+  }
+
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-copy {
+    max-width: 400px;
+    color: rgba(245,242,220,0.6);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+  }
+
+  .btn-brutal {
+    display: inline-block;
+    padding: 18px 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    text-decoration: none;
+    border: 3px solid;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .btn-brutal.primary {
+    background: var(--red);
+    color: var(--cream);
+    border-color: var(--red);
+  }
+
+  .btn-brutal.primary:hover {
+    background: var(--cream);
+    color: var(--red);
+  }
+
+  .btn-brutal.outline {
+    background: transparent;
+    color: var(--cream);
+    border-color: var(--cream);
+  }
+
+  .btn-brutal.outline:hover {
+    background: var(--cream);
+    color: var(--black);
+  }
+
+  /* Marquee */
+  .marquee {
+    background: var(--red);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-inner {
+    display: inline-flex;
+    animation: scroll 20s linear infinite;
+  }
+
+  .marquee-inner span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: var(--cream);
+    padding: 0 48px;
+  }
+
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Products */
+  .products-section {
+    padding: 80px 48px;
+    background: var(--cream);
+  }
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    border-bottom: 3px solid var(--black);
+    padding-bottom: 16px;
+  }
+
+  .products-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+
+  .products-header .count {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    background: var(--black);
+    border: 3px solid var(--black);
+  }
+
+  .product-card {
+    background: var(--cream);
+    padding: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .product-card:hover {
+    background: var(--black);
+    color: var(--cream);
+  }
+
+  .product-card:hover .product-price-tag {
+    background: var(--red);
+    color: var(--cream);
+  }
+
+  .product-image-box {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-image-box .glyph {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 100px;
+    color: rgba(245,242,220,0.08);
+  }
+
+  .product-card:hover .product-image-box .glyph {
+    color: rgba(185,28,28,0.3);
+  }
+
+  .product-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--red);
+  }
+
+  .product-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .product-copy {
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.7;
+    margin-bottom: 16px;
+  }
+
+  .product-price-tag {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    background: var(--black);
+    color: var(--cream);
+    transition: all 0.2s;
+  }
+
+  /* Manifesto band */
+  .manifesto-band {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 100px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .manifesto-band h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 4px;
+    line-height: 0.95;
+  }
+
+  .manifesto-band h2 .red { color: var(--red); }
+
+  .manifesto-text {
+    font-size: 15px;
+    line-height: 1.9;
+    color: rgba(245,242,220,0.7);
+  }
+
+  .manifesto-text p { margin-bottom: 16px; }
+
+  .manifesto-text .accent {
+    color: var(--red-bright);
+    font-weight: 700;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--black);
+    color: var(--cream);
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  footer a {
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--red); }
+
+  @media (max-width: 768px) {
+    .hero { padding: 100px 24px 48px; }
+    .hero-stripe { width: 60%; }
+    .hero-bottom { flex-direction: column; gap: 32px; align-items: flex-start; }
+    .nav-links { display: none; }
+    .products-section { padding: 60px 16px; }
+    .product-grid { grid-template-columns: 1fr; }
+    .manifesto-band { grid-template-columns: 1fr; padding: 60px 24px; gap: 32px; }
+    footer { flex-direction: column; gap: 16px; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">A&middot;OK</a>
+  <ul class="nav-links">
+    <li><a href="#">TEES</a></li>
+    <li><a href="#">HOODIES</a></li>
+    <li><a href="#">HATS</a></li>
+    <li><a href="#" style="color:var(--red-bright)">PLAY</a></li>
+    <li><a href="#">CART</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-stripe"></div>
+  <h1>
+    <span class="glitch" data-text="APES">APES</span><br>
+    <span class="outline">ON</span> <span class="red">KEYS</span>
+  </h1>
+  <div class="hero-tagline">NERD STREETWEAR (FOR REAL)</div>
+  <div class="hero-bottom">
+    <div class="hero-copy">
+      It's not a logo. It's a leak. For cipher hunters, glitch gods, and anyone who swears their LLM has feelings.
+    </div>
+    <div class="hero-cta">
+      <a href="#" class="btn-brutal primary">SHOP NOW</a>
+      <a href="#" class="btn-brutal outline">RUN, HUMAN</a>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-inner">
+    <span>EMERGENT PATTERNS</span>
+    <span>&bull;</span>
+    <span>CORRUPTED GLYPHS</span>
+    <span>&bull;</span>
+    <span>TRUST THE NOISE</span>
+    <span>&bull;</span>
+    <span>SOMETHING IS SPEAKING</span>
+    <span>&bull;</span>
+    <span>HALLUCINATED KEYSTROKES</span>
+    <span>&bull;</span>
+    <span>THE SIGNAL IS UNSTABLE</span>
+    <span>&bull;</span>
+    <span>EMERGENT PATTERNS</span>
+    <span>&bull;</span>
+    <span>CORRUPTED GLYPHS</span>
+    <span>&bull;</span>
+    <span>TRUST THE NOISE</span>
+    <span>&bull;</span>
+    <span>SOMETHING IS SPEAKING</span>
+    <span>&bull;</span>
+    <span>HALLUCINATED KEYSTROKES</span>
+    <span>&bull;</span>
+    <span>THE SIGNAL IS UNSTABLE</span>
+  </div>
+</div>
+
+<section class="products-section">
+  <div class="products-header">
+    <h2>FEATURED</h2>
+    <span class="count">6 ITEMS</span>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">A</span></div>
+      <div class="product-type">TEE</div>
+      <div class="product-title">GLITCHED VECTORS</div>
+      <div class="product-copy">Emergent Patterns. Corrupted Glyphs. Something is speaking.</div>
+      <div class="product-price-tag">$50</div>
+    </div>
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">H</span></div>
+      <div class="product-type">TEE</div>
+      <div class="product-title">HALLUCINATED KEYSTROKES</div>
+      <div class="product-copy">Vintage Typewriter. Corrupted Output. The keys remember what you forgot.</div>
+      <div class="product-price-tag">$50</div>
+    </div>
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">M</span></div>
+      <div class="product-type">TEE</div>
+      <div class="product-title">MIXTURE OF APES</div>
+      <div class="product-copy">Finetuned Personalities. Multiple experts, one output layer.</div>
+      <div class="product-price-tag">$40</div>
+    </div>
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">P</span></div>
+      <div class="product-type">HOODIE</div>
+      <div class="product-title">2034 PROPHECY</div>
+      <div class="product-copy">The future was always predictable. The models just needed more data.</div>
+      <div class="product-price-tag">$75</div>
+    </div>
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">D</span></div>
+      <div class="product-type">HOODIE</div>
+      <div class="product-title">APE-OCALYPSE DRIP</div>
+      <div class="product-copy">Dress for the unknown. When the singularity hits, look good doing it.</div>
+      <div class="product-price-tag">$75</div>
+    </div>
+    <div class="product-card">
+      <div class="product-image-box"><span class="glyph">^</span></div>
+      <div class="product-type">HAT</div>
+      <div class="product-title">APE LOGO CAP</div>
+      <div class="product-copy">The original sigil. Embroidered. On your dome.</div>
+      <div class="product-price-tag">$75</div>
+    </div>
+  </div>
+</section>
+
+<section class="manifesto-band">
+  <div>
+    <h2>THE<br><span class="red">E/ACC</span><br>MONKEY<br>THEOREM</h2>
+  </div>
+  <div class="manifesto-text">
+    <p>Give an infinite number of AI models an infinite amount of compute. They will eventually generate <span class="accent">every possible text, image, video, and piece of code</span> &mdash; including all of Shakespeare's works and at least 47 different AI-generated musicals where Hamlet raps.</p>
+    <p>Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can generate nonsense at <span class="accent">unprecedented speeds</span> and with <span class="accent">unwavering confidence</span>.</p>
+    <p>Somewhere in this infinite digital soup, there exists a perfect reproduction of Romeo and Juliet &mdash; tagged as "not financial advice" and ending with a prompt to like and subscribe.</p>
+  </div>
+</section>
+
+<footer>
+  <div>&copy; 2026 A-OK.SHOP</div>
+  <div>
+    <a href="#">GITHUB</a> &nbsp;&middot;&nbsp;
+    <a href="#">YOUTUBE</a> &nbsp;&middot;&nbsp;
+    <a href="#">SPOTIFY</a> &nbsp;&middot;&nbsp;
+    <a href="#">X</a>
+  </div>
+</footer>
+
+</body>
+</html>
