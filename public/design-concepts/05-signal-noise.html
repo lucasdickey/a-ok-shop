@@ -586,10 +586,47 @@
 </div>
 
 <script>
-  // Generative noise background
+  // Flow field with simplex noise — particles follow field lines that warp around cursor
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
   let w, h, particles = [];
+  let mouseX = -1, mouseY = -1;
+  let targetMX = -1, targetMY = -1;
+  let time = 0;
+  const particleCount = 800;
+  const cursorRadius = 200;
+
+  // Simple 2D noise (value noise with smoothing)
+  const noiseGrid = 64;
+  const noiseTable = [];
+  for (let i = 0; i < noiseGrid * noiseGrid; i++) noiseTable.push(Math.random());
+
+  function noise2d(x, y) {
+    const xi = ((Math.floor(x) % noiseGrid) + noiseGrid) % noiseGrid;
+    const yi = ((Math.floor(y) % noiseGrid) + noiseGrid) % noiseGrid;
+    const xf = x - Math.floor(x);
+    const yf = y - Math.floor(y);
+    const sx = xf * xf * (3 - 2 * xf);
+    const sy = yf * yf * (3 - 2 * yf);
+    const i00 = noiseTable[yi * noiseGrid + xi];
+    const i10 = noiseTable[yi * noiseGrid + ((xi + 1) % noiseGrid)];
+    const i01 = noiseTable[((yi + 1) % noiseGrid) * noiseGrid + xi];
+    const i11 = noiseTable[((yi + 1) % noiseGrid) * noiseGrid + ((xi + 1) % noiseGrid)];
+    const ix0 = i00 + sx * (i10 - i00);
+    const ix1 = i01 + sx * (i11 - i01);
+    return ix0 + sy * (ix1 - ix0);
+  }
+
+  // Fractal Brownian Motion
+  function fbm(x, y, octaves) {
+    let val = 0, amp = 0.5, freq = 1;
+    for (let i = 0; i < octaves; i++) {
+      val += noise2d(x * freq, y * freq) * amp;
+      amp *= 0.5;
+      freq *= 2;
+    }
+    return val;
+  }
 
   function resize() {
     w = canvas.width = window.innerWidth;
@@ -599,51 +636,114 @@
   function init() {
     resize();
     particles = [];
-    const count = Math.floor((w * h) / 8000);
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.3 + 0.05
+        px: 0, py: 0, // previous position for trails
+        speed: Math.random() * 0.5 + 0.3,
+        life: Math.random() * 300 + 100,
+        maxLife: 400,
+        hue: Math.random() > 0.7 ? 0 : 1 // 0 = cream, 1 = red
       });
+      particles[i].px = particles[i].x;
+      particles[i].py = particles[i].y;
     }
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
+  document.addEventListener('mousemove', (e) => {
+    targetMX = e.clientX;
+    targetMY = e.clientY;
+  });
 
-    // Draw connections
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 100) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(185, 28, 28, ${0.06 * (1 - dist / 100)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
+  document.addEventListener('mouseleave', () => {
+    targetMX = -1;
+    targetMY = -1;
+  });
+
+  function draw() {
+    time += 0.003;
+
+    // Smooth cursor
+    if (targetMX > 0) {
+      mouseX += (targetMX - mouseX) * 0.08;
+      mouseY += (targetMY - mouseY) * 0.08;
+    } else {
+      mouseX = -1;
     }
 
-    // Draw particles
+    // Fade trails
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.04)';
+    ctx.fillRect(0, 0, w, h);
+
     for (const p of particles) {
+      p.px = p.x;
+      p.py = p.y;
+
+      // Flow field angle from noise
+      const scale = 0.003;
+      const n = fbm(p.x * scale + time, p.y * scale + time * 0.5, 3);
+      let angle = n * Math.PI * 4;
+
+      // Cursor vortex
+      if (mouseX > 0) {
+        const dx = p.x - mouseX;
+        const dy = p.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < cursorRadius) {
+          const force = (1 - dist / cursorRadius);
+          // Swirl: perpendicular to radial direction
+          const radAngle = Math.atan2(dy, dx);
+          const swirlAngle = radAngle + Math.PI * 0.5;
+          angle += (swirlAngle - angle) * force * 0.6;
+          p.speed = Math.max(p.speed, force * 2);
+        }
+      }
+
+      p.x += Math.cos(angle) * p.speed;
+      p.y += Math.sin(angle) * p.speed;
+      p.speed *= 0.99;
+      p.speed = Math.max(p.speed, 0.3);
+      p.life--;
+
+      // Wrap or reset
+      if (p.x < -10 || p.x > w + 10 || p.y < -10 || p.y > h + 10 || p.life <= 0) {
+        p.x = Math.random() * w;
+        p.y = Math.random() * h;
+        p.px = p.x;
+        p.py = p.y;
+        p.life = Math.random() * 300 + 100;
+        p.speed = Math.random() * 0.5 + 0.3;
+      }
+
+      // Draw trail line
+      const lifeRatio = p.life / p.maxLife;
+      const alpha = lifeRatio * 0.4;
+
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(245, 242, 220, ${p.alpha})`;
+      ctx.moveTo(p.px, p.py);
+      ctx.lineTo(p.x, p.y);
+
+      if (p.hue === 0) {
+        ctx.strokeStyle = `rgba(245, 242, 220, ${alpha})`;
+      } else {
+        ctx.strokeStyle = `rgba(185, 28, 28, ${alpha * 1.2})`;
+      }
+      ctx.lineWidth = lifeRatio * 1.5 + 0.5;
+      ctx.stroke();
+    }
+
+    // Cursor glow
+    if (mouseX > 0) {
+      const g = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, cursorRadius * 0.8);
+      g.addColorStop(0, 'rgba(185, 28, 28, 0.06)');
+      g.addColorStop(0.5, 'rgba(185, 28, 28, 0.02)');
+      g.addColorStop(1, 'rgba(185, 28, 28, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, cursorRadius * 0.8, 0, Math.PI * 2);
       ctx.fill();
-
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
     }
 
     requestAnimationFrame(draw);

@@ -416,6 +416,22 @@
     to { width: 100%; }
   }
 
+  /* Interactive matrix canvas */
+  #matrixCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero, .terminal-section, .manifesto, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     nav { padding: 12px 16px; }
@@ -440,6 +456,8 @@
     <li><a href="#">CART [0]</a></li>
   </ul>
 </nav>
+
+<canvas id="matrixCanvas"></canvas>
 
 <section class="hero">
   <div class="hero-grid"></div>
@@ -576,6 +594,102 @@
     <a href="#">X</a>
   </div>
 </footer>
+
+<script>
+// Matrix rain that reacts to cursor — characters scatter and warp near mouse
+const mc = document.getElementById('matrixCanvas');
+const mctx = mc.getContext('2d');
+let mw, mh, columns, drops;
+const fontSize = 14;
+const chars = 'AOKアイウエオカキクケコ01{}[]<>/\\|~!@#$%^&*()_+=APES';
+let mouseX = -1000, mouseY = -1000;
+const cursorRadius = 150;
+
+function mResize() {
+  mw = mc.width = window.innerWidth;
+  mh = mc.height = window.innerHeight;
+  columns = Math.floor(mw / fontSize);
+  drops = new Array(columns).fill(1);
+}
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+document.addEventListener('mouseleave', () => {
+  mouseX = -1000;
+  mouseY = -1000;
+});
+
+function mDraw() {
+  // Fade trail
+  mctx.fillStyle = 'rgba(10, 10, 10, 0.06)';
+  mctx.fillRect(0, 0, mw, mh);
+
+  for (let i = 0; i < columns; i++) {
+    const x = i * fontSize;
+    const y = drops[i] * fontSize;
+
+    // Distance from cursor
+    const dx = x - mouseX;
+    const dy = y - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const inRadius = dist < cursorRadius;
+
+    if (inRadius) {
+      // Near cursor: bright green, larger, displaced
+      const force = 1 - (dist / cursorRadius);
+      const displaceX = (dx / dist) * force * 20;
+      const displaceY = (dy / dist) * force * 12;
+      const glow = Math.floor(force * 255);
+
+      mctx.font = `${fontSize + force * 8}px monospace`;
+      mctx.fillStyle = `rgba(0, ${180 + glow * 0.3}, ${40 + glow * 0.2}, ${0.8 + force * 0.2})`;
+      mctx.shadowColor = `rgba(0, 255, 65, ${force * 0.6})`;
+      mctx.shadowBlur = force * 15;
+
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      mctx.fillText(char, x + displaceX, y + displaceY);
+      mctx.shadowBlur = 0;
+
+      // Cursor zone drops faster
+      if (Math.random() > 0.85) {
+        drops[i] = 0;
+      }
+    } else {
+      // Normal rain
+      mctx.font = `${fontSize}px monospace`;
+      const alpha = 0.15 + Math.random() * 0.1;
+      mctx.fillStyle = `rgba(0, 170, 42, ${alpha})`;
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      mctx.fillText(char, x, y);
+    }
+
+    // Reset drop
+    if (y > mh && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+
+  // Draw cursor glow ring
+  if (mouseX > 0) {
+    const gradient = mctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, cursorRadius);
+    gradient.addColorStop(0, 'rgba(0, 255, 65, 0.06)');
+    gradient.addColorStop(0.5, 'rgba(0, 255, 65, 0.02)');
+    gradient.addColorStop(1, 'rgba(0, 255, 65, 0)');
+    mctx.fillStyle = gradient;
+    mctx.fillRect(mouseX - cursorRadius, mouseY - cursorRadius, cursorRadius * 2, cursorRadius * 2);
+  }
+
+  requestAnimationFrame(mDraw);
+}
+
+mResize();
+window.addEventListener('resize', mResize);
+mDraw();
+</script>
 
 </body>
 </html>

@@ -53,6 +53,21 @@
     z-index: 9998;
   }
 
+  #arcadeCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  nav, .hero, .score-bar, .products-section, .game-cta, .lore, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   .pixel-font { font-family: 'Press Start 2P', cursive; }
 
   /* Nav */
@@ -492,6 +507,8 @@
 </head>
 <body>
 
+<canvas id="arcadeCanvas"></canvas>
+
 <nav>
   <a href="#" class="nav-logo">A-OK</a>
   <ul class="nav-links">
@@ -650,6 +667,154 @@
     star.style.animationDuration = (2 + Math.random() * 3) + 's';
     starsContainer.appendChild(star);
   }
+
+  // Neon grid with ripple waves from cursor
+  const ac = document.getElementById('arcadeCanvas');
+  const actx = ac.getContext('2d');
+  let aw, ah;
+  const gridSize = 40;
+  let amouseX = -1000, amouseY = -1000;
+  const ripples = [];
+  let lastClick = 0;
+
+  function aResize() {
+    aw = ac.width = window.innerWidth;
+    ah = ac.height = window.innerHeight;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    amouseX = e.clientX;
+    amouseY = e.clientY;
+  });
+
+  document.addEventListener('mouseleave', () => {
+    amouseX = -1000;
+    amouseY = -1000;
+  });
+
+  // Click creates a ripple burst
+  document.addEventListener('click', (e) => {
+    ripples.push({ x: e.clientX, y: e.clientY, radius: 0, maxRadius: 400, speed: 6, alpha: 1 });
+  });
+
+  // Auto-ripple on hover periodically
+  let hoverTimer = 0;
+
+  let aTime = 0;
+
+  function aDraw() {
+    aTime += 0.02;
+    actx.clearRect(0, 0, aw, ah);
+
+    // Auto ripples near cursor
+    hoverTimer++;
+    if (hoverTimer % 40 === 0 && amouseX > 0) {
+      ripples.push({ x: amouseX, y: amouseY, radius: 0, maxRadius: 250, speed: 3, alpha: 0.5 });
+    }
+
+    // Update ripples
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      ripples[i].radius += ripples[i].speed;
+      ripples[i].alpha *= 0.985;
+      if (ripples[i].radius > ripples[i].maxRadius) ripples.splice(i, 1);
+    }
+
+    const cols = Math.ceil(aw / gridSize) + 1;
+    const rows = Math.ceil(ah / gridSize) + 1;
+
+    // Draw grid dots with displacement
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        let x = c * gridSize;
+        let y = r * gridSize;
+        let brightness = 0.06;
+        let dotSize = 1.5;
+        let hue = 120; // green default
+
+        // Cursor proximity glow
+        const cdx = x - amouseX;
+        const cdy = y - amouseY;
+        const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+
+        if (cdist < 200) {
+          const force = 1 - cdist / 200;
+          brightness += force * 0.4;
+          dotSize += force * 3;
+          // Color shift near cursor: green → pink → blue
+          hue = 120 + force * 200;
+          // Displacement
+          x += (cdx / cdist) * force * 8;
+          y += (cdy / cdist) * force * 8;
+        }
+
+        // Ripple effects
+        for (const rip of ripples) {
+          const rdx = x - rip.x;
+          const rdy = y - rip.y;
+          const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
+          const ringDist = Math.abs(rdist - rip.radius);
+          if (ringDist < 30) {
+            const ringForce = (1 - ringDist / 30) * rip.alpha;
+            brightness += ringForce * 0.5;
+            dotSize += ringForce * 2;
+            // Displace along ring
+            const angle = Math.atan2(rdy, rdx);
+            x += Math.cos(angle) * ringForce * 6;
+            y += Math.sin(angle) * ringForce * 6;
+          }
+        }
+
+        // Ambient wave
+        brightness += Math.sin(x * 0.01 + aTime) * Math.cos(y * 0.01 + aTime * 0.7) * 0.03;
+
+        // Choose color based on hue
+        let color;
+        if (hue <= 150) {
+          color = `rgba(57, 255, 20, ${brightness})`;
+        } else if (hue <= 250) {
+          const t = (hue - 150) / 100;
+          color = `rgba(${Math.floor(57 + 198 * t)}, ${Math.floor(255 - 210 * t)}, ${Math.floor(20 + 129 * t)}, ${brightness})`;
+        } else {
+          color = `rgba(0, 212, 255, ${brightness})`;
+        }
+
+        actx.beginPath();
+        actx.arc(x, y, dotSize, 0, Math.PI * 2);
+        actx.fillStyle = color;
+        actx.fill();
+
+        // Glow for bright dots
+        if (brightness > 0.2) {
+          actx.beginPath();
+          actx.arc(x, y, dotSize * 3, 0, Math.PI * 2);
+          actx.fillStyle = color.replace(/[\d.]+\)$/, `${brightness * 0.15})`);
+          actx.fill();
+        }
+      }
+    }
+
+    // Grid lines (very subtle)
+    actx.strokeStyle = 'rgba(57, 255, 20, 0.015)';
+    actx.lineWidth = 0.5;
+    for (let c = 0; c <= cols; c++) {
+      actx.beginPath();
+      actx.moveTo(c * gridSize, 0);
+      actx.lineTo(c * gridSize, ah);
+      actx.stroke();
+    }
+    for (let r = 0; r <= rows; r++) {
+      actx.beginPath();
+      actx.moveTo(0, r * gridSize);
+      actx.lineTo(aw, r * gridSize);
+      actx.stroke();
+    }
+
+    requestAnimationFrame(aDraw);
+  }
+
+  aResize();
+  window.addEventListener('resize', aResize);
+  aDraw();
 </script>
 
 </body>

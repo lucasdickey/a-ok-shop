@@ -159,6 +159,22 @@
     color: var(--red);
   }
 
+  #meshCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  nav, .hero, .products-section, .lookbook, .story, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   .hero-right {
     background: var(--bone);
     display: flex;
@@ -407,6 +423,8 @@
 </head>
 <body>
 
+<canvas id="meshCanvas"></canvas>
+
 <nav id="mainNav">
   <a href="#" class="nav-brand">A-OK.SHOP</a>
   <div class="nav-right">
@@ -543,6 +561,79 @@
   window.addEventListener('scroll', () => {
     document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
   });
+
+  // Stripe-inspired flowing gradient mesh — soft organic blobs that follow cursor
+  const mc = document.getElementById('meshCanvas');
+  const mctx = mc.getContext('2d');
+  let mw, mh;
+  let mmouseX = 0.5, mmouseY = 0.5; // normalized 0-1
+  let targetMX = 0.5, targetMY = 0.5;
+
+  function mResize() {
+    mw = mc.width = window.innerWidth;
+    mh = mc.height = window.innerHeight;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    targetMX = e.clientX / window.innerWidth;
+    targetMY = e.clientY / window.innerHeight;
+  });
+
+  const blobs = [
+    { x: 0.2, y: 0.3, r: 0.35, color: [185, 28, 28], vx: 0.0003, vy: 0.0002, phase: 0 },
+    { x: 0.7, y: 0.2, r: 0.3, color: [237, 232, 208], vx: -0.0002, vy: 0.0003, phase: 1 },
+    { x: 0.5, y: 0.7, r: 0.4, color: [139, 30, 36], vx: 0.0002, vy: -0.0002, phase: 2 },
+    { x: 0.8, y: 0.6, r: 0.28, color: [245, 242, 220], vx: -0.0003, vy: -0.0001, phase: 3 },
+    { x: 0.3, y: 0.8, r: 0.32, color: [200, 60, 60], vx: 0.0001, vy: 0.0003, phase: 4 },
+  ];
+
+  let time = 0;
+
+  function mDraw() {
+    time += 0.008;
+
+    // Smooth cursor follow
+    mmouseX += (targetMX - mmouseX) * 0.03;
+    mmouseY += (targetMY - mmouseY) * 0.03;
+
+    // Clear with slight cream tint
+    mctx.fillStyle = 'rgba(245, 242, 220, 1)';
+    mctx.fillRect(0, 0, mw, mh);
+
+    for (const blob of blobs) {
+      // Organic movement + cursor influence
+      const cursorPullX = (mmouseX - 0.5) * 0.15;
+      const cursorPullY = (mmouseY - 0.5) * 0.15;
+
+      const bx = (blob.x + Math.sin(time + blob.phase) * 0.08 + cursorPullX) * mw;
+      const by = (blob.y + Math.cos(time * 0.7 + blob.phase) * 0.06 + cursorPullY) * mh;
+      const br = blob.r * Math.min(mw, mh) * (1 + Math.sin(time * 0.5 + blob.phase) * 0.1);
+
+      const gradient = mctx.createRadialGradient(bx, by, 0, bx, by, br);
+      const [r, g, b] = blob.color;
+      gradient.addColorStop(0, `rgba(${r},${g},${b},0.6)`);
+      gradient.addColorStop(0.4, `rgba(${r},${g},${b},0.25)`);
+      gradient.addColorStop(1, `rgba(${r},${g},${b},0)`);
+
+      mctx.fillStyle = gradient;
+      mctx.fillRect(0, 0, mw, mh);
+    }
+
+    // Subtle cursor spotlight
+    const spotX = mmouseX * mw;
+    const spotY = mmouseY * mh;
+    const spotGrad = mctx.createRadialGradient(spotX, spotY, 0, spotX, spotY, 180);
+    spotGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+    spotGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    mctx.fillStyle = spotGrad;
+    mctx.fillRect(0, 0, mw, mh);
+
+    requestAnimationFrame(mDraw);
+  }
+
+  mResize();
+  window.addEventListener('resize', mResize);
+  mDraw();
 </script>
 
 </body>
