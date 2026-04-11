@@ -92,6 +92,16 @@ export function ColorSelector({
 }) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+  // Set a default color when the component mounts
+  useEffect(() => {
+    if (colors.length > 0 && !selectedColor) {
+      const defaultColor =
+        colors.find((c) => c.toLowerCase() === 'black') || colors[0];
+      handleColorClick(defaultColor);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colors]);
+
   const handleColorClick = (color: string) => {
     setSelectedColor(color);
 
