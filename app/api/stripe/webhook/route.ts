@@ -118,7 +118,32 @@ async function handleCheckoutSessionCompleted(stripeClient: Stripe, session: Str
 
     console.log("Order data:", JSON.stringify(orderData, null, 2));
 
-    // Send confirmation email
+    // Trigger Stripe's built-in receipt email by setting receipt_email on
+    // the PaymentIntent. Stripe sends a branded receipt to this address
+    // regardless of the Dashboard email-receipts setting.
+    if (orderData.customerEmail && expandedSession.payment_intent) {
+      const paymentIntentId =
+        typeof expandedSession.payment_intent === "string"
+          ? expandedSession.payment_intent
+          : expandedSession.payment_intent.id;
+
+      try {
+        await stripeClient.paymentIntents.update(paymentIntentId, {
+          receipt_email: orderData.customerEmail,
+        });
+        console.log(
+          `Stripe receipt email triggered for ${orderData.customerEmail} (PI: ${paymentIntentId})`
+        );
+      } catch (receiptError) {
+        console.error(
+          "Failed to trigger Stripe receipt email:",
+          receiptError
+        );
+      }
+    }
+
+    // Log order details for observability (actual order-confirmation
+    // email with product breakdown can be layered on later if desired).
     if (orderData.customerEmail) {
       await sendConfirmationEmail(orderData);
     }
