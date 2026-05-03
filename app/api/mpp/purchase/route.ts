@@ -106,7 +106,7 @@ async function handlePaymentChallenge(
     const paymentId = `pi_mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
     // Get Stripe network ID (required for link-cli mpp decode to work properly)
-    const networkId = process.env.STRIPE_NETWORK_ID;
+    const networkId = process.env.STRIPE_NETWORK_ID?.trim();
     if (!networkId) {
       console.error('[MPP] STRIPE_NETWORK_ID environment variable not configured');
       return NextResponse.json({ error: 'Server misconfiguration: STRIPE_NETWORK_ID not set' }, { status: 500 });
