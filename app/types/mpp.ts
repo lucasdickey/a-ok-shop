@@ -63,14 +63,15 @@ export interface MPPPurchaseRequest {
 }
 
 export interface MPPPaymentChallenge {
+  id: string; // Payment ID for tracking
+  request: string; // base64url-encoded request details
   amount: number;
   currency: string;
   description: string;
   paymentMethods: {
     stripe?: {
-      clientSecret: string;
-      publishableKey: string;
-      method: 'link';
+      method: 'stripe';
+      intent: 'charge';
     };
     tempo?: {
       amount: string;
@@ -85,7 +86,7 @@ export interface MPPOrderConfirmation {
   status: 'completed' | 'pending' | 'failed';
   amount: number;
   currency: string;
-  paymentMethod: 'stripe-link' | 'tempo';
+  paymentMethod: 'stripe-link' | 'stripe-spt' | 'tempo';
   paymentId: string;
   items: Array<{
     handle: string;
@@ -103,4 +104,23 @@ export interface PaymentVerificationResult {
   method: 'stripe-link' | 'tempo';
   timestamp: number;
   error?: string;
+}
+
+export interface MPPOrder {
+  orderId: string;
+  paymentIntentId: string;
+  agentId: string;
+  email?: string;
+  items: Array<{
+    handle: string;
+    variantId: string;
+    quantity: number;
+  }>;
+  amount: number; // in cents
+  currency: string;
+  paymentMethod: 'stripe-spt' | 'tempo';
+  status: 'pending' | 'completed' | 'failed' | 'fulfilled';
+  createdAt: string;
+  updatedAt: string;
+  metadata?: Record<string, string>;
 }

@@ -140,36 +140,98 @@ async function handleCheckoutSessionCompleted(stripeClient: Stripe, session: Str
   }
 }
 
+function formatAmount(cents?: number | null) {
+  return `$${((cents || 0) / 100).toFixed(2)}`;
+}
+
+function formatOrderItems(items: any[] = []) {
+  return items.map((item: any) => {
+    const metadata = item.price?.product?.metadata || item.metadata || {};
+    const description = item.description || item.title || item.handle || item.name || "A-OK Shop item";
+    const quantity = item.quantity || 1;
+    let itemStr = `${description} x${quantity}`;
+
+    if (metadata.size) itemStr += ` (Size: ${metadata.size})`;
+    if (metadata.color) itemStr += ` (Color: ${metadata.color})`;
+    if (item.variantId) itemStr += ` (${item.variantId})`;
+
+    return itemStr;
+  });
+}
+
+function generateOrderEmailText(orderData: any, storeName: string) {
+  const lines = [
+    `Thanks for your ${storeName} order.`,
+    "",
+    `Order ID: ${String(orderData.sessionId || orderData.paymentIntentId || "").slice(-12)}`,
+    `Order Total: ${formatAmount(orderData.amountTotal)}`,
+  ];
+
+  if (orderData.amountTax > 0) {
+    lines.push(`Tax: ${formatAmount(orderData.amountTax)}`);
+  }
+
+  if (orderData.amountShipping > 0) {
+    lines.push(`Shipping: ${formatAmount(orderData.amountShipping)}`);
+  }
+
+  const items = formatOrderItems(orderData.items);
+  if (items.length > 0) {
+    lines.push("", "Items:", ...items.map((item) => `- ${item}`));
+  }
+
+  lines.push("", "Your items will ship within 3-5 business days.");
+
+  return lines.join("\n");
+}
+
+function generateOrderEmailHTML(orderData: any, storeName: string) {
+  const items = formatOrderItems(orderData.items);
+  const itemList = items.length > 0
+    ? `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`
+    : "";
+
+  return `
+    <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.5;">
+      <h1 style="font-size: 22px;">Thanks for your ${storeName} order.</h1>
+      <p><strong>Order ID:</strong> ${String(orderData.sessionId || orderData.paymentIntentId || "").slice(-12)}</p>
+      <p><strong>Order Total:</strong> ${formatAmount(orderData.amountTotal)}</p>
+      ${orderData.amountTax > 0 ? `<p><strong>Tax:</strong> ${formatAmount(orderData.amountTax)}</p>` : ""}
+      ${orderData.amountShipping > 0 ? `<p><strong>Shipping:</strong> ${formatAmount(orderData.amountShipping)}</p>` : ""}
+      ${itemList}
+      <p>Your items will ship within 3-5 business days.</p>
+    </div>
+  `;
+}
+
 async function sendConfirmationEmail(orderData: any) {
   try {
+    if (!orderData.customerEmail) {
+      console.warn("Skipping confirmation email because customerEmail is missing");
+      return;
+    }
+
     // Determine the store name based on source
     const storeName = orderData.source === "monthly-deals"
       ? "A-OK Monthly Deal"
       : "A-OK Shop";
+    const subject = `Your ${storeName} Order Confirmation`;
 
-    // For now, just log the email data
-    // In production, you'd integrate with an email service like Amazon SES, SendGrid, Resend, etc.
     console.log("=== CONFIRMATION EMAIL ===");
     console.log("To:", orderData.customerEmail);
-    console.log("Subject:", `Your ${storeName} Order Confirmation`);
-    console.log("Order ID:", orderData.sessionId.slice(-12));
-    console.log("Order Total:", `$${(orderData.amountTotal / 100).toFixed(2)}`);
+    console.log("Subject:", subject);
+    console.log("Order ID:", String(orderData.sessionId || orderData.paymentIntentId || "").slice(-12));
+    console.log("Order Total:", formatAmount(orderData.amountTotal));
 
     if (orderData.amountTax > 0) {
-      console.log("Tax:", `$${(orderData.amountTax / 100).toFixed(2)}`);
+      console.log("Tax:", formatAmount(orderData.amountTax));
     }
 
     if (orderData.amountShipping > 0) {
-      console.log("Shipping:", `$${(orderData.amountShipping / 100).toFixed(2)}`);
+      console.log("Shipping:", formatAmount(orderData.amountShipping));
     }
 
-    console.log("Items:", orderData.items.map((item: any) => {
-      const metadata = item.price?.product?.metadata || {};
-      let itemStr = `${item.description} x${item.quantity}`;
-      if (metadata.size) itemStr += ` (Size: ${metadata.size})`;
-      if (metadata.color) itemStr += ` (Color: ${metadata.color})`;
-      return itemStr;
-    }).join(", "));
+    console.log("Items:", formatOrderItems(orderData.items).join(", "));
 
     if (orderData.shippingAddress) {
       console.log("Shipping to:", JSON.stringify(orderData.shippingAddress, null, 2));
@@ -178,23 +240,82 @@ async function sendConfirmationEmail(orderData: any) {
     console.log("Message: Thank you for your order! Your items will ship within 3-5 business days.");
     console.log("========================");
 
-    // TODO: Implement actual email sending
-    // Example with Resend (recommended for Next.js):
-    /*
-    const { Resend } = require('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("RESEND_API_KEY is not configured; confirmation email was logged but not sent");
+      return;
+    }
 
-    await resend.emails.send({
-      from: 'orders@yourdomain.com',
-      to: orderData.customerEmail,
-      subject: `Your ${storeName} Order Confirmation`,
-      html: generateOrderEmailHTML(orderData)
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+        to: orderData.customerEmail,
+        subject,
+        html: generateOrderEmailHTML(orderData, storeName),
+        text: generateOrderEmailText(orderData, storeName),
+      }),
     });
-    */
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Resend email failed: ${response.status} ${errorBody}`);
+    }
 
   } catch (error) {
     console.error("Error sending confirmation email:", error);
   }
+}
+
+function parseMPPItems(rawItems?: string) {
+  if (!rawItems) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(rawItems);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn("[MPP] Unable to parse MPP item metadata:", error);
+    return [];
+  }
+}
+
+async function resolveMPPCustomerEmail(stripeClient: Stripe, paymentIntent: Stripe.PaymentIntent) {
+  if (paymentIntent.metadata?.customerEmail) {
+    return paymentIntent.metadata.customerEmail;
+  }
+
+  if (paymentIntent.receipt_email) {
+    return paymentIntent.receipt_email;
+  }
+
+  const expandedPaymentIntent = await stripeClient.paymentIntents.retrieve(paymentIntent.id, {
+    expand: ["customer", "latest_charge"],
+  });
+
+  if (expandedPaymentIntent.metadata?.customerEmail) {
+    return expandedPaymentIntent.metadata.customerEmail;
+  }
+
+  if (expandedPaymentIntent.receipt_email) {
+    return expandedPaymentIntent.receipt_email;
+  }
+
+  const customer = expandedPaymentIntent.customer;
+  if (customer && typeof customer !== "string" && !customer.deleted && customer.email) {
+    return customer.email;
+  }
+
+  const latestCharge = expandedPaymentIntent.latest_charge;
+  if (latestCharge && typeof latestCharge !== "string") {
+    return latestCharge.billing_details?.email || undefined;
+  }
+
+  return undefined;
 }
 
 /**
@@ -205,6 +326,7 @@ async function handleMPPPaymentSucceeded(stripeClient: Stripe, paymentIntent: St
   try {
     const agentId = paymentIntent.metadata?.agentId || 'unknown-agent';
     const itemCount = paymentIntent.metadata?.itemCount || '0';
+    const customerEmail = await resolveMPPCustomerEmail(stripeClient, paymentIntent);
 
     console.log('[MPP] Processing successful payment:', paymentIntent.id);
     console.log('[MPP] Agent:', agentId, 'Items:', itemCount);
@@ -213,15 +335,28 @@ async function handleMPPPaymentSucceeded(stripeClient: Stripe, paymentIntent: St
     const mppOrderData = {
       paymentIntentId: paymentIntent.id,
       agentId: agentId,
+      source: 'mpp-agent',
+      customerEmail,
       amount: paymentIntent.amount,
+      amountTotal: paymentIntent.amount,
+      amountSubtotal: paymentIntent.amount,
+      amountTax: 0,
+      amountShipping: 0,
       currency: paymentIntent.currency,
       itemCount: parseInt(itemCount),
+      items: parseMPPItems(paymentIntent.metadata?.items),
       status: 'fulfilled',
       timestamp: new Date(paymentIntent.created * 1000).toISOString(),
       metadata: paymentIntent.metadata,
     };
 
     console.log('[MPP] Order data:', JSON.stringify(mppOrderData, null, 2));
+
+    if (mppOrderData.customerEmail) {
+      await sendConfirmationEmail(mppOrderData);
+    } else {
+      console.warn('[MPP] No customer email found for payment:', paymentIntent.id);
+    }
 
     // Here you could:
     // - Save order to database with fulfillment status
