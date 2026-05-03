@@ -41,12 +41,15 @@ export async function verifyStripePayment(
 
     // Extract payment intent ID from client secret
     const paymentIntentId = clientSecret.split('_secret_')[0];
+    console.log('[MPP] Verifying Stripe payment:', paymentIntentId);
 
     // Retrieve the payment intent
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    console.log('[MPP] PaymentIntent status:', paymentIntent.status, 'amount:', paymentIntent.amount);
 
     // Verify the payment was successful
     if (paymentIntent.status !== 'succeeded') {
+      console.warn('[MPP] Payment not succeeded:', paymentIntentId, 'status:', paymentIntent.status);
       return {
         verified: false,
         paymentId: paymentIntentId,
@@ -61,6 +64,7 @@ export async function verifyStripePayment(
     // Verify the amount matches (within 1 cent tolerance for rounding)
     const amountDifference = Math.abs(paymentIntent.amount - expectedAmount);
     if (amountDifference > 1) {
+      console.warn('[MPP] Amount mismatch:', paymentIntentId, 'expected:', expectedAmount, 'got:', paymentIntent.amount);
       return {
         verified: false,
         paymentId: paymentIntentId,
@@ -72,6 +76,7 @@ export async function verifyStripePayment(
       };
     }
 
+    console.log('[MPP] Stripe payment verified:', paymentIntentId);
     return {
       verified: true,
       paymentId: paymentIntentId,
@@ -81,7 +86,7 @@ export async function verifyStripePayment(
       timestamp: paymentIntent.created * 1000,
     };
   } catch (error) {
-    console.error('Error verifying Stripe payment:', error);
+    console.error('[MPP] Error verifying Stripe payment:', error);
     return {
       verified: false,
       paymentId: '',

@@ -11,7 +11,7 @@ let stripe: Stripe | null = null;
 export function getStripeClient(): Stripe | null {
   if (!stripe && process.env.STRIPE_SECRET_KEY) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2025-09-30.clover' as any,
+      apiVersion: '2026-04-22.dahlia' as any,
     });
   }
   return stripe;
