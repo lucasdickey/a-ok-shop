@@ -136,11 +136,17 @@ async function handlePaymentChallenge(
 
     console.log('[MPP] Payment challenge created:', paymentId);
 
+    // Get Stripe account ID for network_id (fallback to domain if not available)
+    const merchantId = process.env.STRIPE_ACCOUNT_ID || 'a-ok.shop';
+
+    // Build WWW-Authenticate header with proper merchant info for link-cli validation
+    const wwwAuthenticateHeader = `Payment id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}", network_id="${merchantId}"`;
+
     // Return 402 with proper MPP headers
     return NextResponse.json(challenge, {
       status: 402,
       headers: {
-        'WWW-Authenticate': `Payment id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`,
+        'WWW-Authenticate': wwwAuthenticateHeader,
         'Content-Type': 'application/json',
       },
     });
