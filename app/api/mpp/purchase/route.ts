@@ -1,30 +1,20 @@
 import { getProductByHandle } from '@/app/lib/catalog';
 import { getStripeClient } from '@/app/lib/stripe-client';
-import {
-  parsePaymentAuthorization,
-  verifyStripePayment,
-  verifyTempoPayment,
-} from '@/app/lib/mpp-payment-verifier';
-import {
-  MPPOrderConfirmation,
-  MPPPaymentChallenge,
-  MPPPurchaseRequest,
-} from '@/app/types/mpp';
-import { createHash } from 'crypto';
+import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
+import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
+import { MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest } from '@/app/types/mpp';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * MPP Purchase Endpoint
+ * MPP Purchase Endpoint (Machine Payments Protocol)
  *
- * Handles agent purchases using the Machine Payments Protocol.
- * Implements the 402 Payment Required flow with support for Link (Stripe) and Tempo stablecoins.
+ * Implements the proper MPP flow per paymentauth.org spec:
  *
- * Flow:
- * 1. Agent sends purchase request
- * 2. Server responds with 402 Payment Required + payment options
- * 3. Agent completes payment (Link or Tempo)
- * 4. Agent retries request with Authorization: Payment header
- * 5. Server validates payment and fulfills order
+ * 1. Client sends POST with items
+ * 2. Server validates and returns 402 with WWW-Authenticate header
+ * 3. Client obtains SPT (Shared Payment Token) from wallet
+ * 4. Client retries with Authorization: Payment header (base64url-encoded SPT)
+ * 5. Server creates/confirms PaymentIntent and returns 200 with order
  */
 
 export async function POST(request: NextRequest) {
@@ -32,39 +22,31 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as MPPPurchaseRequest;
     const { items, agentId = 'unknown-agent', email } = body;
 
-    console.log('[MPP] Purchase request from agent:', agentId, 'items:', items.length, 'email:', email);
+    console.log('[MPP] Purchase request from agent:', agentId, 'items:', items.length);
 
     // Validate items and calculate total
     let totalAmount = 0;
-    const lineItems: Array<{ variantId: string; quantity: number; price: number }> = [];
+    const lineItems: Array<{ handle: string; variantId: string; quantity: number; price: number }> = [];
 
     for (const item of items) {
       const product = getProductByHandle(item.handle);
       if (!product) {
         console.warn('[MPP] Product not found:', item.handle);
-        return NextResponse.json(
-          { error: `Product not found: ${item.handle}` },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: `Product not found: ${item.handle}` }, { status: 404 });
       }
 
-      // Navigate the nested edges structure for variants
       const variant = product.variants?.edges?.find(
         (edge: any) => edge.node.id === item.variantId
       )?.node;
 
       if (!variant) {
-        return NextResponse.json(
-          { error: `Variant not found: ${item.variantId}` },
-          { status: 404 }
-        );
+        console.warn('[MPP] Variant not found:', item.variantId);
+        return NextResponse.json({ error: `Variant not found: ${item.variantId}` }, { status: 404 });
       }
 
       if (!variant.availableForSale) {
-        return NextResponse.json(
-          { error: `Variant not available: ${item.variantId}` },
-          { status: 400 }
-        );
+        console.warn('[MPP] Variant not available:', item.variantId);
+        return NextResponse.json({ error: `Variant not available: ${item.variantId}` }, { status: 400 });
       }
 
       const price = parseFloat(variant.price.amount);
@@ -72,6 +54,7 @@ export async function POST(request: NextRequest) {
       totalAmount += itemTotal;
 
       lineItems.push({
+        handle: item.handle,
         variantId: item.variantId,
         quantity: item.quantity,
         price,
@@ -81,168 +64,164 @@ export async function POST(request: NextRequest) {
     // Add shipping
     const shippingCost = totalAmount < 50 ? 9.99 : 0;
     const amountInCents = Math.round((totalAmount + shippingCost) * 100);
-    console.log('[MPP] Order totals - items:', totalAmount.toFixed(2), 'shipping:', shippingCost.toFixed(2), 'total:', (totalAmount + shippingCost).toFixed(2));
+    console.log('[MPP] Order totals - items:', totalAmount.toFixed(2), 'shipping:', shippingCost.toFixed(2));
 
-    // Check for Authorization: Payment header (payment already completed)
+    // Check for Authorization: Payment header (second step of flow)
     const authHeader = request.headers.get('Authorization');
     if (authHeader) {
       console.log('[MPP] Payment authorization header received, processing payment');
-      return handlePaymentAuthorization(
-        authHeader,
-        items,
-        amountInCents,
-        email
-      );
+      return handlePaymentAuthorization(authHeader, items, lineItems, amountInCents, agentId, email);
     }
 
-    // No payment yet - initiate payment challenge
-    console.log('[MPP] Initiating payment challenge for agent:', agentId);
-    const paymentDetails = await initializePaymentChallenge(
-      items,
-      totalAmount,
-      shippingCost,
-      agentId
-    );
+    // First step: return 402 Payment Required with payment challenge
+    console.log('[MPP] Returning 402 Payment Required challenge');
+    return handlePaymentChallenge(items, totalAmount, shippingCost, amountInCents, agentId);
+  } catch (error) {
+    console.error('[MPP] Error in purchase endpoint:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
 
-    // Return 402 Payment Required with payment options
-    return NextResponse.json(paymentDetails, {
+/**
+ * Handle initial payment challenge (402 response)
+ * Returns proper MPP protocol response with WWW-Authenticate header
+ */
+async function handlePaymentChallenge(
+  items: MPPPurchaseRequest['items'],
+  subtotal: number,
+  shipping: number,
+  amountInCents: number,
+  agentId: string
+) {
+  try {
+    const stripe = await getStripeClient();
+    if (!stripe) {
+      console.error('[MPP] Stripe client not configured');
+      return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
+    }
+
+    const amount = amountInCents;
+
+    // Create a payment reference ID
+    const paymentId = `pi_mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+    // Prepare request details for base64url encoding
+    const requestDetails = {
+      id: paymentId,
+      amount,
+      currency: 'usd',
+      description: `Purchase ${items.length} item(s) from a-ok.shop`,
+      items,
+      agentId,
+      timestamp: Date.now(),
+    };
+
+    // Encode request details in base64url
+    const base64urlRequest = Buffer.from(JSON.stringify(requestDetails)).toString('base64');
+
+    // Create the payment challenge response
+    const challenge: MPPPaymentChallenge = {
+      id: paymentId,
+      request: base64urlRequest,
+      amount,
+      currency: 'USD',
+      description: `Purchase ${items.length} item(s) from a-ok.shop`,
+      paymentMethods: {
+        stripe: {
+          method: 'stripe',
+          intent: 'charge',
+        },
+      },
+    };
+
+    console.log('[MPP] Payment challenge created:', paymentId);
+
+    // Return 402 with proper MPP headers
+    return NextResponse.json(challenge, {
       status: 402,
       headers: {
-        'WWW-Authenticate':
-          'Payment realm="a-ok.shop", methods="stripe,tempo", charset="UTF-8"',
+        'WWW-Authenticate': `Payment id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`,
         'Content-Type': 'application/json',
       },
     });
   } catch (error) {
-    console.error('Error in MPP purchase:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('[MPP] Error creating payment challenge:', error);
+    return NextResponse.json({ error: 'Failed to create payment challenge' }, { status: 500 });
   }
 }
 
-async function initializePaymentChallenge(
-  items: MPPPurchaseRequest['items'],
-  subtotal: number,
-  shipping: number,
-  agentId: string
-): Promise<MPPPaymentChallenge> {
-  const stripe = await getStripeClient();
-  if (!stripe) {
-    throw new Error('Stripe client not configured');
-  }
-  const amount = Math.round((subtotal + shipping) * 100);
-
-  // Generate idempotency key to prevent duplicate charges on retry
-  // Hash items + amounts to create a stable key (same request = same key)
-  const idempotencyPayload = JSON.stringify({
-    agentId,
-    items: items.map((i) => ({ handle: i.handle, variantId: i.variantId, quantity: i.quantity })),
-    amount,
-  });
-  const idempotencyKey = createHash('sha256').update(idempotencyPayload).digest('hex');
-
-  // Create Stripe PaymentIntent for Link payment
-  console.log('[MPP] Creating PaymentIntent for agent:', agentId, 'amount:', amount, 'idempotencyKey:', idempotencyKey.substring(0, 8) + '...');
-  const paymentIntent = await stripe.paymentIntents.create(
-    {
-      amount,
-      currency: 'usd',
-      payment_method_types: ['card', 'link'],
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      metadata: {
-        source: 'mpp-agent',
-        agentId,
-        itemCount: items.length.toString(),
-      },
-    },
-    {
-      // Idempotency key prevents duplicate charges if agent retries
-      idempotencyKey,
-    }
-  );
-
-  console.log('[MPP] PaymentIntent created:', paymentIntent.id);
-
-  return {
-    amount,
-    currency: 'USD',
-    description: `Purchase ${items.length} item(s) from a-ok.shop`,
-    paymentMethods: {
-      stripe: {
-        clientSecret: paymentIntent.client_secret || '',
-        publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-        method: 'link',
-      },
-      tempo: {
-        amount: (amount / 100).toFixed(2),
-        currency: 'USDC',
-        recipient: process.env.TEMPO_RECIPIENT_ADDRESS || 'aok-shop.tempo',
-      },
-    },
-  };
-}
-
+/**
+ * Handle payment authorization with SPT (second step)
+ * Creates PaymentIntent, confirms with SPT, and returns order confirmation
+ */
 async function handlePaymentAuthorization(
   authHeader: string,
   items: MPPPurchaseRequest['items'],
+  lineItems: Array<{ handle: string; variantId: string; quantity: number; price: number }>,
   amountInCents: number,
+  agentId: string,
   email?: string
-): Promise<NextResponse<MPPOrderConfirmation | { error: string }>> {
+): Promise<NextResponse> {
   try {
-    // Parse the authorization header to determine payment method
-    const { method, payload } = parsePaymentAuthorization(authHeader);
-    console.log('[MPP] Processing authorization - method:', method);
+    // Parse the SPT from base64url-encoded Authorization header
+    const { method, spt } = parsePaymentAuthorization(authHeader);
 
-    let verificationResult;
-
-    if (method === 'stripe-link') {
-      // Verify Stripe payment using clientSecret
-      console.log('[MPP] Verifying Stripe Link payment');
-      verificationResult = await verifyStripePayment(payload, amountInCents);
-    } else if (method === 'tempo') {
-      // Verify Tempo stablecoin payment using transaction hash
-      console.log('[MPP] Verifying Tempo stablecoin payment');
-      const tempoRecipient = process.env.TEMPO_RECIPIENT_ADDRESS || 'aok-shop.tempo';
-      verificationResult = await verifyTempoPayment(
-        payload,
-        amountInCents / 100,
-        tempoRecipient
-      );
-    } else {
-      console.warn('[MPP] Invalid payment method:', method);
-      return NextResponse.json(
-        { error: 'Invalid payment method in Authorization header' },
-        { status: 400 }
-      );
+    if (method !== 'stripe-link' || !spt) {
+      console.warn('[MPP] Invalid authorization method or missing SPT:', method);
+      return NextResponse.json({ error: 'Invalid payment authorization' }, { status: 400 });
     }
 
-    // Check if payment was verified
-    if (!verificationResult.verified) {
-      console.error(
-        '[MPP] Payment verification failed:',
-        verificationResult.error
-      );
-      return NextResponse.json(
-        { error: verificationResult.error || 'Payment verification failed' },
-        { status: 401 }
-      );
+    console.log('[MPP] Processing SPT payment for agent:', agentId);
+
+    // Generate order ID upfront
+    const orderId = `mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+    // Create and confirm PaymentIntent with SPT
+    const paymentResult = await createStripePaymentFromSPT(
+      spt,
+      amountInCents,
+      agentId,
+      orderId,
+      email,
+      items
+    );
+
+    if (!paymentResult.verified) {
+      console.error('[MPP] Payment verification failed:', paymentResult.error);
+      return NextResponse.json({ error: paymentResult.error || 'Payment failed' }, { status: 401 });
     }
 
-    // Generate order ID
-    const orderId = `MPP-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-    console.log('[MPP] Order confirmed:', orderId, 'paymentId:', verificationResult.paymentId);
+    console.log('[MPP] Payment verified successfully:', paymentResult.paymentId);
 
+    // Save order record
+    const order: MPPOrder = {
+      orderId,
+      paymentIntentId: paymentResult.paymentId,
+      agentId,
+      email,
+      items,
+      amount: amountInCents,
+      currency: 'USD',
+      paymentMethod: 'stripe-spt',
+      status: 'completed',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        lineItemCount: lineItems.length.toString(),
+      },
+    };
+
+    await saveOrder(order);
+    console.log('[MPP] Order saved:', orderId);
+
+    // Return order confirmation
     const confirmation: MPPOrderConfirmation = {
       orderId,
       status: 'completed',
       amount: amountInCents / 100,
-      currency: amountInCents < 1000000 ? 'USD' : 'USDC', // If amount > 10k USD, assume stablecoin
-      paymentMethod: method,
-      paymentId: verificationResult.paymentId,
+      currency: 'USD',
+      paymentMethod: 'stripe-spt',
+      paymentId: paymentResult.paymentId,
       items,
       message: 'Order completed successfully',
     };
@@ -256,9 +235,6 @@ async function handlePaymentAuthorization(
     });
   } catch (error) {
     console.error('[MPP] Error processing payment authorization:', error);
-    return NextResponse.json(
-      { error: 'Payment verification failed' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Payment processing failed' }, { status: 500 });
   }
 }

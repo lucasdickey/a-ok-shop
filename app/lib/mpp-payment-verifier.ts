@@ -19,15 +19,21 @@ export interface PaymentVerificationResult {
 }
 
 /**
- * Verify a Stripe Link payment using the clientSecret from the Authorization header
+ * Create and confirm a Stripe PaymentIntent using a Shared Payment Token (SPT)
+ * This is the MPP-compliant flow for Stripe Link AI Wallet
  */
-export async function verifyStripePayment(
-  clientSecret: string,
-  expectedAmount: number
+export async function createStripePaymentFromSPT(
+  spt: string,
+  amount: number,
+  agentId: string,
+  orderId: string,
+  email?: string,
+  items?: Array<{ handle: string; variantId: string; quantity: number }>
 ): Promise<PaymentVerificationResult> {
   try {
     const stripe = await getStripeClient();
     if (!stripe) {
+      console.error('[MPP] Stripe client not configured');
       return {
         verified: false,
         paymentId: '',
@@ -39,54 +45,60 @@ export async function verifyStripePayment(
       };
     }
 
-    // Extract payment intent ID from client secret
-    const paymentIntentId = clientSecret.split('_secret_')[0];
-    console.log('[MPP] Verifying Stripe payment:', paymentIntentId);
+    console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // Retrieve the payment intent
-    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    console.log('[MPP] PaymentIntent status:', paymentIntent.status, 'amount:', paymentIntent.amount);
+    // Create PaymentIntent with SPT
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'usd',
+      payment_method_types: ['card'],
+      metadata: {
+        source: 'mpp-agent',
+        agentId,
+        orderId,
+        customerEmail: email || '',
+        itemCount: items?.length.toString() || '0',
+        items: items ? JSON.stringify(items) : '',
+      },
+      receipt_email: email,
+    });
 
-    // Verify the payment was successful
-    if (paymentIntent.status !== 'succeeded') {
-      console.warn('[MPP] Payment not succeeded:', paymentIntentId, 'status:', paymentIntent.status);
+    console.log('[MPP] PaymentIntent created:', paymentIntent.id);
+
+    // Confirm the PaymentIntent with the SPT
+    console.log('[MPP] Confirming PaymentIntent with SPT');
+    const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntent.id, {
+      payment_method: 'card',
+      shared_payment_granted_token: spt,
+    } as any);
+
+    console.log('[MPP] PaymentIntent confirmed, status:', confirmedIntent.status);
+
+    // Verify the payment succeeded
+    if (confirmedIntent.status !== 'succeeded') {
+      console.warn('[MPP] Payment not succeeded:', paymentIntent.id, 'status:', confirmedIntent.status);
       return {
         verified: false,
-        paymentId: paymentIntentId,
+        paymentId: paymentIntent.id,
         amount: 0,
-        currency: 'usd',
+        currency: confirmedIntent.currency,
         method: 'stripe-link',
         timestamp: Date.now(),
-        error: `Payment not succeeded. Status: ${paymentIntent.status}`,
+        error: `Payment not succeeded. Status: ${confirmedIntent.status}`,
       };
     }
 
-    // Verify the amount matches (within 1 cent tolerance for rounding)
-    const amountDifference = Math.abs(paymentIntent.amount - expectedAmount);
-    if (amountDifference > 1) {
-      console.warn('[MPP] Amount mismatch:', paymentIntentId, 'expected:', expectedAmount, 'got:', paymentIntent.amount);
-      return {
-        verified: false,
-        paymentId: paymentIntentId,
-        amount: paymentIntent.amount,
-        currency: paymentIntent.currency,
-        method: 'stripe-link',
-        timestamp: Date.now(),
-        error: `Amount mismatch. Expected ${expectedAmount}, got ${paymentIntent.amount}`,
-      };
-    }
-
-    console.log('[MPP] Stripe payment verified:', paymentIntentId);
+    console.log('[MPP] Stripe payment confirmed successfully:', paymentIntent.id);
     return {
       verified: true,
-      paymentId: paymentIntentId,
-      amount: paymentIntent.amount,
-      currency: paymentIntent.currency,
+      paymentId: paymentIntent.id,
+      amount: confirmedIntent.amount,
+      currency: confirmedIntent.currency,
       method: 'stripe-link',
-      timestamp: paymentIntent.created * 1000,
+      timestamp: confirmedIntent.created * 1000,
     };
   } catch (error) {
-    console.error('[MPP] Error verifying Stripe payment:', error);
+    console.error('[MPP] Error creating Stripe payment from SPT:', error);
     return {
       verified: false,
       paymentId: '',
@@ -170,25 +182,39 @@ export async function verifyTempoPayment(
 
 /**
  * Parse the Authorization: Payment header and extract payment details
+ * Format: Authorization: Payment <base64url-encoded-json>
+ * Where JSON contains: { "spt": "spt_...", "method": "stripe", ... }
  */
 export function parsePaymentAuthorization(authHeader: string): {
   method: 'stripe-link' | 'tempo' | 'unknown';
-  payload: string;
+  spt?: string; // Shared Payment Token for SPT flow
+  payload?: string; // Raw payload for fallback
 } {
   if (!authHeader || !authHeader.startsWith('Payment ')) {
-    return { method: 'unknown', payload: '' };
+    return { method: 'unknown' };
   }
 
-  const payload = authHeader.substring(8);
+  try {
+    const base64urlPayload = authHeader.substring(8);
 
-  // Determine payment method based on payload format
-  if (payload.startsWith('pi_')) {
-    // Stripe payment intent
-    return { method: 'stripe-link', payload };
-  } else if (payload.length === 88 || payload.length === 44) {
-    // Solana transaction hash (base58)
-    return { method: 'tempo', payload };
+    // Decode base64url to JSON
+    const json = JSON.parse(
+      Buffer.from(base64urlPayload, 'base64').toString('utf-8')
+    );
+
+    // Check for SPT (Shared Payment Token)
+    if (json.spt && json.spt.startsWith('spt_')) {
+      return { method: 'stripe-link', spt: json.spt };
+    }
+
+    // Check for Tempo transaction hash
+    if (json.tempo_tx_hash) {
+      return { method: 'tempo', payload: json.tempo_tx_hash };
+    }
+
+    return { method: 'unknown' };
+  } catch (error) {
+    console.warn('[MPP] Error parsing Authorization header:', error);
+    return { method: 'unknown' };
   }
-
-  return { method: 'unknown', payload };
 }
