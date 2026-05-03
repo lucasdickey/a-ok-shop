@@ -105,7 +105,15 @@ async function handlePaymentChallenge(
     // Create a payment reference ID
     const paymentId = `pi_mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
+    // Get Stripe network ID (required for link-cli mpp decode to work properly)
+    const networkId = process.env.STRIPE_NETWORK_ID;
+    if (!networkId) {
+      console.error('[MPP] STRIPE_NETWORK_ID environment variable not configured');
+      return NextResponse.json({ error: 'Server misconfiguration: STRIPE_NETWORK_ID not set' }, { status: 500 });
+    }
+
     // Prepare request details for base64url encoding
+    // Include methodDetails with networkId so link-cli mpp decode can extract it from the request
     const requestDetails = {
       id: paymentId,
       amount,
@@ -114,6 +122,10 @@ async function handlePaymentChallenge(
       items,
       agentId,
       timestamp: Date.now(),
+      methodDetails: {
+        networkId,
+        paymentMethodTypes: ['card'],
+      },
     };
 
     // Encode request details in base64url (not base64)
@@ -121,10 +133,8 @@ async function handlePaymentChallenge(
     // Convert base64 to base64url: replace +/= with -_
     const base64urlRequest = base64Request.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
-    // Get Stripe account ID for network_id (fallback to domain if not available)
-    const merchantId = process.env.STRIPE_ACCOUNT_ID || 'a-ok.shop';
-
-    // Create the payment challenge response with methodDetails containing networkId
+    // Create the payment challenge response
+    // Note: methodDetails.networkId is now in the base64url-encoded request for link-cli mpp decode to read
     const challenge: MPPPaymentChallenge = {
       id: paymentId,
       request: base64urlRequest,
@@ -135,15 +145,11 @@ async function handlePaymentChallenge(
         stripe: {
           method: 'stripe',
           intent: 'charge',
-          // methodDetails contains networkId for link-cli mpp decode extraction
-          methodDetails: {
-            networkId: merchantId,
-          },
         },
       },
     };
 
-    console.log('[MPP] Payment challenge created:', paymentId, 'networkId:', merchantId);
+    console.log('[MPP] Payment challenge created:', paymentId, 'networkId:', networkId);
 
     // Build WWW-Authenticate header per MPP spec with realm and base64url request
     const wwwAuthenticateHeader = `Payment realm="a-ok.shop", id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`;

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       title: product.title,
       description: product.description,
       price: `${amount.toFixed(2)} ${currency}`,
-      buyUrl: `/api/mpp/buy`, // Base endpoint for buying via MPP
+      buyUrl: `/api/mpp/purchase`, // Base endpoint for buying via MPP
       variants: product.variants.edges.map((edge) => ({
         id: edge.node.id,
         title: edge.node.title,
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       products: agentProducts,
       endpoints: {
         catalog: "/api/mpp/products",
-        buy: "/api/mpp/buy",
+        buy: "/api/mpp/purchase",
       },
     },
     { headers: corsHeaders }

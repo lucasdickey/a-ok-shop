@@ -47,18 +47,19 @@ export async function createStripePaymentFromSPT(
 
     console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // Use idempotency key to prevent duplicate charges on retry
-    const idempotencyKey = `${orderId}-${amount}-${Date.now()}`;
+    // Use stable idempotency key based on orderId to ensure retries are idempotent
+    // Stripe will return the same PaymentIntent if called with the same key
+    const idempotencyKey = orderId;
 
     // Single PaymentIntent create call with confirm:true per Stripe MPP spec
     // This atomically creates and confirms the payment in one operation
+    // When using shared_payment_granted_token, Stripe handles the payment method selection
     const confirmedIntent = await stripe.paymentIntents.create(
       {
         amount,
         currency: 'usd',
         confirm: true,
         shared_payment_granted_token: spt,
-        payment_method: 'card',
         metadata: {
           source: 'mpp-agent',
           agentId,
