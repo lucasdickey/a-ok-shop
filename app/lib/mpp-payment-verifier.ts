@@ -47,39 +47,39 @@ export async function createStripePaymentFromSPT(
 
     console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // Create PaymentIntent with SPT
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'usd',
-      payment_method_types: ['card'],
-      metadata: {
-        source: 'mpp-agent',
-        agentId,
-        orderId,
-        customerEmail: email || '',
-        itemCount: items?.length.toString() || '0',
-        items: items ? JSON.stringify(items) : '',
-      },
-      receipt_email: email,
-    });
+    // Use idempotency key to prevent duplicate charges on retry
+    const idempotencyKey = `${orderId}-${amount}-${Date.now()}`;
 
-    console.log('[MPP] PaymentIntent created:', paymentIntent.id);
+    // Single PaymentIntent create call with confirm:true per Stripe MPP spec
+    // This atomically creates and confirms the payment in one operation
+    const confirmedIntent = await stripe.paymentIntents.create(
+      {
+        amount,
+        currency: 'usd',
+        confirm: true,
+        shared_payment_granted_token: spt,
+        payment_method: 'card',
+        metadata: {
+          source: 'mpp-agent',
+          agentId,
+          orderId,
+          customerEmail: email || '',
+          itemCount: items?.length.toString() || '0',
+          items: items ? JSON.stringify(items) : '',
+        },
+        receipt_email: email,
+      } as any,
+      { idempotencyKey } as any
+    );
 
-    // Confirm the PaymentIntent with the SPT
-    console.log('[MPP] Confirming PaymentIntent with SPT');
-    const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntent.id, {
-      payment_method: 'card',
-      shared_payment_granted_token: spt,
-    } as any);
-
-    console.log('[MPP] PaymentIntent confirmed, status:', confirmedIntent.status);
+    console.log('[MPP] PaymentIntent created and confirmed, id:', confirmedIntent.id, 'status:', confirmedIntent.status);
 
     // Verify the payment succeeded
     if (confirmedIntent.status !== 'succeeded') {
-      console.warn('[MPP] Payment not succeeded:', paymentIntent.id, 'status:', confirmedIntent.status);
+      console.warn('[MPP] Payment not succeeded:', confirmedIntent.id, 'status:', confirmedIntent.status);
       return {
         verified: false,
-        paymentId: paymentIntent.id,
+        paymentId: confirmedIntent.id,
         amount: 0,
         currency: confirmedIntent.currency,
         method: 'stripe-link',
@@ -88,10 +88,10 @@ export async function createStripePaymentFromSPT(
       };
     }
 
-    console.log('[MPP] Stripe payment confirmed successfully:', paymentIntent.id);
+    console.log('[MPP] Stripe payment completed successfully:', confirmedIntent.id);
     return {
       verified: true,
-      paymentId: paymentIntent.id,
+      paymentId: confirmedIntent.id,
       amount: confirmedIntent.amount,
       currency: confirmedIntent.currency,
       method: 'stripe-link',
@@ -183,7 +183,15 @@ export async function verifyTempoPayment(
 /**
  * Parse the Authorization: Payment header and extract payment details
  * Format: Authorization: Payment <base64url-encoded-json>
- * Where JSON contains: { "spt": "spt_...", "method": "stripe", ... }
+ *
+ * Per MPP spec, expects credential envelope:
+ * {
+ *   "challenge": "...",
+ *   "payload": {
+ *     "spt": "spt_...",  // Stripe SPT
+ *     "method": "stripe"
+ *   }
+ * }
  */
 export function parsePaymentAuthorization(authHeader: string): {
   method: 'stripe-link' | 'tempo' | 'unknown';
@@ -198,20 +206,31 @@ export function parsePaymentAuthorization(authHeader: string): {
     const base64urlPayload = authHeader.substring(8);
 
     // Decode base64url to JSON
-    const json = JSON.parse(
-      Buffer.from(base64urlPayload, 'base64').toString('utf-8')
-    );
+    // Convert base64url back to base64: replace -_ with +/
+    const base64Payload = base64urlPayload.replace(/-/g, '+').replace(/_/g, '/');
+    // Add padding if needed
+    const padded = base64Payload + '='.repeat((4 - base64Payload.length % 4) % 4);
+    const decodedJson = Buffer.from(padded, 'base64').toString('utf-8');
+    const credential = JSON.parse(decodedJson);
 
-    // Check for SPT (Shared Payment Token)
-    if (json.spt && json.spt.startsWith('spt_')) {
-      return { method: 'stripe-link', spt: json.spt };
+    // Check for proper credential envelope with payload.spt (Stripe SPT)
+    if (credential.payload?.spt && credential.payload.spt.startsWith('spt_')) {
+      console.log('[MPP] Extracted SPT from credential envelope');
+      return { method: 'stripe-link', spt: credential.payload.spt };
+    }
+
+    // Fallback: check for direct SPT field (for backwards compatibility)
+    if (credential.spt && credential.spt.startsWith('spt_')) {
+      console.log('[MPP] Extracted SPT from direct field');
+      return { method: 'stripe-link', spt: credential.spt };
     }
 
     // Check for Tempo transaction hash
-    if (json.tempo_tx_hash) {
-      return { method: 'tempo', payload: json.tempo_tx_hash };
+    if (credential.payload?.tempo_tx_hash) {
+      return { method: 'tempo', payload: credential.payload.tempo_tx_hash };
     }
 
+    console.warn('[MPP] No recognized payment token in credential envelope');
     return { method: 'unknown' };
   } catch (error) {
     console.warn('[MPP] Error parsing Authorization header:', error);

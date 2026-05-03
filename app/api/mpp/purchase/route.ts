@@ -116,10 +116,15 @@ async function handlePaymentChallenge(
       timestamp: Date.now(),
     };
 
-    // Encode request details in base64url
-    const base64urlRequest = Buffer.from(JSON.stringify(requestDetails)).toString('base64');
+    // Encode request details in base64url (not base64)
+    const base64Request = Buffer.from(JSON.stringify(requestDetails)).toString('base64');
+    // Convert base64 to base64url: replace +/= with -_
+    const base64urlRequest = base64Request.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 
-    // Create the payment challenge response
+    // Get Stripe account ID for network_id (fallback to domain if not available)
+    const merchantId = process.env.STRIPE_ACCOUNT_ID || 'a-ok.shop';
+
+    // Create the payment challenge response with methodDetails containing networkId
     const challenge: MPPPaymentChallenge = {
       id: paymentId,
       request: base64urlRequest,
@@ -130,17 +135,18 @@ async function handlePaymentChallenge(
         stripe: {
           method: 'stripe',
           intent: 'charge',
+          // methodDetails contains networkId for link-cli mpp decode extraction
+          methodDetails: {
+            networkId: merchantId,
+          },
         },
       },
     };
 
-    console.log('[MPP] Payment challenge created:', paymentId);
+    console.log('[MPP] Payment challenge created:', paymentId, 'networkId:', merchantId);
 
-    // Get Stripe account ID for network_id (fallback to domain if not available)
-    const merchantId = process.env.STRIPE_ACCOUNT_ID || 'a-ok.shop';
-
-    // Build WWW-Authenticate header with proper merchant info for link-cli validation
-    const wwwAuthenticateHeader = `Payment id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}", network_id="${merchantId}"`;
+    // Build WWW-Authenticate header per MPP spec with realm and base64url request
+    const wwwAuthenticateHeader = `Payment realm="a-ok.shop", id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`;
 
     // Return 402 with proper MPP headers
     return NextResponse.json(challenge, {

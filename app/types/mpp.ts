@@ -72,6 +72,9 @@ export interface MPPPaymentChallenge {
     stripe?: {
       method: 'stripe';
       intent: 'charge';
+      methodDetails?: {
+        networkId: string; // Used by link-cli mpp decode
+      };
     };
     tempo?: {
       amount: string;
