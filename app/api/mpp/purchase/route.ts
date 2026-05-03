@@ -116,12 +116,12 @@ async function handlePaymentChallenge(
     // Include methodDetails with networkId so link-cli mpp decode can extract it from the request
     const requestDetails = {
       id: paymentId,
-      amount,
+      amount: amount.toString(), // link-cli expects amount as string
       currency: 'usd',
       description: `Purchase ${items.length} item(s) from a-ok.shop`,
       items,
       agentId,
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(), // link-cli expects timestamp as string
       methodDetails: {
         networkId,
         paymentMethodTypes: ['card'],
