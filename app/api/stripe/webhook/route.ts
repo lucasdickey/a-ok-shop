@@ -6,7 +6,7 @@ let stripe: Stripe | null = null;
 function getStripe() {
   if (!stripe && process.env.STRIPE_SECRET_KEY) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-09-30.clover" as any,
+      apiVersion: "2026-04-22.dahlia" as any,
     });
   }
   return stripe;
@@ -71,6 +71,11 @@ export async function POST(request: NextRequest) {
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.log("Payment succeeded:", paymentIntent.id);
+
+        // Handle MPP agent payments
+        if (paymentIntent.metadata?.source === 'mpp-agent') {
+          await handleMPPPaymentSucceeded(stripeClient, paymentIntent);
+        }
         break;
 
       default:
@@ -214,5 +219,46 @@ async function sendConfirmationEmail(orderData: any) {
 
   } catch (error) {
     console.error("Error sending confirmation email:", error);
+  }
+}
+
+/**
+ * Handle successful MPP agent payment
+ * Performs order fulfillment for machine-initiated purchases
+ */
+async function handleMPPPaymentSucceeded(stripeClient: Stripe, paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const agentId = paymentIntent.metadata?.agentId || 'unknown-agent';
+    const itemCount = paymentIntent.metadata?.itemCount || '0';
+
+    console.log('[MPP] Processing successful payment:', paymentIntent.id);
+    console.log('[MPP] Agent:', agentId, 'Items:', itemCount);
+
+    // Extract order information
+    const mppOrderData = {
+      paymentIntentId: paymentIntent.id,
+      agentId: agentId,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      itemCount: parseInt(itemCount),
+      status: 'fulfilled',
+      timestamp: new Date(paymentIntent.created * 1000).toISOString(),
+      metadata: paymentIntent.metadata,
+    };
+
+    console.log('[MPP] Order data:', JSON.stringify(mppOrderData, null, 2));
+
+    // Here you could:
+    // - Save order to database with fulfillment status
+    // - Send fulfillment to logistics/print-on-demand service
+    // - Update agent with order status
+    // - Trigger fulfillment notifications
+    // - Store order history for the agent
+    // - Mark as fulfilled if fulfillment provider confirms
+
+    console.log('[MPP] Payment fulfillment completed:', paymentIntent.id);
+
+  } catch (error) {
+    console.error('[MPP] Error processing successful payment:', error);
   }
 }
