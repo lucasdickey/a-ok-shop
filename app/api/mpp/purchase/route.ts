@@ -140,7 +140,7 @@ async function handlePaymentChallenge(
     return NextResponse.json(challenge, {
       status: 402,
       headers: {
-        'WWW-Authenticate': `Payment id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`,
+        'WWW-Authenticate': `Payment realm="a-ok.shop", id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`,
         'Content-Type': 'application/json',
       },
     });
