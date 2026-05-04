@@ -45,13 +45,15 @@ export async function createStripePaymentFromSPT(
       };
     }
 
-    console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
+    console.log('[MPP] Creating and confirming PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // Create PaymentIntent with SPT
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Create and immediately confirm PaymentIntent with SPT
+    // SPT must be passed during creation with confirm: true
+    const confirmedIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'usd',
-      payment_method_types: ['card'],
+      confirm: true,
+      shared_payment_granted_token: spt,
       metadata: {
         source: 'mpp-agent',
         agentId,
@@ -61,25 +63,16 @@ export async function createStripePaymentFromSPT(
         items: items ? JSON.stringify(items) : '',
       },
       receipt_email: email,
-    });
-
-    console.log('[MPP] PaymentIntent created:', paymentIntent.id);
-
-    // Confirm the PaymentIntent with the SPT
-    console.log('[MPP] Confirming PaymentIntent with SPT');
-    const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntent.id, {
-      payment_method: 'card',
-      shared_payment_granted_token: spt,
     } as any);
 
-    console.log('[MPP] PaymentIntent confirmed, status:', confirmedIntent.status);
+    console.log('[MPP] PaymentIntent created and confirmed, status:', confirmedIntent.status);
 
     // Verify the payment succeeded
     if (confirmedIntent.status !== 'succeeded') {
-      console.warn('[MPP] Payment not succeeded:', paymentIntent.id, 'status:', confirmedIntent.status);
+      console.warn('[MPP] Payment not succeeded:', confirmedIntent.id, 'status:', confirmedIntent.status);
       return {
         verified: false,
-        paymentId: paymentIntent.id,
+        paymentId: confirmedIntent.id,
         amount: 0,
         currency: confirmedIntent.currency,
         method: 'stripe-link',
@@ -88,10 +81,10 @@ export async function createStripePaymentFromSPT(
       };
     }
 
-    console.log('[MPP] Stripe payment confirmed successfully:', paymentIntent.id);
+    console.log('[MPP] Stripe payment confirmed successfully:', confirmedIntent.id);
     return {
       verified: true,
-      paymentId: paymentIntent.id,
+      paymentId: confirmedIntent.id,
       amount: confirmedIntent.amount,
       currency: confirmedIntent.currency,
       method: 'stripe-link',
