@@ -49,21 +49,24 @@ export async function createStripePaymentFromSPT(
 
     // Create and immediately confirm PaymentIntent with SPT
     // SPT must be passed during creation with confirm: true
-    const confirmedIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'usd',
-      confirm: true,
-      shared_payment_granted_token: spt,
-      metadata: {
-        source: 'mpp-agent',
-        agentId,
-        orderId,
-        customerEmail: email || '',
-        itemCount: items?.length.toString() || '0',
-        items: items ? JSON.stringify(items) : '',
-      },
-      receipt_email: email,
-    } as any);
+    const confirmedIntent = await stripe.paymentIntents.create(
+      {
+        amount,
+        currency: 'usd',
+        confirm: true,
+        shared_payment_granted_token: spt,
+        metadata: {
+          source: 'mpp-agent',
+          agentId,
+          orderId,
+          customerEmail: email || '',
+          itemCount: items?.length.toString() || '0',
+          items: items ? JSON.stringify(items) : '',
+        },
+        receipt_email: email,
+      } as any,
+      { idempotencyKey: orderId } // Prevent duplicate charges on retry
+    );
 
     console.log('[MPP] PaymentIntent created and confirmed, status:', confirmedIntent.status);
 
