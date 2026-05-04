@@ -65,7 +65,10 @@ export async function createStripePaymentFromSPT(
         },
         receipt_email: email,
       } as any,
-      { idempotencyKey: orderId } // Prevent duplicate charges on retry
+      {
+        idempotencyKey: orderId, // Prevent duplicate charges on retry
+        maxRetriesPerRequest: 1, // Limit retries to prevent hitting max retries
+      } as any
     );
 
     console.log('[MPP] PaymentIntent created and confirmed, status:', confirmedIntent.status);
