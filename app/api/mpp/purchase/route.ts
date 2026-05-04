@@ -108,12 +108,12 @@ async function handlePaymentChallenge(
     // Prepare request details for base64url encoding
     const requestDetails = {
       id: paymentId,
-      amount,
+      amount: amount.toString(),
       currency: 'usd',
       description: `Purchase ${items.length} item(s) from a-ok.shop`,
       items,
       agentId,
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
     };
 
     // Encode request details in base64url
