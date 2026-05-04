@@ -191,13 +191,29 @@ export function parsePaymentAuthorization(authHeader: string): {
     const base64urlPayload = authHeader.substring(8);
 
     // Decode base64url to JSON
-    const json = JSON.parse(
-      Buffer.from(base64urlPayload, 'base64').toString('utf-8')
-    );
+    const decodedStr = Buffer.from(base64urlPayload, 'base64').toString('utf-8');
+    console.log('[MPP] Decoded Authorization payload:', decodedStr.substring(0, 200));
+    const json = JSON.parse(decodedStr);
 
-    // Check for SPT (Shared Payment Token)
-    if (json.spt && json.spt.startsWith('spt_')) {
-      return { method: 'stripe-link', spt: json.spt };
+    // Check for SPT (Shared Payment Token) in various possible locations
+    let spt: string | undefined;
+
+    // Try direct field
+    if (json.spt && typeof json.spt === 'string' && json.spt.startsWith('spt_')) {
+      spt = json.spt;
+    }
+    // Try nested in payload object
+    else if (json.payload?.spt && json.payload.spt.startsWith('spt_')) {
+      spt = json.payload.spt;
+    }
+    // Try nested in credential_envelope
+    else if (json.credential_envelope?.spt && json.credential_envelope.spt.startsWith('spt_')) {
+      spt = json.credential_envelope.spt;
+    }
+
+    if (spt) {
+      console.log('[MPP] Extracted SPT:', spt);
+      return { method: 'stripe-link', spt };
     }
 
     // Check for Tempo transaction hash
@@ -205,6 +221,7 @@ export function parsePaymentAuthorization(authHeader: string): {
       return { method: 'tempo', payload: json.tempo_tx_hash };
     }
 
+    console.warn('[MPP] No recognized payment token found in:', json);
     return { method: 'unknown' };
   } catch (error) {
     console.warn('[MPP] Error parsing Authorization header:', error);
