@@ -92,6 +92,11 @@ export async function createStripePaymentFromSPT(
     };
   } catch (error) {
     console.error('[MPP] Error creating Stripe payment from SPT:', error);
+    const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error('[MPP] Detailed error:', errorMessage);
+    if (error instanceof Error && error.cause) {
+      console.error('[MPP] Error cause:', error.cause);
+    }
     return {
       verified: false,
       paymentId: '',
@@ -99,7 +104,7 @@ export async function createStripePaymentFromSPT(
       currency: 'usd',
       method: 'stripe-link',
       timestamp: Date.now(),
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: errorMessage,
     };
   }
 }

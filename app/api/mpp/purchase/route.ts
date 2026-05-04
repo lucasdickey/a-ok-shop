@@ -242,6 +242,8 @@ async function handlePaymentAuthorization(
     });
   } catch (error) {
     console.error('[MPP] Error processing payment authorization:', error);
-    return NextResponse.json({ error: 'Payment processing failed' }, { status: 500 });
+    const errorMsg = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error('[MPP] Detailed authorization error:', errorMsg);
+    return NextResponse.json({ error: 'Payment processing failed', details: errorMsg }, { status: 500 });
   }
 }
