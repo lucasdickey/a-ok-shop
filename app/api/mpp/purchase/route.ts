@@ -105,6 +105,9 @@ async function handlePaymentChallenge(
     // Create a payment reference ID
     const paymentId = `pi_mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
+    // Get network ID from environment or use default
+    const networkId = process.env.STRIPE_NETWORK_ID?.trim() || 'acct_1RUbP1KcMygrnU2D';
+
     // Prepare request details for base64url encoding
     const requestDetails = {
       id: paymentId,
@@ -114,6 +117,10 @@ async function handlePaymentChallenge(
       items,
       agentId,
       timestamp: Date.now().toString(),
+      methodDetails: {
+        networkId,
+        paymentMethodTypes: ['card'],
+      },
     };
 
     // Encode request details in base64url
