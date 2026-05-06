@@ -11,7 +11,11 @@ let redis: Redis | null = null;
 
 function getRedisClient(): Redis | null {
   if (!redis && process.env.REDIS_URL) {
-    redis = new Redis(process.env.REDIS_URL);
+    redis = new Redis(process.env.REDIS_URL, {
+      connectTimeout: 5000,
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+    });
   }
   return redis;
 }
@@ -39,7 +43,6 @@ export async function saveOrder(order: MPPOrder): Promise<void> {
     console.log('[MPP] Order saved:', order.orderId);
   } catch (error) {
     console.error('[MPP] Error saving order:', error);
-    throw error;
   }
 }
 

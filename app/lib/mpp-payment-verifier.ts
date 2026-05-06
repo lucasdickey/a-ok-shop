@@ -67,7 +67,7 @@ export async function createStripePaymentFromSPT(
       } as any,
       {
         idempotencyKey: orderId, // Prevent duplicate charges on retry
-        maxRetriesPerRequest: 1, // Limit retries to prevent hitting max retries
+        maxNetworkRetries: 0, // Disable Stripe retries for SPT payments.
       } as any
     );
 
