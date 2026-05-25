@@ -1,97 +1,89 @@
-# Stripe MPP and x402 Protocol Implementation (Prototype)
+# Stripe MPP and x402 Protocol Implementation
 
-This document outlines the implementation of the Stripe Machine Payments Protocol (MPP) and the x402 protocol within the A-OK Shop. These protocols allow AI agents to shop for products and perform machine-to-machine payments using the HTTP 402 "Payment Required" status code.
+This document describes the Stripe Machine Payments Protocol (MPP) integration in the A-OK Shop. These protocols allow AI agents to discover products and pay for them machine-to-machine using the HTTP 402 "Payment Required" status code.
 
 ## Protocol Overview
 
 ### Stripe MPP (Machine Payments Protocol)
-MPP is an open standard co-authored by Stripe and Tempo. It embeds payment negotiation directly into HTTP requests. When a resource (like a product) requires payment, the server returns a 402 status code with a JSON body containing a `challengeId` and a list of supported payment methods.
+MPP is an open standard (see paymentauth.org) that embeds payment negotiation directly into HTTP requests. When a resource (like a cart of products) requires payment, the server returns a `402 Payment Required` response with a `WWW-Authenticate: Payment ...` header. The agent obtains a credential (a Stripe **Shared Payment Token**, "SPT", from a Stripe Link AI wallet) and retries the request with an `Authorization: Payment <credential>` header.
 
-### x402 Protocol
-Similar to MPP, x402 is a protocol for internet payments that leverages the HTTP 402 status code. It is backed by Coinbase and Stripe, focusing on protocol minimization and embedding payments directly into HTTP requests, often using cryptocurrency on networks like Base.
+### x402 / Tempo
+x402-style stablecoin settlement (USDC on Tempo) is scaffolded in `app/lib/mpp-payment-verifier.ts` (`verifyTempoPayment`) but on-chain verification is still a placeholder. The live, end-to-end path today is Stripe SPT.
 
-## Wallet & Payment Address Management
+## Endpoints
 
-A key advantage of using Stripe's MPP implementation is that **you do not need to manually provision a wallet** for the store. Stripe handles the generation of unique deposit addresses for each transaction.
+### 1. Catalog — `GET /api/mpp/catalog`
+Returns the product catalog in a machine-readable format: `id`, `handle`, `title`, `description`, `priceRange`, `variants` (with `id`, `price`, `available`, `options`, `stripePriceId`), `images`, and `options`. No payment required. This is the canonical discovery endpoint for agents.
 
-- **Automated Generation**: When a purchase is initiated, the store creates a Stripe PaymentIntent in `mode: 'deposit'`.
-- **Dynamic Addresses**: Stripe returns a unique crypto deposit address (e.g., a USDC address on the Base or Tempo network) specifically for that PaymentIntent.
-- **Settlement**: Once the agent sends the crypto to that address, Stripe detects the transaction on-chain, confirms the PaymentIntent, and settles the funds (as USD or stablecoins) into your merchant account.
+> `GET /api/mpp/products` is a legacy, lighter-weight feed kept for backwards compatibility. Prefer `/api/mpp/catalog`.
 
-## Prototype Components
+### 2. Purchase — `POST /api/mpp/purchase`
+Implements the two-step MPP flow.
 
-We have implemented a functional prototype with the following endpoints:
+**Request body:**
+```jsonc
+{
+  "agentId": "demo-agent",          // optional, defaults to "unknown-agent"
+  "email": "agent@example.com",     // optional, used for the Stripe receipt
+  "items": [
+    { "handle": "product-handle", "variantId": "gid://shopify/ProductVariant/...", "quantity": 1 }
+  ]
+}
+```
 
-### 1. Agentic Product Feed
-**Endpoint**: `GET /api/mpp/products`
+**Step 1 — challenge (no `Authorization` header):**
+The server validates items, computes the total (adds $9.99 shipping when the merchandise subtotal is under $50), and returns `402 Payment Required` with:
+- A `WWW-Authenticate: Payment realm="a-ok.shop", id="...", method="stripe", intent="charge", request="<base64url>"` header.
+- A JSON body (`MPPPaymentChallenge`) containing the payment `id`, the base64url-encoded `request` details (including `methodDetails.networkId` for `link-cli mpp decode`), `amount` (cents), `currency`, and `paymentMethods`.
 
-Returns a list of products in a machine-readable format that highlights payment protocol capabilities. This allows agents to discover products and understand the payment methods required (e.g., Stripe MPP, x402).
+**Step 2 — authorization (`Authorization: Payment <base64url>` header):**
+The agent supplies a credential envelope, base64url-encoded:
+```jsonc
+{ "payload": { "spt": "spt_...", "method": "stripe" } }
+```
+The server creates and confirms a Stripe `PaymentIntent` using `shared_payment_granted_token: <spt>` (idempotency-keyed on the order ID), persists the order, and returns `200` with an `MPPOrderConfirmation` plus a `Payment-Receipt` header.
 
-### 2. MPP Buy Endpoint
-**Endpoint**: `POST /api/mpp/buy`
-
-This endpoint initiates the purchase flow.
-- **First Request**: Returns a `402 Payment Required` response with:
-    - `WWW-Authenticate: MPP challengeId="chal_..."` header.
-    - JSON body with `challengeId`, `methods` (Stripe MPP, x402), and payment details (amount, currency, recipient address).
-- **Subsequent Request**: After the agent completes the payment (e.g., on-chain), they retry the request with an `Authorization: MPP <challengeId>` header. If verified, the server returns the order confirmation and a receipt.
+### 3. Order status — `GET /api/mpp/orders/:orderId`
+Lets an agent look up an order it placed. Returns the order `status`, `amount`, `currency`, `paymentMethod`, `items`, and timestamps. Returns `404` if the order is unknown or order persistence (Redis) is not configured.
 
 ## Example Flow
 
-1. **Agent Discovers Product**:
-   ```bash
-   GET /api/mpp/products
-   ```
+1. **Discover**: `GET /api/mpp/catalog`
+2. **Attempt purchase**: `POST /api/mpp/purchase` with `items` → `402` + `WWW-Authenticate: Payment ...`
+3. **Obtain SPT**: Agent's Stripe Link AI wallet mints a Shared Payment Token for the challenge.
+4. **Authorize**: Retry `POST /api/mpp/purchase` with `Authorization: Payment <base64url({ payload: { spt, method } })>` → `200` with `{ orderId, status, paymentId, ... }`.
+5. **Track**: `GET /api/mpp/orders/:orderId`
 
-2. **Agent Attempts Purchase**:
-   ```bash
-   POST /api/mpp/buy
-   { "variantId": "variant_123", "quantity": 1 }
-   ```
+## Supporting Code
 
-3. **Server Responds with 402**:
-   ```json
-   {
-     "status": 402,
-     "challengeId": "chal_abc123",
-     "methods": [
-       {
-         "type": "stripe-mpp",
-         "recipient": "0x...",
-         "network": "tempo"
-       }
-     ]
-   }
-   ```
+- `app/api/mpp/catalog/route.ts` — catalog feed
+- `app/api/mpp/purchase/route.ts` — 402 challenge + SPT authorization
+- `app/api/mpp/orders/[orderId]/route.ts` — order status lookup
+- `app/lib/mpp-payment-verifier.ts` — Stripe SPT confirmation + Tempo placeholder
+- `app/lib/mpp-order-store.ts` — Redis-backed order persistence
+- `app/lib/stripe-client.ts` — lazily-initialized Stripe client (API `2026-04-22.dahlia`)
+- `app/types/mpp.ts` — shared MPP types
 
-4. **Agent Performs Payment**: The agent sends the specified amount to the recipient address on the given network.
+## Environment Variables
 
-5. **Agent Retries with Credential**:
-   ```bash
-   POST /api/mpp/buy
-   Headers: { "Authorization": "MPP chal_abc123" }
-   ```
-
-6. **Server Delivers Resource**:
-   ```json
-   { "success": true, "order": { "id": "mpp_order_456" }, "receipt": "rcpt_789" }
-   ```
+| Variable | Purpose |
+| --- | --- |
+| `STRIPE_SECRET_KEY` | Stripe API key used to create/confirm PaymentIntents. |
+| `STRIPE_NETWORK_ID` | Stripe Link network ID; **required** by the 402 challenge so `link-cli mpp decode` can read payment method details. |
+| `REDIS_URL` | Redis connection string for order persistence. Without it, purchases still succeed but orders are not queryable via `/api/mpp/orders/:id`. |
 
 ## Production Roadmap
 
-To move this prototype to production, the following steps are required:
-
-1. **Stripe Private Preview Access**: Request access to "Machine Payments" in the Stripe Dashboard.
-2. **Stripe API Version**: Use the `2026-03-04.preview` (or latest) API version.
-3. **PaymentIntents with Deposit Mode**: Implement server-side logic to create Stripe PaymentIntents in `mode: 'deposit'` for each purchase, which generates unique crypto deposit addresses.
-4. **Webhook Integration**: Use Stripe webhooks (`payment_intent.succeeded`) to verify payments and update the session status in a real database (e.g., Redis or PostgreSQL).
-5. **x402 Facilitator**: For x402 support on mainnet, integrate with an x402 facilitator such as Coinbase Developer Platform (CDP).
-6. **Production Secrets**: Configure `STRIPE_SECRET_KEY` and appropriate webhook secrets.
+1. **Stripe access**: Ensure the account has Machine Payments / SPT access and the correct preview API version.
+2. **x402 facilitator**: Implement real on-chain verification in `verifyTempoPayment` (e.g., via a Solana RPC for USDC on Tempo) or integrate a facilitator such as Coinbase Developer Platform.
+3. **Fulfillment**: Wire completed MPP orders into the existing order/fulfillment pipeline (shipping address collection, Shopify order creation).
+4. **Webhooks**: Reconcile `payment_intent.*` webhook events with stored MPP orders.
 
 ## Demonstration
 
-You can run the demonstration script to see the flow in action:
 ```bash
-# In a local development environment
+# With the dev server running and STRIPE_SECRET_KEY + STRIPE_NETWORK_ID set
 node scripts/test-mpp-flow.js
 ```
+
+The script discovers a product, triggers the `402` challenge, and decodes it. The final SPT charge step is manual because it requires a token from a Stripe Link AI wallet (use Stripe's `link-cli mpp` against the printed `WWW-Authenticate` header).
