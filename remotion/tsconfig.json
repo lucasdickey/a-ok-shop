@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2018"
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "../remotion.config.ts"],
+  "exclude": ["../node_modules"]
+}
