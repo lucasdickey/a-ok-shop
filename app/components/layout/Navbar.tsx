@@ -1,39 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import CartButton from "../cart/CartButton";
 import TextAnimatedLogo from "./TextAnimatedLogo";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-secondary bg-light/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 w-full border-b border-dark/10 bg-light/80 shadow-sm backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <TextAnimatedLogo />
-          <nav className="hidden md:flex gap-6">
-            <Link
-              href="/products?category=t-shirts"
-              className="text-sm font-medium hover:text-primary"
-            >
+          <nav className="hidden items-center gap-6 md:flex">
+            <Link href="/products?category=t-shirts" className="nav-link">
               T-Shirts
             </Link>
-            <Link
-              href="/products?category=hoodies"
-              className="text-sm font-medium hover:text-primary"
-            >
+            <Link href="/products?category=hoodies" className="nav-link">
               Hoodies
             </Link>
-            <Link
-              href="/products?category=hats"
-              className="text-sm font-medium hover:text-primary"
-            >
+            <Link href="/products?category=hats" className="nav-link">
               Hats
             </Link>
-            <span className="text-sm text-gray-400">|</span>
+            <span
+              aria-hidden="true"
+              className="h-4 w-px bg-dark/20"
+            />
             <Link
               href="/game"
-              className="text-sm font-medium hover:text-primary animate-pulse"
+              className="nav-link text-maroon after:bg-charcoal-dark hover:text-charcoal-dark"
             >
               Run, Human, Run!
             </Link>

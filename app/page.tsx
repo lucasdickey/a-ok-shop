@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
+import ProductCard from "@/app/components/product/ProductCard";
 import fs from "fs";
 import path from "path";
 
@@ -79,20 +80,18 @@ export default async function Home() {
   let productsToShow: Array<any> = [];
   try {
     productsToShow = await getFeaturedProductsData();
-    console.log(`Fetched ${productsToShow.length} featured products successfully`);
   } catch (error) {
     console.error("Error fetching featured products:", error);
   }
 
   // Get gallery images using the new function
   const galleryImages = await getGalleryImages();
-  const hasGalleryImages = galleryImages.length > 0;
 
   return (
     <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
       {/* Hero Section */}
-      <section className="mb-12">
-        <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
+      <section className="mb-16">
+        <div className="relative h-[500px] w-full overflow-hidden rounded-3xl shadow-card-hover md:h-[560px]">
           <Image
             src="/images/hero-v1a.png"
             alt="A-OK Store"
@@ -100,20 +99,27 @@ export default async function Home() {
             priority
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-dark/50 flex items-center justify-center md:items-start md:justify-end md:pt-16">
-            <div
-              className="hero-content bg-white/80 p-4 rounded-xl md:mr-6 flex flex-col items-center text-center justify-center"
-              style={{ width: "auto", maxWidth: "280px" }}
-            >
-              <h1 className="text-6xl md:text-6xl font-bebas-neue text-dark leading-tight text-shadow-bold">
+          <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/30 to-dark/10" />
+          <div className="absolute inset-0 flex items-end justify-center pb-12 md:justify-start md:pb-16">
+            <div className="animate-fade-up px-6 text-center md:pl-14 md:text-left">
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.3em] text-bone/80">
+                Apes On Keys
+              </p>
+              <h1 className="font-bebas-neue text-6xl leading-none text-bone md:text-8xl">
                 A - O K
               </h1>
-              <p className="text-lg md:text-xl text-dark font-bebas-neue tracking-wide">
-                APES ON KEYS - AI NERDWEAR
+              <p className="mt-3 max-w-md font-space-grotesk text-lg text-bone/90 md:text-xl">
+                AI nerdwear for the terminally online.
               </p>
-              <div className="mt-5">
-                <Link href="/products" className="btn btn-primary">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+                <Link href="/products" className="btn btn-primary px-8 py-3 text-base">
                   Shop Now
+                </Link>
+                <Link
+                  href="/game"
+                  className="btn border-2 border-bone/80 bg-transparent px-8 py-3 text-base text-bone hover:bg-bone hover:text-charcoal-dark hover:-translate-y-0.5"
+                >
+                  Play the Game
                 </Link>
               </div>
             </div>
@@ -122,39 +128,40 @@ export default async function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {productsToShow.map((product) => (
-            <Link
-              href={`/products/${product.handle}`}
-              key={product.id}
-              className="group"
+      <section className="mb-20">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="section-eyebrow">Fresh off the keys</span>
+            <h2 className="font-bebas-neue text-4xl tracking-wide md:text-5xl">
+              Featured Products
+            </h2>
+          </div>
+          <Link
+            href="/products"
+            className="group hidden items-center gap-1 text-sm font-semibold text-maroon transition-colors hover:text-maroon-dark sm:inline-flex"
+          >
+            View all
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
             >
-              <div className="border-2 border-[#1F1F1F] bg-[#F5F2DC] p-5 rounded-xl text-[#1F1F1F] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] h-full">
-                <div className="relative aspect-square bg-light mb-4 rounded-lg overflow-hidden border border-[#1F1F1F]">
-                  <Image
-                    src={product.images.edges[0]?.node.url || "/product-placeholder.jpg"}
-                    alt={product.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
-                    unoptimized={!product.images.edges[0]?.node.url?.startsWith('http')}
-                  />
-                </div>
-                <h3 className="font-bebas-neue text-xl mb-1 tracking-wide">
-                  {product.title}
-                </h3>
-                <p className="text-[#8B1E24] font-bebas-neue text-lg mb-4">
-                  $
-                  {parseFloat(
-                    product.priceRange.minVariantPrice.amount
-                  ).toFixed(2)}
-                </p>
-              </div>
-            </Link>
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+        <div className="stagger-children grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {productsToShow.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
-        <div className="text-center mt-8">
+        <div className="mt-10 text-center sm:hidden">
           <Link href="/products" className="btn btn-outline">
             View All Products
           </Link>
@@ -162,31 +169,34 @@ export default async function Home() {
       </section>
 
       {/* About Section */}
-      <section className="mb-16">
-        <h1 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center">
-          Who are Apes On Keys?
-        </h1>
-        <div className="w-full max-w-3xl mx-auto bg-[#1E1E1E] rounded-lg overflow-hidden shadow-lg border border-gray-700">
-          <div className="flex items-center bg-[#333333] px-4 py-2 border-b border-gray-700">
+      <section className="mb-20">
+        <div className="mb-8 text-center">
+          <span className="section-eyebrow">The lore</span>
+          <h2 className="font-bebas-neue text-4xl tracking-wide md:text-5xl">
+            Who are Apes On Keys?
+          </h2>
+        </div>
+        <div className="mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-gray-700 bg-[#1E1E1E] shadow-card-hover">
+          <div className="flex items-center border-b border-gray-700 bg-[#333333] px-4 py-2">
             <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <div className="h-3 w-3 rounded-full bg-red-500"></div>
+              <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+              <div className="h-3 w-3 rounded-full bg-green-500"></div>
             </div>
-            <div className="ml-4 text-gray-300 text-sm font-mono">
+            <div className="ml-4 font-mono text-sm text-gray-300">
               monkey_theorem.md
             </div>
           </div>
           <div
-            className="p-6 h-[400px] overflow-y-auto font-mono text-sm text-gray-300 leading-relaxed"
+            className="h-[400px] overflow-y-auto p-6 font-mono text-sm leading-relaxed text-gray-300"
             style={{ scrollbarWidth: "thin", scrollbarColor: "#555 #1E1E1E" }}
           >
-            <div className="flex items-center mb-3 text-gray-400 text-xs">
+            <div className="mb-3 flex items-center text-xs text-gray-400">
               <span className="mr-2">commit 42a7f9e</span>
               <span>Updated October 2025</span>
             </div>
             <p className="mb-4">
-              <span className="text-red-500 font-bold">
+              <span className="font-bold text-red-500">
                 The E/ACC Monkey Theorem
               </span>{" "}
               states that if you give an infinite number of AI models an
@@ -195,12 +205,12 @@ export default async function Home() {
               Shakespeare&apos;s works, their various HBO adaptations, and at
               least 47 different AI-generated musicals where Hamlet raps.
             </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
+            <div className="mb-4 rounded border border-green-800 bg-green-900/20">
+              <div className="flex items-center bg-green-800/30 px-2 py-1 text-xs text-green-400">
                 <span className="mr-1">+</span>{" "}
                 <span>Added in PR #238 (Oct 2025)</span>
               </div>
-              <p className="p-2 border-l-4 border-green-600">
+              <p className="border-l-4 border-green-600 p-2">
                 Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku
                 and OpenAI&apos;s GPT-5-mini, we&apos;ve observed a 300%
                 increase in AI-generated Shakespearean sonnets about blockchain
@@ -221,12 +231,12 @@ export default async function Home() {
                 events from the 16th century.
               </span>
             </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
+            <div className="mb-4 rounded border border-green-800 bg-green-900/20">
+              <div className="flex items-center bg-green-800/30 px-2 py-1 text-xs text-green-400">
                 <span className="mr-1">+</span>{" "}
                 <span>Replaced in PR #238 (Oct 2025)</span>
               </div>
-              <p className="p-2 border-l-4 border-green-600">
+              <p className="border-l-4 border-green-600 p-2">
                 However, they&apos;ll also generate an infinite number of
                 hallucinated Shakespeare quotes about cryptocurrency, several
                 million images of the Bard wearing Supreme hoodies, and
@@ -246,12 +256,12 @@ export default async function Home() {
               even add citations to completely imaginary academic papers and
               insist they&apos;re being helpful while doing so.
             </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
+            <div className="mb-4 rounded border border-green-800 bg-green-900/20">
+              <div className="flex items-center bg-green-800/30 px-2 py-1 text-xs text-green-400">
                 <span className="mr-1">+</span>{" "}
                 <span>Comment by @monkeydev (Nov 2025)</span>
               </div>
-              <p className="p-2 border-l-4 border-green-600 italic">
+              <p className="border-l-4 border-green-600 p-2 italic">
                 The November 2025 &quot;Citation Verification Protocol&quot; has
                 only made this worse. Now AIs create elaborate fake DOIs and
                 even generate QR codes linking to non-existent journal websites
@@ -264,17 +274,17 @@ export default async function Home() {
               Juliet – though it&apos;s probably tagged as &quot;not financial
               advice&quot; and ends with a prompt to like and subscribe.
             </p>
-            <p className="bg-gray-700/30 p-3 rounded border-l-4 border-gray-500 mb-4">
-              <span className="text-gray-400 italic">Note:</span> This theorem
+            <p className="mb-4 rounded border-l-4 border-gray-500 bg-gray-700/30 p-3">
+              <span className="italic text-gray-400">Note:</span> This theorem
               has been reviewed by approximately 2.7 million AI models, each
               claiming to have a knowledge cutoff date that makes them unable to
               verify their own existence.
             </p>
-            <div className="border border-blue-800 bg-blue-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-blue-800/30 text-blue-400 text-xs">
+            <div className="rounded border border-blue-800 bg-blue-900/20">
+              <div className="flex items-center bg-blue-800/30 px-2 py-1 text-xs text-blue-400">
                 <span className="mr-1">i</span> <span>Updated Dec 2025</span>
               </div>
-              <p className="p-2 border-l-4 border-blue-600">
+              <p className="border-l-4 border-blue-600 p-2">
                 As of December 2025, this number has increased to 4.3 million
                 models, with several now claiming to have &quot;quantum
                 uncertainty&quot; about their training cutoff dates, existing in
@@ -288,22 +298,26 @@ export default async function Home() {
 
       {/* Chaos Monkeys Image Grid - only render if we have images */}
       <section className="mb-16">
-        <div className="flex justify-center w-full">
-          <Link href="/gallery" className="no-underline hover:no-underline">
-            <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center relative group inline-flex items-center justify-center">
-              <span className="relative z-10">CHAOS MONKEYS AT WORK</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></span>
-              <span className="inline-block ml-1 text-gray-400 opacity-0 group-hover:opacity-70 transition-opacity duration-300">
-                →
-              </span>
-            </h2>
+        <div className="mb-8 flex w-full justify-center">
+          <Link href="/gallery" className="group no-underline hover:no-underline">
+            <div className="text-center">
+              <span className="section-eyebrow">The gallery</span>
+              <h2 className="relative inline-flex items-center justify-center font-bebas-neue text-4xl tracking-wide md:text-5xl">
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-maroon">
+                  CHAOS MONKEYS AT WORK
+                </span>
+                <span className="ml-2 inline-block -translate-x-1 text-maroon opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                  →
+                </span>
+              </h2>
+            </div>
           </Link>
         </div>
         {galleryImages && galleryImages.length > 0 ? (
           <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
         ) : (
-          <div className="text-center p-8 bg-gray-100 rounded-lg border border-gray-300">
-            <p className="text-gray-600">
+          <div className="rounded-2xl border border-dark/10 bg-secondary-light p-8 text-center">
+            <p className="text-dark-light">
               Image gallery is currently loading or unavailable.
             </p>
           </div>

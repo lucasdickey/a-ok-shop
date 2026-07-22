@@ -1,11 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { getAllProducts, getProductsByCategory, SimpleProduct as ShopifyProduct } from "@/app/lib/catalog";
 import ProductCard from "@/app/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0; // Disable caching for this page
+
+const categories = [
+  { label: "All", value: undefined },
+  { label: "T-Shirts", value: "t-shirts" },
+  { label: "Hoodies", value: "hoodies" },
+  { label: "Hats", value: "hats" },
+];
 
 export default async function ProductsPage({
   searchParams,
@@ -22,8 +28,6 @@ export default async function ProductsPage({
       : undefined;
 
   try {
-    console.log("Fetching products in page component...");
-    
     // Use category-specific API if category is provided
     if (category) {
       products = await getProductsByCategory(category);
@@ -42,12 +46,42 @@ export default async function ProductsPage({
   }
 
   return (
-    <div className="container py-8">
-      <h1 className="mb-8 text-3xl font-bold">{pageTitle}</h1>
+    <div className="container py-10 md:py-14">
+      <header className="mb-8 animate-fade-up">
+        <span className="section-eyebrow">A-OK Catalog</span>
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <h1 className="font-bebas-neue text-4xl tracking-wide md:text-5xl">
+            {pageTitle}
+          </h1>
+          {!error && products.length > 0 && (
+            <p className="text-sm text-dark-light">
+              {products.length} {products.length === 1 ? "item" : "items"}
+            </p>
+          )}
+        </div>
+        <nav
+          aria-label="Product categories"
+          className="mt-6 flex flex-wrap gap-2"
+        >
+          {categories.map(({ label, value }) => {
+            const isActive = category === value || (!category && !value);
+            return (
+              <Link
+                key={label}
+                href={value ? `/products?category=${value}` : "/products"}
+                className={`chip ${isActive ? "chip-active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+      </header>
 
       {error ? (
-        <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-8">
-          <h2 className="text-lg font-semibold mb-2">Error loading products</h2>
+        <div className="mb-8 animate-fade-up rounded-2xl border border-red-200 bg-red-50 p-6 text-red-800">
+          <h2 className="mb-2 text-lg font-semibold">Error loading products</h2>
           <p>{error}</p>
           <p className="mt-2 text-sm">
             Please try again or contact support if the issue persists.
@@ -55,15 +89,36 @@ export default async function ProductsPage({
         </div>
       ) : null}
 
-      <Suspense fallback={<p>Loading products...</p>}>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="card animate-pulse"
+                aria-hidden="true"
+              >
+                <div className="aspect-square w-full bg-light-dark" />
+                <div className="space-y-2 p-4">
+                  <div className="h-4 w-3/4 rounded bg-light-dark" />
+                  <div className="h-5 w-1/4 rounded bg-light-dark" />
+                </div>
+              </div>
+            ))}
+          </div>
+        }
+      >
         {products.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg">
+          <div className="animate-fade-up rounded-2xl border border-dark/10 bg-secondary-light py-16 text-center">
+            <p className="text-lg font-medium">
               No products found matching your criteria.
             </p>
+            <Link href="/products" className="btn btn-primary mt-4">
+              View all products
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="stagger-children grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

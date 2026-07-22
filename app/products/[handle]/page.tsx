@@ -286,7 +286,7 @@ export default async function ProductPage({
   console.log("Color options:", colorValues);
 
   return (
-    <div className="container py-8">
+    <div className="container py-10 md:py-14">
       <ProductPageContent
         product={product}
         images={images}

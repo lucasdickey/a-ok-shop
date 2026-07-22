@@ -9,8 +9,28 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-light text-dark antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-maroon text-bone;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   .bebas-heading {
@@ -45,20 +65,76 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold tracking-wide transition-all duration-200 ease-out-expo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97];
   }
   .btn-primary {
-    @apply bg-primary text-light hover:bg-primary-dark;
+    @apply bg-maroon text-bone shadow-sm hover:bg-maroon-dark hover:shadow-md hover:-translate-y-0.5;
   }
   .btn-secondary {
-    @apply bg-secondary text-dark hover:bg-secondary-dark;
+    @apply bg-secondary text-dark shadow-sm hover:bg-secondary-dark hover:shadow-md hover:-translate-y-0.5;
   }
   .btn-outline {
-    @apply border border-dark bg-transparent hover:bg-secondary-light;
+    @apply border-2 border-dark bg-transparent hover:bg-dark hover:text-light hover:-translate-y-0.5 hover:shadow-md;
+  }
+  .btn-dark {
+    @apply bg-charcoal-dark text-bone shadow-sm hover:bg-dark hover:shadow-md hover:-translate-y-0.5;
   }
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8;
   }
+
+  /* Animated underline for nav links */
+  .nav-link {
+    @apply relative text-sm font-medium text-dark transition-colors duration-200 hover:text-maroon;
+  }
+
+  .nav-link::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-maroon transition-transform duration-300 ease-out-expo;
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    @apply scale-x-100;
+  }
+
+  /* Category filter chips */
+  .chip {
+    @apply inline-flex items-center rounded-full border-2 border-charcoal-dark bg-transparent px-4 py-1.5 text-sm font-semibold transition-all duration-200 ease-out-expo hover:-translate-y-0.5 hover:bg-charcoal-dark hover:text-bone hover:shadow-md active:scale-95;
+  }
+
+  .chip-active {
+    @apply bg-charcoal-dark text-bone shadow-sm;
+  }
+
+  /* Modern product card */
+  .card {
+    @apply overflow-hidden rounded-2xl border border-dark/10 bg-white shadow-card transition-all duration-300 ease-out-expo;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-1 hover:shadow-card-hover hover:border-dark/20;
+  }
+
+  /* Section eyebrow + heading pattern */
+  .section-eyebrow {
+    @apply mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-maroon;
+  }
+
+  /* Staggered entrance for grid children */
+  .stagger-children > * {
+    animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+  .stagger-children > *:nth-child(n + 9) { animation-delay: 480ms; }
 
   /* Product description formatting */
   .product-description {
@@ -286,6 +362,18 @@
       padding-left: 0;
       padding-right: 0;
     }
+  }
+}
+
+/* Keyframes shared with Tailwind's animate-* utilities (kept in sync with tailwind.config.js) */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
