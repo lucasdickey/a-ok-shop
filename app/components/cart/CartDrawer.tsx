@@ -56,14 +56,12 @@ export default function CartDrawer() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: cart,
-          subtotal
-        }),
+        body: JSON.stringify({ items: cart }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        const { error } = await response.json().catch(() => ({ error: null }));
+        throw new Error(error || "Failed to create checkout session");
       }
 
       const { url } = await response.json();
@@ -75,7 +73,11 @@ export default function CartDrawer() {
       window.location.href = url;
     } catch (error) {
       console.error('Error creating checkout:', error);
-      alert('There was an error processing your order. Please try again.');
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'There was an error processing your order. Please try again.'
+      );
     }
   };
 

@@ -3,36 +3,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart, CartItem } from "@/app/components/cart/CartProvider";
-
-// Monthly deal product data - will be updated monthly
-const MONTHLY_DEAL = {
-  id: "monthly-deal-2025-01",
-  title: "A-OK DAY 2 MONKEY HOODIE",
-  description: "Simplified. Streamlined. Still A Little Scary. A hoodie designed to reflect the clean, evolving interfaces of modern LLMs with a focus on comfort and style. New look. Same depth. Fully backward compatible.",
-  price: 50.00,
-  originalPrice: 75.00,
-  images: [
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-front-modeled.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588"
-  ],
-  sizes: ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"],
-  colors: ["Black", "Navy", "Heather Grey"],
-  features: [
-    "Cozy fleece interior",
-    "Simplified A-OK mascot on front",
-    "Classic hoodie fit",
-    "Designed for prompt engineers & digital therapists",
-    "Limited monthly release"
-  ]
-};
+// Monthly deal product data lives server-side so checkout can price it
+// authoritatively; the page renders from the same definition.
+import { MONTHLY_DEAL, monthlyDealVariantId } from "@/app/lib/monthly-deal";
 
 export default function MonthlyDealsPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
-  const { cart, addToCart, subtotal, clearCart } = useCart();
+  const { cart, addToCart, clearCart } = useCart();
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
@@ -46,7 +26,7 @@ export default function MonthlyDealsPage() {
       price: MONTHLY_DEAL.price,
       quantity: 1,
       image: MONTHLY_DEAL.images[0],
-      variantId: `${MONTHLY_DEAL.id}-${selectedSize}-${selectedColor}`,
+      variantId: monthlyDealVariantId(selectedSize, selectedColor),
       size: selectedSize,
       color: selectedColor
     };
@@ -70,14 +50,12 @@ export default function MonthlyDealsPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: cart,
-          subtotal
-        }),
+        body: JSON.stringify({ items: cart }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        const { error } = await response.json().catch(() => ({ error: null }));
+        throw new Error(error || "Failed to create checkout session");
       }
 
       const { url } = await response.json();
@@ -89,7 +67,11 @@ export default function MonthlyDealsPage() {
       window.location.href = url;
     } catch (error) {
       console.error("Error creating checkout session:", error);
-      alert("There was an error processing your order. Please try again.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "There was an error processing your order. Please try again."
+      );
       setIsProcessingCheckout(false);
     }
   };

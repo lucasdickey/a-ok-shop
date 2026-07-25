@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-// Initialize Stripe client lazily to avoid build-time errors
-let stripe: Stripe | null = null;
-function getStripe() {
-  if (!stripe && process.env.STRIPE_SECRET_KEY) {
-    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-09-30.clover" as any,
-    });
-  }
-  return stripe;
-}
+import { getStripeClient } from "@/app/lib/stripe-client";
 
 // Mark as dynamic to prevent static rendering during build
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
+/**
+ * Order summary for the success page.
+ *
+ * Anyone holding a session id can call this, so it returns only what the
+ * confirmation screen needs — never the full Stripe Session, which carries the
+ * customer's email, address and payment intent.
+ */
 export async function GET(request: NextRequest) {
   try {
-    const stripeClient = getStripe();
+    const stripeClient = getStripeClient();
     if (!stripeClient) {
       return NextResponse.json(
         { error: "Stripe not configured" },
@@ -27,18 +23,35 @@ export async function GET(request: NextRequest) {
 
     const sessionId = request.nextUrl.searchParams.get("session_id");
 
-    if (!sessionId) {
+    if (!sessionId || !sessionId.startsWith("cs_")) {
       return NextResponse.json(
-        { error: "Session ID is required" },
+        { error: "A valid session ID is required" },
         { status: 400 }
       );
     }
 
     const session = await stripeClient.checkout.sessions.retrieve(sessionId, {
-      expand: ["line_items", "customer", "total_details"]
+      expand: ["line_items"],
     });
 
-    return NextResponse.json(session);
+    if (session.payment_status === "unpaid") {
+      return NextResponse.json({ status: "pending" });
+    }
+
+    return NextResponse.json({
+      status: "complete",
+      orderId: session.id.slice(-12),
+      amountTotal: session.amount_total,
+      amountSubtotal: session.amount_subtotal,
+      amountShipping: session.total_details?.amount_shipping ?? 0,
+      amountTax: session.total_details?.amount_tax ?? 0,
+      currency: session.currency,
+      items: (session.line_items?.data || []).map((lineItem) => ({
+        description: lineItem.description,
+        quantity: lineItem.quantity,
+        amountTotal: lineItem.amount_total,
+      })),
+    });
   } catch (error) {
     console.error("Error retrieving checkout session:", error);
     return NextResponse.json(

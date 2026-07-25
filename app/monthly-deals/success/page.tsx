@@ -75,9 +75,12 @@ function MonthlyDealsSuccessContent() {
           <p className="text-xl text-gray-600 mb-2">
             Thank you for your purchase
           </p>
-          {sessionData.customer_details?.email && (
-            <p className="text-gray-500">
-              Confirmation sent to {sessionData.customer_details.email}
+          <p className="text-gray-500">
+            A confirmation email is on its way.
+          </p>
+          {sessionData.orderId && (
+            <p className="text-sm text-gray-500 mt-1">
+              Order ID: {sessionData.orderId}
             </p>
           )}
         </div>
@@ -86,9 +89,9 @@ function MonthlyDealsSuccessContent() {
         <div className="bg-gray-50 rounded-lg p-6 border-2 border-gray-200 mb-8 text-left">
           <h2 className="text-xl font-bebas-neue mb-4 text-center">ORDER DETAILS</h2>
           
-          {sessionData.line_items?.data && (
+          {sessionData.items && (
             <div className="space-y-3 mb-4">
-              {sessionData.line_items.data.map((item: any, index: number) => (
+              {sessionData.items.map((item: any, index: number) => (
                 <div key={index} className="flex justify-between items-center">
                   <div>
                     <span className="font-medium">{item.description}</span>
@@ -96,7 +99,7 @@ function MonthlyDealsSuccessContent() {
                       <span className="text-gray-600"> (Qty: {item.quantity})</span>
                     )}
                   </div>
-                  <span>${(item.amount_total / 100).toFixed(2)}</span>
+                  <span>${((item.amountTotal || 0) / 100).toFixed(2)}</span>
                 </div>
               ))}
             </div>
@@ -107,24 +110,24 @@ function MonthlyDealsSuccessContent() {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span>Subtotal:</span>
-              <span>${((sessionData.amount_subtotal || 0) / 100).toFixed(2)}</span>
+              <span>${((sessionData.amountSubtotal || 0) / 100).toFixed(2)}</span>
             </div>
-            {sessionData.total_details?.amount_shipping > 0 && (
+            {sessionData.amountShipping > 0 && (
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span>${(sessionData.total_details.amount_shipping / 100).toFixed(2)}</span>
+                <span>${(sessionData.amountShipping / 100).toFixed(2)}</span>
               </div>
             )}
-            {sessionData.total_details?.amount_tax > 0 && (
+            {sessionData.amountTax > 0 && (
               <div className="flex justify-between">
                 <span>Tax:</span>
-                <span>${(sessionData.total_details.amount_tax / 100).toFixed(2)}</span>
+                <span>${(sessionData.amountTax / 100).toFixed(2)}</span>
               </div>
             )}
             <hr className="border-gray-300" />
             <div className="flex justify-between font-bebas-neue text-lg">
               <span>TOTAL PAID:</span>
-              <span>${((sessionData.amount_total || 0) / 100).toFixed(2)}</span>
+              <span>${((sessionData.amountTotal || 0) / 100).toFixed(2)}</span>
             </div>
           </div>
         </div>

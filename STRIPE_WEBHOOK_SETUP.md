@@ -30,8 +30,11 @@ This redirects to the unified webhook. Can be deleted once Stripe is updated.
    https://yourdomain.com/api/stripe/webhook
    ```
 4. Select events to listen for:
-   - ✅ `checkout.session.completed`
-   - ✅ `payment_intent.succeeded`
+   - ✅ `checkout.session.completed` — instant payments; fulfillment trigger
+   - ✅ `checkout.session.async_payment_succeeded` — delayed methods (bank debits, vouchers) clearing later
+   - ✅ `checkout.session.async_payment_failed` — delayed payment that never cleared; do **not** fulfill
+   - ✅ `payment_intent.succeeded` — machine-initiated (MPP agent) orders
+   - ✅ `payment_intent.payment_failed` — failure visibility in logs
 5. Click "Add endpoint"
 
 ### 2. Get Webhook Signing Secrets
@@ -87,49 +90,63 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
 
 ## What the Webhook Does
 
-When a successful checkout occurs:
+On `checkout.session.completed` / `checkout.session.async_payment_succeeded`:
 
-1. ✅ **Validates** the webhook signature for security
-2. ✅ **Retrieves** full order details from Stripe
-3. ✅ **Identifies** the source (catalog vs monthly-deals)
-4. ✅ **Logs** order information including:
-   - Customer email and name
-   - Shipping address
-   - Items purchased (with size/color metadata)
-   - Total, tax, and shipping amounts
-   - Payment status
-5. ✅ **Prepares** confirmation email data (logs to console)
+1. ✅ **Verifies** the Stripe signature (tries each configured secret)
+2. ✅ **De-duplicates** by event ID, so Stripe retries never re-send emails
+3. ✅ **Re-reads** the session from Stripe, expanding line items down to the
+   product (so size/colour metadata is available) and the charge
+4. ✅ **Refuses to fulfill unpaid sessions** — a completed session with
+   `payment_status: "unpaid"` is a delayed payment still in flight; it is
+   fulfilled later on `checkout.session.async_payment_succeeded`
+5. ✅ **Triggers Stripe's own receipt** by setting `receipt_email` on the
+   **Charge** (setting it on an already-succeeded PaymentIntent does nothing —
+   receipts are generated from the Charge)
+6. ✅ **Emails the customer** an itemised order confirmation via Resend
+7. ✅ **Emails the operator** a fulfillment alert, so no order goes unnoticed
+8. ✅ **Returns a non-2xx on transient failure** so Stripe retries with backoff
 
-### Next Steps (TODO)
+### Retry semantics
 
-Currently the webhook only logs order information. You'll want to add:
+| Situation | Response | Stripe behaviour |
+| --- | --- | --- |
+| Handled successfully | 200 | Done |
+| Duplicate delivery | 200 | Done |
+| Email provider error / network failure | 500 | Retries with backoff (up to 3 days) |
+| `RESEND_API_KEY` not configured | 200 + error log | No retry — retrying cannot fix config |
+| Bad signature | 400 | No retry |
 
-- [ ] **Email service integration** (Resend, SendGrid, Amazon SES)
-- [ ] **Order database storage** (if needed)
-- [ ] **Fulfillment service integration** (Printful, Shipstation, etc.)
-- [ ] **Inventory updates** (if managing stock)
-- [ ] **Analytics tracking** (order conversion events)
+### Required environment variables
 
----
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `STRIPE_SECRET_KEY` | Yes | Stripe API access |
+| `STRIPE_WEBHOOK_SECRET_1` / `_2` / `STRIPE_WEBHOOK_SECRET` | Yes (at least one) | Signature verification |
+| `RESEND_API_KEY` | **Yes for emails** | Without it, **no confirmation email is sent** |
+| `ORDER_EMAIL_FROM` | Recommended | Verified Resend sender, e.g. `A-OK Shop <orders@a-ok.shop>` |
+| `ORDER_NOTIFICATION_EMAIL` | **Recommended** | Operator address for fulfillment alerts |
+| `REDIS_URL` | Optional | Shares webhook de-duplication across instances |
+| `STRIPE_AUTOMATIC_TAX_ENABLED` | Optional | `true` only after registering tax locations |
 
-## Email Service Integration Example
+`ORDER_EMAIL_FROM` must be on a domain verified in Resend, otherwise every send
+is rejected and orders arrive with no customer email.
 
-Recommended: Use [Resend](https://resend.com) for Next.js apps
+### Dashboard settings worth checking
 
-1. Install Resend:
-   ```bash
-   npm install resend
-   ```
+- **Settings → Emails → "Successful payments"** — enable so Stripe also sends
+  its own receipt as a backstop.
+- **Test mode sends no receipts** to real inboxes; verify receipts in live mode
+  (or with a real test purchase) rather than assuming.
 
-2. Add API key to environment:
-   ```
-   RESEND_API_KEY=re_...
-   ```
+### Still to build
 
-3. Uncomment and customize the email sending code in:
-   ```
-   app/api/stripe/webhook/route.ts (line ~147)
-   ```
+- [ ] Order database storage
+- [ ] Fulfillment service integration (Printful, Shipstation, etc.)
+- [ ] Inventory updates
+- [ ] Analytics tracking (order conversion events)
+
+Until a fulfillment integration exists, the operator alert email is the record
+of record — `ORDER_NOTIFICATION_EMAIL` must be set.
 
 ---
 
@@ -144,6 +161,13 @@ Recommended: Use [Resend](https://resend.com) for Next.js apps
 - Check Vercel logs for errors
 - Verify webhook is active in Stripe Dashboard
 - Test with Stripe CLI locally first
+
+### No confirmation email arrived
+- Confirm `RESEND_API_KEY` is set in the deployment environment — without it the
+  webhook logs `RESEND_API_KEY is not set` and sends nothing
+- Confirm `ORDER_EMAIL_FROM` uses a domain verified in Resend
+- Check the Stripe Dashboard webhook delivery log for non-2xx responses
+- Search logs for `[orders]` to see every order the webhook processed
 
 ### Events not triggering
 - Ensure you selected the right events in Stripe Dashboard

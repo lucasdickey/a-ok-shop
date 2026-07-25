@@ -355,3 +355,119 @@ export function createCheckoutLineItems(cartItems: Array<{
     };
   });
 }
+
+// A cart item as posted by the browser. Only the variant and quantity are
+// trusted; every price is resolved from the catalog on the server.
+export type IncomingCartItem = {
+  variantId?: unknown;
+  quantity?: unknown;
+};
+
+export type ResolvedCartItem = {
+  variantId: string;
+  quantity: number;
+  title: string;
+  size?: string;
+  color?: string;
+  stripePriceId?: string;
+  imageUrl?: string;
+  unitAmount: number; // cents
+};
+
+export type ResolvedCart = {
+  items: ResolvedCartItem[];
+  subtotal: number; // cents
+};
+
+const MAX_QUANTITY_PER_LINE = 20;
+
+// Raised when a submitted cart cannot be priced from the catalog. These
+// messages are safe to return to the caller.
+export class CartValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CartValidationError";
+  }
+}
+
+function findVariant(variantId: string) {
+  for (const product of loadProducts()) {
+    const variant = product.variants.edges.find(
+      (edge) => edge.node.id === variantId
+    )?.node;
+
+    if (variant) {
+      return { product, variant };
+    }
+  }
+
+  return null;
+}
+
+// Resolve a client-submitted cart against the bundled catalog.
+// Throws on anything we cannot price ourselves, so a checkout session is never
+// created from browser-supplied amounts.
+export function resolveCart(rawItems: unknown): ResolvedCart {
+  if (!Array.isArray(rawItems) || rawItems.length === 0) {
+    throw new CartValidationError("Cart is empty");
+  }
+
+  const items = rawItems.map((rawItem: IncomingCartItem) => {
+    const variantId =
+      typeof rawItem?.variantId === "string" ? rawItem.variantId.trim() : "";
+
+    if (!variantId) {
+      throw new CartValidationError("Cart item is missing a variantId");
+    }
+
+    const quantity = Number(rawItem?.quantity);
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      throw new CartValidationError(`Invalid quantity for variant ${variantId}`);
+    }
+    if (quantity > MAX_QUANTITY_PER_LINE) {
+      throw new CartValidationError(
+        `Quantity for variant ${variantId} exceeds the ${MAX_QUANTITY_PER_LINE} item limit`
+      );
+    }
+
+    const match = findVariant(variantId);
+    if (!match) {
+      throw new CartValidationError(`Unknown variant ${variantId}`);
+    }
+
+    const { product, variant } = match;
+
+    if (!variant.availableForSale) {
+      throw new CartValidationError(`${product.title} (${variant.title}) is sold out`);
+    }
+
+    const unitAmount = Math.round(parseFloat(variant.price.amount) * 100);
+    if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
+      throw new CartValidationError(`Catalog price is invalid for variant ${variantId}`);
+    }
+
+    const options = variant.selectedOptions || [];
+    const optionValue = (name: string) =>
+      options.find((option) => option.name.toLowerCase() === name)?.value;
+
+    const imageUrl = product.images.edges[0]?.node.url;
+
+    return {
+      variantId,
+      quantity,
+      title: `${product.title} - ${variant.title}`,
+      size: optionValue("size"),
+      color: optionValue("color"),
+      stripePriceId: variant.stripePriceId,
+      imageUrl: imageUrl?.startsWith("http") ? imageUrl : undefined,
+      unitAmount,
+    };
+  });
+
+  const subtotal = items.reduce(
+    (total, item) => total + item.unitAmount * item.quantity,
+    0
+  );
+
+  return { items, subtotal };
+}
