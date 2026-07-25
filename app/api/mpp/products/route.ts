@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllProducts } from "@/app/lib/catalog";
+import { getAgentProducts } from "@/app/lib/catalog";
 import { getCorsHeaders } from "@/app/lib/cors";
 
 export async function GET(request: NextRequest) {
-  const products = getAllProducts();
+  // Agent feed: includes agent-only SKUs the storefront hides.
+  const products = getAgentProducts();
   const origin = request.headers.get("origin");
   const corsHeaders = getCorsHeaders(origin);
 

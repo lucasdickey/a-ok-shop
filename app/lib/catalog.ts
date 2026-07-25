@@ -161,8 +161,24 @@ function getNumericProductId(id: string): number {
   return match ? Number(match[1]) : 0;
 }
 
-// Get all products (sorted by product identifier, newest first)
-export function getAllProducts(): SimpleProduct[] {
+/**
+ * Tag marking a SKU that exists for machine buyers only.
+ *
+ * The machine-payable sticker is priced at $0.05 so an MPP settlement can be
+ * demonstrated for pennies. That price makes no sense on the human storefront —
+ * checkout would add $9.99 of freight to a five-cent digital download — so
+ * tagged products are served to agents and hidden from people.
+ */
+export const AGENT_ONLY_TAG = "agent-only";
+
+function isAgentOnly(product: { tags?: string[] }): boolean {
+  return (product.tags ?? []).some(
+    (tag) => tag.toLowerCase() === AGENT_ONLY_TAG
+  );
+}
+
+// Every product, agent-only ones included, sorted newest first.
+function loadMappedProducts(): SimpleProduct[] {
   const products = [...loadProducts()].sort(
     (a, b) => getNumericProductId(b.id) - getNumericProductId(a.id)
   );
@@ -220,6 +236,21 @@ export function getAllProducts(): SimpleProduct[] {
   }));
 }
 
+/**
+ * Products for the human storefront (sorted newest first).
+ * Agent-only SKUs are excluded — see {@link AGENT_ONLY_TAG}.
+ */
+export function getAllProducts(): SimpleProduct[] {
+  return loadMappedProducts().filter((product) => !isAgentOnly(product));
+}
+
+/**
+ * Products for machine buyers (MPP / ACP feeds), including agent-only SKUs.
+ */
+export function getAgentProducts(): SimpleProduct[] {
+  return loadMappedProducts();
+}
+
 // Get products by category (using tags and productType)
 export function getProductsByCategory(category: string): SimpleProduct[] {
   const allProducts = getAllProducts();
@@ -257,10 +288,15 @@ export function getProductsByCategory(category: string): SimpleProduct[] {
   });
 }
 
-// Get a single product by handle
+/**
+ * Get a single product by handle.
+ *
+ * Resolves agent-only SKUs too: this backs the MPP purchase route, which has to
+ * be able to price and sell the machine-payable sticker even though the
+ * storefront never lists it.
+ */
 export function getProductByHandle(handle: string): SimpleProduct | null {
-  const allProducts = getAllProducts();
-  return allProducts.find((product) => product.handle === handle) || null;
+  return loadMappedProducts().find((product) => product.handle === handle) || null;
 }
 
 // Get product categories (unique product types and tags)
