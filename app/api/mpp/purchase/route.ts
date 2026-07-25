@@ -27,6 +27,9 @@ export async function POST(request: NextRequest) {
     // Validate items and calculate total
     let totalAmount = 0;
     const lineItems: Array<{ handle: string; variantId: string; quantity: number; price: number }> = [];
+    // Digital goods have nothing to ship. Tracked so a five-cent download
+    // doesn't get $9.99 of freight bolted onto it (see the shipping rule below).
+    let requiresShipping = false;
 
     for (const item of items) {
       const product = getProductByHandle(item.handle);
@@ -49,6 +52,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `Variant not available: ${item.variantId}` }, { status: 400 });
       }
 
+      const isDigital = (product.tags || []).some(
+        (tag: string) => tag.toLowerCase() === 'digital'
+      );
+      if (!isDigital) {
+        requiresShipping = true;
+      }
+
       const price = parseFloat(variant.price.amount);
       const itemTotal = price * item.quantity;
       totalAmount += itemTotal;
@@ -61,8 +71,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Add shipping
-    const shippingCost = totalAmount < 50 ? 9.99 : 0;
+    // Add shipping. Orders that are entirely digital ship nothing and are
+    // charged nothing for freight — otherwise the $0.05 machine-payable sticker
+    // would settle at $10.04 and stop being a cheap way to exercise the protocol.
+    const shippingCost = requiresShipping && totalAmount < 50 ? 9.99 : 0;
     const amountInCents = Math.round((totalAmount + shippingCost) * 100);
     console.log('[MPP] Order totals - items:', totalAmount.toFixed(2), 'shipping:', shippingCost.toFixed(2));
 

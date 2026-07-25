@@ -1,4 +1,4 @@
-import { getAllProducts } from '@/app/lib/catalog';
+import { getAgentProducts } from '@/app/lib/catalog';
 import { MPPCatalogResponse, MPPProduct } from '@/app/types/mpp';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -32,7 +32,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const products = getAllProducts();
+    // Agent feed: includes agent-only SKUs the storefront hides.
+    const products = getAgentProducts();
 
     // Transform products into MPP-compatible format
     const mppProducts: MPPProduct[] = products.map((product) => ({
