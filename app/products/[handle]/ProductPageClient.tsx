@@ -239,8 +239,10 @@ export function ProductDetails({
   };
 
   return (
-    <div className="animate-fade-up">
-      <h1 className="font-bebas-neue text-4xl tracking-wide md:text-5xl">
+    // No entrance animation here: a persistent transform would become the
+    // containing block for the fixed sticky add-to-cart bar rendered inside.
+    <div>
+      <h1 className="animate-fade-up font-bebas-neue text-4xl tracking-wide md:text-5xl">
         {product.title}
       </h1>
 
