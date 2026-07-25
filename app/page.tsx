@@ -88,10 +88,10 @@ export default async function Home() {
   const galleryImages = await getGalleryImages();
 
   return (
-    <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
+    <div className="container mx-auto px-4 py-6 sm:px-6 md:px-16 md:py-8 lg:px-24 xl:px-32">
       {/* Hero Section */}
-      <section className="mb-16">
-        <div className="relative h-[500px] w-full overflow-hidden rounded-3xl shadow-card-hover md:h-[560px]">
+      <section className="mb-12 md:mb-16">
+        <div className="relative h-[440px] w-full overflow-hidden rounded-2xl shadow-card-hover sm:h-[500px] sm:rounded-3xl md:h-[560px]">
           <Image
             src="/images/hero-v1a.png"
             alt="A-OK Store"
@@ -100,24 +100,27 @@ export default async function Home() {
             className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/30 to-dark/10" />
-          <div className="absolute inset-0 flex items-end justify-center pb-12 md:justify-start md:pb-16">
-            <div className="animate-fade-up px-6 text-center md:pl-14 md:text-left">
-              <p className="mb-3 text-sm font-bold uppercase tracking-[0.3em] text-bone/80">
+          <div className="absolute inset-0 flex items-end justify-center pb-6 sm:pb-12 md:justify-start md:pb-16">
+            <div className="w-full animate-fade-up px-5 text-center sm:w-auto sm:px-6 md:pl-14 md:text-left">
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-bone/80 sm:mb-3 sm:text-sm">
                 Apes On Keys
               </p>
               <h1 className="font-bebas-neue text-6xl leading-none text-bone md:text-8xl">
                 A - O K
               </h1>
-              <p className="mt-3 max-w-md font-space-grotesk text-lg text-bone/90 md:text-xl">
+              <p className="mt-2 font-space-grotesk text-base text-bone/90 sm:mt-3 sm:text-lg md:max-w-md md:text-xl">
                 AI nerdwear for the terminally online.
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-                <Link href="/products" className="btn btn-primary px-8 py-3 text-base">
+              <div className="mt-5 flex w-full flex-col items-stretch gap-3 sm:mt-8 sm:w-auto sm:flex-row sm:items-center sm:justify-center md:justify-start">
+                <Link
+                  href="/products"
+                  className="btn btn-primary w-full px-8 py-3 text-base sm:w-auto"
+                >
                   Shop Now
                 </Link>
                 <Link
                   href="/game"
-                  className="btn border-2 border-bone/80 bg-transparent px-8 py-3 text-base text-bone hover:bg-bone hover:text-charcoal-dark hover:-translate-y-0.5"
+                  className="btn w-full border-2 border-bone/80 bg-transparent px-8 py-3 text-base text-bone hover:bg-bone hover:text-charcoal-dark hover:-translate-y-0.5 sm:w-auto"
                 >
                   Play the Game
                 </Link>
@@ -128,7 +131,7 @@ export default async function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="mb-20">
+      <section className="mb-14 md:mb-20">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <span className="section-eyebrow">Fresh off the keys</span>
@@ -156,20 +159,20 @@ export default async function Home() {
             </svg>
           </Link>
         </div>
-        <div className="stagger-children grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-children grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
           {productsToShow.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-        <div className="mt-10 text-center sm:hidden">
-          <Link href="/products" className="btn btn-outline">
+        <div className="mt-8 text-center sm:hidden">
+          <Link href="/products" className="btn btn-outline w-full">
             View All Products
           </Link>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="mb-20">
+      <section className="mb-14 md:mb-20">
         <div className="mb-8 text-center">
           <span className="section-eyebrow">The lore</span>
           <h2 className="font-bebas-neue text-4xl tracking-wide md:text-5xl">

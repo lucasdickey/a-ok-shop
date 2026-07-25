@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="border-t-4 border-maroon bg-charcoal-dark text-bone">
       <div className="container py-10 md:py-14">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="font-bebas-neue text-2xl tracking-wide text-bone">
               A-OK Store

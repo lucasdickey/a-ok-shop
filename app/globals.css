@@ -98,6 +98,16 @@
     @apply scale-x-100;
   }
 
+  /* Hide scrollbars on horizontal scroll rows (mobile chip rails etc.) */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Category filter chips */
   .chip {
     @apply inline-flex items-center rounded-full border-2 border-charcoal-dark bg-transparent px-4 py-1.5 text-sm font-semibold transition-all duration-200 ease-out-expo hover:-translate-y-0.5 hover:bg-charcoal-dark hover:text-bone hover:shadow-md active:scale-95;

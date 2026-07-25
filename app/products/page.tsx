@@ -61,7 +61,7 @@ export default async function ProductsPage({
         </div>
         <nav
           aria-label="Product categories"
-          className="mt-6 flex flex-wrap gap-2"
+          className="no-scrollbar -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
         >
           {categories.map(({ label, value }) => {
             const isActive = category === value || (!category && !value);
@@ -69,7 +69,7 @@ export default async function ProductsPage({
               <Link
                 key={label}
                 href={value ? `/products?category=${value}` : "/products"}
-                className={`chip ${isActive ? "chip-active" : ""}`}
+                className={`chip flex-shrink-0 whitespace-nowrap ${isActive ? "chip-active" : ""}`}
                 aria-current={isActive ? "page" : undefined}
               >
                 {label}
@@ -91,7 +91,7 @@ export default async function ProductsPage({
 
       <Suspense
         fallback={
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
@@ -118,7 +118,7 @@ export default async function ProductsPage({
             </Link>
           </div>
         ) : (
-          <div className="stagger-children grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="stagger-children grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

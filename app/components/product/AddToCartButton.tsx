@@ -71,11 +71,11 @@ export default function AddToCartButton({
 
   return (
     <div>
-      <div className="flex items-center gap-4">
-        <div className="flex items-center rounded-lg border-2 border-dark/15 bg-white">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div className="flex items-center justify-between rounded-lg border-2 border-dark/15 bg-white sm:justify-start">
           <button
             onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
-            className="px-3 py-2 font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90 rounded-l-md"
+            className="px-4 py-2.5 font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90 rounded-l-md sm:px-3 sm:py-2"
             aria-label="Decrease quantity"
           >
             −
@@ -85,7 +85,7 @@ export default function AddToCartButton({
           </span>
           <button
             onClick={() => setItemQuantity(prev => prev + 1)}
-            className="px-3 py-2 font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90 rounded-r-md"
+            className="px-4 py-2.5 font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90 rounded-r-md sm:px-3 sm:py-2"
             aria-label="Increase quantity"
           >
             +

@@ -57,12 +57,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             unoptimized={!imageUrl.startsWith('http')}
           />
           <span
-            className={`absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-sm ${badgeStyles[cardType]}`}
+            className={`absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm sm:left-3 sm:top-3 sm:px-3 sm:py-1 sm:text-xs ${badgeStyles[cardType]}`}
           >
             {badgeLabels[cardType]}
           </span>
-          {/* Reveal CTA on hover */}
-          <div className="absolute inset-x-0 bottom-0 z-10 translate-y-full p-3 transition-transform duration-300 ease-out-expo group-hover:translate-y-0">
+          {/* Reveal CTA on hover (desktop only — whole card is the tap target on mobile) */}
+          <div className="absolute inset-x-0 bottom-0 z-10 hidden translate-y-full p-3 transition-transform duration-300 ease-out-expo group-hover:translate-y-0 sm:block">
             <span className="flex w-full items-center justify-center rounded-lg bg-charcoal-dark/90 py-2.5 text-sm font-semibold text-bone backdrop-blur-sm">
               View Product
               <svg
@@ -82,11 +82,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-between gap-1 p-4">
-          <h3 className="font-space-grotesk text-base font-semibold leading-snug text-dark transition-colors duration-200 group-hover:text-maroon">
+        <div className="flex flex-1 flex-col justify-between gap-1 p-3 sm:p-4">
+          <h3 className="line-clamp-2 font-space-grotesk text-sm font-semibold leading-snug text-dark transition-colors duration-200 group-hover:text-maroon sm:text-base">
             {title}
           </h3>
-          <p className="font-space-grotesk text-lg font-medium text-maroon">
+          <p className="font-space-grotesk text-base font-medium text-maroon sm:text-lg">
             ${price.toFixed(2)}
           </p>
         </div>
