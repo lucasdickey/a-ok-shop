@@ -87,10 +87,19 @@ export default async function Home() {
   // Get gallery images using the new function
   const galleryImages = await getGalleryImages();
 
+  const tickerItems = [
+    "APES ON KEYS",
+    "AI NERDWEAR (FOR REAL)",
+    "INFINITE MONKEYS · INFINITE MERCH",
+    "BEAT THE GAME → 25% OFF",
+    "SHIP IT · WEAR IT · PROMPT IT",
+  ];
+
   return (
-    <div className="container mx-auto px-4 py-6 sm:px-6 md:px-16 md:py-8 lg:px-24 xl:px-32">
-      {/* Hero Section */}
-      <section className="mb-12 md:mb-16">
+    <div className="overflow-x-clip">
+      <div className="container mx-auto px-4 pt-6 sm:px-6 md:px-16 md:pt-8 lg:px-24 xl:px-32">
+        {/* Hero Section */}
+        <section>
         <div className="relative h-[440px] w-full overflow-hidden rounded-2xl shadow-card-hover sm:h-[500px] sm:rounded-3xl md:h-[560px]">
           <Image
             src="/images/hero-v1a.png"
@@ -125,11 +134,46 @@ export default async function Home() {
                   Play the Game
                 </Link>
               </div>
+              <p className="mt-3 text-xs text-bone/70 sm:text-sm">
+                Win{" "}
+                <span className="font-semibold text-bone/90">
+                  Run, Human, Run!
+                </span>{" "}
+                and score 25% off your order.
+              </p>
             </div>
           </div>
         </div>
       </section>
+      </div>
 
+      {/* Brand ticker */}
+      <section
+        aria-hidden="true"
+        className="marquee my-10 border-y-4 border-maroon bg-charcoal-dark py-3 md:my-14 md:py-4"
+      >
+        <div className="marquee-track">
+          {[0, 1].map((copy) => (
+            <div
+              key={copy}
+              className="flex items-center"
+              aria-hidden={copy === 1}
+            >
+              {tickerItems.map((item) => (
+                <span
+                  key={item}
+                  className="flex items-center font-bebas-neue text-xl tracking-[0.15em] text-bone md:text-2xl"
+                >
+                  <span className="mx-5 md:mx-8">{item}</span>
+                  <span className="text-primary-light">✦</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 pb-6 sm:px-6 md:px-16 md:pb-8 lg:px-24 xl:px-32">
       {/* Featured Products Section */}
       <section className="mb-14 md:mb-20">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -326,6 +370,7 @@ export default async function Home() {
           </div>
         )}
       </section>
+      </div>
     </div>
   );
 }

@@ -131,6 +131,37 @@
     @apply mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-maroon;
   }
 
+  /* Brand ticker marquee */
+  .marquee {
+    @apply overflow-hidden whitespace-nowrap;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Diagonal shine sweep on hover (pair with a `group` parent) */
+  .shine {
+    @apply pointer-events-none absolute inset-0 z-10;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 60%
+    );
+    transform: translateX(-101%);
+  }
+
+  .group:hover .shine {
+    animation: shine-sweep 0.75s ease-out;
+  }
+
   /* Staggered entrance for grid children */
   .stagger-children > * {
     animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -372,6 +403,18 @@
       padding-left: 0;
       padding-right: 0;
     }
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shine-sweep {
+  to {
+    transform: translateX(101%);
   }
 }
 

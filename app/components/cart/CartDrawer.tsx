@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
 
@@ -157,6 +158,14 @@ export default function CartDrawer() {
             >
               Continue Shopping
             </button>
+            <Link
+              href="/game"
+              onClick={closeCart}
+              className="mt-4 text-xs text-dark-light transition-colors duration-150 hover:text-maroon"
+            >
+              …or beat <span className="font-semibold">Run, Human, Run!</span>{' '}
+              for 25% off →
+            </Link>
           </div>
         ) : (
           <>

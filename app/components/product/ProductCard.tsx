@@ -56,8 +56,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="object-cover transition-transform duration-500 ease-out-expo group-hover:scale-105"
             unoptimized={!imageUrl.startsWith('http')}
           />
+          <span aria-hidden="true" className="shine" />
           <span
-            className={`absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm sm:left-3 sm:top-3 sm:px-3 sm:py-1 sm:text-xs ${badgeStyles[cardType]}`}
+            className={`absolute left-2 top-2 z-10 -rotate-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm transition-transform duration-200 group-hover:rotate-0 sm:left-3 sm:top-3 sm:px-3 sm:py-1 sm:text-xs ${badgeStyles[cardType]}`}
           >
             {badgeLabels[cardType]}
           </span>

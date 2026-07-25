@@ -306,6 +306,7 @@ export function ProductDetails({
           }}
           showSizeWarning={isClothingItem && hasSizeOptions && !selectedSize}
           showColorWarning={hasColorOptions && !selectedColor}
+          stickyOnMobile
         />
       </div>
 
