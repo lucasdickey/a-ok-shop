@@ -1,6 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
+import {
+  buildValidatedCheckout,
+  CheckoutValidationError,
+} from "@/app/lib/checkout-pricing";
+
+// Free-shipping threshold and flat shipping fee, in cents.
+const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
+const SHIPPING_FEE_CENTS = 999;
+
+function resolveBaseUrl(request: NextRequest): string {
+  const host = request.headers.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  return (
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : `${protocol}://${host}`)
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,59 +32,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { items, subtotal } = await request.json();
+    const body = await request.json().catch(() => null);
 
-    if (!items || items.length === 0) {
-      return NextResponse.json(
-        { error: "No items in cart" },
-        { status: 400 }
-      );
+    // Prices are resolved server-side from the catalog; the client-supplied
+    // `price`/`subtotal` fields are intentionally ignored to prevent tampering.
+    let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[];
+    let subtotalCents: number;
+    try {
+      ({ lineItems, subtotalCents } = buildValidatedCheckout(body?.items));
+    } catch (error) {
+      if (error instanceof CheckoutValidationError) {
+        return NextResponse.json(
+          { error: "Invalid cart contents" },
+          { status: 400 }
+        );
+      }
+      throw error;
     }
 
-    // Check if Stripe Tax is enabled (requires tax registration in Stripe Dashboard)
-    const automaticTaxEnabled = process.env.STRIPE_AUTOMATIC_TAX_ENABLED === 'true';
+    const automaticTaxEnabled =
+      process.env.STRIPE_AUTOMATIC_TAX_ENABLED === "true";
 
-    // Convert cart items to Stripe line items
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.title,
-          images: item.image && item.image.startsWith('http') ? [item.image] : [],
-          metadata: {
-            size: item.size || "",
-            color: item.color || "",
-            variantId: item.variantId || ""
-          }
-        },
-        unit_amount: Math.round(item.price * 100), // Convert to cents
-      },
-      quantity: item.quantity,
-    }));
-
-    // Add shipping if subtotal is under $50
-    if (subtotal < 50) {
+    // Add shipping if the authoritative subtotal is under the free threshold.
+    if (subtotalCents < FREE_SHIPPING_THRESHOLD_CENTS) {
       lineItems.push({
         price_data: {
           currency: "usd",
           product_data: {
             name: "Shipping",
           },
-          unit_amount: 999, // $9.99 in cents
+          unit_amount: SHIPPING_FEE_CENTS,
         },
         quantity: 1,
       });
     }
 
-    // Get the base URL from the request headers or environment variables
-    const host = request.headers.get('host') || 'localhost:3000';
-    const protocol = host.includes('localhost') ? 'http' : 'https';
-    const baseUrl = process.env.SITE_URL ||
-                   process.env.NEXT_PUBLIC_SITE_URL ||
-                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
-                   `${protocol}://${host}`);
-
-    console.log("Creating checkout session with base URL:", baseUrl);
+    const baseUrl = resolveBaseUrl(request);
 
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
@@ -88,9 +91,10 @@ export async function POST(request: NextRequest) {
       // Custom branding (if configured in Stripe Dashboard)
       custom_text: {
         submit: {
-          message: "Items ship within 3-5 business days after payment confirmation."
-        }
-      }
+          message:
+            "Items ship within 3-5 business days after payment confirmation.",
+        },
+      },
     });
 
     return NextResponse.json({ url: session.url });
