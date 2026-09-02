@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 9: Patchbay Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --red: #B91C1C;
+    --cream: #F5F2DC;
+    --rack: #12100E;
+    --panel: #1C1916;
+    --amber: #E8A317;
+    --warm: #D9B48A;
+  }
+  body { background: var(--rack); color: var(--cream); font-family: 'Space Grotesk', sans-serif; }
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 30;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 28px;
+    background: #0c0b0a;
+    border-bottom: 1px solid #2a2420;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; letter-spacing: 5px; font-size: 24px; color: var(--cream); text-decoration: none; }
+  .nav-links { display: flex; gap: 18px; list-style: none; font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; }
+  .nav-links a { color: var(--warm); text-decoration: none; }
+  .nav-links a:hover { color: var(--amber); }
+  .burger { display: none; background: none; border: 0; color: var(--cream); font-size: 18px; }
+
+  .vu {
+    height: 8px; background: #2a2420; overflow: hidden; margin-top: 10px;
+    display: flex; gap: 2px;
+  }
+  .vu i { flex: 1; background: var(--amber); opacity: 0.25; animation: pulse 1.4s infinite ease-in-out; }
+  .vu i:nth-child(3n) { background: var(--red); animation-duration: 0.9s; }
+  .vu i:nth-child(2n) { animation-delay: 0.2s; }
+  @keyframes pulse { 50% { opacity: 1; } }
+
+  header {
+    padding: 110px 40px 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 32px;
+    align-items: end;
+  }
+  .kicker { font-family: 'IBM Plex Mono', monospace; color: var(--amber); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 9vw, 108px); line-height: 0.86; letter-spacing: 3px; margin: 10px 0; }
+  .lede { max-width: 480px; color: var(--warm); line-height: 1.6; }
+  .actions { display: flex; gap: 12px; margin-top: 24px; }
+  .btn { text-decoration: none; padding: 12px 18px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .btn-live { background: var(--red); color: white; }
+  .btn-off { border: 1px solid var(--warm); color: var(--cream); }
+
+  .channel {
+    background: var(--panel);
+    border: 1px solid #2f2924;
+    padding: 18px;
+  }
+  .screws { display: flex; justify-content: space-between; color: #4a4038; font-size: 10px; margin-bottom: 8px; }
+  .channel h2 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; }
+
+  .rack {
+    padding: 20px 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .mod {
+    background: linear-gradient(#1f1b18, #161310);
+    border: 1px solid #332c26;
+    padding: 10px;
+  }
+  .mod img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border: 1px solid #3a322c; }
+  .mod h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; margin-top: 10px; }
+  .mod .price { color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .jacks { display: flex; gap: 8px; margin-top: 10px; }
+  .jack { width: 14px; height: 14px; border-radius: 50%; border: 3px solid #3a322c; background: #0a0908; }
+
+  .desk {
+    margin: 0 40px 60px;
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    background: var(--panel);
+    border: 1px solid #2f2924;
+  }
+  .desk > div { padding: 32px; }
+  .desk h2 { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 2px; margin-bottom: 12px; }
+  .desk p { color: var(--warm); line-height: 1.7; }
+  .live { background: #0f0d0b; border-left: 1px solid #2f2924; }
+  .live a { color: var(--amber); }
+
+  footer { padding: 24px 40px 40px; display: flex; justify-content: space-between; font-size: 12px; color: var(--warm); border-top: 8px solid #0c0b0a; }
+  footer a { color: var(--amber); text-decoration: none; }
+
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+    nav.show .nav-links { display: flex; flex-direction: column; position: absolute; top: 48px; left: 0; right: 0; background: #0c0b0a; padding: 16px; }
+    .burger { display: block; }
+    header, .rack, .desk { grid-template-columns: 1fr; }
+    header, .rack, footer { padding-left: 20px; padding-right: 20px; }
+    .desk { margin: 0 20px 40px; }
+    .desk > div + div { border-left: 0; border-top: 1px solid #2f2924; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#">A-OK KEYS</a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('show')">☰</button>
+  <ul class="nav-links">
+    <li><a href="#">T-Shirts</a></li>
+    <li><a href="#">Hoodies</a></li>
+    <li><a href="#">Hats</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Ch. 4 Game</a></li>
+    <li><a href="#">Cart [0]</a></li>
+  </ul>
+</nav>
+
+<header>
+  <div>
+    <div class="kicker">studio · analog in / digital out</div>
+    <h1>WE GOT<br>THE KEYS</h1>
+    <p class="lede">Not an arcade. Not a terminal. The brand is a room with warm lamps, a patchbay, and too many models on the talkback.</p>
+    <div class="vu"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="actions">
+      <a class="btn btn-live" href="#">Arm the shop</a>
+      <a class="btn btn-off" href="#">Listen to Key To Sleep</a>
+    </div>
+  </div>
+  <aside class="channel">
+    <div class="screws"><span>◉</span><span>CH 01 · VOCALS</span><span>◉</span></div>
+    <div class="kicker">now playing</div>
+    <h2>APES ON KNOWLEDGE</h2>
+    <p style="color:#D9B48A;margin:8px 0 12px;line-height:1.5">The merch is the session merch. If you already listen, you already know the joke.</p>
+    <div class="vu"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </aside>
+</header>
+
+<section class="rack">
+  <article class="mod">
+    <div class="screws"><span>◉</span><span>MOD 12</span><span>◉</span></div>
+    <img src="/images/products/a-ok-we-got-the-keys-1.png" alt="We Got The Keys tee">
+    <h3>WE GOT THE KEYS</h3>
+    <div class="price">$50.00</div>
+    <div class="jacks"><span class="jack"></span><span class="jack"></span><span class="jack"></span></div>
+  </article>
+  <article class="mod">
+    <div class="screws"><span>◉</span><span>MOD 13</span><span>◉</span></div>
+    <img src="/images/products/a-okool-as-a-cucumber-tee-0.png" alt="A-OKool as a cucumber">
+    <h3>A-OKOOL CUCUMBER</h3>
+    <div class="price">$45.00</div>
+    <div class="jacks"><span class="jack"></span><span class="jack"></span></div>
+  </article>
+  <article class="mod">
+    <div class="screws"><span>◉</span><span>MOD 14</span><span>◉</span></div>
+    <img src="/images/products/business-logic-crew-neck-sweatshirt-0.png" alt="Business Logic">
+    <h3>BUSINESS LOGIC</h3>
+    <div class="price">$75.00 · hoodie plate</div>
+    <div class="jacks"><span class="jack"></span><span class="jack"></span><span class="jack"></span><span class="jack"></span></div>
+  </article>
+</section>
+
+<section class="desk">
+  <div>
+    <div class="kicker">liner notes</div>
+    <h2>THE E/ACC MONKEY THEOREM</h2>
+    <p>Infinite models, infinite compute, every possible mix: Hamlet rapping, Romeo tagged not-financial-advice, citations to journals that 404 in beautiful type.</p>
+    <p>Unlike typing monkeys, these ones finish the take on the first pass and insist they meant to.</p>
+  </div>
+  <div class="live">
+    <div class="kicker">channel 4 · live</div>
+    <h2>RUN, HUMAN, RUN!</h2>
+    <p>Arcade as a named send, not the whole mix. Collect 3 UBI credits, take 25% off the session merch.</p>
+    <p style="margin-top:16px"><a href="#">Punch in →</a></p>
+  </div>
+</section>
+
+<footer>
+  <div>A-OK.SHOP — patched, not generated</div>
+  <div><a href="#">GitHub</a> · <a href="#">YouTube</a> · <a href="#">Spotify</a> · <a href="#">SoundCloud</a></div>
+</footer>
+</body>
+</html>
