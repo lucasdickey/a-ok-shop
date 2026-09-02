@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 10: Supergraphic Billboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --red: #B91C1C; --cream: #F5F2DC; --ink: #0B0B0B; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 40;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    mix-blend-mode: difference;
+    color: white;
+  }
+  .nav-brand { font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: 18px; color: inherit; text-decoration: none; }
+  .nav-links { display: flex; gap: 18px; list-style: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .nav-links a { color: inherit; text-decoration: none; }
+  .burger { display: none; background: none; border: 0; color: inherit; font-size: 18px; }
+
+  .billboard {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background: var(--ink);
+  }
+  .word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(140px, 42vw, 520px);
+    line-height: 0.75;
+    letter-spacing: -0.04em;
+    color: transparent;
+    background: url('/images/products/a-ok-march-of-the-agents-tee-0.png') center/cover no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-align: center;
+    width: 100%;
+    padding: 80px 0 40px;
+  }
+  .caption {
+    position: absolute; left: 24px; bottom: 24px; right: 24px;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    color: var(--cream); font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .caption a { color: var(--cream); }
+
+  .strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    min-height: 70vh;
+  }
+  .plate { position: relative; overflow: hidden; min-height: 420px; }
+  .plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .plate .label {
+    position: absolute; left: 16px; bottom: 16px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1px; color: white;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  .plate .price { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: 0; }
+
+  .theorem {
+    padding: 72px 24px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .theorem h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 10vw, 96px); line-height: 0.85; letter-spacing: 2px; }
+  .theorem p { font-size: 18px; line-height: 1.6; margin-top: 20px; max-width: 640px; }
+  .links { margin-top: 28px; display: flex; gap: 16px; }
+  .links a { color: var(--red); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; border-bottom: 2px solid var(--red); padding-bottom: 2px; }
+
+  footer { padding: 24px; display: flex; justify-content: space-between; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border-top: 8px solid var(--ink); }
+  footer a { color: var(--red); text-decoration: none; }
+
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+    nav.show .nav-links { display: flex; flex-direction: column; position: absolute; top: 48px; right: 16px; background: var(--ink); color: var(--cream); mix-blend-mode: normal; padding: 16px; }
+    .burger { display: block; }
+    .word { font-size: 38vw; padding-top: 120px; }
+    .strip { grid-template-columns: 1fr; }
+    .caption, footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="#">A-OK</a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('show')">☰</button>
+  <ul class="nav-links">
+    <li><a href="#">T-Shirts</a></li>
+    <li><a href="#">Hoodies</a></li>
+    <li><a href="#">Hats</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Game</a></li>
+    <li><a href="#">Cart</a></li>
+  </ul>
+</nav>
+
+<section class="billboard">
+  <div class="word">A-OK</div>
+  <div class="caption">
+    <span>Apes On Keys · AI nerdwear</span>
+    <a href="#">Shop the plate →</a>
+  </div>
+</section>
+
+<section class="strip">
+  <article class="plate">
+    <img src="/images/products/a-ok-march-of-the-agents-tee-1.png" alt="March of the Agents">
+    <div class="label">MARCH OF THE AGENTS <span class="price">$50</span></div>
+  </article>
+  <article class="plate">
+    <img src="/images/hp-art-grid-collection/a-ok-acc-preso-flat.png" alt="ACC poster">
+    <div class="label">GALLERY / ACC <span class="price">open</span></div>
+  </article>
+  <article class="plate" style="background:#8B1E24">
+    <img src="/images/products/ape-logo-embroidered-2.jpg" alt="Ape logo cap">
+    <div class="label">SIGIL CAP <span class="price">$75</span></div>
+  </article>
+</section>
+
+<section class="theorem">
+  <h2>THE THEOREM<br>IS THE BILLBOARD</h2>
+  <p>Infinite models, infinite compute, every possible sentence — including this one, printed large enough to be illegal on a building. Hamlet raps. Romeo discloses nothing. You wear the citation.</p>
+  <div class="links">
+    <a href="#">Full catalog</a>
+    <a href="#">Run, Human, Run!</a>
+  </div>
+</section>
+
+<footer>
+  <div>A-OK.SHOP · city scale</div>
+  <div><a href="#">GitHub</a> · <a href="#">YouTube</a> · <a href="#">Spotify</a></div>
+</footer>
+</body>
+</html>

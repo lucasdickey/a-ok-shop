@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-OK Design Concept 7: Inference Trace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --red: #B91C1C;
+    --cream: #F5F2DC;
+    --ink: #141414;
+    --paper: #FAF8F1;
+    --rail: #0E0F12;
+    --token: #7CFFB2;
+    --muted: #6b6b6b;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 28px;
+    background: rgba(250,248,241,0.92);
+    border-bottom: 1px solid #e6e1d2;
+  }
+  .nav-brand { font-family: 'Bebas Neue', sans-serif; letter-spacing: 5px; font-size: 24px; text-decoration: none; color: var(--ink); }
+  .nav-links { display: flex; gap: 22px; list-style: none; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .nav-links a { color: var(--ink); text-decoration: none; }
+  .nav-links a:hover { color: var(--red); }
+  .burger { display: none; background: none; border: 0; font-size: 20px; cursor: pointer; }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 1.35fr 0.85fr;
+    min-height: 100vh;
+    padding-top: 57px;
+  }
+  .shop { padding: 48px 48px 80px; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 8vw, 96px); line-height: 0.88; letter-spacing: 2px; margin: 12px 0 18px; }
+  .lede { max-width: 520px; font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 28px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn { text-decoration: none; padding: 12px 18px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .btn-primary { background: var(--red); color: white; }
+  .btn-ghost { border: 1px solid var(--ink); color: var(--ink); }
+
+  .products { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { background: white; border: 1px solid #e6e1d2; }
+  .card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .card-body { padding: 14px; }
+  .card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+  .price { color: var(--red); font-weight: 700; margin-top: 4px; }
+  .meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 8px; }
+
+  .trace {
+    background: var(--rail);
+    color: #c9d0c4;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 28px 24px 60px;
+    border-left: 1px solid #1f2420;
+    position: sticky; top: 57px; height: calc(100vh - 57px); overflow: auto;
+  }
+  .trace h2 { font-family: 'Bebas Neue', sans-serif; color: var(--cream); letter-spacing: 2px; font-size: 28px; font-weight: 400; }
+  .status { color: var(--token); margin: 8px 0 24px; }
+  .step { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #222; }
+  .step .k { color: #7aa2ff; }
+  .step .ok { color: var(--token); }
+  .step .dim { color: #667066; }
+  .rec {
+    margin-top: 24px;
+    background: #161916;
+    border: 1px solid #2a332c;
+    padding: 16px;
+  }
+  .rec img { width: 100%; height: 160px; object-fit: cover; margin: 10px 0; display: block; }
+  .rec strong { color: var(--cream); display: block; margin-bottom: 6px; }
+  .token { color: var(--token); }
+
+  .band { grid-column: 1 / -1; background: var(--cream); padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; border-top: 1px solid #e6e1d2; }
+  .band h2 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 2px; }
+  .band p { line-height: 1.7; margin-top: 12px; }
+  .theorem { background: #111; color: #c9d0c4; padding: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.7; }
+  .plus { color: var(--token); }
+
+  footer { grid-column: 1 / -1; display: flex; justify-content: space-between; padding: 24px 48px; font-size: 12px; border-top: 1px solid #e6e1d2; }
+  footer a { color: var(--red); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    nav.show .nav-links { display: flex; flex-direction: column; position: absolute; top: 52px; right: 0; left: 0; background: var(--paper); padding: 16px; }
+    .burger { display: block; }
+    .shell { grid-template-columns: 1fr; }
+    .trace { position: relative; top: 0; height: auto; }
+    .shop { padding: 32px 20px; }
+    .products, .band { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 8px; padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="#">A-OK</a>
+  <button class="burger" onclick="document.querySelector('nav').classList.toggle('show')">☰</button>
+  <ul class="nav-links">
+    <li><a href="#">T-Shirts</a></li>
+    <li><a href="#">Hoodies</a></li>
+    <li><a href="#">Hats</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Run, Human, Run!</a></li>
+    <li><a href="#">Cart [0]</a></li>
+  </ul>
+</nav>
+
+<div class="shell">
+  <main class="shop">
+    <div class="eyebrow">session · shop.a-ok · thinking visible</div>
+    <h1>THE MODEL<br>ALREADY DRESSED YOU</h1>
+    <p class="lede">Not a terminal skin. A 2026 agent trace sitting next to real merch. The shop reasons in public, then hands you a tee.</p>
+    <div class="row">
+      <a class="btn btn-primary" href="#">Accept recommendation</a>
+      <a class="btn btn-ghost" href="#">Browse catalog anyway</a>
+    </div>
+    <div class="products">
+      <article class="card">
+        <img src="/images/products/hallucination-club-inference-error-edition-1.png" alt="Hallucination Club">
+        <div class="card-body">
+          <h3>HALLUCINATION CLUB</h3>
+          <div class="price">$45.00</div>
+          <div class="meta">tool: catalog.search · confidence 0.81</div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="/images/products/a-ok-we-got-the-keys-0.png" alt="We Got The Keys">
+        <div class="card-body">
+          <h3>WE GOT THE KEYS</h3>
+          <div class="price">$50.00</div>
+          <div class="meta">tool: catalog.search · confidence 0.74</div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="/images/products/mixture-of-apes-finetuned-personalities-tee-0.png" alt="Mixture of Apes">
+        <div class="card-body">
+          <h3>MIXTURE OF APES</h3>
+          <div class="price">$50.00</div>
+          <div class="meta">fallback if you hate the rec</div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="/images/products/ape-logo-embroidered-0.jpg" alt="Ape logo cap">
+        <div class="card-body">
+          <h3>APE LOGO CAP</h3>
+          <div class="price">$75.00</div>
+          <div class="meta">hat plate · charcoal</div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <aside class="trace" aria-label="Inference trace">
+    <div class="eyebrow" style="color:#7CFFB2">live trace</div>
+    <h2>THINKING</h2>
+    <div class="status">● streaming tokens</div>
+    <div class="step"><span class="k">goal</span><br>User landed from /game. Likely wants a wearable joke, not a hoodie yet.</div>
+    <div class="step"><span class="k">tool</span> catalog.featured()<br><span class="ok">ok</span> 4 SKUs · tees + cap</div>
+    <div class="step"><span class="k">observe</span><br>Color-coded cards convert. Homepage cream cards do not. Preserve the shop system.</div>
+    <div class="step"><span class="k">risk</span><br>Don't recommend the $75 hat first. Start at $45, then upsell Keys.</div>
+    <div class="rec">
+      <span class="dim">final answer</span>
+      <strong>Buy Hallucination Club — Inference Error.</strong>
+      <img src="/images/products/hallucination-club-inference-error-edition-0.png" alt="">
+      <span class="token">25% off unlocks if you collect 3 UBI credits.</span>
+    </div>
+  </aside>
+
+  <section class="band">
+    <div>
+      <div class="eyebrow">abstract</div>
+      <h2>WHO ARE APES ON KEYS?</h2>
+      <p>The theorem is not a wallpaper terminal. It is the model's scratchpad, published as copy.</p>
+    </div>
+    <div class="theorem">
+      <div class="plus">+ monkey_theorem.md</div>
+      Give infinite models infinite compute and they generate everything, including Hamlet rapping and a Romeo and Juliet marked <em>not financial advice</em>.
+      <br><br>
+      Reviewed by 4.3 million models in superposition about their own cutoff dates.
+    </div>
+  </section>
+
+  <footer>
+    <div>A-OK.SHOP — traces are not financial advice</div>
+    <div><a href="#">GitHub</a> · <a href="#">YouTube</a> · <a href="#">Spotify</a></div>
+  </footer>
+</div>
+</body>
+</html>
