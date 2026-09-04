@@ -49,31 +49,39 @@ export function SizeSelector({
     onSizeSelect(size, variantId);
   };
 
-  const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const size = e.target.value;
-    handleSizeSelection(size);
-  };
-
   return (
     <div className="mt-6">
-      <label htmlFor="size-select" className="block text-sm font-medium mb-2">
-        Size
-      </label>
-      <select
-        id="size-select"
-        value={selectedSize}
-        onChange={handleSizeChange}
-        className="w-full p-2 border border-secondary rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
-      >
-        <option value="" disabled>
-          Select a size
-        </option>
-        {sizes.map((size) => (
-          <option key={size} value={size}>
-            {size}
-          </option>
-        ))}
-      </select>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-semibold uppercase tracking-wider text-dark">
+          Size
+        </span>
+        {selectedSize && (
+          <span className="text-sm text-dark-light">
+            Selected: <span className="font-semibold">{selectedSize}</span>
+          </span>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Size">
+        {sizes.map((size) => {
+          const isSelected = selectedSize === size;
+          return (
+            <button
+              key={size}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              onClick={() => handleSizeSelection(size)}
+              className={`min-w-[3rem] rounded-lg border-2 px-3 py-2 text-sm font-semibold transition-all duration-200 ease-out-expo active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon focus-visible:ring-offset-2 ${
+                isSelected
+                  ? 'border-charcoal-dark bg-charcoal-dark text-bone shadow-sm'
+                  : 'border-dark/20 bg-white text-dark hover:border-charcoal-dark hover:-translate-y-0.5 hover:shadow-sm'
+              }`}
+            >
+              {size}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -151,25 +159,34 @@ export function ColorSelector({
 
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium mb-2">Color</h3>
-      <div className="flex flex-wrap gap-2">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-semibold uppercase tracking-wider text-dark">
+          Color
+        </span>
+        {selectedColor && (
+          <span className="text-sm text-dark-light">
+            Selected: <span className="font-semibold">{selectedColor}</span>
+          </span>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-3">
         {colors.map((color) => (
           <button
             key={color}
             onClick={() => handleColorClick(color)}
-            className={`w-8 h-8 rounded-full border ${getColorStyle(color)} ${
+            className={`h-9 w-9 rounded-full border transition-all duration-200 ease-out-expo active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon focus-visible:ring-offset-2 ${getColorStyle(
+              color
+            )} ${
               selectedColor === color
-                ? 'ring-2 ring-primary ring-offset-2'
-                : 'hover:ring-1 hover:ring-gray-300'
+                ? 'scale-110 ring-2 ring-maroon ring-offset-2'
+                : 'hover:scale-110 hover:ring-1 hover:ring-gray-300'
             }`}
             title={color}
             aria-label={`Select ${color} color`}
+            aria-pressed={selectedColor === color}
           />
         ))}
       </div>
-      {selectedColor && (
-        <p className="mt-2 text-sm text-gray-600">Selected: {selectedColor}</p>
-      )}
     </div>
   );
 }
@@ -222,11 +239,17 @@ export function ProductDetails({
   };
 
   return (
+    // No entrance animation here: a persistent transform would become the
+    // containing block for the fixed sticky add-to-cart bar rendered inside.
     <div>
-      <h1 className="text-3xl font-bold">{product.title}</h1>
+      <h1 className="animate-fade-up font-bebas-neue text-4xl tracking-wide md:text-5xl">
+        {product.title}
+      </h1>
 
-      <div className="mt-4">
-        <p className="text-2xl font-medium text-primary">${price.toFixed(2)}</p>
+      <div className="mt-3">
+        <p className="font-space-grotesk text-3xl font-medium text-maroon">
+          ${price.toFixed(2)}
+        </p>
       </div>
 
       {/* Color selector for products with color options */}
@@ -251,12 +274,14 @@ export function ProductDetails({
       {/* Variant selector for non-clothing items with multiple variants */}
       {!isClothingItem && !hasColorOptions && variants.length > 1 && (
         <div className="mt-6">
-          <h3 className="text-sm font-medium">Variants</h3>
+          <span className="text-sm font-semibold uppercase tracking-wider text-dark">
+            Variants
+          </span>
           <div className="mt-2 flex flex-wrap gap-2">
             {variants.map((variant) => (
               <button
                 key={variant.id}
-                className="rounded-md border border-secondary px-3 py-1 text-sm hover:bg-secondary-light"
+                className="rounded-lg border-2 border-dark/20 px-3 py-2 text-sm font-semibold transition-all duration-200 hover:border-charcoal-dark hover:-translate-y-0.5 hover:shadow-sm active:scale-95"
               >
                 {variant.title}
               </button>
@@ -266,7 +291,7 @@ export function ProductDetails({
       )}
 
       {/* Add to cart button for all products */}
-      <div className="mt-6">
+      <div className="mt-8">
         <AddToCartButton
           product={{
             id: product.id,
@@ -283,11 +308,14 @@ export function ProductDetails({
           }}
           showSizeWarning={isClothingItem && hasSizeOptions && !selectedSize}
           showColorWarning={hasColorOptions && !selectedColor}
+          stickyOnMobile
         />
       </div>
 
-      <div className="mt-8 prose prose-sm max-w-none prose-headings:font-medium prose-ul:list-disc prose-ul:pl-5 prose-li:mt-2 prose-p:mb-4">
-        <h3 className="text-lg font-medium">Description</h3>
+      <div className="mt-10 border-t border-dark/10 pt-8 prose prose-sm max-w-none prose-headings:font-medium prose-ul:list-disc prose-ul:pl-5 prose-li:mt-2 prose-p:mb-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-dark">
+          Description
+        </h3>
         <div
           dangerouslySetInnerHTML={{
             __html:
@@ -298,18 +326,20 @@ export function ProductDetails({
                     .replace(/\r/g, '')
                 : ''),
           }}
-          className="product-description"
+          className="product-description mt-3"
         />
       </div>
 
       {product.tags.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-sm font-medium">Tags</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-dark">
+            Tags
+          </h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {product.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="rounded-full bg-secondary px-3 py-1 text-xs"
+                className="rounded-full border border-dark/10 bg-secondary px-3 py-1 text-xs font-medium transition-colors duration-200 hover:bg-secondary-dark"
               >
                 {tag}
               </span>
@@ -350,15 +380,16 @@ export function ProductPageContent({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
       {/* Product Images */}
-      <div className="space-y-4">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
+      <div className="space-y-4 md:sticky md:top-24 md:self-start">
+        <div className="group relative aspect-square overflow-hidden rounded-2xl border border-dark/10 bg-secondary-light shadow-card">
           <Image
+            key={selectedImageIndex}
             src={images[selectedImageIndex]?.url || '/product-placeholder.jpg'}
             alt={images[selectedImageIndex]?.alt || product.title}
             fill
-            className="object-cover"
+            className="animate-fade-in object-cover transition-transform duration-500 ease-out-expo group-hover:scale-105"
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             unoptimized={!images[selectedImageIndex]?.url?.startsWith('http')}
@@ -366,12 +397,17 @@ export function ProductPageContent({
         </div>
 
         {images.length > 1 && (
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {images.map((image, index) => (
-              <div
+              <button
                 key={index}
-                className={`relative aspect-square overflow-hidden rounded-lg bg-secondary-light cursor-pointer ${
-                  selectedImageIndex === index ? 'ring-2 ring-primary' : ''
+                type="button"
+                aria-label={`View image ${index + 1} of ${product.title}`}
+                aria-pressed={selectedImageIndex === index}
+                className={`relative aspect-square overflow-hidden rounded-xl border-2 bg-secondary-light transition-all duration-200 ease-out-expo focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon focus-visible:ring-offset-2 ${
+                  selectedImageIndex === index
+                    ? 'border-maroon shadow-sm'
+                    : 'border-transparent opacity-70 hover:-translate-y-0.5 hover:opacity-100 hover:shadow-sm'
                 }`}
                 onClick={() => setSelectedImageIndex(index)}
               >
@@ -383,7 +419,7 @@ export function ProductPageContent({
                   sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
                   unoptimized={!image.url?.startsWith('http')}
                 />
-              </div>
+              </button>
             ))}
           </div>
         )}

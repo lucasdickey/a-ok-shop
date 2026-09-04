@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './CartProvider';
 
@@ -9,10 +10,11 @@ export default function CartDrawer() {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, subtotal } = useCart();
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
-  
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   const isMonthlyDeals = pathname?.startsWith('/monthly-deals');
 
-  // Handle click outside to close
+  // Handle click outside and Escape key to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
@@ -20,12 +22,20 @@ export default function CartDrawer() {
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeCart();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, closeCart]);
 
@@ -43,7 +53,9 @@ export default function CartDrawer() {
   }, [isOpen]);
 
   const handleCheckout = async () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0 || isCheckingOut) return;
+
+    setIsCheckingOut(true);
 
     try {
       // Use Stripe checkout for all products
@@ -76,22 +88,26 @@ export default function CartDrawer() {
     } catch (error) {
       console.error('Error creating checkout:', error);
       alert('There was an error processing your order. Please try again.');
+      setIsCheckingOut(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-dark/50">
+    <div className="fixed inset-0 z-50 animate-fade-in bg-dark/60 backdrop-blur-sm">
       <div
         ref={drawerRef}
-        className="fixed right-0 top-0 h-full w-full max-w-md bg-light p-6 shadow-xl transition-transform sm:w-96"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping cart"
+        className="fixed right-0 top-0 flex h-full w-full max-w-md animate-slide-in-right flex-col bg-light p-6 shadow-drawer sm:w-96"
       >
-        <div className="flex items-center justify-between border-b border-secondary pb-2">
-          <h2 className="text-lg font-bold">Your Cart</h2>
+        <div className="flex items-center justify-between border-b border-dark/10 pb-3">
+          <h2 className="font-bebas-neue text-2xl tracking-wide">Your Cart</h2>
           <button
             onClick={closeCart}
-            className="rounded-md p-1 hover:bg-secondary-light"
+            className="rounded-lg p-1.5 transition-all duration-200 hover:rotate-90 hover:bg-secondary-light active:scale-90"
             aria-label="Close cart"
           >
             <svg
@@ -113,67 +129,87 @@ export default function CartDrawer() {
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex h-[calc(100vh-180px)] flex-col items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-10 w-10 text-secondary-dark mb-3"
-            >
-              <circle cx="8" cy="21" r="1" />
-              <circle cx="19" cy="21" r="1" />
-              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-            </svg>
-            <p className="text-base font-medium">Your cart is empty</p>
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary-light">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-8 w-8 text-dark-light"
+              >
+                <circle cx="8" cy="21" r="1" />
+                <circle cx="19" cy="21" r="1" />
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+              </svg>
+            </div>
+            <p className="mt-4 text-base font-semibold">Your cart is empty</p>
+            <p className="mt-1 text-sm text-dark-light">
+              Fill it with some AI nerdwear.
+            </p>
             <button
               onClick={closeCart}
-              className="mt-3 btn btn-primary text-sm py-2 px-4"
+              className="btn btn-primary mt-5"
             >
               Continue Shopping
             </button>
+            <Link
+              href="/game"
+              onClick={closeCart}
+              className="mt-4 text-xs text-dark-light transition-colors duration-150 hover:text-maroon"
+            >
+              …or beat <span className="font-semibold">Run, Human, Run!</span>{' '}
+              for 25% off →
+            </Link>
           </div>
         ) : (
           <>
-            <div className="max-h-[calc(100vh-200px)] overflow-y-auto py-4">
+            <div className="flex-1 overflow-y-auto py-4">
               {cart.map((item) => (
-                <div key={item.id} className="flex border-b border-secondary py-2 text-sm">
-                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                <div
+                  key={item.id}
+                  className="flex animate-fade-up border-b border-dark/10 py-3 text-sm"
+                >
+                  <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-dark/10 bg-secondary-light">
                     <Image
                       src={item.image || '/product-placeholder.jpg'}
                       alt={item.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 12vw, 10vw"
+                      sizes="(max-width: 768px) 16vw, 10vw"
                     />
                   </div>
-                  <div className="ml-2 flex flex-1 flex-col">
-                    <div className="flex justify-between text-sm font-medium">
-                      <h3 className="text-sm truncate max-w-[150px]">{item.title}</h3>
-                      <p className="ml-2 text-sm">${item.price.toFixed(2)}</p>
+                  <div className="ml-3 flex flex-1 flex-col">
+                    <div className="flex justify-between font-medium">
+                      <h3 className="truncate max-w-[170px] text-sm">{item.title}</h3>
+                      <p className="ml-2 font-space-grotesk text-sm font-semibold">
+                        ${item.price.toFixed(2)}
+                      </p>
                     </div>
-                    <div className="flex text-xs text-gray-500 gap-2">
+                    <div className="mt-0.5 flex gap-2 text-xs text-dark-light">
                       {item.size && <span>Size: {item.size}</span>}
                       {item.color && <span>Color: {item.color}</span>}
                     </div>
-                    <div className="mt-1 flex items-center justify-between">
-                      <div className="flex items-center border border-secondary rounded-md">
+                    <div className="mt-2 flex items-center justify-between">
+                      <div className="flex items-center rounded-lg border border-dark/15 bg-white">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-1 text-xs hover:bg-secondary-light"
+                          className="px-2 py-1 text-xs font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90"
                           aria-label="Decrease quantity"
                         >
-                          -
+                          −
                         </button>
-                        <span className="px-1 text-xs">{item.quantity}</span>
+                        <span className="min-w-[1.75rem] px-1 py-1 text-center text-xs font-semibold tabular-nums">
+                          {item.quantity}
+                        </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-1 text-xs hover:bg-secondary-light"
+                          className="px-2 py-1 text-xs font-semibold transition-colors duration-150 hover:bg-secondary-light active:scale-90"
                           aria-label="Increase quantity"
                         >
                           +
@@ -181,7 +217,7 @@ export default function CartDrawer() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-xs text-primary hover:text-primary-dark"
+                        className="text-xs font-medium text-maroon underline-offset-2 transition-colors duration-150 hover:text-maroon-dark hover:underline"
                       >
                         Remove
                       </button>
@@ -190,26 +226,53 @@ export default function CartDrawer() {
                 </div>
               ))}
             </div>
-            <div className="border-t border-secondary pt-3">
-              <div className="flex justify-between text-sm font-medium">
+            <div className="border-t border-dark/10 pt-4">
+              <div className="flex justify-between font-space-grotesk text-base font-semibold">
                 <p>Subtotal</p>
                 <p>${subtotal.toFixed(2)}</p>
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-dark-light">
                 Shipping and taxes calculated at checkout.
               </p>
-              <div className="mt-3">
+              <div className="mt-4">
                 <button
                   onClick={handleCheckout}
-                  className="w-full btn btn-primary text-sm py-2"
+                  disabled={isCheckingOut}
+                  className="btn btn-primary w-full py-3 text-base"
                 >
-                  Checkout
+                  {isCheckingOut ? (
+                    <span className="inline-flex items-center gap-2">
+                      <svg
+                        className="h-4 w-4 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+                        />
+                      </svg>
+                      Redirecting…
+                    </span>
+                  ) : (
+                    'Checkout'
+                  )}
                 </button>
               </div>
-              <div className="mt-2 flex justify-center text-xs">
+              <div className="mt-3 flex justify-center text-xs">
                 <button
                   onClick={closeCart}
-                  className="text-primary hover:text-primary-dark"
+                  className="font-medium text-maroon underline-offset-2 transition-colors duration-150 hover:text-maroon-dark hover:underline"
                 >
                   Continue Shopping
                 </button>
