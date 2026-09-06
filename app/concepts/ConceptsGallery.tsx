@@ -4,11 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
-type Filter = "all" | "cursor" | "droid";
+type Filter = "all" | "cursor" | "droid" | "codex";
 
 const ORIGIN_LABEL: Record<Concept["harness"], string> = {
   Cursor: "Cursor",
   Droid: "Droid",
+  Codex: "Codex",
+};
+
+const originColor: Record<Concept["harness"], string> = {
+  Cursor: "indigo",
+  Droid: "red",
+  Codex: "emerald",
 };
 
 export default function ConceptsGallery() {
@@ -25,7 +32,6 @@ export default function ConceptsGallery() {
   );
 
   const current: Concept = visible[index] ?? visible[0];
-  const isCursor = current.harness === "Cursor";
 
   const go = (next: number) => {
     if (visible.length === 0) return;
@@ -85,6 +91,7 @@ export default function ConceptsGallery() {
                 ["all", "All"],
                 ["cursor", "Cursor · Opus 4.8"],
                 ["droid", "Droid · Grok 4.6"],
+                ["codex", "Codex · Sol 5.6"],
               ] as const
             ).map(([value, label]) => (
               <button
@@ -183,9 +190,11 @@ export default function ConceptsGallery() {
             <span
               className={
                 "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium " +
-                (isCursor
+                (originColor[current.harness] === "indigo"
                   ? "border-indigo-400/30 bg-indigo-400/10 text-indigo-300"
-                  : "border-[#B91C1C]/40 bg-[#B91C1C]/15 text-red-300")
+                  : originColor[current.harness] === "emerald"
+                    ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
+                    : "border-[#B91C1C]/40 bg-[#B91C1C]/15 text-red-300")
               }
             >
               <span className="h-2 w-2 rounded-full bg-current" />
@@ -254,7 +263,11 @@ export default function ConceptsGallery() {
                   <span
                     className={
                       "h-2 w-2 rounded-full " +
-                      (c.harness === "Cursor" ? "bg-indigo-400" : "bg-red-500")
+                      (c.harness === "Cursor"
+                        ? "bg-indigo-400"
+                        : c.harness === "Codex"
+                          ? "bg-emerald-400"
+                          : "bg-red-500")
                     }
                   />
                   <span

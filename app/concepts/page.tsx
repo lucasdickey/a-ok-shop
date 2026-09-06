@@ -4,7 +4,7 @@ import ConceptsGallery from "./ConceptsGallery";
 export const metadata: Metadata = {
   title: "Concept Gallery — A-OK Shop",
   description:
-    "Side-by-side homepage design concepts for the A-OK storefront, labeled by harness and model origin (Cursor · Opus 4.8 vs Droid · Grok 4.6).",
+    "Fifteen homepage design concepts for the A-OK storefront across Cursor · Opus 4.8, Droid · Grok 4.6, and Codex · Sol 5.6.",
 };
 
 export default function ConceptsPage() {

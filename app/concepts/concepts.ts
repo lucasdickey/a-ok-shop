@@ -1,4 +1,4 @@
-export type Harness = "Cursor" | "Droid";
+export type Harness = "Cursor" | "Droid" | "Codex";
 
 export interface Concept {
   id: string;
@@ -123,5 +123,60 @@ export const concepts: Concept[] = [
     description:
       "One oversized word filling the viewport. Product photo clipped inside the letterforms. Almost no chrome, city-scale type.",
     highlights: ["Giant clipped type", "Product plates strip", "Theorem statement section"],
+  },
+  {
+    id: "11",
+    title: "Museum Store",
+    file: "/design-concepts/11-museum-store.html",
+    harness: "Codex",
+    model: "Sol 5.6",
+    tags: ["Curatorial", "Objects", "Premium"],
+    description:
+      "White-cube museum retail with accession labels, object cards, and gallery wall text. Products become collectible cultural artifacts.",
+    highlights: ["Accession-label hero", "Object collection grid", "Theorem as wall text", "Interactive game wing"],
+  },
+  {
+    id: "12",
+    title: "Field Guide",
+    file: "/design-concepts/12-field-guide.html",
+    harness: "Codex",
+    model: "Sol 5.6",
+    tags: ["Outdoor", "Tactile", "Field notes"],
+    description:
+      "An expedition manual for synthetic wildlife: graph paper, specimen numbers, olive canvas, safety orange, and gear-like product cards.",
+    highlights: ["Issued-to-humans hero", "Species card catalog", "Field-note theorem", "Game as survival exercise"],
+  },
+  {
+    id: "13",
+    title: "Transit Authority",
+    file: "/design-concepts/13-transit-authority.html",
+    harness: "Codex",
+    model: "Sol 5.6",
+    tags: ["Wayfinding", "Civic", "Color"],
+    description:
+      "Public wayfinding as storefront. Colored routes become categories, products are destinations, and brand features are transfer stations.",
+    highlights: ["Route-map product hero", "Departure-board catalog", "Feature transfer stations", "Strong mobile hierarchy"],
+  },
+  {
+    id: "14",
+    title: "Receipt Machine",
+    file: "/design-concepts/14-receipt-machine.html",
+    harness: "Codex",
+    model: "Sol 5.6",
+    tags: ["Commerce", "Thermal", "Mono"],
+    description:
+      "The homepage as a giant thermal receipt: line items, SKU jokes, totals, barcode rhythm, and transaction-native calls to action.",
+    highlights: ["Receipt hero", "Scannable line-item products", "Fine-print theorem", "Loyalty-game offer"],
+  },
+  {
+    id: "15",
+    title: "Soft Machine",
+    file: "/design-concepts/15-soft-machine.html",
+    harness: "Codex",
+    model: "Sol 5.6",
+    tags: ["Organic", "Optimistic", "Colorful"],
+    description:
+      "Optimistic AI culture with biomorphic fields, warm color, rounded product vessels, and gentler language without losing the strange.",
+    highlights: ["Biomorphic product hero", "Rounded color-block catalog", "Gentle theorem", "Game as playful tension"],
   },
 ];
