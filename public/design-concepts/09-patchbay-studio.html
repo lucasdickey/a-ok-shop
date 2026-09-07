@@ -105,6 +105,66 @@
     .desk > div + div { border-left: 0; border-top: 1px solid #2f2924; }
   }
 </style>
+<style>
+  /* ── Micro-interactions ── */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,.68,.24,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .logo { display: inline-block; transition: letter-spacing .3s ease, color .3s ease; }
+  .logo:hover { letter-spacing: 7px; color: var(--amber); }
+  .nav-links a { position: relative; transition: color .2s ease; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--amber); transition: width .25s ease; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .btn { transition: transform .18s ease, box-shadow .18s ease, background-color .2s ease, border-color .2s ease, color .2s ease; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-live:hover { background: #d22323; box-shadow: 0 6px 18px -6px rgba(185,28,28,0.7); }
+  .btn-off:hover { border-color: var(--amber); color: var(--amber); }
+  .btn:active { transform: translateY(1px); }
+
+  .mod { transition: transform .3s cubic-bezier(.22,.68,.24,1), border-color .3s ease, box-shadow .3s ease; }
+  .mod:hover { transform: translateY(-6px); border-color: #59472f; box-shadow: 0 16px 34px -22px rgba(0,0,0,0.85); }
+  .mod img { transition: transform .5s cubic-bezier(.22,.68,.24,1); }
+  .mod:hover img { transform: scale(1.04); }
+  .jack { transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease; }
+  .mod:hover .jack { border-color: var(--amber); }
+  .mod:hover .jack:nth-child(1) { background: var(--amber); box-shadow: 0 0 8px rgba(232,163,23,0.8); }
+  .mod:hover .jack:nth-child(2) { background: var(--amber); box-shadow: 0 0 8px rgba(232,163,23,0.8); transition-delay: .07s; }
+  .mod:hover .jack:nth-child(3) { background: var(--amber); box-shadow: 0 0 8px rgba(232,163,23,0.8); transition-delay: .14s; }
+  .mod:hover .jack:nth-child(4) { background: var(--amber); box-shadow: 0 0 8px rgba(232,163,23,0.8); transition-delay: .21s; }
+
+  .channel { transition: border-color .3s ease; }
+  .channel:hover { border-color: #59472f; }
+  .live a { transition: opacity .2s ease; }
+  .live a:hover { opacity: .6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(sel) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    els.forEach(function (el) { el.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    setup('.mod, .channel, .desk > div');
+  });
+})();
+</script>
 </head>
 <body>
 <nav>

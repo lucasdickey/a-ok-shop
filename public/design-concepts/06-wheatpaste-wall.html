@@ -319,6 +319,80 @@
     footer { flex-direction: column; }
   }
 </style>
+<style>
+  /* ── Micro-interactions ── */
+  .reveal, .reveal-fade { opacity: 0; will-change: opacity, transform; }
+  .reveal { transform: translateY(18px); }
+  .reveal, .reveal-fade { transition: opacity .6s ease, transform .6s cubic-bezier(.22,.68,.24,1); }
+  .reveal.in, .reveal-fade.in { opacity: 1; }
+  .reveal.in { transform: translateY(0); }
+
+  .poster, .drop, .tile, .side-poster, .hero-main, .hero-stamp, .manifesto {
+    transition: transform .38s cubic-bezier(.22,.68,.24,1), box-shadow .38s ease;
+  }
+  .side-poster:hover, .drop:hover, .manifesto:hover,
+  .hero-main:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 12px 18px 0 rgba(0,0,0,0.42); }
+  .hero-stamp:hover { transform: rotate(0deg) scale(1.04); }
+
+  .drop img { transition: transform .55s cubic-bezier(.22,.68,.24,1), filter .55s ease; }
+  .drop:hover img { transform: scale(1.05); filter: contrast(1.14) saturate(1.03); }
+
+  .tile:hover { transform: translateY(-5px); background-color: #a31f24; }
+  .tile h3 { transition: letter-spacing .3s ease; }
+  .tile:hover h3 { letter-spacing: 2px; }
+  .bento > img { transition: transform .6s cubic-bezier(.22,.68,.24,1), filter .5s ease; }
+  .bento > img:hover { transform: scale(1.045); filter: contrast(1.1); }
+
+  .nav-links a { position: relative; transition: color .25s ease; }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: -5px; height: 3px; width: 0;
+    background: var(--tag); transition: width .28s cubic-bezier(.22,.68,.24,1);
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-brand { transition: letter-spacing .35s ease, color .3s ease; }
+  .nav-brand:hover { letter-spacing: 6px; color: var(--tag); }
+
+  .cta { transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease; }
+  .cta:hover { transform: translateY(-2px) rotate(-1deg); box-shadow: 4px 6px 0 rgba(0,0,0,0.25); }
+  .cta:active { transform: translateY(1px); box-shadow: 1px 2px 0 rgba(0,0,0,0.3); }
+
+  .graffiti { transition: transform .3s cubic-bezier(.22,.68,.24,1), text-shadow .3s ease; }
+  .graffiti:hover { transform: rotate(2deg) scale(1.07); text-shadow: 3px 3px 0 var(--deep-red); }
+
+  .section-tag { transition: transform .3s ease; }
+  .section-tag:hover { transform: rotate(-3deg) scale(1.05); }
+
+  footer a { transition: color .2s ease; }
+  footer a:hover { color: var(--cream); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal, .reveal-fade { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(sel, cls) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    els.forEach(function (el) { el.classList.add(cls); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    setup('.tile, .bento > img, .section-tag, .section-title', 'reveal');
+    setup('.side-poster, .drop, .manifesto', 'reveal-fade');
+  });
+})();
+</script>
 </head>
 <body>
 <nav>

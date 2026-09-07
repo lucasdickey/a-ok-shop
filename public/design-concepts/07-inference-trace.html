@@ -103,6 +103,60 @@
     footer { flex-direction: column; gap: 8px; padding: 24px 20px; }
   }
 </style>
+<style>
+  /* ── Micro-interactions ── */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,.68,.24,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .btn { transition: transform .18s ease, box-shadow .18s ease, background-color .2s ease, color .2s ease; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.12); }
+  .btn:active { transform: translateY(1px); box-shadow: none; }
+  .btn-ghost:hover { background: var(--ink); color: #fff; }
+
+  .nav-links a { position: relative; transition: color .2s ease; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--red); transition: width .25s ease; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .card { transition: transform .3s cubic-bezier(.22,.68,.24,1), box-shadow .3s ease, border-color .3s ease; }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px -18px rgba(0,0,0,0.35); border-color: #d9d2bf; }
+  .card img { transition: transform .5s cubic-bezier(.22,.68,.24,1); }
+  .card:hover img { transform: scale(1.05); }
+
+  .step { transition: background-color .25s ease; }
+  .step:hover { background-color: rgba(124,255,178,0.04); }
+  .rec strong::after { content: ' ▍'; color: var(--token); animation: blink 1s steps(2,start) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  footer a { transition: opacity .2s ease; }
+  footer a:hover { opacity: .6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(sel) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    els.forEach(function (el) { el.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    setup('.card, .trace .step, .rec');
+  });
+})();
+</script>
 </head>
 <body>
 <nav>
