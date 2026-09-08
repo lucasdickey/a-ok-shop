@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
-type Filter = "all" | "cursor" | "droid" | "codex";
+type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6";
 
 const ORIGIN_LABEL: Record<Concept["harness"], string> = {
   Cursor: "Cursor",
@@ -21,13 +21,13 @@ const originColor: Record<Concept["harness"], string> = {
 export default function ConceptsGallery() {
   const [index, setIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>("desktop");
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>("gpt6");
 
   const visible = useMemo(
     () =>
       filter === "all"
         ? concepts
-        : concepts.filter((c) => c.harness.toLowerCase() === filter),
+        : concepts.filter((c) => filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
     [filter]
   );
 
@@ -38,14 +38,12 @@ export default function ConceptsGallery() {
     setIndex((next + visible.length) % visible.length);
   };
 
-  // Reset position whenever the filter changes so the first item is in view.
-  useEffect(() => {
-    setIndex(0);
-  }, [filter]);
+
 
   // Arrow-key traversal while the gallery (not the iframe) has focus.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLElement && e.target.closest("button, input, textarea, select, [contenteditable=true]")) return;
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         setIndex((i) => (i - 1 + visible.length) % visible.length);
@@ -78,8 +76,9 @@ export default function ConceptsGallery() {
             Concept Gallery
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#F5F2DC]/50">
-            Side-by-side pass over the site refresh. Live prototypes, labeled by
-            harness + model origin. Use the arrows or ← / → keys to traverse.
+            Side-by-side pass over the site refresh. Twenty prototypes across four rounds. The newest five put the buying
+            flow, art studio, and mobile navigation into practice. Use the arrows
+            or ← / → keys to compare.
           </p>
         </header>
 
@@ -91,12 +90,14 @@ export default function ConceptsGallery() {
                 ["all", "All"],
                 ["cursor", "Cursor · Opus 4.8"],
                 ["droid", "Droid · Grok 4.6"],
-                ["codex", "Codex · Sol 5.6"],
+                ["sol", "Codex · Sol 5.6"],
+                ["gpt6", "Codex · GPT-6 · New"],
               ] as const
             ).map(([value, label]) => (
               <button
                 key={value}
-                onClick={() => setFilter(value)}
+                onClick={() => { setFilter(value); setIndex(0); }}
+                aria-pressed={filter === value}
                 className={
                   "rounded-full border px-4 py-1.5 text-xs uppercase tracking-wider transition " +
                   (filter === value
@@ -119,6 +120,7 @@ export default function ConceptsGallery() {
               <button
                 key={value}
                 onClick={() => setViewport(value)}
+                aria-pressed={viewport === value}
                 className={
                   "rounded px-3 py-1 text-xs uppercase tracking-wider transition " +
                   (viewport === value
@@ -241,7 +243,7 @@ export default function ConceptsGallery() {
         {/* Strip */}
         <div
           className="mt-8 flex snap-x gap-3 overflow-x-auto pb-2"
-          role="tablist"
+          role="group"
           aria-label="Concept list"
         >
           {visible.map((c, i) => {
@@ -249,8 +251,7 @@ export default function ConceptsGallery() {
             return (
               <button
                 key={c.id}
-                role="tab"
-                aria-selected={selected}
+                aria-pressed={selected}
                 onClick={() => setIndex(i)}
                 className={
                   "min-w-[150px] snap-start rounded-md border px-3 py-2 text-left transition " +

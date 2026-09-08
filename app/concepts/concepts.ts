@@ -3,7 +3,7 @@ export type Harness = "Cursor" | "Droid" | "Codex";
 export interface Concept {
   id: string;
   title: string;
-  /** Public path to the self-contained prototype (served from /public). */
+  /** Public path to the prototype (served from /public). */
   file: string;
   harness: Harness;
   model: string;
@@ -178,5 +178,101 @@ export const concepts: Concept[] = [
     description:
       "Optimistic AI culture with biomorphic fields, warm color, rounded product vessels, and gentler language without losing the strange.",
     highlights: ["Biomorphic product hero", "Rounded color-block catalog", "Gentle theorem", "Game as playful tension"],
+  },
+
+  {
+    "id": "16",
+    "title": "Human Standard",
+    "file": "/design-concepts/16-human-standard.html",
+    "harness": "Codex",
+    "model": "GPT-6",
+    "tags": [
+      "Wearable",
+      "Direct",
+      "Brand core"
+    ],
+    "description": "A crimson masthead and real street photography turn AI nerdwear into a confident clothing label. Shopping gets the first word; art gets the second.",
+    "highlights": [
+      "Product and price in the opening screen",
+      "Actual catalog options + preview bag",
+      "Color-coded category browsing",
+      "Generator and art below the collection"
+    ]
+  },
+  {
+    "id": "17",
+    "title": "Open Studio",
+    "file": "/design-concepts/17-open-studio.html",
+    "harness": "Codex",
+    "model": "GPT-6",
+    "tags": [
+      "Process",
+      "Cobalt",
+      "Art to object"
+    ],
+    "description": "A cobalt studio directory and a workbench composition put finished garments next to the art practice. It feels like visiting the people behind the label.",
+    "highlights": [
+      "Studio directory on desktop; working menu on mobile",
+      "Featured product with direct options",
+      "Artwork lightbox + generator workbench",
+      "Commerce connected to creative process"
+    ]
+  },
+  {
+    "id": "18",
+    "title": "Hallucination Club",
+    "file": "/design-concepts/18-hallucination-club.html",
+    "harness": "Codex",
+    "model": "GPT-6",
+    "tags": [
+      "Graphic",
+      "Collective",
+      "Playful"
+    ],
+    "description": "A punchy yellow club identity with a product selector built into the opening spread. Belonging comes from the shared joke, with no signup between you and a tee.",
+    "highlights": [
+      "Clickable featured-product selector",
+      "Oversized type with a wearable hero",
+      "Plain-language shopping controls",
+      "Generator treated as a club creative activity"
+    ]
+  },
+  {
+    "id": "19",
+    "title": "After Hours",
+    "file": "/design-concepts/19-after-hours.html",
+    "harness": "Codex",
+    "model": "GPT-6",
+    "tags": [
+      "Photography",
+      "Night",
+      "Fashion"
+    ],
+    "description": "A cinematic contact sheet with warm white type and a single crimson purchase accent. Real garments and quiet photographic pacing replace ambient tech effects.",
+    "highlights": [
+      "Shoppable contact-sheet hero",
+      "Product photography stays legible in dark mode",
+      "Low-motion art interlude",
+      "Shared accessible options and bag flow"
+    ]
+  },
+  {
+    "id": "20",
+    "title": "The Living Index",
+    "file": "/design-concepts/20-living-index.html",
+    "harness": "Codex",
+    "model": "GPT-6",
+    "tags": [
+      "Catalog first",
+      "Scannable",
+      "Adaptive"
+    ],
+    "description": "The storefront opens directly on the collection. A compact manifesto, clear filters, and an optional studio drawer make this the shortest route from curiosity to a piece.",
+    "highlights": [
+      "Catalog in the first viewport",
+      "Category filters + price sort",
+      "Grid/list density toggle",
+      "Art and generator in a compact studio module"
+    ]
   },
 ];
