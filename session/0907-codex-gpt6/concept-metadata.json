@@ -1,0 +1,87 @@
+[
+  {
+    "n": 16,
+    "slug": "human-standard",
+    "name": "Human Standard",
+    "tags": [
+      "Wearable",
+      "Direct",
+      "Brand core"
+    ],
+    "desc": "A crimson masthead and real street photography turn AI nerdwear into a confident clothing label. Shopping gets the first word; art gets the second.",
+    "highlights": [
+      "Product and price in the opening screen",
+      "Actual catalog options + preview bag",
+      "Color-coded category browsing",
+      "Generator and art below the collection"
+    ]
+  },
+  {
+    "n": 17,
+    "slug": "open-studio",
+    "name": "Open Studio",
+    "tags": [
+      "Process",
+      "Cobalt",
+      "Art to object"
+    ],
+    "desc": "A cobalt studio directory and a workbench composition put finished garments next to the art practice. It feels like visiting the people behind the label.",
+    "highlights": [
+      "Studio directory on desktop; working menu on mobile",
+      "Featured product with direct options",
+      "Artwork lightbox + generator workbench",
+      "Commerce connected to creative process"
+    ]
+  },
+  {
+    "n": 18,
+    "slug": "hallucination-club",
+    "name": "Hallucination Club",
+    "tags": [
+      "Graphic",
+      "Collective",
+      "Playful"
+    ],
+    "desc": "A punchy yellow club identity with a product selector built into the opening spread. Belonging comes from the shared joke, with no signup between you and a tee.",
+    "highlights": [
+      "Clickable featured-product selector",
+      "Oversized type with a wearable hero",
+      "Plain-language shopping controls",
+      "Generator treated as a club creative activity"
+    ]
+  },
+  {
+    "n": 19,
+    "slug": "after-hours",
+    "name": "After Hours",
+    "tags": [
+      "Photography",
+      "Night",
+      "Fashion"
+    ],
+    "desc": "A cinematic contact sheet with warm white type and a single crimson purchase accent. Real garments and quiet photographic pacing replace ambient tech effects.",
+    "highlights": [
+      "Shoppable contact-sheet hero",
+      "Product photography stays legible in dark mode",
+      "Low-motion art interlude",
+      "Shared accessible options and bag flow"
+    ]
+  },
+  {
+    "n": 20,
+    "slug": "living-index",
+    "name": "The Living Index",
+    "tags": [
+      "Catalog first",
+      "Scannable",
+      "Adaptive"
+    ],
+    "desc": "The storefront opens directly on the collection. A compact manifesto, clear filters, and an optional studio drawer make this the shortest route from curiosity to a piece.",
+    "highlights": [
+      "Catalog in the first viewport",
+      "Category filters + price sort",
+      "Grid/list density toggle",
+      "Art and generator in a compact studio module"
+    ]
+  }
+]
