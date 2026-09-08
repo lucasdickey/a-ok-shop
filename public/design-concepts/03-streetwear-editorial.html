@@ -145,7 +145,7 @@
   }
 
   .btn-editorial.filled:hover {
-    background: var(--red);
+    color: var(--cream);
   }
 
   .btn-editorial.text-link {
@@ -405,6 +405,232 @@
     justify-content: flex-end;
   }
 
+  /* ===== Micro-interactions & scroll-reveal (editorial polish) ===== */
+
+  /* Scroll-reveal entrances — only hide when JS is present to avoid no-JS content loss */
+  .reveal {
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    will-change: opacity, transform;
+  }
+  .js .reveal.in-view {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Staggered cascades within grouped items */
+  .hero-left .reveal:nth-child(1) { transition-delay: 0.05s; }
+  .hero-left .reveal:nth-child(2) { transition-delay: 0.15s; }
+  .hero-left .reveal:nth-child(3) { transition-delay: 0.25s; }
+  .hero-left .reveal:nth-child(4) { transition-delay: 0.35s; }
+  .hero-left .reveal:nth-child(5) { transition-delay: 0.45s; }
+
+  .editorial-grid .editorial-card:nth-child(1) { transition-delay: 0.05s; }
+  .editorial-grid .editorial-card:nth-child(2) { transition-delay: 0.13s; }
+  .editorial-grid .editorial-card:nth-child(3) { transition-delay: 0.21s; }
+  .editorial-grid .editorial-card:nth-child(4) { transition-delay: 0.29s; }
+  .editorial-grid .editorial-card:nth-child(5) { transition-delay: 0.37s; }
+  .editorial-grid .editorial-card:nth-child(6) { transition-delay: 0.45s; }
+
+  .lookbook .lookbook-panel:nth-child(1) { transition-delay: 0.05s; }
+  .lookbook .lookbook-panel:nth-child(2) { transition-delay: 0.20s; }
+  .lookbook .lookbook-panel:nth-child(3) { transition-delay: 0.35s; }
+
+  /* Thin rule that draws in under section titles on reveal */
+  .section-title, .story h2 { position: relative; }
+  .section-title::after, .story h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    width: 60px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+  }
+  .story h2::after { left: 50%; margin-left: -30px; transform-origin: center; }
+  .section-title.in-view::after, .story h2.in-view::after { transform: scaleX(1); }
+
+  /* Hero image — subtle slow zoom on hover */
+  .hero-right .editorial-img {
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-right:hover .editorial-img { transform: scale(1.03); }
+
+  /* Product card — lift, soft shadow, slow image zoom, VIEW caption reveal */
+  .editorial-card {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .editorial-card:hover { transform: translateY(-4px); }
+  .card-image-wrap {
+    position: relative;
+    transition: box-shadow 0.5s ease;
+  }
+  .editorial-card:hover .card-image-wrap {
+    box-shadow: 0 18px 40px -18px rgba(10, 10, 10, 0.45);
+  }
+  .editorial-card:hover .card-image,
+  .editorial-card:focus-visible .card-image { transform: scale(1.06); }
+  .card-image-wrap::after {
+    content: 'VIEW';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 13px 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    color: var(--cream);
+    background: rgba(10, 10, 10, 0.55);
+    transform: translateY(101%);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .editorial-card:hover .card-image-wrap::after,
+  .editorial-card:focus-visible .card-image-wrap::after { transform: translateY(0); }
+
+  /* Lookbook panels — gentle darken overlay, text scale, sub reveal */
+  .lookbook-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.12);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  .lookbook-panel:hover::before { opacity: 1; }
+  .lookbook-panel .panel-text {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lookbook-panel:hover .panel-text { transform: scale(1.05); }
+  .lookbook-panel .panel-sub {
+    transform: translateY(6px);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lookbook-panel:hover .panel-sub { opacity: 0.9; transform: translateY(0); }
+
+  /* Filled CTA — red fill wipes in from left + arrow slides right */
+  .btn-editorial.filled {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .btn-editorial.filled::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -1;
+  }
+  .btn-editorial.filled:hover::before,
+  .btn-editorial.filled:focus-visible::before { transform: scaleX(1); }
+  .btn-editorial.filled::after {
+    content: '\2192';
+    display: inline-block;
+    margin-left: 12px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-editorial.filled:hover::after,
+  .btn-editorial.filled:focus-visible::after { transform: translateX(6px); }
+  .btn-editorial:active { transform: scale(0.97); }
+
+  /* Text-link CTA (Our Story) — red underline slides in from left */
+  .btn-editorial.text-link { position: relative; }
+  .btn-editorial.text-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-editorial.text-link:hover::after,
+  .btn-editorial.text-link:focus-visible::after { transform: scaleX(1); }
+
+  /* Nav links — underline slides in from left */
+  .nav-right a { position: relative; }
+  .nav-right a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 1px;
+    background: var(--black);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-right a:hover::after,
+  .nav-right a:focus-visible::after { transform: scaleX(1); }
+
+  /* Footer links — underline slides in from left */
+  footer a { position: relative; display: inline-block; }
+  footer a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: var(--black);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  footer a:hover::after,
+  footer a:focus-visible::after { transform: scaleX(1); }
+
+  /* Accessibility — visible focus rings for keyboard users */
+  a:focus-visible,
+  .btn-editorial:focus-visible,
+  .editorial-card:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 4px;
+  }
+
+  /* Respect reduced-motion — disable non-essential motion */
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1 !important; transform: none !important; }
+    .reveal,
+    .section-title::after, .story h2::after,
+    .hero-right .editorial-img,
+    .editorial-card,
+    .card-image,
+    .card-image-wrap::after,
+    .lookbook-panel .panel-text,
+    .lookbook-panel .panel-sub,
+    .btn-editorial.filled::before,
+    .btn-editorial.filled::after {
+      transition: none !important;
+    }
+    .section-title::after, .story h2::after { transform: scaleX(1); }
+    .editorial-card:hover,
+    .editorial-card:hover .card-image,
+    .editorial-card:focus-visible .card-image,
+    .hero-right:hover .editorial-img,
+    .lookbook-panel:hover .panel-text,
+    .btn-editorial.filled:hover::after,
+    .btn-editorial.filled:focus-visible::after,
+    .btn-editorial:active { transform: none; }
+  }
+
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; }
     .hero-right { min-height: 50vh; }
@@ -420,6 +646,7 @@
     footer .footer-links { justify-content: flex-start; }
   }
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -438,30 +665,30 @@
 
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-issue">COLLECTION 001 &mdash; SPRING 2026</div>
-    <h1>APES<br>ON <span class="thin">KEYS</span></h1>
-    <div class="hero-divider"></div>
-    <div class="hero-copy">
+    <div class="hero-issue reveal">COLLECTION 001 &mdash; SPRING 2026</div>
+    <h1 class="reveal">APES<br>ON <span class="thin">KEYS</span></h1>
+    <div class="hero-divider reveal"></div>
+    <div class="hero-copy reveal">
       AI Nerdwear for cipher hunters, glitch gods, and anyone building the future between inference calls. The signal is unstable. The brand is A-OK.
     </div>
-    <div class="hero-actions">
+    <div class="hero-actions reveal">
       <a href="#" class="btn-editorial filled">EXPLORE COLLECTION</a>
       <a href="#" class="btn-editorial text-link">Our Story</a>
     </div>
   </div>
   <div class="hero-right">
-    <div class="editorial-img">
+    <div class="editorial-img reveal">
       <span class="overlay-text">OK</span>
     </div>
-    <div class="caption">AI NERDWEAR &mdash; EST. 2025</div>
+    <div class="caption reveal">AI NERDWEAR &mdash; EST. 2025</div>
   </div>
 </section>
 
 <section class="products-section">
-  <div class="section-label">CURATED SELECTION</div>
-  <div class="section-title">FEATURED</div>
+  <div class="section-label reveal">CURATED SELECTION</div>
+  <div class="section-title reveal">FEATURED</div>
   <div class="editorial-grid">
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">01</span></div>
       </div>
@@ -470,7 +697,7 @@
       <div class="card-desc">Emergent Patterns. Corrupted Glyphs. Something is speaking through the noise.</div>
       <div class="card-price">$50.00</div>
     </a>
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">02</span></div>
       </div>
@@ -479,7 +706,7 @@
       <div class="card-desc">One voice. Infinite agents. Always aligned. Find the pattern.</div>
       <div class="card-price">$50.00</div>
     </a>
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">03</span></div>
       </div>
@@ -488,7 +715,7 @@
       <div class="card-desc">Recursive thought loops. Meditative inference. The monk computes in silence.</div>
       <div class="card-price">$75.00</div>
     </a>
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">04</span></div>
       </div>
@@ -497,7 +724,7 @@
       <div class="card-desc">They're autonomous. They're aligned. They're coming for your codebase.</div>
       <div class="card-price">$40.00</div>
     </a>
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">05</span></div>
       </div>
@@ -506,7 +733,7 @@
       <div class="card-desc">Dress for the unknown. When the singularity hits, look good doing it.</div>
       <div class="card-price">$75.00</div>
     </a>
-    <a href="#" class="editorial-card">
+    <a href="#" class="editorial-card reveal">
       <div class="card-image-wrap">
         <div class="card-image"><span class="icon">06</span></div>
       </div>
@@ -516,37 +743,37 @@
       <div class="card-price">$75.00</div>
     </a>
   </div>
-  <div class="view-all">
+  <div class="view-all reveal">
     <a href="#" class="btn-editorial filled">VIEW ALL PRODUCTS</a>
   </div>
 </section>
 
 <section class="lookbook">
-  <div class="lookbook-panel dark">
+  <div class="lookbook-panel dark reveal">
     <div class="panel-text">TRUST<br>THE<br>NOISE</div>
     <div class="panel-sub">TEES &mdash; $40&ndash;$60</div>
   </div>
-  <div class="lookbook-panel red">
+  <div class="lookbook-panel red reveal">
     <div class="panel-text">DRESS<br>FOR THE<br>UNKNOWN</div>
     <div class="panel-sub">HOODIES &mdash; $75</div>
   </div>
-  <div class="lookbook-panel bone">
+  <div class="lookbook-panel bone reveal">
     <div class="panel-text">THE<br>ORIGINAL<br>SIGIL</div>
     <div class="panel-sub">HATS &mdash; $75</div>
   </div>
 </section>
 
 <section class="story">
-  <div class="section-label">THE BRAND</div>
-  <h2>THE E/ACC MONKEY THEOREM</h2>
-  <p>Give an infinite number of AI models an infinite amount of compute. They'll generate <span class="accent">every possible text, image, and piece of code</span> &mdash; including all of Shakespeare and at least 47 musicals where Hamlet raps.</p>
-  <p>Modern AI generates nonsense at <span class="accent">unprecedented speeds</span> and with <span class="accent">unwavering confidence</span>. We thought that deserved a clothing line.</p>
+  <div class="section-label reveal">THE BRAND</div>
+  <h2 class="reveal">THE E/ACC MONKEY THEOREM</h2>
+  <p class="reveal">Give an infinite number of AI models an infinite amount of compute. They'll generate <span class="accent">every possible text, image, and piece of code</span> &mdash; including all of Shakespeare and at least 47 musicals where Hamlet raps.</p>
+  <p class="reveal">Modern AI generates nonsense at <span class="accent">unprecedented speeds</span> and with <span class="accent">unwavering confidence</span>. We thought that deserved a clothing line.</p>
 </section>
 
 <footer>
-  <div>&copy; 2026 APES ON KEYS</div>
-  <div class="footer-center">A-OK.SHOP</div>
-  <div class="footer-right">
+  <div class="reveal">&copy; 2026 APES ON KEYS</div>
+  <div class="footer-center reveal">A-OK.SHOP</div>
+  <div class="footer-right reveal">
     <div class="footer-links">
       <a href="#">GitHub</a>
       <a href="#">YouTube</a>
@@ -561,6 +788,24 @@
   window.addEventListener('scroll', () => {
     document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
   });
+
+  // Scroll-reveal entrances via a single IntersectionObserver
+  (function () {
+    const revealEls = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || !revealEls.length) {
+      revealEls.forEach((el) => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach((el) => io.observe(el));
+  })();
 
   // Stripe-inspired flowing gradient mesh — soft organic blobs that follow cursor
   const mc = document.getElementById('meshCanvas');

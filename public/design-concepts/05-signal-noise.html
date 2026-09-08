@@ -78,6 +78,7 @@
   }
 
   .nav-center a {
+    position: relative;
     color: rgba(245,242,220,0.4);
     text-decoration: none;
     font-size: 11px;
@@ -87,7 +88,25 @@
     transition: color 0.3s;
   }
 
+  .nav-center a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.35s ease;
+  }
+
   .nav-center a:hover { color: var(--cream); }
+  .nav-center a:hover::after,
+  .nav-center a:focus-visible::after { transform: scaleX(1); }
+
+  .nav-brand { transition: opacity 0.3s ease; }
+  .nav-brand:hover { opacity: 1; }
 
   .nav-cart {
     color: rgba(245,242,220,0.5);
@@ -95,7 +114,10 @@
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
+    transition: color 0.3s ease;
   }
+
+  .nav-cart:hover { color: var(--cream); }
 
   /* Hero */
   .hero {
@@ -159,6 +181,7 @@
   }
 
   .btn-signal {
+    position: relative;
     display: inline-block;
     padding: 14px 48px;
     font-size: 11px;
@@ -166,8 +189,12 @@
     text-transform: uppercase;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.4s ease;
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease,
+                transform 0.3s ease, box-shadow 0.4s ease;
   }
+
+  .btn-signal:hover { transform: translateY(-1px) scale(1.02); }
+  .btn-signal:active { transform: translateY(0) scale(0.99); }
 
   .btn-signal.primary {
     background: var(--cream);
@@ -177,6 +204,7 @@
   .btn-signal.primary:hover {
     background: var(--red);
     color: var(--cream);
+    box-shadow: 0 12px 32px -14px rgba(185,28,28,0.65);
   }
 
   .btn-signal.ghost {
@@ -184,10 +212,25 @@
     border: 1px solid rgba(245,242,220,0.15);
   }
 
+  .btn-signal.ghost::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 9px;
+    height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
   .btn-signal.ghost:hover {
     color: var(--cream);
-    border-color: var(--cream);
+    border-color: rgba(185,28,28,0.5);
   }
+
+  .btn-signal.ghost:hover::after { transform: scaleX(1); }
 
   /* Divider */
   .section-divider {
@@ -215,11 +258,27 @@
   }
 
   .products-header h2 {
+    position: relative;
+    display: inline-block;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 48px;
     letter-spacing: 6px;
     font-weight: 400;
   }
+
+  .products-header h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -16px;
+    height: 2px;
+    width: 0;
+    background: var(--red);
+    transform: translateX(-50%);
+    transition: width 0.7s ease 0.25s;
+  }
+
+  .products-header h2.in-view::after { width: 56px; }
 
   .signal-grid {
     display: grid;
@@ -234,9 +293,10 @@
     background: var(--black);
     padding: 32px;
     cursor: pointer;
-    transition: all 0.5s ease;
+    transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
     position: relative;
     overflow: hidden;
+    border: 1px solid transparent;
   }
 
   .signal-card::after {
@@ -256,10 +316,17 @@
 
   .signal-card:hover {
     background: rgba(25,25,25,1);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 44px -22px rgba(185,28,28,0.45);
+    border-color: rgba(185,28,28,0.22);
   }
 
   .signal-card:hover .card-image-area {
     border-color: rgba(185,28,28,0.3);
+  }
+
+  .signal-card:hover .card-image-area .wave {
+    transform: scaleX(1.08) scaleY(1.04);
   }
 
   .card-image-area {
@@ -271,12 +338,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     transition: border-color 0.5s ease;
   }
 
   .card-image-area .wave {
     width: 60%;
     height: 1px;
+    transition: transform 0.6s ease;
     background: linear-gradient(90deg,
       transparent 0%,
       rgba(185,28,28,0.2) 20%,
@@ -426,16 +495,84 @@
   }
 
   footer a {
+    position: relative;
     color: rgba(245,242,220,0.3);
     text-decoration: none;
     transition: color 0.3s;
   }
 
+  footer a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+
   footer a:hover { color: var(--cream); }
+  footer a:hover::after,
+  footer a:focus-visible::after { transform: scaleX(1); }
 
   footer .social {
     display: flex;
     gap: 32px;
+  }
+
+  /* Scroll-reveal — signal resolving out of noise (JS-gated so no-JS shows all) */
+  .reveal-ready .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(6px);
+    transition: opacity 0.9s cubic-bezier(0.2,0.7,0.2,1) var(--reveal-delay, 0ms),
+                transform 0.9s cubic-bezier(0.2,0.7,0.2,1) var(--reveal-delay, 0ms),
+                filter 0.9s ease var(--reveal-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .reveal-ready .reveal.in-view {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+
+  /* Accessibility — visible focus for keyboard users */
+  a:focus-visible,
+  .btn-signal:focus-visible,
+  .signal-card:focus-visible,
+  .cat-panel:focus-visible {
+    outline: 1px solid var(--red-light);
+    outline-offset: 3px;
+  }
+
+  /* Respect reduced-motion — disable non-essential motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-ready .reveal,
+    .reveal-ready .reveal.in-view {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+    .signal-card,
+    .signal-card .card-image-area .wave,
+    .btn-signal,
+    .btn-signal.ghost::after,
+    .nav-center a::after,
+    footer a::after,
+    .products-header h2::after {
+      transition: none !important;
+    }
+    .signal-card:hover,
+    .signal-card:hover .card-image-area .wave,
+    .btn-signal:hover,
+    .btn-signal:active {
+      transform: none !important;
+    }
   }
 
   @media (max-width: 768px) {
@@ -595,6 +732,8 @@
   let time = 0;
   const particleCount = 800;
   const cursorRadius = 200;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let frameCount = 0;
 
   // Simple 2D noise (value noise with smoothing)
   const noiseGrid = 64;
@@ -746,12 +885,73 @@
       ctx.fill();
     }
 
-    requestAnimationFrame(draw);
+    // Under reduced-motion, build a static field then freeze (no ambient motion)
+    frameCount++;
+    if (!reduceMotion || frameCount < 180) requestAnimationFrame(draw);
   }
 
   window.addEventListener('resize', () => { resize(); });
   init();
   draw();
+
+  // Scroll-reveal — a single IntersectionObserver resolves elements into view
+  (function () {
+    const selectors = [
+      '.hero-eyebrow', '.hero h1', '.hero-line', '.hero-copy', '.hero-actions',
+      '.products-header .label', '.products-header h2',
+      '.signal-card', '.grid-footer',
+      '.cat-panel',
+      '.manifesto .label', '.manifesto blockquote', '.manifesto p',
+      'footer > div'
+    ];
+    const els = [];
+    selectors.forEach((sel) => {
+      document.querySelectorAll(sel).forEach((el) => {
+        el.classList.add('reveal');
+        els.push(el);
+      });
+    });
+
+    // Stagger the product grid so cards resolve one after another.
+    // Use a scoped custom property so the delay applies only to the reveal
+    // transition, never to hover/interactive transitions.
+    document.querySelectorAll('.signal-grid .signal-card').forEach((card, i) => {
+      card.style.setProperty('--reveal-delay', (i * 90) + 'ms');
+    });
+
+    document.body.classList.add('reveal-ready');
+
+    // After a card/panel resolves into view, drop the reveal classes so its own
+    // interactive (hover) transitions take over cleanly and will-change clears.
+    // (Skipped for elements like the section title whose red rule depends on
+    // .in-view persisting.)
+    const cleanup = (el) => {
+      if (!el.matches('.signal-card, .cat-panel')) return;
+      el.addEventListener('transitionend', function handler() {
+        el.classList.remove('reveal', 'in-view');
+        el.style.removeProperty('--reveal-delay');
+        el.style.willChange = 'auto';
+        el.removeEventListener('transitionend', handler);
+      });
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('in-view'));
+      return;
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          cleanup(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    els.forEach((el) => io.observe(el));
+  })();
 </script>
 
 </body>

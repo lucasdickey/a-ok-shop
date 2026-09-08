@@ -432,6 +432,102 @@
     z-index: 1;
   }
 
+  /* ===== Micro-interactions ===== */
+  /* Scroll-reveal entrances */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Product card lift */
+  .product-card {
+    will-change: transform;
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+  }
+
+  /* Product art reacts on hover: scale + flicker + glow */
+  .product-image .placeholder-art {
+    transition: transform 0.4s ease, opacity 0.4s ease, text-shadow 0.4s ease;
+  }
+  .product-card:hover .product-image .placeholder-art {
+    transform: scale(1.18);
+    text-shadow: 0 0 24px var(--green-glow);
+    animation: artFlicker 0.9s steps(2) infinite;
+  }
+  @keyframes artFlicker {
+    0%, 100% { opacity: 0.5; }
+    45% { opacity: 0.3; }
+    50% { opacity: 0.85; }
+  }
+
+  /* Scan sweep across the product image on hover */
+  .product-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,255,65,0) 40%, rgba(0,255,65,0.10) 50%, rgba(0,255,65,0) 60%);
+    transform: translateY(-110%);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+  }
+  .product-card:hover .product-image::after {
+    transform: translateY(110%);
+  }
+
+  /* Blinking cursor appears after the filename on hover */
+  .product-card-header .filename::after {
+    content: '_';
+    margin-left: 2px;
+    opacity: 0;
+  }
+  .product-card:hover .product-card-header .filename::after {
+    opacity: 1;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* Price glows on hover */
+  .product-price { transition: text-shadow 0.3s ease; }
+  .product-card:hover .product-price {
+    text-shadow: 0 0 14px var(--green-glow);
+  }
+
+  /* Tags invert on hover */
+  .product-tags span {
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .product-tags span:hover {
+    color: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 10px var(--green-glow);
+  }
+
+  /* Tactile press states for buttons */
+  .hero-cta a:active { transform: translateY(1px); }
+
+  /* Keyboard focus visibility */
+  a:focus-visible,
+  .product-card:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 4px;
+  }
+
+  /* Respect reduced-motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     nav { padding: 12px 16px; }
@@ -689,6 +785,41 @@ function mDraw() {
 mResize();
 window.addEventListener('resize', mResize);
 mDraw();
+</script>
+
+<script>
+// Scroll-reveal + interactive product cards
+(function () {
+  const targets = document.querySelectorAll(
+    '.section-title, .product-card, .manifesto .terminal-window, footer > div'
+  );
+  targets.forEach((el) => el.classList.add('reveal'));
+
+  // Stagger product cards so they cascade in per row (3-up grid)
+  document.querySelectorAll('.product-grid .product-card').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 3) * 90}ms`;
+    // Make cards keyboard-focusable for parity with the hover affordance
+    el.setAttribute('tabindex', '0');
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+  targets.forEach((el) => io.observe(el));
+})();
 </script>
 
 </body>

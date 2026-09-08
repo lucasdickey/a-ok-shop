@@ -446,7 +446,191 @@
     .manifesto-band { grid-template-columns: 1fr; padding: 60px 24px; gap: 32px; }
     footer { flex-direction: column; gap: 16px; padding: 32px 24px; }
   }
+
+  /* ============================================================
+     MICRO-INTERACTIONS & SCROLL REVEAL — Glitch Brutalist
+     Animate only transform/opacity/filter/clip-path/text-shadow.
+     ============================================================ */
+
+  /* --- Scroll-reveal entrances (hidden state only when JS active) --- */
+  .js .reveal {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    clip-path: inset(0 100% 0 0);
+    transition:
+      opacity 0.18s steps(3, end),
+      transform 0.24s cubic-bezier(0.2, 0.9, 0.1, 1),
+      clip-path 0.28s cubic-bezier(0.85, 0, 0.15, 1);
+    will-change: opacity, transform, clip-path;
+  }
+
+  /* Hard horizontal snap variant for headers / manifesto columns */
+  .js .reveal-wipe {
+    transform: translate3d(-18px, 0, 0);
+  }
+
+  .js .reveal.in-view {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* Staggered product-card cascade (index set via JS --i) */
+  .js .product-card.reveal {
+    transition:
+      opacity 0.16s steps(2, end),
+      transform 0.2s cubic-bezier(0.2, 0.9, 0.1, 1),
+      clip-path 0.24s cubic-bezier(0.85, 0, 0.15, 1);
+    transition-delay: calc(var(--i, 0) * 0.06s);
+  }
+
+  /* --- Product card hover: brutal lift + hard offset shadow --- */
+  .product-card {
+    transition:
+      background 0.15s,
+      color 0.15s,
+      transform 0.15s cubic-bezier(0.2, 0.9, 0.1, 1),
+      box-shadow 0.15s;
+  }
+
+  @media (hover: hover) {
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: -8px 8px 0 var(--red);
+      z-index: 2;
+    }
+  }
+
+  /* Scale the glyph inside its overflow:hidden box */
+  .product-image-box .glyph {
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.1, 1), color 0.2s;
+  }
+
+  .product-card:hover .product-image-box .glyph {
+    transform: scale(1.08);
+  }
+
+  /* Brief RGB-split glitch flourish on the product title */
+  .product-title {
+    position: relative;
+  }
+
+  @media (hover: hover) {
+    .product-card:hover .product-title {
+      animation: title-glitch 0.3s steps(2, end) 1;
+      text-shadow: 2px 0 var(--red-bright), -2px 0 #00f0ff;
+    }
+  }
+
+  @keyframes title-glitch {
+    0%   { transform: translate(0);        text-shadow: 0 0 transparent; }
+    25%  { transform: translate(-2px, 1px); text-shadow: 2px 0 var(--red-bright), -2px 0 #00f0ff; }
+    50%  { transform: translate(2px, -1px); text-shadow: -2px 0 var(--red-bright), 2px 0 #00f0ff; }
+    75%  { transform: translate(-1px, 0);   text-shadow: 2px 0 var(--red-bright), -2px 0 #00f0ff; }
+    100% { transform: translate(0);         text-shadow: 2px 0 var(--red-bright), -2px 0 #00f0ff; }
+  }
+
+  /* --- Buttons / CTAs: pressed feedback + nudging arrow --- */
+  .btn-brutal {
+    position: relative;
+  }
+
+  .btn-brutal:active {
+    transform: translateY(2px);
+  }
+
+  .btn-brutal.primary::after {
+    content: '\2192';
+    display: inline-block;
+    margin-left: 10px;
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.1, 1);
+  }
+
+  .btn-brutal.primary:hover::after {
+    transform: translateX(6px);
+  }
+
+  /* --- Nav links: red underline wipe on hover/focus --- */
+  .nav-links a {
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 2px;
+    background: var(--red-bright);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s cubic-bezier(0.85, 0, 0.15, 1);
+  }
+
+  .nav-links a:hover::after,
+  .nav-links a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* --- Footer links: crimson underline wipe --- */
+  footer a {
+    position: relative;
+    transition: color 0.15s;
+  }
+
+  footer a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s cubic-bezier(0.85, 0, 0.15, 1);
+  }
+
+  footer a:hover::after,
+  footer a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* --- Marquee: pause on hover --- */
+  .marquee:hover .marquee-inner {
+    animation-play-state: paused;
+  }
+
+  /* --- Accessibility: visible focus outlines --- */
+  a:focus-visible,
+  .btn-brutal:focus-visible {
+    outline: 3px solid var(--red-bright);
+    outline-offset: 3px;
+  }
+
+  /* --- Reduced motion: disable non-essential motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal,
+    .js .reveal.in-view {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+      transition: none !important;
+    }
+
+    .marquee-inner { animation: none !important; }
+    .glitch::before,
+    .glitch::after { animation: none !important; }
+
+    .product-card:hover { transform: none; }
+    .product-card:hover .product-title { animation: none !important; }
+    .product-card:hover .product-image-box .glyph { transform: none; }
+    .btn-brutal:active { transform: none; }
+    .btn-brutal.primary:hover::after { transform: none; }
+  }
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -511,47 +695,47 @@
 </div>
 
 <section class="products-section">
-  <div class="products-header">
+  <div class="products-header reveal reveal-wipe">
     <h2>FEATURED</h2>
     <span class="count">6 ITEMS</span>
   </div>
   <div class="product-grid">
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">A</span></div>
       <div class="product-type">TEE</div>
       <div class="product-title">GLITCHED VECTORS</div>
       <div class="product-copy">Emergent Patterns. Corrupted Glyphs. Something is speaking.</div>
       <div class="product-price-tag">$50</div>
     </div>
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">H</span></div>
       <div class="product-type">TEE</div>
       <div class="product-title">HALLUCINATED KEYSTROKES</div>
       <div class="product-copy">Vintage Typewriter. Corrupted Output. The keys remember what you forgot.</div>
       <div class="product-price-tag">$50</div>
     </div>
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">M</span></div>
       <div class="product-type">TEE</div>
       <div class="product-title">MIXTURE OF APES</div>
       <div class="product-copy">Finetuned Personalities. Multiple experts, one output layer.</div>
       <div class="product-price-tag">$40</div>
     </div>
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">P</span></div>
       <div class="product-type">HOODIE</div>
       <div class="product-title">2034 PROPHECY</div>
       <div class="product-copy">The future was always predictable. The models just needed more data.</div>
       <div class="product-price-tag">$75</div>
     </div>
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">D</span></div>
       <div class="product-type">HOODIE</div>
       <div class="product-title">APE-OCALYPSE DRIP</div>
       <div class="product-copy">Dress for the unknown. When the singularity hits, look good doing it.</div>
       <div class="product-price-tag">$75</div>
     </div>
-    <div class="product-card">
+    <div class="product-card reveal">
       <div class="product-image-box"><span class="glyph">^</span></div>
       <div class="product-type">HAT</div>
       <div class="product-title">APE LOGO CAP</div>
@@ -562,10 +746,10 @@
 </section>
 
 <section class="manifesto-band">
-  <div>
+  <div class="reveal reveal-wipe">
     <h2>THE<br><span class="red">E/ACC</span><br>MONKEY<br>THEOREM</h2>
   </div>
-  <div class="manifesto-text">
+  <div class="manifesto-text reveal reveal-wipe">
     <p>Give an infinite number of AI models an infinite amount of compute. They will eventually generate <span class="accent">every possible text, image, video, and piece of code</span> &mdash; including all of Shakespeare's works and at least 47 different AI-generated musicals where Hamlet raps.</p>
     <p>Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can generate nonsense at <span class="accent">unprecedented speeds</span> and with <span class="accent">unwavering confidence</span>.</p>
     <p>Somewhere in this infinite digital soup, there exists a perfect reproduction of Romeo and Juliet &mdash; tagged as "not financial advice" and ending with a prompt to like and subscribe.</p>
@@ -573,8 +757,8 @@
 </section>
 
 <footer>
-  <div>&copy; 2026 A-OK.SHOP</div>
-  <div>
+  <div class="reveal">&copy; 2026 A-OK.SHOP</div>
+  <div class="reveal">
     <a href="#">GITHUB</a> &nbsp;&middot;&nbsp;
     <a href="#">YOUTUBE</a> &nbsp;&middot;&nbsp;
     <a href="#">SPOTIFY</a> &nbsp;&middot;&nbsp;
@@ -742,9 +926,48 @@ function gDraw() {
   requestAnimationFrame(gDraw);
 }
 
-gInit();
-window.addEventListener('resize', gInit);
-gDraw();
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!prefersReducedMotion) {
+  gInit();
+  window.addEventListener('resize', gInit);
+  gDraw();
+} else {
+  // Respect reduced-motion: skip the animated background effect entirely.
+  gc.style.display = 'none';
+}
+
+// --- Scroll-reveal entrances (single IntersectionObserver) ---
+(function () {
+  const revealEls = document.querySelectorAll('.reveal');
+
+  // Cascade product cards via per-card index used by CSS transition-delay.
+  document.querySelectorAll('.product-grid .product-card').forEach((card, i) => {
+    card.style.setProperty('--i', i);
+  });
+
+  // No JS/observer support or reduced motion: show everything immediately.
+  if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+    revealEls.forEach((el) => el.classList.remove('reveal'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.add('in-view');
+      obs.unobserve(el);
+      // After the entrance completes, drop the reveal classes so hover
+      // interactions fall back to their own base transitions.
+      window.setTimeout(() => {
+        el.classList.remove('reveal', 'in-view');
+      }, 700);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+  revealEls.forEach((el) => io.observe(el));
+})();
 </script>
 
 </body>
