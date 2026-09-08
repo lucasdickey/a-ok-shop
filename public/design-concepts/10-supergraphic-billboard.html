@@ -86,6 +86,59 @@
     .caption, footer { flex-direction: column; }
   }
 </style>
+<style>
+  /* ── Micro-interactions ── */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,.68,.24,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .word { animation: pan 26s ease-in-out infinite alternate; }
+  @keyframes pan { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+  .word { transition: letter-spacing .6s ease; }
+  .billboard:hover .word { letter-spacing: -0.01em; }
+
+  .nav-links a { position: relative; transition: opacity .2s ease; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: currentColor; transition: width .25s ease; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .plate img { transition: transform .7s cubic-bezier(.22,.68,.24,1); }
+  .plate:hover img { transform: scale(1.06); }
+  .plate::after { content: ''; position: absolute; inset: 0; z-index: 0; background: rgba(0,0,0,0); transition: background .4s ease; pointer-events: none; }
+  .plate:hover::after { background: rgba(0,0,0,0.22); }
+  .plate .label { z-index: 1; transition: transform .4s cubic-bezier(.22,.68,.24,1); }
+  .plate:hover .label { transform: translateY(-6px); }
+
+  .links a { transition: color .2s ease; }
+  .links a:hover { color: var(--ink); }
+  footer a { transition: opacity .2s ease; }
+  footer a:hover { opacity: .6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(sel) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    els.forEach(function (el) { el.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    setup('.plate, .theorem h2, .theorem p, .links');
+  });
+})();
+</script>
 </head>
 <body>
 <nav>

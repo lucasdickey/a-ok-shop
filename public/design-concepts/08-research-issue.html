@@ -88,6 +88,58 @@
     h1 { font-size: 72px; }
   }
 </style>
+<style>
+  /* ── Micro-interactions ── */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22,.68,.24,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .journal { transition: letter-spacing .3s ease, color .3s ease; }
+  .journal:hover { letter-spacing: 8px; color: var(--red); }
+  .nav-links a { position: relative; transition: color .2s ease; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--red); transition: width .25s ease; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .cta { transition: transform .18s ease, background-color .2s ease, box-shadow .18s ease; }
+  .cta:hover { transform: translateY(-2px); background: var(--deep); box-shadow: 3px 4px 0 rgba(0,0,0,0.2); }
+  .cta:active { transform: translateY(1px); box-shadow: none; }
+
+  figure { transition: transform .32s cubic-bezier(.22,.68,.24,1), box-shadow .32s ease; }
+  figure:hover { transform: translateY(-6px); box-shadow: 0 14px 30px -22px rgba(0,0,0,0.45); }
+  .plate img { transition: transform .55s cubic-bezier(.22,.68,.24,1), filter .55s ease; }
+  figure:hover .plate img { transform: scale(1.05); filter: contrast(1.06); }
+
+  .game a { transition: opacity .2s ease; }
+  .game a:hover { opacity: .7; }
+  footer a { transition: color .2s ease; }
+  footer a:hover { color: var(--deep); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setup(sel) {
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    els.forEach(function (el) { el.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    setup('figure, .abstract, .methods > div');
+  });
+})();
+</script>
 </head>
 <body>
 <nav>
