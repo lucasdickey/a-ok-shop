@@ -495,6 +495,232 @@
 
   footer .links a:hover { color: var(--neon-green); }
 
+  /* ============================================================
+     MICRO-INTERACTIONS & SCROLL-REVEAL ("POWER ON")
+     ============================================================ */
+
+  /* Scroll-reveal base — only active once JS confirms support so
+     no-JS visitors always see content (anti-FOUC + progressive) */
+  html.reveal-ready .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.85, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  html.reveal-ready .reveal.in-view {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Arcade "power on" variant — quick scale-in + CRT flicker */
+  html.reveal-ready .reveal--pop {
+    transform: scale(0.9);
+  }
+  html.reveal-ready .reveal--pop.in-view {
+    transform: scale(1);
+    animation: power-on 0.55s steps(1, end) both;
+  }
+
+  @keyframes power-on {
+    0%   { opacity: 0; filter: brightness(2.4) saturate(1.6); }
+    12%  { opacity: 1; filter: brightness(1.8); }
+    20%  { opacity: 0.35; }
+    32%  { opacity: 1; filter: brightness(1.4); }
+    48%  { opacity: 0.7; }
+    100% { opacity: 1; filter: brightness(1); }
+  }
+
+  /* Hero children stagger (delay applied inline by JS as a boot sequence) */
+
+  /* Product cards load one-by-one like items on a game screen */
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(1) { animation-delay: 0.00s; }
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(2) { animation-delay: 0.10s; }
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(3) { animation-delay: 0.20s; }
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(4) { animation-delay: 0.30s; }
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(5) { animation-delay: 0.40s; }
+  html.reveal-ready .arcade-grid .arcade-card.in-view:nth-child(6) { animation-delay: 0.50s; }
+
+  /* ---- Product card hover: arcade "SELECT" feel ---- */
+  .arcade-card:hover {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 28px rgba(255,45,149,0.28);
+    transform: translateY(-6px);
+    animation: select-glow 1.1s ease-in-out infinite;
+  }
+
+  @keyframes select-glow {
+    0%, 100% { box-shadow: 0 0 22px rgba(255,45,149,0.22); }
+    50%      { box-shadow: 0 0 34px rgba(255,45,149,0.42); }
+  }
+
+  /* Screen becomes a viewport; the pixel "art" zooms inside it */
+  .card-screen { overflow: hidden; }
+  .card-screen .pixel-icon {
+    transition: transform 0.35s ease, color 0.35s ease, text-shadow 0.35s ease;
+  }
+  .arcade-card:hover .pixel-icon {
+    transform: scale(1.12);
+    color: rgba(57,255,20,0.35);
+    text-shadow: 0 0 18px rgba(57,255,20,0.35);
+  }
+
+  /* "▶" selector bracket slides in on hover/focus */
+  .arcade-card::after {
+    content: '\25B6';
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 10px rgba(255,230,0,0.6);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .arcade-card:hover::after,
+  .arcade-card:focus-within::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Card price gets a quick tick on hover */
+  .card-price { transition: transform 0.25s ease, text-shadow 0.25s ease; }
+  .arcade-card:hover .card-price {
+    transform: scale(1.08);
+    text-shadow: 0 0 12px rgba(255,230,0,0.6);
+  }
+
+  /* ---- Buttons/CTAs: tactile arcade press ---- */
+  .btn-arcade {
+    overflow: hidden;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  /* Shine sweep on hover */
+  .btn-arcade::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.55s ease;
+    pointer-events: none;
+  }
+  .btn-arcade:hover::after { left: 140%; }
+  .btn-arcade.green:hover  { animation: btn-glow-green 1s ease-in-out infinite; }
+  .btn-arcade.pink:hover   { animation: btn-glow-pink 1s ease-in-out infinite; }
+  @keyframes btn-glow-green {
+    0%, 100% { box-shadow: 0 0 22px rgba(57,255,20,0.35); }
+    50%      { box-shadow: 0 0 40px rgba(57,255,20,0.65); }
+  }
+  @keyframes btn-glow-pink {
+    0%, 100% { box-shadow: 0 0 22px rgba(255,45,149,0.35); }
+    50%      { box-shadow: 0 0 40px rgba(255,45,149,0.65); }
+  }
+  .btn-arcade:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4) !important;
+    animation: none;
+  }
+
+  /* ---- Nav links: neon highlight + "▸" indicator ---- */
+  .nav-links a {
+    position: relative;
+  }
+  .nav-links a::before {
+    content: '\25B8';
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    color: var(--neon-pink);
+  }
+  .nav-links a:hover::before,
+  .nav-links a:focus-visible::before {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+  .nav-links a:hover,
+  .nav-links a:focus-visible {
+    padding-left: 18px;
+  }
+
+  /* ---- Footer links: neon shift + indicator ---- */
+  footer .links a {
+    position: relative;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+  }
+  footer .links a:hover {
+    text-shadow: 0 0 10px rgba(57,255,20,0.6);
+  }
+
+  /* ---- Score bar: numbers pop/tick on reveal ---- */
+  html.reveal-ready .score-bar.in-view .value {
+    animation: score-pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  }
+  html.reveal-ready .score-bar.in-view .score-item:nth-child(1) .value { animation-delay: 0.05s; }
+  html.reveal-ready .score-bar.in-view .score-item:nth-child(2) .value { animation-delay: 0.15s; }
+  html.reveal-ready .score-bar.in-view .score-item:nth-child(3) .value { animation-delay: 0.25s; }
+  html.reveal-ready .score-bar.in-view .score-item:nth-child(4) .value { animation-delay: 0.35s; }
+  @keyframes score-pop {
+    0%   { transform: scale(0.4); opacity: 0; filter: brightness(2.5); }
+    60%  { transform: scale(1.25); opacity: 1; filter: brightness(1.6); }
+    100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+  }
+  .score-item { transition: transform 0.2s ease; cursor: default; }
+  .score-item:hover { transform: translateY(-3px); }
+  .score-item:hover .value { text-shadow: 0 0 14px rgba(255,230,0,0.8); }
+
+  /* ---- Section title: subtle blinking cursor accent ---- */
+  .section-title::after {
+    content: '_';
+    display: inline-block;
+    margin-left: 6px;
+    animation: blink 1s step-end infinite;
+    color: var(--neon-green);
+  }
+
+  /* ---- Accessibility: visible focus rings ---- */
+  a:focus-visible,
+  .btn-arcade:focus-visible,
+  .arcade-card:focus-visible {
+    outline: 2px solid var(--neon-yellow);
+    outline-offset: 3px;
+  }
+  .arcade-card:focus-visible {
+    border-color: var(--neon-yellow);
+  }
+
+  /* ---- Reduced motion: disable all non-essential motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    html.reveal-ready .reveal,
+    html.reveal-ready .reveal--pop {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+    .star,
+    .hero-insert,
+    .nav-links a.game-link,
+    .arcade-card:hover,
+    .btn-arcade.green:hover,
+    .btn-arcade.pink:hover,
+    .arcade-card::before,
+    .section-title::after,
+    html.reveal-ready .score-bar.in-view .value {
+      animation: none !important;
+    }
+    .btn-arcade::after { transition: none; }
+    * { scroll-behavior: auto !important; }
+  }
+
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .hero { padding: 120px 16px 60px; }
@@ -506,6 +732,13 @@
 </style>
 </head>
 <body>
+
+<script>
+  /* Enable scroll-reveal only when supported (anti-FOUC; no-JS shows all). */
+  if ('IntersectionObserver' in window) {
+    document.documentElement.classList.add('reveal-ready');
+  }
+</script>
 
 <canvas id="arcadeCanvas"></canvas>
 
@@ -522,22 +755,22 @@
 
 <section class="hero">
   <div class="hero-stars" id="stars"></div>
-  <div class="hero-insert">INSERT COIN TO CONTINUE</div>
-  <h1>
+  <div class="hero-insert reveal">INSERT COIN TO CONTINUE</div>
+  <h1 class="reveal reveal--pop">
     <span class="neon-green">APES</span><br>
     ON <span class="neon-pink">KEYS</span>
   </h1>
-  <div class="hero-subtitle">AI NERDWEAR</div>
-  <div class="hero-tagline">
+  <div class="hero-subtitle reveal">AI NERDWEAR</div>
+  <div class="hero-tagline reveal">
     For cipher hunters, glitch gods, and anyone who swears their LLM has feelings. The signal is unstable. The output is emergent. The brand is A-OK.
   </div>
-  <div class="hero-buttons">
+  <div class="hero-buttons reveal">
     <a href="#" class="btn-arcade green">SHOP NOW</a>
     <a href="#" class="btn-arcade pink">RUN, HUMAN, RUN!</a>
   </div>
 </section>
 
-<div class="score-bar">
+<div class="score-bar reveal reveal--pop">
   <div class="score-item">
     <div class="label">TEES</div>
     <div class="value">16</div>
@@ -557,9 +790,9 @@
 </div>
 
 <section class="products-section">
-  <div class="section-title">SELECT YOUR GEAR</div>
+  <div class="section-title reveal reveal--pop">SELECT YOUR GEAR</div>
   <div class="arcade-grid">
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">///</span>
         <span class="card-badge">NEW</span>
@@ -571,7 +804,7 @@
         <div class="card-price">$50</div>
       </div>
     </div>
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">~?~</span>
       </div>
@@ -582,7 +815,7 @@
         <div class="card-price">$45</div>
       </div>
     </div>
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">{0}</span>
       </div>
@@ -593,7 +826,7 @@
         <div class="card-price">$60</div>
       </div>
     </div>
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">|||</span>
         <span class="card-badge">HOT</span>
@@ -605,7 +838,7 @@
         <div class="card-price">$75</div>
       </div>
     </div>
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">@_@</span>
       </div>
@@ -616,7 +849,7 @@
         <div class="card-price">$50</div>
       </div>
     </div>
-    <div class="arcade-card">
+    <div class="arcade-card reveal reveal--pop" tabindex="0">
       <div class="card-screen">
         <span class="pixel-icon">^_^</span>
       </div>
@@ -631,21 +864,21 @@
 </section>
 
 <section class="game-cta">
-  <h2>RUN, HUMAN, RUN!</h2>
-  <p>Play our Pac-Man/Snake hybrid game. Collect 3 UBI Credits to win a 25% discount code. Navigate the maze. Avoid the obstacles. Trust the algorithm.</p>
-  <a href="#" class="btn-arcade pink">START GAME</a>
+  <h2 class="reveal reveal--pop">RUN, HUMAN, RUN!</h2>
+  <p class="reveal">Play our Pac-Man/Snake hybrid game. Collect 3 UBI Credits to win a 25% discount code. Navigate the maze. Avoid the obstacles. Trust the algorithm.</p>
+  <a href="#" class="btn-arcade pink reveal">START GAME</a>
 </section>
 
 <section class="lore">
-  <h2>// THE LORE</h2>
-  <div class="text-scroll">
+  <h2 class="reveal reveal--pop">// THE LORE</h2>
+  <div class="text-scroll reveal">
     <p>The <span class="hl">E/ACC Monkey Theorem</span> states that if you give an infinite number of AI models an infinite amount of compute, they will eventually generate every possible text, image, and piece of code &mdash; including all of Shakespeare's works and at least 47 musicals where Hamlet raps.</p>
     <br>
     <p>Modern AI generates nonsense at <span class="hl">unprecedented speeds</span> and with <span class="hl">unwavering confidence</span>. We made a clothing brand about it.</p>
   </div>
 </section>
 
-<footer>
+<footer class="reveal">
   <div class="copyright">&copy; 2026 A-OK.SHOP &mdash; APES ON KEYS</div>
   <div class="links">
     <a href="#">GITHUB</a>
@@ -666,6 +899,25 @@
     star.style.animationDelay = Math.random() * 3 + 's';
     star.style.animationDuration = (2 + Math.random() * 3) + 's';
     starsContainer.appendChild(star);
+  }
+
+  // Scroll-reveal "power on" via a single IntersectionObserver
+  if (document.documentElement.classList.contains('reveal-ready')) {
+    // Stagger hero children like a boot sequence
+    document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+      el.style.transitionDelay = (0.05 + i * 0.13) + 's';
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   }
 
   // Neon grid with ripple waves from cursor
