@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk, Bebas_Neue } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import SiteChrome from "./components/layout/SiteChrome";
 import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
 
@@ -76,12 +75,8 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} ${spaceGrotesk.variable} ${bebasNeue.variable}`}>
         <CartProvider>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CartDrawer />
-          </div>
+          <SiteChrome>{children}</SiteChrome>
+          <CartDrawer />
         </CartProvider>
         <Analytics />
       </body>
