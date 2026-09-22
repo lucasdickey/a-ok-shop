@@ -1,16 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
-
-// Initialize Stripe client lazily to avoid build-time errors
-let stripe: Stripe | null = null;
-function getStripe() {
-  if (!stripe && process.env.STRIPE_SECRET_KEY) {
-    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2026-04-22.dahlia" as any,
-    });
-  }
-  return stripe;
-}
+import type Stripe from "stripe";
+import { getStripeClient } from "@/app/lib/stripe-client";
+import { runOnce } from "@/app/lib/kv";
 
 // Support multiple webhook secrets (for different Stripe destinations)
 function getWebhookSecrets() {
@@ -22,148 +13,314 @@ function getWebhookSecrets() {
 }
 
 export async function POST(request: NextRequest) {
+  const stripeClient = getStripeClient();
+  if (!stripeClient) {
+    return NextResponse.json(
+      { error: "Stripe not configured" },
+      { status: 500 }
+    );
+  }
+
+  const body = await request.text();
+  const signature = request.headers.get("stripe-signature");
+  if (!signature) {
+    return NextResponse.json({ error: "Missing signature" }, { status: 400 });
+  }
+
+  let event: Stripe.Event | null = null;
+  for (const secret of getWebhookSecrets()) {
+    try {
+      event = stripeClient.webhooks.constructEvent(body, signature, secret);
+      break;
+    } catch {
+      // Try the next secret
+    }
+  }
+
+  if (!event) {
+    console.error("Webhook signature verification failed with all secrets");
+    return NextResponse.json(
+      { error: "Invalid signature" },
+      { status: 400 }
+    );
+  }
+
+  console.log("Received Stripe webhook:", event.type, event.id);
+
   try {
-    const stripeClient = getStripe();
-    if (!stripeClient) {
-      return NextResponse.json(
-        { error: "Stripe not configured" },
-        { status: 500 }
-      );
-    }
-
-    const body = await request.text();
-    const signature = request.headers.get("stripe-signature");
-
-    let event: Stripe.Event | null = null;
-    let lastError: Error | null = null;
-
-    // Try to verify the signature with each available secret
-    const secrets = getWebhookSecrets();
-    for (const secret of secrets) {
-      try {
-        event = stripeClient.webhooks.constructEvent(body, signature!, secret);
-        console.log(`Webhook verified successfully with secret ending in ...${secret.slice(-4)}`);
-        break; // Successfully verified, exit loop
-      } catch (err) {
-        lastError = err as Error;
-        // Continue to next secret
-      }
-    }
-
-    // If none of the secrets worked, return error
-    if (!event) {
-      console.error("Webhook signature verification failed with all secrets:", lastError);
-      return NextResponse.json(
-        { error: "Invalid signature" },
-        { status: 400 }
-      );
-    }
-
-    console.log("Received Stripe webhook:", event.type);
-
-    // Handle the event
     switch (event.type) {
       case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
-        await handleCheckoutSessionCompleted(stripeClient, session);
+        // Delayed payment methods complete as "unpaid"; they are fulfilled
+        // when checkout.session.async_payment_succeeded arrives.
+        if (session.payment_status !== "unpaid") {
+          await handlePaidCheckoutSession(stripeClient, session.id);
+        }
         break;
+      }
 
-      case "payment_intent.succeeded":
+      case "checkout.session.async_payment_failed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        console.warn("Delayed payment failed for checkout session:", session.id);
+        break;
+      }
+
+      case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log("Payment succeeded:", paymentIntent.id);
-
         // Handle MPP agent payments
-        if (paymentIntent.metadata?.source === 'mpp-agent') {
+        if (paymentIntent.metadata?.source === "mpp-agent") {
           await handleMPPPaymentSucceeded(stripeClient, paymentIntent);
         }
         break;
+      }
 
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }
-
-    return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    // A non-2xx response makes Stripe retry the event (for up to 3 days),
+    // so a transient email or API failure never silently drops an order.
+    console.error(`Webhook handler failed for ${event.type} ${event.id}:`, error);
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }
     );
   }
+
+  return NextResponse.json({ received: true });
 }
 
-async function handleCheckoutSessionCompleted(stripeClient: Stripe, session: Stripe.Checkout.Session) {
-  console.log("Checkout session completed:", session.id);
+type OrderItem = {
+  name: string;
+  quantity: number;
+  size: string;
+  color: string;
+  variantId: string;
+  sku: string;
+  amountTotal: number;
+};
 
-  try {
-    // Expand session to get line items and customer details
-    const expandedSession = await stripeClient.checkout.sessions.retrieve(session.id, {
-      expand: ["line_items", "customer"]
-    });
+type Order = {
+  sessionId: string;
+  paymentIntentId: string | null;
+  source: string;
+  createdAt: Date;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingName: string;
+  shippingAddress: Stripe.Address | null;
+  items: OrderItem[];
+  amountSubtotal: number;
+  amountShipping: number;
+  amountTax: number;
+  amountTotal: number;
+  livemode: boolean;
+};
 
-    // Determine the source (catalog or monthly-deals)
-    const source = expandedSession.metadata?.source || "unknown";
-    console.log("Order source:", source);
+async function handlePaidCheckoutSession(stripeClient: Stripe, sessionId: string) {
+  // Re-fetch so we read the current state with product metadata (size/color/variant).
+  const session = await stripeClient.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items.data.price.product", "payment_intent.latest_charge"],
+  });
 
-    // Extract order information
-    const orderData = {
-      sessionId: session.id,
-      source: source,
-      customerEmail: expandedSession.customer_details?.email,
-      customerName: expandedSession.customer_details?.name,
-      shippingAddress: (expandedSession as any).shipping_details?.address,
-      items: expandedSession.line_items?.data || [],
-      amountTotal: expandedSession.amount_total,
-      amountSubtotal: expandedSession.amount_subtotal,
-      amountTax: expandedSession.total_details?.amount_tax || 0,
-      amountShipping: expandedSession.total_details?.amount_shipping || 0,
-      paymentStatus: expandedSession.payment_status,
-      metadata: expandedSession.metadata
+  if (session.payment_status === "unpaid") return;
+
+  const order = toOrder(session);
+  console.log(
+    `Paid order ${order.sessionId} (${order.source}): ${order.items.length} line item(s), ${formatAmount(order.amountTotal)}`
+  );
+
+  // Receipt first so a misconfigured owner alert never blocks the customer's email.
+  await runOnce(`order-receipt:${order.sessionId}`, () =>
+    ensureCustomerReceipt(stripeClient, session)
+  );
+  await runOnce(`order-alert:${order.sessionId}`, () => sendOwnerOrderAlert(order));
+}
+
+function toOrder(session: Stripe.Checkout.Session): Order {
+  const shipping = session.collected_information?.shipping_details ?? null;
+  const paymentIntent = session.payment_intent;
+
+  const items: OrderItem[] = (session.line_items?.data ?? []).map((lineItem) => {
+    const product = lineItem.price?.product;
+    const metadata =
+      product && typeof product !== "string" && !product.deleted
+        ? product.metadata
+        : {};
+    return {
+      name: lineItem.description ?? "Item",
+      quantity: lineItem.quantity ?? 1,
+      size: metadata.size ?? "",
+      color: metadata.color ?? "",
+      variantId: metadata.variantId ?? "",
+      sku: metadata.sku ?? "",
+      amountTotal: lineItem.amount_total,
     };
+  });
 
-    console.log("Order data:", JSON.stringify(orderData, null, 2));
-
-    // Trigger Stripe's built-in receipt email by setting receipt_email on
-    // the PaymentIntent. Stripe sends a branded receipt to this address
-    // regardless of the Dashboard email-receipts setting.
-    if (orderData.customerEmail && expandedSession.payment_intent) {
-      const paymentIntentId =
-        typeof expandedSession.payment_intent === "string"
-          ? expandedSession.payment_intent
-          : expandedSession.payment_intent.id;
-
-      try {
-        await stripeClient.paymentIntents.update(paymentIntentId, {
-          receipt_email: orderData.customerEmail,
-        });
-        console.log(
-          `Stripe receipt email triggered for ${orderData.customerEmail} (PI: ${paymentIntentId})`
-        );
-      } catch (receiptError) {
-        console.error(
-          "Failed to trigger Stripe receipt email:",
-          receiptError
-        );
-      }
-    }
-
-    // Log order details for observability (actual order-confirmation
-    // email with product breakdown can be layered on later if desired).
-    if (orderData.customerEmail) {
-      await sendConfirmationEmail(orderData);
-    }
-
-    // Here you could also:
-    // - Save order to database
-    // - Send order to fulfillment service (Printful, Shopify, etc.)
-    // - Update inventory
-    // - Trigger other business processes
-    // - Different handling based on source (catalog vs monthly-deals)
-
-  } catch (error) {
-    console.error("Error processing completed checkout session:", error);
-  }
+  return {
+    sessionId: session.id,
+    paymentIntentId:
+      typeof paymentIntent === "string" ? paymentIntent : paymentIntent?.id ?? null,
+    source: session.metadata?.source ?? "unknown",
+    createdAt: new Date(session.created * 1000),
+    customerName: session.customer_details?.name ?? "",
+    customerEmail: session.customer_details?.email ?? "",
+    customerPhone: session.customer_details?.phone ?? "",
+    shippingName: shipping?.name ?? "",
+    shippingAddress: shipping?.address ?? null,
+    items,
+    amountSubtotal: session.amount_subtotal ?? 0,
+    amountShipping: session.total_details?.amount_shipping ?? 0,
+    amountTax: session.total_details?.amount_tax ?? 0,
+    amountTotal: session.amount_total ?? 0,
+    livemode: session.livemode,
+  };
 }
+
+/**
+ * Make sure the customer gets Stripe's payment receipt. If the Dashboard's
+ * "Successful payments" customer email is on, Stripe has already set
+ * receipt_email on the charge and we leave it alone to avoid a duplicate.
+ */
+async function ensureCustomerReceipt(stripeClient: Stripe, session: Stripe.Checkout.Session) {
+  const email = session.customer_details?.email;
+  const paymentIntent = session.payment_intent;
+  if (!email || !paymentIntent || typeof paymentIntent === "string") return;
+
+  const charge = paymentIntent.latest_charge;
+  if (charge && typeof charge !== "string" && charge.receipt_email) return;
+
+  await stripeClient.paymentIntents.update(paymentIntent.id, {
+    receipt_email: email,
+  });
+  console.log(`Stripe receipt requested for checkout session ${session.id}`);
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function formatAddressLines(name: string, address: Stripe.Address | null): string[] {
+  if (!address) return ["(no shipping address collected)"];
+  return [
+    name,
+    address.line1,
+    address.line2,
+    [address.city, address.state, address.postal_code].filter(Boolean).join(", "),
+    address.country,
+  ].filter((line): line is string => Boolean(line));
+}
+
+function formatItemLine(item: OrderItem) {
+  const details = [
+    item.size && `Size: ${item.size}`,
+    item.color && `Color: ${item.color}`,
+    item.sku && `SKU: ${item.sku}`,
+    item.variantId && `Variant: ${item.variantId}`,
+  ].filter(Boolean);
+  return `${item.quantity} × ${item.name}${details.length ? ` (${details.join(", ")})` : ""} — ${formatAmount(item.amountTotal)}`;
+}
+
+function paymentDashboardUrl(order: Order) {
+  if (!order.paymentIntentId) return "";
+  const mode = order.livemode ? "" : "test/";
+  return `https://dashboard.stripe.com/${mode}payments/${order.paymentIntentId}`;
+}
+
+/**
+ * Email the store owner everything needed to place the print-on-demand /
+ * drop-ship order with the vendor. Throws on failure so Stripe retries.
+ */
+async function sendOwnerOrderAlert(order: Order) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.ORDER_NOTIFICATION_EMAIL;
+  if (!apiKey || !to) {
+    throw new Error(
+      "Owner order alert not sent: RESEND_API_KEY and ORDER_NOTIFICATION_EMAIL must be set"
+    );
+  }
+
+  const testPrefix = order.livemode ? "" : "[TEST] ";
+  const subject = `${testPrefix}New A-OK order to fulfill: ${formatAmount(order.amountTotal)} — ${order.shippingName || order.customerName || order.customerEmail}`;
+  const addressLines = formatAddressLines(order.shippingName, order.shippingAddress);
+  const itemLines = order.items.map(formatItemLine);
+  const dashboardUrl = paymentDashboardUrl(order);
+
+  const totals = [
+    `Subtotal: ${formatAmount(order.amountSubtotal)}`,
+    `Shipping: ${formatAmount(order.amountShipping)}`,
+    `Tax: ${formatAmount(order.amountTax)}`,
+    `Total paid: ${formatAmount(order.amountTotal)}`,
+  ];
+
+  const text = [
+    `New paid order — place it with the vendor.`,
+    "",
+    `Placed: ${order.createdAt.toISOString()}`,
+    `Checkout session: ${order.sessionId}`,
+    dashboardUrl && `Stripe payment: ${dashboardUrl}`,
+    "",
+    "SHIP TO",
+    ...addressLines,
+    order.customerPhone && `Phone: ${order.customerPhone}`,
+    `Email: ${order.customerEmail}`,
+    "",
+    "ITEMS",
+    ...itemLines.map((line) => `- ${line}`),
+    "",
+    ...totals,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.5;">
+      <h1 style="font-size: 20px;">New paid order — place it with the vendor</h1>
+      <p>Placed: ${escapeHtml(order.createdAt.toISOString())}<br/>
+      Checkout session: ${escapeHtml(order.sessionId)}<br/>
+      ${dashboardUrl ? `<a href="${escapeHtml(dashboardUrl)}">View payment in Stripe</a>` : ""}</p>
+      <h2 style="font-size: 16px;">Ship to</h2>
+      <p>${addressLines.map(escapeHtml).join("<br/>")}<br/>
+      ${order.customerPhone ? `Phone: ${escapeHtml(order.customerPhone)}<br/>` : ""}
+      Email: ${escapeHtml(order.customerEmail)}</p>
+      <h2 style="font-size: 16px;">Items</h2>
+      <ul>${itemLines.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}</ul>
+      <p>${totals.map(escapeHtml).join("<br/>")}</p>
+    </div>
+  `;
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      // Resend dedupes retries of the same alert within 24 hours.
+      "Idempotency-Key": `order-alert-${order.sessionId}`,
+    },
+    body: JSON.stringify({
+      from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+      to: to.split(",").map((address) => address.trim()).filter(Boolean),
+      reply_to: order.customerEmail || undefined,
+      subject,
+      html,
+      text,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Resend owner alert failed: ${response.status} ${await response.text()}`);
+  }
+  console.log(`Owner order alert sent for checkout session ${order.sessionId}`);
+}
+
 
 function formatAmount(cents?: number | null) {
   return `$${((cents || 0) / 100).toFixed(2)}`;

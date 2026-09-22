@@ -173,3 +173,34 @@ export async function sessionExists(id: string): Promise<boolean> {
 export function generateSessionId(): string {
   return `cs_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
 }
+
+const ONCE_PENDING_TTL = 300; // seconds a step may run before another attempt can claim it
+const ONCE_DONE_TTL = 60 * 60 * 24 * 90; // remember completed steps for 90 days
+
+/**
+ * Run `fn` at most once per key (e.g. one owner alert per Stripe order), so
+ * Stripe webhook retries and duplicate deliveries don't repeat side effects.
+ * A failed run releases its claim so the next retry can try again.
+ * Without REDIS_URL, `fn` runs every time.
+ */
+export async function runOnce(key: string, fn: () => Promise<void>): Promise<void> {
+  if (!process.env.REDIS_URL) {
+    await fn();
+    return;
+  }
+
+  const onceKey = `once:${key}`;
+  const claimed = await redis.set(onceKey, 'pending', 'EX', ONCE_PENDING_TTL, 'NX');
+  if (!claimed) {
+    if ((await redis.get(onceKey)) === 'done') return;
+    throw new Error(`Step already in progress: ${key}`);
+  }
+
+  try {
+    await fn();
+  } catch (error) {
+    await redis.del(onceKey);
+    throw error;
+  }
+  await redis.set(onceKey, 'done', 'EX', ONCE_DONE_TTL);
+}
