@@ -114,6 +114,7 @@ export default function ConceptsGallery() {
   const [expanded, setExpanded] = useState(false);
   const fullscreenRef = useRef<HTMLDialogElement>(null);
   const expandRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const visible = useMemo(
     () =>
@@ -158,6 +159,7 @@ export default function ConceptsGallery() {
     if (!expanded) return;
     const dialog = fullscreenRef.current;
     dialog?.showModal();
+    closeRef.current?.focus();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -380,7 +382,7 @@ export default function ConceptsGallery() {
               <button
                 onClick={() => setExpanded(false)}
                 aria-label="Close fullscreen"
-                autoFocus
+                ref={closeRef}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F5F2DC]/20 text-lg text-[#F5F2DC] transition hover:border-[#F5F2DC]/60"
               >
                 ✕
@@ -417,7 +419,7 @@ export default function ConceptsGallery() {
 
           <div className="flex items-center justify-between border-t border-[#F5F2DC]/10 px-4 py-2 sm:hidden">
             <ArrowButton direction="prev" onClick={() => go(-1)} className="h-11 w-11" />
-            <span role="status" className="text-xs">{index + 1} / {visible.length}</span>
+            <span aria-hidden="true" className="text-xs">{index + 1} / {visible.length}</span>
             <ArrowButton direction="next" onClick={() => go(1)} className="h-11 w-11" />
           </div>
           <div

@@ -13,3 +13,5 @@ body:has(dialog[open]){overflow:hidden}dialog{border:1px solid var(--ink);paddin
 .editorial-pairs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px}.editorial-pairs h2{margin-top:12px}.editorial-pairs h3{font-size:24px}.editorial-pairs article p{font-size:13px;line-height:1.7;margin:14px 0}.editorial-pairs .text-button{display:block;text-align:left}
 @media(max-width:640px){.editorial-pairs{grid-template-columns:1fr;gap:24px}.editorial-pairs article{border-top:1px solid var(--line);padding-top:20px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
+.print-room .generator-card :focus-visible{outline-color:#fff}

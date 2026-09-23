@@ -91,6 +91,11 @@ const result = {catalog:'Six products match source prices, variants, availabilit
       await page.locator('[data-art="0"]').click();
       await page.locator(current?'#inspect-dialog[open]':'#art-dialog[open]').waitFor();
       await page.keyboard.press('Escape');
+      if(target==='24-print-room'){
+        const generator = page.locator('[data-generator]');
+        await generator.focus();
+        assert.equal(await generator.evaluate(el=>getComputedStyle(el).outlineColor),'rgb(255, 255, 255)','Visible white focus ring on crimson generator card');
+      }
       await page.locator(current?'[data-generator]':'[data-studio]').first().click();
       const generatorText=await page.locator(current?'#generator-dialog':'#studio-dialog').innerText();
       assert.match(generatorText,/existing/i);

@@ -14,6 +14,8 @@ const origin = process.env.AOK_PREVIEW_URL || 'http://localhost:3016';
     await page.getByRole('dialog').waitFor();
     assert.equal(await page.getByRole('dialog').evaluate(el=>el.matches(':modal')),true,'Fullscreen makes background inert');
     assert.equal(await page.evaluate(()=>!!document.activeElement.closest('dialog')),true,'Focus enters fullscreen');
+    assert.equal(await page.getByRole('button',{name:'Close fullscreen',exact:true}).evaluate(el=>el===document.activeElement),true,'Close receives initial focus');
+    assert.equal(await page.getByRole('dialog').locator('[role="status"]').count(),1,'One position announcement');
     await page.getByRole('dialog').locator('button[aria-label="Next concept"]:visible').click();
     assert.match(await page.locator('iframe').last().getAttribute('src'),/25-human-edit/);
     await page.getByRole('dialog').locator('button[aria-label="Next concept"]:visible').click();
