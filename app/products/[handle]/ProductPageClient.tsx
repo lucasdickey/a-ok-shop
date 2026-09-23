@@ -213,18 +213,16 @@ export function ProductDetails({
     setSelectedColor(color);
   };
 
-  // Pick the variant from size and color together. Only options the variants carry are
-  // matched: print-on-demand clothing has no size in its variants, so size is sent separately.
+  // Pick the variant by color. Size isn't part of the match: clothing is printed on demand in
+  // every standard size, and products without a size picker have one size.
   const optionOf = (variant: any, name: string): string | undefined =>
     variant.selectedOptions?.find(
       (option: { name: string; value: string }) => option.name.toLowerCase() === name
     )?.value;
-  const variantsHaveSize = variants.some((v) => optionOf(v, 'size'));
   const variantsHaveColor = variants.some((v) => optionOf(v, 'color'));
   const selectedVariant = variants.find(
     (v) =>
       v.available !== false &&
-      (!variantsHaveSize || !selectedSize || optionOf(v, 'size') === selectedSize) &&
       (!variantsHaveColor ||
         !selectedColor ||
         optionOf(v, 'color')?.toLowerCase() === selectedColor.toLowerCase())

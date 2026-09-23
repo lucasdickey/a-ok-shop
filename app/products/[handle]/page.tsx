@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/app/lib/catalog";
+import { CLOTHING_SIZES } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +101,7 @@ export default async function ProductPage({
         tag.toLowerCase().includes("hoodie")
     );
 
-  // Sizes that exist on an in-stock variant. Only these can be checked out.
+  // Values of an option that exist on an in-stock variant. Only these can be checked out.
   const optionValues = (name: string) =>
     Array.from(
       new Set(
@@ -110,27 +111,15 @@ export default async function ProductPage({
           .filter((value): value is string => Boolean(value))
       )
     );
-  const variantSizes = optionValues("size");
 
-  // Clothing whose variants carry no size is printed on demand, so every standard size is offered.
-  // Otherwise offer only the sizes that exist (the catalog can list sizes with no variant behind them).
-  // Keep this list in sync with PRINT_ON_DEMAND_SIZES in app/api/catalog/checkout/route.ts.
+  // Every tee and hoodie is printed on demand, so every standard size is offered.
   if (isClothingItem) {
     sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
-    sizeValues.push(
-      ...(variantSizes.length > 0
-        ? variantSizes
-        : ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"])
-    );
+    sizeValues.push(...CLOTHING_SIZES);
   }
 
   // Sort sizes in the standard order
-  sizeValues.sort((a, b) => {
-    return (
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(a) -
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(b)
-    );
-  });
+  sizeValues.sort((a, b) => CLOTHING_SIZES.indexOf(a) - CLOTHING_SIZES.indexOf(b));
 
   const hasSizeOptions = sizeValues.length > 0;
 

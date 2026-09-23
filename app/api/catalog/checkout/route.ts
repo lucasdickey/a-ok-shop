@@ -2,14 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
 import { getAllProducts, type SimpleProduct } from "@/app/lib/catalog";
+import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 
 const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const FLAT_SHIPPING_CENTS = 999;
 const MAX_QUANTITY_PER_ITEM = 20;
-
-// Sizes the product page offers for print-on-demand clothing whose variants carry no size.
-// Kept in sync with app/products/[handle]/page.tsx.
-const PRINT_ON_DEMAND_SIZES = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"];
 
 type CartItemInput = {
   variantId: string;
@@ -52,45 +49,42 @@ function getOption(variant: ProductVariant, name: string): string | undefined {
   )?.value;
 }
 
+type Resolved = { product: SimpleProduct; variant: ProductVariant; size?: string };
+
 /**
- * Resolve the variant the customer actually picked. The product page can send
- * a variantId that matches the chosen size but not the chosen color, so prefer
- * the variant whose options match the customer's size/color selection.
- *
- * Only options the product's variants actually carry are matched. Most clothing
- * is printed on demand with no size in its variants; for those the chosen size
- * is returned separately so it can be recorded on the order.
+ * Resolve the variant the customer actually picked, by color. Tees and hoodies
+ * are printed on demand in any of CLOTHING_SIZES, so size is not part of the
+ * match: it must be one of those sizes and is recorded on the order instead.
  */
 function resolveVariant(
   products: SimpleProduct[],
   item: CartItemInput
-): { product: SimpleProduct; variant: ProductVariant; size?: string } | null {
+): Resolved | { error: string } | null {
   const product = products.find((p) =>
     p.variants.edges.some((v) => v.node.id === item.variantId)
   );
   if (!product) return null;
 
-  const variants = product.variants.edges.map((v) => v.node);
-  const variantsHave = (name: string) => variants.some((v) => getOption(v, name));
-  const matchSize = variantsHave("size");
-  const matchColor = variantsHave("color");
-
-  let printOnDemandSize: string | undefined;
-  if (!matchSize && item.size) {
+  let size: string | undefined;
+  if (isClothing(product.productType)) {
     // Only accept known sizes: this value ends up in Stripe metadata and the owner's email.
-    if (!PRINT_ON_DEMAND_SIZES.includes(item.size)) return null;
-    printOnDemandSize = item.size;
+    if (!item.size) return { error: `Choose a size for ${product.title}` };
+    if (!CLOTHING_SIZES.includes(item.size)) return null;
+    size = item.size;
   }
 
-  const matchesSelection = (variant: ProductVariant) =>
-    (!matchSize || !item.size || getOption(variant, "size") === item.size) &&
-    (!matchColor || !item.color || getOption(variant, "color") === item.color);
+  const variants = product.variants.edges
+    .map((v) => v.node)
+    .filter((v) => v.availableForSale);
+  const matchColor = variants.some((v) => getOption(v, "color"));
+  const matchesColor = (variant: ProductVariant) =>
+    !matchColor || !item.color || getOption(variant, "color") === item.color;
 
   const variant =
-    variants.find((v) => v.id === item.variantId && matchesSelection(v)) ||
-    variants.find(matchesSelection);
+    variants.find((v) => v.id === item.variantId && matchesColor(v)) ||
+    variants.find(matchesColor);
 
-  return variant ? { product, variant, size: printOnDemandSize } : null;
+  return variant ? { product, variant, size } : null;
 }
 
 function getBaseUrl(request: NextRequest): string {
@@ -139,7 +133,10 @@ export async function POST(request: NextRequest) {
 
     for (const item of items) {
       const resolved = resolveVariant(products, item);
-      if (!resolved || !resolved.variant.availableForSale) {
+      if (resolved && "error" in resolved) {
+        return NextResponse.json({ error: resolved.error }, { status: 400 });
+      }
+      if (!resolved) {
         return NextResponse.json(
           { error: "An item in your cart is no longer available" },
           { status: 400 }
@@ -147,7 +144,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { product, variant } = resolved;
-      const size = getOption(variant, "size") || resolved.size || "";
+      const size = resolved.size || "";
       const unitAmount = Math.round(parseFloat(variant.price.amount) * 100);
       if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
         return NextResponse.json(
@@ -162,7 +159,9 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: "usd",
           product_data: {
-            name: `${product.title} - ${variant.title}${resolved.size ? ` / ${resolved.size}` : ""}`,
+            name: `${product.title} - ${[getOption(variant, "color") || variant.title, size]
+              .filter(Boolean)
+              .join(" / ")}`,
             images: image && image.startsWith("http") ? [image] : [],
             metadata: {
               size,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart, CartItem } from "@/app/components/cart/CartProvider";
+import { CLOTHING_SIZES } from "@/app/lib/sizes";
 
 // Monthly deal product data - will be updated monthly
 const MONTHLY_DEAL = {
@@ -16,7 +17,7 @@ const MONTHLY_DEAL = {
     "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
     "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588"
   ],
-  sizes: ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"],
+  sizes: [...CLOTHING_SIZES],
   colors: ["Black", "Navy", "Heather Grey"],
   features: [
     "Cozy fleece interior",
