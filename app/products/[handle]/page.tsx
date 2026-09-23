@@ -100,12 +100,28 @@ export default async function ProductPage({
         tag.toLowerCase().includes("hoodie")
     );
 
-  // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // Since products are printed on demand, all sizes are always available
-  if ((sizeValues.length === 0 || true) && isClothingItem) {
-    console.log("Using standard sizes for clothing item");
+  // Sizes that exist on an in-stock variant. Only these can be checked out.
+  const optionValues = (name: string) =>
+    Array.from(
+      new Set(
+        variants
+          .filter((v) => v.available)
+          .map((v) => v.selectedOptions?.find((o) => o.name.toLowerCase() === name)?.value)
+          .filter((value): value is string => Boolean(value))
+      )
+    );
+  const variantSizes = optionValues("size");
+
+  // Clothing whose variants carry no size is printed on demand, so every standard size is offered.
+  // Otherwise offer only the sizes that exist (the catalog can list sizes with no variant behind them).
+  // Keep this list in sync with PRINT_ON_DEMAND_SIZES in app/api/catalog/checkout/route.ts.
+  if (isClothingItem) {
     sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
-    sizeValues.push(...["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"]);
+    sizeValues.push(
+      ...(variantSizes.length > 0
+        ? variantSizes
+        : ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"])
+    );
   }
 
   // Sort sizes in the standard order
@@ -273,7 +289,14 @@ export default async function ProductPage({
     );
   }
 
-  // All colors are always available since products are printed on demand
+  // When variants carry colors, drop listed colors that have no in-stock variant behind them.
+  const variantColors = optionValues("color");
+  if (variantColors.length > 0) {
+    const inStock = colorValues.filter((color) => variantColors.includes(color));
+    colorValues.length = 0;
+    colorValues.push(...inStock);
+  }
+
   const colorAvailability: Record<string, boolean> = {};
   colorValues.forEach((color) => {
     colorAvailability[color] = true;
