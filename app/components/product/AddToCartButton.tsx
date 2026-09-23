@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { useCart, CartItem } from '@/app/components/cart/CartProvider';
 
+// Checkout accepts at most this many of one item (see app/api/catalog/checkout/route.ts).
+const MAX_QUANTITY = 20;
+
 type AddToCartButtonProps = {
   product: {
     id: string;
@@ -94,7 +97,8 @@ export default function AddToCartButton({
           </button>
           <span className="px-3 py-2">{itemQuantity}</span>
           <button
-            onClick={() => setItemQuantity(prev => prev + 1)}
+            onClick={() => setItemQuantity(prev => Math.min(MAX_QUANTITY, prev + 1))}
+            disabled={itemQuantity >= MAX_QUANTITY}
             className="px-3 py-2 hover:bg-secondary-light"
             aria-label="Increase quantity"
           >
@@ -104,18 +108,19 @@ export default function AddToCartButton({
         
         <button
           onClick={handleAddToCart}
-          disabled={isAdding}
-          className="btn btn-primary flex-1"
+          disabled={isAdding || unavailable}
+          className="btn btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isAdding ? 'Adding...' : 'Add to Cart'}
+          {isAdding ? 'Adding...' : unavailable ? 'Unavailable' : 'Add to Cart'}
         </button>
       </div>
       
-      {showWarning && (
-        <div className="mt-2 text-sm text-red-500">
-          {warningMessage}
-        </div>
-      )}
+      {/* Always rendered so screen readers announce the message when it appears. */}
+      <div role="alert" className="mt-2 text-sm text-red-500">
+        {unavailable
+          ? 'That combination isn’t available. Try another size or color.'
+          : showWarning && warningMessage}
+      </div>
     </div>
   );
 }

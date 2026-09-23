@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/app/lib/catalog";
-import { CLOTHING_SIZES } from "@/app/lib/sizes";
+import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
 
 export const dynamic = "force-dynamic";
@@ -91,15 +91,8 @@ export default async function ProductPage({
   }
 
   // Check if this is a clothing item (shirt or hoodie)
-  const isClothingItem =
-    product.productType.toLowerCase().includes("t-shirt") ||
-    product.productType.toLowerCase().includes("hoodie") ||
-    product.tags.some(
-      (tag) =>
-        tag.toLowerCase().includes("t-shirt") ||
-        tag.toLowerCase().includes("tshirt") ||
-        tag.toLowerCase().includes("hoodie")
-    );
+  // Same check checkout uses, so a size picked here is always recorded on the order.
+  const isClothingItem = isClothing(product.productType, product.tags);
 
   // Values of an option that exist on an in-stock variant. Only these can be checked out.
   const optionValues = (name: string) =>

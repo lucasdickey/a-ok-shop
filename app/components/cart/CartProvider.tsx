@@ -85,7 +85,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         );
       } else {
         // Add new item
-        return [...prevCart, item];
+        return [...prevCart, { ...item, quantity: Math.min(MAX_QUANTITY_PER_ITEM, item.quantity) }];
       }
     });
     openCart();

@@ -66,16 +66,28 @@ function resolveVariant(
   if (!product) return null;
 
   let size: string | undefined;
-  if (isClothing(product.productType)) {
+  if (isClothing(product.productType, product.tags)) {
     // Only accept known sizes: this value ends up in Stripe metadata and the owner's email.
     if (!item.size) return { error: `Choose a size for ${product.title}` };
-    if (!CLOTHING_SIZES.includes(item.size)) return null;
+    if (!CLOTHING_SIZES.includes(item.size)) {
+      return { error: `${item.size.slice(0, 10)} is no longer offered for ${product.title}` };
+    }
     size = item.size;
   }
 
-  const variants = product.variants.edges
-    .map((v) => v.node)
-    .filter((v) => v.availableForSale);
+  const allVariants = product.variants.edges.map((v) => v.node);
+  // A sold-out variant is never swapped for another one, unless the shopper's color
+  // points elsewhere (the id is then only a stale pointer from the product page).
+  const requested = allVariants.find((v) => isSameId(v.id, item.variantId));
+  if (
+    requested &&
+    !requested.availableForSale &&
+    (!item.color || getOption(requested, "color") === item.color)
+  ) {
+    return null;
+  }
+
+  const variants = allVariants.filter((v) => v.availableForSale);
   const matchColor = variants.some((v) => getOption(v, "color"));
   const matchesColor = (variant: ProductVariant) =>
     !matchColor || !item.color || getOption(variant, "color") === item.color;

@@ -204,3 +204,32 @@ export async function runOnce(key: string, fn: () => Promise<void>): Promise<voi
   }
   await redis.set(onceKey, 'done', 'EX', ONCE_DONE_TTL);
 }
+
+const localCounts = new Map<string, { count: number; resetAt: number }>();
+
+/**
+ * Count one use of `key` and report whether it is still within `limit` per
+ * `windowSeconds`. Uses Redis when REDIS_URL is set; otherwise falls back to a
+ * per-server in-memory count, which is weaker but still bounded.
+ */
+export async function takeRateLimit(
+  key: string,
+  limit: number,
+  windowSeconds: number
+): Promise<boolean> {
+  const rateKey = `rate:${key}`;
+  if (process.env.REDIS_URL) {
+    const count = await redis.incr(rateKey);
+    if (count === 1) await redis.expire(rateKey, windowSeconds);
+    return count <= limit;
+  }
+
+  const now = Date.now();
+  const entry = localCounts.get(rateKey);
+  if (!entry || entry.resetAt <= now) {
+    localCounts.set(rateKey, { count: 1, resetAt: now + windowSeconds * 1000 });
+    return true;
+  }
+  entry.count += 1;
+  return entry.count <= limit;
+}

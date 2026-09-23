@@ -4,7 +4,9 @@
 export const CLOTHING_SIZES: readonly string[] = ["XS", "S", "M", "L", "XL", "2XL"];
 
 /** Tees and hoodies (including sweatshirts filed under either type) take a size. */
-export function isClothing(productType: string): boolean {
-  const type = productType.toLowerCase();
-  return type.includes("t-shirt") || type.includes("hoodie");
+export function isClothing(productType: string, tags: readonly string[] = []): boolean {
+  return [productType, ...tags].some((value) => {
+    const text = value.toLowerCase();
+    return text.includes("t-shirt") || text.includes("tshirt") || text.includes("hoodie");
+  });
 }
