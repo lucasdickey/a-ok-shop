@@ -1,12 +1,12 @@
 # Agent Guidelines
 
-Welcome to the A-OK Shop repository. This project is a custom Shopify storefront built with Next.js 14+, TypeScript, and Tailwind CSS.
+Welcome to the A-OK Shop repository. This project is a custom storefront built with Next.js 14+, TypeScript, and Tailwind CSS, with checkout on Stripe.
 
 ## Project Overview
 
 The A-OK Shop features:
 
-- **Custom Shopify Storefront**: Product browsing, cart, and checkout
+- **Custom Storefront**: Product browsing, cart, and Stripe checkout
 - **Embedded Game**: Pac-Man/Snake hybrid with reward system at `/game`
 - **Discount Code System**: Win-based 25% discount codes via `/api/discount`
 - **Self-Replicating Art Gallery**: Dynamic image generation and display
@@ -22,20 +22,22 @@ The A-OK Shop features:
 
 ### Environment Variables
 
-- Copy `.env.example` to `.env.local` and provide your Shopify credentials.
-- Required keys: `SHOPIFY_STORE_DOMAIN` and `SHOPIFY_STOREFRONT_API_TOKEN`.
-- Optional: `SHOPIFY_ADMIN_API_TOKEN` for real discount code generation (see `SHOPIFY_DISCOUNT_SETUP.md`).
+- Copy `.env.example` to `.env.local` and fill in the values.
+- `STRIPE_SECRET_KEY` enables checkout and real discount codes; without it, `/api/discount` returns mock codes.
+- `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, and `ORDER_NOTIFICATION_EMAIL` enable the owner's paid-order alerts.
 
 ### Build Checks
 
 - Before committing, run `npm run lint` and then `npm run build` to ensure the project compiles.
 - The build step runs `scripts/generate-image-list.js` via the `prebuild` script, so ensure it completes successfully.
 
-## Shopify API
+## Catalog and Checkout
 
-- All Shopify requests use the Storefront GraphQL API.
-- Discount code generation uses Admin API (optional, falls back to mock codes).
-- Shared utilities can be found in `app/lib/shopify.ts`.
+- Product data comes from `product-catalog.json` through `app/lib/catalog.ts`. There are no catalog API calls.
+- Every tee and hoodie is printed on demand in XS–2XL; the list lives in `app/lib/sizes.ts`.
+- Checkout (`app/api/catalog/checkout/route.ts`) re-prices every line from the catalog and creates a Stripe Checkout session.
+- Discount codes are Stripe promotion codes created by `/api/discount` (mock codes when Stripe isn't configured).
+- `scripts/sync-stripe-products.js` keeps Stripe products and prices in step with the catalog (see `STRIPE_CATALOG_SYNC.md`).
 
 ## Game Integration
 
@@ -48,7 +50,7 @@ The A-OK Shop features:
 
 - Update `README.md` when configuration or usage instructions change.
 - Keep documentation files in Markdown format.
-- See `SHOPIFY_DISCOUNT_SETUP.md` for discount code configuration.
+- See `STRIPE_CATALOG_SYNC.md` and `STRIPE_WEBHOOK_SETUP.md` for Stripe setup.
 
 ## Testing
 

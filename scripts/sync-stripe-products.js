@@ -19,6 +19,11 @@ const path = require('path');
 const Stripe = require('stripe');
 
 const CATALOG_PATH = path.join(__dirname, '..', 'product-catalog.json');
+
+// Every tee and hoodie is printed on demand in these sizes. Same list as app/lib/sizes.ts.
+const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+const sizesFor = (productType = '') =>
+  /t-shirt|hoodie/i.test(productType) ? CLOTHING_SIZES.join(',') : '';
 const DRY_RUN = process.argv.includes('--dry-run');
 const UPDATE_MODE = process.argv.includes('--update');
 
@@ -81,6 +86,7 @@ async function main() {
               handle: product.handle,
               productType: product.productType || '',
               vendor: product.vendor || '',
+              sizes: sizesFor(product.productType),
             },
             active: product.availableForSale !== false,
           });
@@ -97,6 +103,7 @@ async function main() {
               handle: product.handle,
               productType: product.productType || '',
               vendor: product.vendor || '',
+              sizes: sizesFor(product.productType),
             },
             active: product.availableForSale !== false,
           });
