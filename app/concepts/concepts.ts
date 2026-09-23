@@ -1,4 +1,4 @@
-export type Harness = "Cursor" | "Droid" | "Codex";
+export type Harness = "Cursor" | "Droid" | "Codex" | "Claude Code";
 
 export interface Concept {
   id: string;
@@ -274,5 +274,38 @@ export const concepts: Concept[] = [
       "Grid/list density toggle",
       "Art and generator in a compact studio module"
     ]
+  },
+  {
+    id: "21",
+    title: "The Router",
+    file: "/design-concepts/21-the-router.html",
+    harness: "Claude Code",
+    model: "Opus 5.5",
+    tags: ["Decision helper", "Voice-led", "Real cart"],
+    description:
+      "Mixture of Apes as a shopping tool. Tap the audience lines lifted from the product copy; the router narrows 24 designs to two, with options and add-to-bag on the first one.",
+    highlights: ["Trait chips quoted from catalog copy", "Router weights you can read", "Picker + add in the output panel", "Free-shipping meter in the bag bar"],
+  },
+  {
+    id: "22",
+    title: "Ministry of Alignment",
+    file: "/design-concepts/22-ministry-of-alignment.html",
+    harness: "Claude Code",
+    model: "Opus 5.5",
+    tags: ["Poster art", "Parody", "Real cart"],
+    description:
+      "The screen-print posters finally lead. One decree per screen with the art full size, a requisition form to pick options, and a ration card that tracks the $50 free-shipping line.",
+    highlights: ["Full-bleed product art as posters", "Requisition form on every decree", "Ration card suggests real items to close the gap", "Archive of the street posters"],
+  },
+  {
+    id: "23",
+    title: "Model Card",
+    file: "/design-concepts/23-model-card.html",
+    harness: "Claude Code",
+    model: "Opus 5.5",
+    tags: ["Long copy", "Full catalog", "Real cart"],
+    description:
+      "Every piece gets a model card: summary, intended use, known limitations, the full description as training data, and a hallucinated citation. Searchable across all 24 pieces.",
+    highlights: ["Full product copy, not truncated", "Honest limitations (missing sizes)", "Search + category + price sort", "Deploy to bag from every card"],
   },
 ];

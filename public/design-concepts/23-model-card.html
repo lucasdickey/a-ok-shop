@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A–OK 23 — Model Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --paper:#FBFAF5; --ink:#171717; --muted:#5b5b57; --line:#dedbd0; --red:#B91C1C; --tee:#8B1E24; --hoodie:#F5F2DC; --hat:#2C2C2C; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.55 'Space Grotesk', system-ui, sans-serif; }
+  a { color:inherit; }
+  code, .mono { font-family:'JetBrains Mono', ui-monospace, monospace; }
+  .review { display:flex; justify-content:space-between; gap:12px; padding:6px 16px; background:var(--ink); color:var(--paper); font:11px 'JetBrains Mono'; letter-spacing:.06em; text-transform:uppercase; }
+  .review a { text-decoration:none; }
+  header { display:flex; align-items:center; gap:16px; padding:12px 24px; border-bottom:1px solid var(--line); background:#fff; }
+  .logo { font-weight:700; font-size:20px; text-decoration:none; letter-spacing:-.01em; }
+  .logo span { color:var(--red); }
+  .search { flex:1; max-width:420px; font:inherit; font-size:14px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
+  .bag { margin-left:auto; font:600 13px 'JetBrains Mono'; text-decoration:none; padding:8px 12px; border-radius:8px; background:var(--ink); color:#fff; }
+
+  .hero { padding:32px 24px 20px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:16px; }
+  .hero h1 { font-size:clamp(32px,4.6vw,56px); line-height:1; margin:0; letter-spacing:-.03em; }
+  .hero h1 em { font-style:normal; color:var(--red); }
+  .hero p { margin:10px 0 0; color:var(--muted); max-width:56ch; }
+  .filters { display:flex; flex-wrap:wrap; gap:6px; }
+  .filters button { font:500 13px 'JetBrains Mono'; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  .filters button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .layout { display:grid; grid-template-columns:320px minmax(0,1fr); min-height:70vh; }
+  .zoo { border-right:1px solid var(--line); max-height:calc(100vh - 100px); overflow:auto; position:sticky; top:0; }
+  .zoo button { width:100%; display:grid; grid-template-columns:44px 1fr auto; gap:10px; align-items:center; padding:10px 16px; border:0; border-bottom:1px solid var(--line); background:transparent; text-align:left; font:inherit; cursor:pointer; transition:background .15s; }
+  .zoo button:hover { background:#fff; }
+  .zoo button[aria-current="true"] { background:#fff; box-shadow:inset 3px 0 0 var(--red); }
+  .zoo img { width:44px; height:44px; object-fit:cover; border-radius:6px; }
+  .zoo .repo { font:12px 'JetBrains Mono'; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .zoo .repo b { display:block; font:600 14px 'Space Grotesk'; }
+  .zoo .px { font:12px 'JetBrains Mono'; color:var(--muted); }
+
+  .card { padding:24px 32px 120px; display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:32px; align-items:start; }
+  .card-head { grid-column:1 / -1; }
+  .repo-name { font:600 clamp(18px,2.4vw,26px) 'JetBrains Mono'; margin:0; word-break:break-word; }
+  .repo-name span { color:var(--muted); font-weight:400; }
+  .pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .pill { font:12px 'JetBrains Mono'; padding:3px 8px; border-radius:6px; border:1px solid var(--line); background:#fff; }
+  .pill.cat { color:#fff; border-color:transparent; }
+  .pill.cat.T-Shirts { background:var(--tee); }
+  .pill.cat.Hoodies { background:var(--hoodie); color:var(--ink); border-color:#d8d2b4; }
+  .pill.cat.Hats { background:var(--hat); }
+
+  .doc h2 { font-size:13px; font:600 12px 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:28px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  .doc h2:first-child { margin-top:0; }
+  .summary { font-size:clamp(22px,2.6vw,32px); line-height:1.15; font-weight:700; letter-spacing:-.02em; margin:0; }
+  .doc p { margin:0 0 8px; }
+  .limits { margin:0; padding-left:18px; }
+  .training { color:#2e2e2b; }
+  .training.clamped { display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
+  .more { font:600 13px 'JetBrains Mono'; background:none; border:0; padding:0; color:var(--red); cursor:pointer; text-decoration:underline; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td, th { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font:600 12px 'JetBrains Mono'; color:var(--muted); width:40%; }
+  pre.cite { font:12.5px/1.55 'JetBrains Mono'; background:#f1efe6; border:1px solid var(--line); border-radius:8px; padding:14px; white-space:pre-wrap; margin:0; }
+
+  .deploy { position:sticky; top:16px; border:1px solid var(--line); border-radius:12px; background:#fff; overflow:hidden; }
+  .deploy img { width:100%; aspect-ratio:1; object-fit:cover; display:block; background:var(--hoodie); }
+  .thumbs { display:flex; gap:6px; padding:8px 12px 0; }
+  .thumbs button { padding:0; border:2px solid transparent; border-radius:6px; background:none; cursor:pointer; }
+  .thumbs button[aria-pressed="true"] { border-color:var(--ink); }
+  .thumbs img { width:44px; height:44px; object-fit:cover; border-radius:4px; }
+  .deploy-body { padding:14px 16px 16px; }
+  .deploy-title { font:600 12px 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:0 0 10px; }
+  .p5-opt { border:0; padding:0; margin:0 0 10px; }
+  .p5-opt legend { font:600 11px 'JetBrains Mono'; text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px; color:var(--muted); }
+  .p5-opt button { font:500 13px 'JetBrains Mono'; min-width:40px; padding:6px 9px; margin:0 4px 4px 0; border:1px solid var(--line); border-radius:6px; background:#fff; cursor:pointer; }
+  .p5-opt button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .p5-opt button:disabled { opacity:.35; text-decoration:line-through; cursor:not-allowed; }
+  .p5-note { font-size:13px; color:var(--tee); margin:0 0 10px; }
+  .p5-add { width:100%; font:700 16px 'Space Grotesk'; padding:13px; border:0; border-radius:8px; background:var(--red); color:#fff; cursor:pointer; transition:background .15s, transform .12s; }
+  .p5-add:hover:not(:disabled) { background:var(--tee); }
+  .p5-add:active { transform:scale(.98); }
+  .p5-add:disabled { background:#aaa; cursor:not-allowed; }
+  .ship { font:12px 'JetBrains Mono'; color:var(--muted); margin:10px 0 0; }
+
+  .manifest { position:fixed; left:0; right:0; bottom:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px; padding:10px 24px; background:var(--ink); color:#fff; font:13px 'JetBrains Mono'; }
+  .manifest .meter { flex:1 1 180px; max-width:280px; height:6px; background:rgba(255,255,255,.2); border-radius:3px; overflow:hidden; }
+  .manifest .meter i { display:block; height:100%; background:#f87171; transition:width .4s; }
+  .manifest a { margin-left:auto; font-weight:600; }
+
+  @media (max-width: 960px) {
+    header { padding:10px 16px; flex-wrap:wrap; }
+    .search { order:3; max-width:none; flex-basis:100%; }
+    .hero { padding:20px 16px 14px; }
+    .layout { grid-template-columns:1fr; }
+    .zoo { position:static; max-height:none; border-right:0; border-bottom:1px solid var(--line); display:flex; overflow-x:auto; }
+    .zoo button { flex:0 0 220px; border-bottom:0; border-right:1px solid var(--line); }
+    .zoo button[aria-current="true"] { box-shadow:inset 0 -3px 0 var(--red); }
+    .card { grid-template-columns:1fr; padding:16px 16px 120px; gap:20px; }
+    .deploy { position:static; order:-1; }
+    .deploy img { aspect-ratio:4/3; }
+    .manifest { padding:10px 16px; }
+    .manifest a { margin-left:0; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="review"><a href="/concepts" target="_top">← Concept gallery</a><span>Round 05 / 23 · Model Card</span><span>Adds to the real bag</span></div>
+<header>
+  <a class="logo" href="#top">A–OK <span>Model Zoo</span></a>
+  <input class="search" id="q" type="search" placeholder="Search 24 checkpoints (try “founder” or “hallucinate”)" aria-label="Search pieces">
+  <a class="bag" href="/products" target="_top">Bag · <span data-count>0</span></a>
+</header>
+
+<section class="hero" id="top">
+  <div>
+    <h1>24 checkpoints.<br><em>All fine-tuned on the same ape.</em></h1>
+    <p>Every piece ships with its full model card: what it’s for, what it’s not for, known limitations, and training data. Read it. Deploy it. Wear it.</p>
+  </div>
+  <div class="filters" role="group" aria-label="Category">
+    <button data-cat="all" aria-pressed="true">all</button>
+    <button data-cat="T-Shirts" aria-pressed="false">t-shirts</button>
+    <button data-cat="Hoodies" aria-pressed="false">hoodies</button>
+    <button data-cat="Hats" aria-pressed="false">hats</button>
+    <button data-cat="price" aria-pressed="false">sort: price ↑</button>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="zoo" id="zoo" aria-label="Checkpoints"></nav>
+  <article class="card" id="card" aria-live="polite"></article>
+</div>
+
+<div class="manifest" role="status">
+  <span id="m-line">Deployment manifest: empty. Free shipping at $50.</span>
+  <span class="meter" aria-hidden="true"><i id="m-meter" style="width:0"></i></span>
+  <a href="/products" target="_top">Review bag &amp; check out on the store →</a>
+</div>
+
+<script src="round-five-data.js"></script>
+<script src="round-five-cart.js"></script>
+<script>
+(function () {
+  const C = window.AOK5Cart;
+  const all = window.AOK5.products;
+  let cat = 'all', byPrice = false, query = '';
+  let current = all.find((p) => p.handle === location.hash.slice(1)) || C.byHandle('hallucination-club-inference-error-edition');
+
+  function list() {
+    const q = query.toLowerCase();
+    let items = all.filter((p) => (cat === 'all' || p.category === cat) && (!q || (p.title + ' ' + p.description + ' ' + p.forWho).toLowerCase().includes(q)));
+    if (byPrice) items = [...items].sort((a, b) => a.price - b.price);
+    return items;
+  }
+
+  function renderZoo() {
+    const items = list();
+    document.getElementById('zoo').innerHTML = items.length
+      ? items.map((p) => `<button type="button" data-h="${p.handle}" aria-current="${p.handle === current.handle}"><img src="${C.esc(p.images[0])}" alt="" width="44" height="44" loading="lazy"><span class="repo">apesonkeys/<b>${C.esc(p.name)}</b></span><span class="px">${C.money(p.price)}</span></button>`).join('')
+      : `<p style="padding:16px">No checkpoints matched. The model is confident they exist anyway.</p>`;
+  }
+
+  function renderCard() {
+    const p = current;
+    const colors = p.options.find((o) => o.name === 'Color');
+    const sizes = p.options.find((o) => o.name === 'Size');
+    const inStock = p.variants.some((v) => v.available);
+    const limits = [];
+    if (!sizes && p.category !== 'Hats') limits.push('No size option is published for this checkpoint yet. Treat that as a known issue, not a feature.');
+    if (p.images.length > 1 || (colors && colors.values.length > 1)) limits.push('Photos are not matched to the color you pick. What you see is one color; what you pick is what ships.');
+    if (!inStock) limits.push('Currently sold out. The weights are frozen.');
+    limits.push('Will not make you better at prompting. Will make you look like you are.');
+
+    const year = 2026;
+    const cite = `@misc{apesonkeys${year}${p.handle.split('-')[0]},\n  title  = {${p.title}},\n  author = {Apes On Keys and an unspecified number of models},\n  year   = {${year}},\n  note   = {${p.signoff}},\n  doi    = {hallucinated}\n}`;
+
+    document.getElementById('card').innerHTML = `
+      <div class="card-head">
+        <h2 class="repo-name"><span>apesonkeys/</span>${C.esc(p.handle)}</h2>
+        <div class="pills"><span class="pill cat ${C.esc(p.category)}">${C.esc(p.category)}</span><span class="pill">${C.money(p.price)}</span>${colors ? `<span class="pill">${colors.values.length} color${colors.values.length > 1 ? 's' : ''}</span>` : ''}<span class="pill">${sizes ? sizes.values.length + ' sizes' : 'sizes: unlisted'}</span><span class="pill">${inStock ? 'in stock' : 'sold out'}</span></div>
+      </div>
+      <div class="doc">
+        <h2>Model summary</h2>
+        <p class="summary">${C.esc(p.tag)}</p>
+        <h2>Intended use</h2>
+        <p>${C.esc(p.forWho)}</p>
+        <h2>Out-of-scope use</h2>
+        <p>Being the only person in the room who gets the joke. Deploy a second checkpoint for a friend.</p>
+        <h2>Known limitations</h2>
+        <ul class="limits">${limits.map((l) => `<li>${C.esc(l)}</li>`).join('')}</ul>
+        <h2>Training data</h2>
+        <p class="training clamped" id="training">${C.esc(p.description)}</p>
+        <button type="button" class="more" id="more">Read the full training data</button>
+        <h2>Evaluation</h2>
+        <table>
+          <tr><th>Price</th><td>${C.money(p.price)}</td></tr>
+          <tr><th>Colors</th><td>${colors ? C.esc(colors.values.join(', ')) : 'One'}</td></tr>
+          <tr><th>Sizes</th><td>${sizes ? C.esc(sizes.values.join(', ')) : 'Not listed'}</td></tr>
+          <tr><th>Ships free on its own</th><td>${p.price >= 50 ? 'Yes ($50+)' : `No. ${C.money(50 - p.price)} more in the bag and it does.`}</td></tr>
+        </table>
+        <h2>Citation</h2>
+        <pre class="cite">${C.esc(cite)}</pre>
+      </div>
+      <aside class="deploy" aria-label="Deploy ${C.esc(p.name)}">
+        <img id="hero-img" src="${C.esc(p.images[0])}" alt="${C.esc(p.title)}" width="600" height="600">
+        ${p.images.length > 1 ? `<div class="thumbs">${p.images.slice(0, 5).map((src, i) => `<button type="button" data-img="${C.esc(src)}" aria-pressed="${i === 0}" aria-label="Image ${i + 1}"><img src="${C.esc(src)}" alt="" width="44" height="44" loading="lazy"></button>`).join('')}</div>` : ''}
+        <div class="deploy-body"><p class="deploy-title">Deploy · ${C.esc(p.name)}</p><div id="pick"></div><p class="ship" id="ship"></p></div>
+      </aside>`;
+    C.mountPicker(document.getElementById('pick'), p, { label: (prod, v) => `Deploy to bag · ${C.money(v.price)}` });
+    updateShip(C.summary());
+  }
+
+  function updateShip(s) {
+    const el = document.getElementById('ship');
+    if (el) el.textContent = s.free ? 'Manifest ships free.' : s.count ? `${C.money(s.gap)} from free shipping.` : 'Free shipping at $50 across the whole bag.';
+  }
+
+  document.getElementById('zoo').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-h]');
+    if (!b) return;
+    current = C.byHandle(b.dataset.h);
+    history.replaceState(null, '', '#' + current.handle);
+    renderZoo();
+    renderCard();
+    if (matchMedia('(max-width: 960px)').matches) document.getElementById('card').scrollIntoView({ block: 'start' });
+  });
+  document.getElementById('card').addEventListener('click', (e) => {
+    if (e.target.closest('#more')) {
+      const t = document.getElementById('training');
+      const open = t.classList.toggle('clamped');
+      e.target.textContent = open ? 'Read the full training data' : 'Show less';
+    }
+    const th = e.target.closest('[data-img]');
+    if (th) {
+      document.getElementById('hero-img').src = th.dataset.img;
+      document.querySelectorAll('.thumbs button').forEach((b) => b.setAttribute('aria-pressed', b === th));
+    }
+  });
+  document.querySelector('.filters').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.cat === 'price') {
+      byPrice = !byPrice;
+      b.setAttribute('aria-pressed', byPrice);
+    } else {
+      cat = b.dataset.cat;
+      document.querySelectorAll('[data-cat]:not([data-cat="price"])').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    }
+    renderZoo();
+  });
+  document.getElementById('q').addEventListener('input', (e) => { query = e.target.value.trim(); renderZoo(); });
+
+  C.onChange((s) => {
+    document.querySelectorAll('[data-count]').forEach((n) => (n.textContent = s.count));
+    document.getElementById('m-meter').style.width = Math.min(100, (s.subtotal / 50) * 100) + '%';
+    document.getElementById('m-line').textContent = !s.count
+      ? 'Deployment manifest: empty. Free shipping at $50.'
+      : `Manifest: ${s.count} deployed · ${C.money(s.subtotal)} · ${s.free ? 'free shipping unlocked' : C.money(s.gap) + ' from free shipping'}`;
+    updateShip(s);
+  });
+
+  renderZoo();
+  renderCard();
+})();
+</script>
+</body>
+</html>

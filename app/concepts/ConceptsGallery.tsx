@@ -4,24 +4,27 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
-type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6";
+type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6" | "opus55";
 
 const ORIGIN_LABEL: Record<Concept["harness"], string> = {
   Cursor: "Cursor",
   Droid: "Droid",
   Codex: "Codex",
+  "Claude Code": "Claude Code",
 };
 
 const BADGE_CLASS: Record<Concept["harness"], string> = {
   Cursor: "border-indigo-400/30 bg-indigo-400/10 text-indigo-300",
   Droid: "border-[#B91C1C]/40 bg-[#B91C1C]/15 text-red-300",
   Codex: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+  "Claude Code": "border-amber-400/30 bg-amber-400/10 text-amber-300",
 };
 
 const DOT_CLASS: Record<Concept["harness"], string> = {
   Cursor: "bg-indigo-400",
   Droid: "bg-red-500",
   Codex: "bg-emerald-400",
+  "Claude Code": "bg-amber-400",
 };
 
 const FILTERS: ReadonlyArray<readonly [Filter, string]> = [
@@ -29,7 +32,8 @@ const FILTERS: ReadonlyArray<readonly [Filter, string]> = [
   ["cursor", "Cursor · Opus 4.8"],
   ["droid", "Droid · Grok 4.6"],
   ["sol", "Codex · Sol 5.6"],
-  ["gpt6", "Codex · GPT-6 · New"],
+  ["gpt6", "Codex · GPT-6"],
+  ["opus55", "Claude Code · Opus 5.5 · New"],
 ];
 
 const VIEWPORTS: ReadonlyArray<readonly [Viewport, string]> = [
@@ -105,14 +109,14 @@ function ArrowButton({
 export default function ConceptsGallery() {
   const [index, setIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>("desktop");
-  const [filter, setFilter] = useState<Filter>("gpt6");
+  const [filter, setFilter] = useState<Filter>("opus55");
   const [expanded, setExpanded] = useState(false);
 
   const visible = useMemo(
     () =>
       filter === "all"
         ? concepts
-        : concepts.filter((c) => filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
+        : concepts.filter((c) => filter === "opus55" ? c.harness === "Claude Code" : filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
     [filter]
   );
 
