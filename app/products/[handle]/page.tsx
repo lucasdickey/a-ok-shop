@@ -94,12 +94,12 @@ export default async function ProductPage({
   // Same check checkout uses, so a size picked here is always recorded on the order.
   const isClothingItem = isClothing(product.productType, product.tags);
 
-  // Values of an option that exist on an in-stock variant. Only these can be checked out.
-  const optionValues = (name: string) =>
+  // Values of an option that exist on a variant (in stock only, by default).
+  const optionValues = (name: string, inStockOnly = true) =>
     Array.from(
       new Set(
         variants
-          .filter((v) => v.available)
+          .filter((v) => !inStockOnly || v.available)
           .map((v) => v.selectedOptions?.find((o) => o.name.toLowerCase() === name)?.value)
           .filter((value): value is string => Boolean(value))
       )
@@ -272,7 +272,9 @@ export default async function ProductPage({
   }
 
   // When variants carry colors, drop listed colors that have no in-stock variant behind them.
-  const variantColors = optionValues("color");
+  // Fully sold-out products still drop listed colors that have no variant at all.
+  const inStockColors = optionValues("color");
+  const variantColors = inStockColors.length > 0 ? inStockColors : optionValues("color", false);
   if (variantColors.length > 0) {
     const inStock = colorValues.filter((color) => variantColors.includes(color));
     colorValues.length = 0;

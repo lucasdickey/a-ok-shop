@@ -40,7 +40,8 @@ export default function SpecialOffer() {
 
       console.log("Response status:", response.status);
       if (!response.ok) {
-        throw new Error(`Failed to generate discount: ${response.status}`);
+        const { error } = await response.json().catch(() => ({ error: undefined }));
+        throw new Error(typeof error === "string" ? error : `Failed to generate discount: ${response.status}`);
       }
 
       const data = await response.json();

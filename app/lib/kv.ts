@@ -219,9 +219,14 @@ export async function takeRateLimit(
 ): Promise<boolean> {
   const rateKey = `rate:${key}`;
   if (process.env.REDIS_URL) {
-    const count = await redis.incr(rateKey);
-    if (count === 1) await redis.expire(rateKey, windowSeconds);
-    return count <= limit;
+    try {
+      const count = await redis.incr(rateKey);
+      if (count === 1) await redis.expire(rateKey, windowSeconds);
+      return count <= limit;
+    } catch (error) {
+      // A Redis hiccup shouldn't cost a player their reward; fall back to the local count.
+      console.error('Rate limit: Redis unavailable, using local count', error);
+    }
   }
 
   const now = Date.now();

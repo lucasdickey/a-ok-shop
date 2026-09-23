@@ -92,7 +92,10 @@ function resolveVariant(
   const matchesColor = (variant: ProductVariant) =>
     !matchColor || !item.color || getOption(variant, "color") === item.color;
 
+  // Prefer a variant whose size also matches (some products carry sizes in the catalog),
+  // so variantId and sku agree with the size recorded on the order.
   const variant =
+    (size && variants.find((v) => matchesColor(v) && getOption(v, "size") === size)) ||
     variants.find((v) => isSameId(v.id, item.variantId) && matchesColor(v)) ||
     variants.find(matchesColor);
 

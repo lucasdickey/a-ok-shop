@@ -46,14 +46,8 @@ export default function AddToCartButton({
       return;
     }
 
-    if (unavailable) {
-      setWarningMessage('That combination isn’t available. Try another size or color.');
-      setShowWarning(true);
-      setTimeout(() => {
-        setShowWarning(false);
-      }, 3000);
-      return;
-    }
+    // The reason is already shown in the status message below the button.
+    if (unavailable) return;
 
     if (showColorWarning) {
       setWarningMessage('Please select a color before adding to cart.');

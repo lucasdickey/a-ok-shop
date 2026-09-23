@@ -3,10 +3,11 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useCart } from './CartProvider';
+import { MAX_QUANTITY_PER_ITEM, useCart } from './CartProvider';
+import { CLOTHING_SIZES } from '@/app/lib/sizes';
 
 export default function CartDrawer() {
-  const { cart, isOpen, closeCart, removeFromCart, updateQuantity, subtotal } = useCart();
+  const { cart, isOpen, closeCart, removeFromCart, updateQuantity, updateSize, subtotal } = useCart();
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
   
@@ -165,7 +166,23 @@ export default function CartDrawer() {
                       <p className="ml-2 text-sm">${item.price.toFixed(2)}</p>
                     </div>
                     <div className="flex text-xs text-gray-500 gap-2">
-                      {item.size && <span>Size: {item.size}</span>}
+                      {item.size && CLOTHING_SIZES.includes(item.size) && <span>Size: {item.size}</span>}
+                      {item.size && !CLOTHING_SIZES.includes(item.size) && (
+                        // Saved before the size list changed: let the shopper pick an offered size.
+                        <label className="text-red-600">
+                          {item.size} is no longer offered. Size:{' '}
+                          <select
+                            value=""
+                            onChange={(e) => updateSize(item.id, e.target.value)}
+                            className="border border-secondary rounded text-xs"
+                          >
+                            <option value="" disabled>Choose</option>
+                            {CLOTHING_SIZES.map((size) => (
+                              <option key={size} value={size}>{size}</option>
+                            ))}
+                          </select>
+                        </label>
+                      )}
                       {item.color && <span>Color: {item.color}</span>}
                     </div>
                     <div className="mt-1 flex items-center justify-between">
@@ -180,7 +197,8 @@ export default function CartDrawer() {
                         <span className="px-1 text-xs">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-1 text-xs hover:bg-secondary-light"
+                          disabled={item.quantity >= MAX_QUANTITY_PER_ITEM}
+                          className="px-1 text-xs hover:bg-secondary-light disabled:cursor-not-allowed disabled:opacity-40"
                           aria-label="Increase quantity"
                         >
                           +

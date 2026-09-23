@@ -21,13 +21,14 @@ type CartContextType = {
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  updateSize: (id: string, size: string) => void;
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
 };
 
 // Checkout rejects more than this per line (see app/api/catalog/checkout/route.ts).
-const MAX_QUANTITY_PER_ITEM = 20;
+export const MAX_QUANTITY_PER_ITEM = 20;
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -108,6 +109,21 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  // Lets a shopper fix a saved line whose size is no longer offered.
+  const updateSize = (id: string, size: string) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              size,
+              title: item.size ? item.title.replace(` - ${item.size}`, ` - ${size}`) : item.title,
+            }
+          : item
+      )
+    );
+  };
+
   const clearCart = () => setCart([]);
 
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
@@ -127,6 +143,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        updateSize,
         clearCart,
         totalItems,
         subtotal,

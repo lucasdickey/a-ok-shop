@@ -220,13 +220,15 @@ export function ProductDetails({
       (option: { name: string; value: string }) => option.name.toLowerCase() === name
     )?.value;
   const variantsHaveColor = variants.some((v) => optionOf(v, 'color'));
-  const selectedVariant = variants.find(
-    (v) =>
-      v.available !== false &&
-      (!variantsHaveColor ||
-        !selectedColor ||
-        optionOf(v, 'color')?.toLowerCase() === selectedColor.toLowerCase())
-  );
+  const matchesColor = (v: any) =>
+    v.available !== false &&
+    (!variantsHaveColor ||
+      !selectedColor ||
+      optionOf(v, 'color')?.toLowerCase() === selectedColor.toLowerCase());
+  // Prefer the variant carrying the chosen size when the catalog has one, as checkout does.
+  const selectedVariant =
+    variants.find((v) => matchesColor(v) && optionOf(v, 'size') === selectedSize) ||
+    variants.find(matchesColor);
   const selectedVariantId = selectedVariant?.id || '';
   // One cart line per variant + size + color, so a second size or color doesn't merge into the first.
   const cartLineId = [selectedVariantId || product.id, selectedSize, selectedColor]

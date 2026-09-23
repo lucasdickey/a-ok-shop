@@ -95,14 +95,17 @@ export default function ChaosMonkey({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate discount code");
+        const { error } = await response.json().catch(() => ({ error: undefined }));
+        throw new Error(typeof error === "string" ? error : "Failed to generate discount code. Please try again.");
       }
 
       const data = await response.json();
       setDiscountCode(data.code);
     } catch (error) {
       console.error("Error generating discount code:", error);
-      setDiscountError("Failed to generate discount code. Please try again.");
+      setDiscountError(
+        error instanceof Error ? error.message : "Failed to generate discount code. Please try again."
+      );
     } finally {
       setIsClaimingDiscount(false);
     }
