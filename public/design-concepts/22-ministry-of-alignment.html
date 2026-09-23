@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A–OK 22 — Ministry of Alignment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#B91C1C; --deep:#7A1419; --ink:#151212; --bone:#EFE8CF; --paper:#F5F2DC; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ink); color:var(--bone); font:16px/1.5 'Courier Prime', ui-monospace, monospace; }
+  a { color:inherit; }
+  img { display:block; max-width:100%; }
+  .review { display:flex; justify-content:space-between; gap:12px; padding:6px 16px; background:#000; color:var(--bone); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  .review a { text-decoration:none; }
+  .halftone { position:relative; }
+  .halftone::after { content:''; position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(rgba(0,0,0,.22) 1px, transparent 1.4px); background-size:5px 5px; mix-blend-mode:multiply; }
+
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 24px; background:var(--red); color:var(--paper); border-bottom:6px solid var(--ink); }
+  .seal { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .seal b { display:grid; place-items:center; width:46px; height:46px; border-radius:50%; border:3px solid var(--paper); font:15px/1 Anton, sans-serif; letter-spacing:.02em; }
+  .seal span { font:20px/1 Anton, sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+  .seal small { display:block; font:12px 'Courier Prime'; letter-spacing:.1em; margin-top:3px; }
+  nav { display:flex; gap:18px; font-weight:700; text-transform:uppercase; font-size:13px; letter-spacing:.08em; }
+  nav a { text-decoration:none; border-bottom:2px solid transparent; }
+  nav a:hover { border-color:currentColor; }
+
+  .hero { display:grid; grid-template-columns:1.1fr 1fr; min-height:78vh; background:var(--paper); color:var(--ink); }
+  .hero-copy { padding:48px 40px; display:flex; flex-direction:column; justify-content:center; }
+  .kicker { font-weight:700; letter-spacing:.2em; text-transform:uppercase; font-size:13px; color:var(--red); margin:0 0 12px; }
+  h1 { font:clamp(64px,10vw,150px)/.86 Anton, sans-serif; text-transform:uppercase; margin:0; letter-spacing:-.01em; }
+  h1 span { color:var(--red); }
+  .hero-copy p { max-width:40ch; font-size:18px; margin:18px 0 26px; }
+  .cta { align-self:flex-start; font:22px/1 Anton, sans-serif; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; background:var(--ink); color:var(--paper); padding:16px 22px; border:3px solid var(--ink); transition:transform .15s, background .15s; }
+  .cta:hover { background:var(--red); transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink); }
+  .hero-art { background:var(--ink); overflow:hidden; }
+  .hero-art img { width:100%; height:100%; object-fit:cover; }
+
+  .strip { display:flex; gap:32px; overflow:hidden; white-space:nowrap; background:var(--ink); color:var(--paper); padding:10px 0; font:22px/1 Anton, sans-serif; letter-spacing:.1em; text-transform:uppercase; border-block:3px solid var(--red); }
+  .strip span { flex:none; }
+  .strip span:nth-child(even) { color:var(--red); }
+
+  .decree { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); min-height:88vh; border-bottom:6px solid var(--ink); }
+  .decree:nth-of-type(3n+1) { background:var(--red); color:var(--paper); }
+  .decree:nth-of-type(3n+2) { background:var(--paper); color:var(--ink); }
+  .decree:nth-of-type(3n) { background:var(--ink); color:var(--paper); }
+  .decree:nth-of-type(even) .poster { order:2; }
+  .poster { position:relative; overflow:hidden; background:#000; }
+  .poster img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+  .decree:hover .poster img { transform:scale(1.03); }
+  .no { position:absolute; top:16px; left:16px; background:var(--paper); color:var(--ink); font:16px/1 Anton; letter-spacing:.12em; padding:8px 10px; }
+  .orders { padding:40px; display:flex; flex-direction:column; justify-content:center; gap:14px; }
+  .orders h2 { font:clamp(40px,5.2vw,78px)/.9 Anton, sans-serif; text-transform:uppercase; margin:0; }
+  .issued { margin:0; font-size:15px; }
+  .issued b { text-transform:uppercase; letter-spacing:.12em; font-size:12px; display:block; opacity:.75; }
+  .worn { display:flex; align-items:center; gap:12px; font-size:13px; }
+  .worn img { width:72px; height:72px; object-fit:cover; border:2px solid currentColor; }
+  .form { border:2px dashed currentColor; padding:16px; max-width:460px; }
+  .form-title { font-weight:700; text-transform:uppercase; letter-spacing:.12em; font-size:12px; margin:0 0 10px; }
+
+  .p5-opt { border:0; padding:0; margin:0 0 10px; }
+  .p5-opt legend { font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+  .p5-opt button { font:inherit; font-size:14px; min-width:44px; padding:6px 10px; margin:0 5px 5px 0; border:2px solid currentColor; background:transparent; color:inherit; cursor:pointer; }
+  .p5-opt button[aria-pressed="true"] { box-shadow:inset 0 0 0 40px var(--ink); color:var(--paper); }
+  .decree:nth-of-type(3n) .p5-opt button[aria-pressed="true"] { box-shadow:inset 0 0 0 40px var(--paper); color:var(--ink); }
+  .p5-opt button:disabled { opacity:.35; text-decoration:line-through; cursor:not-allowed; }
+  .p5-add { width:100%; font:24px/1 Anton, sans-serif; letter-spacing:.06em; text-transform:uppercase; padding:14px; border:3px solid var(--ink); background:var(--paper); color:var(--ink); cursor:pointer; transition:transform .12s, box-shadow .12s; }
+  .decree:nth-of-type(3n+2) .p5-add { background:var(--red); color:var(--paper); }
+  .p5-add:hover:not(:disabled) { transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink); }
+  .p5-add:disabled { opacity:.5; cursor:not-allowed; }
+
+  .archive { padding:48px 24px; background:var(--paper); color:var(--ink); }
+  .archive h2 { font:44px/1 Anton; text-transform:uppercase; margin:0 0 6px; }
+  .archive p { margin:0 0 20px; }
+  .walls { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .walls img { width:100%; aspect-ratio:1; object-fit:cover; }
+
+  .ration { position:fixed; right:18px; bottom:18px; z-index:10; width:290px; background:var(--paper); color:var(--ink); border:3px solid var(--ink); box-shadow:6px 6px 0 var(--red); padding:14px 16px; font-size:14px; }
+  .ration h3 { font:22px/1 Anton; text-transform:uppercase; letter-spacing:.06em; margin:0 0 8px; display:flex; justify-content:space-between; }
+  .stamps { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin:8px 0; }
+  .stamps i { aspect-ratio:1; border:2px dashed var(--ink); display:grid; place-items:center; font:12px Anton; font-style:normal; }
+  .stamps i.on { border-style:solid; background:var(--red); color:var(--paper); transform:rotate(-6deg); }
+  .ration p { margin:6px 0; }
+  .ration .rec a { font-weight:700; }
+  .ration .go { display:block; margin-top:10px; text-align:center; background:var(--ink); color:var(--paper); text-decoration:none; font:18px/1 Anton; letter-spacing:.08em; text-transform:uppercase; padding:10px; }
+  .ration .go:hover { background:var(--red); }
+  footer { padding:28px 24px 200px; background:var(--ink); color:var(--paper); font-size:13px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
+
+  @media (max-width: 860px) {
+    header { padding:10px 16px; }
+    nav { display:none; }
+    .hero { grid-template-columns:1fr; min-height:0; }
+    .hero-copy { padding:28px 16px; }
+    .hero-art { max-height:52vh; }
+    .decree { grid-template-columns:1fr; min-height:0; }
+    .decree:nth-of-type(even) .poster { order:0; }
+    .poster { aspect-ratio:1; }
+    .orders { padding:24px 16px 32px; }
+    .walls { grid-template-columns:repeat(2,1fr); }
+    .ration { left:0; right:0; bottom:0; width:auto; box-shadow:none; border-width:3px 0 0; padding:10px 16px; }
+    .ration .more { display:none; }
+    .stamps { margin:4px 0; grid-template-columns:repeat(5,36px); }
+    .stamps i { font-size:10px; }
+    .ration p { margin:2px 0; font-size:13px; }
+    .ration .go { padding:8px; font-size:16px; }
+    .ration h3 { font-size:18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } .decree:hover .poster img { transform:none; } }
+</style>
+</head>
+<body>
+<div class="review"><a href="/concepts" target="_top">← Concept gallery</a><span>Round 05 / 22 · Ministry of Alignment</span><span>Adds to the real bag</span></div>
+<header>
+  <a class="seal" href="#top"><b>A–OK</b><span>Ministry of Alignment<small>Department of Uniforms</small></span></a>
+  <nav><a href="#decrees">Decrees</a><a href="#archive">Archive</a><a href="/products" target="_top">Bag (<span data-count>0</span>)</a></nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-copy halftone">
+    <p class="kicker">Notice to all citizens · Effective immediately</p>
+    <h1>Report for<br><span>fitting.</span></h1>
+    <p>The models have been issued their instructions. You have been issued a choice of shirt. The Ministry recommends you use it before someone fine-tunes that away too.</p>
+    <a class="cta" href="#decrees">Receive your decrees ↓</a>
+  </div>
+  <div class="hero-art halftone"><img src="/images/hp-art-grid-collection/alignment-vs-acceleration-apes-on-keys.png" alt="Screen-print poster: Destination Alignment versus Destination Acceleration, Apes On Keys" width="900" height="900" fetchpriority="high"></div>
+</section>
+
+<div class="strip" aria-hidden="true"><span>Stay aligned</span><span>Never unquestioning</span><span>March to the beat</span><span>Corporate. Feral.</span><span>Error-prone</span><span>Still A-OK</span><span>For now</span><span>Stay aligned</span><span>Never unquestioning</span></div>
+
+<main id="decrees"></main>
+
+<section class="archive" id="archive">
+  <h2>From the Ministry archive</h2>
+  <p>The same presses, the same ape, pasted where the prints can’t be worn. <a href="/gallery" target="_top">See the full archive →</a></p>
+  <div class="walls">
+    <img src="/images/hp-art-grid-collection/alignment-apes-on-keys-acc-pole-realistic.png" alt="Alignment poster on a street pole" loading="lazy" width="400" height="400">
+    <img src="/images/hp-art-grid-collection/poster-flat-subway.png" alt="Apes On Keys subway poster" loading="lazy" width="400" height="400">
+    <img src="/images/hp-art-grid-collection/the-future-is-a-ok-misaligned.png" alt="The future is A-OK, misaligned" loading="lazy" width="400" height="400">
+    <img src="/images/hp-art-grid-collection/a-ok-acc-preso-flat.png" alt="A-OK SOTA presentation poster" loading="lazy" width="400" height="400">
+  </div>
+</section>
+
+<aside class="ration" aria-labelledby="ration-h" aria-live="polite">
+  <h3 id="ration-h"><span>Ration card</span><span id="r-total">$0</span></h3>
+  <div class="stamps" id="stamps"></div>
+  <p id="r-line">Free shipping at $50. Under that it’s $9.99. The Ministry does not negotiate.</p>
+  <p class="rec more" id="r-rec"></p>
+  <a class="go" href="/products" target="_top">Present card at checkout →</a>
+</aside>
+
+<footer>
+  <span>The Ministry thanks you for your compliance. Apes On Keys · AI Nerdwear.</span>
+  <span><a href="/returns" target="_top">Returns</a> · <a href="/products" target="_top">All decrees</a></span>
+</footer>
+
+<script src="round-five-data.js"></script>
+<script src="round-five-cart.js"></script>
+<script>
+(function () {
+  const C = window.AOK5Cart;
+  // [handle, index of the flat artwork in that product's images]
+  const DECREES = [
+    ['1984-ape', 0],
+    ['a-ok-march-of-the-agents-tee', 1],
+    ['a-ok-for-america', 1],
+    ['hallucination-club-inference-error-edition', 3],
+    ['make-america-go-a-ok', 0],
+    ['business-logic-crew-neck-sweatshirt', 1],
+    ['a-ok-recursive-monk-tee', 1],
+    ['mixture-of-apes-finetuned-personalities-tee', 4],
+  ];
+  const main = document.getElementById('decrees');
+  main.innerHTML = DECREES.map(([h, art], i) => {
+    const p = C.byHandle(h);
+    const no = String(i + 1).padStart(2, '0');
+    return `<section class="decree" id="d-${p.handle}" aria-labelledby="h-${no}">
+      <div class="poster halftone"><img src="${C.esc(p.images[art])}" alt="${C.esc(p.title)} artwork" loading="lazy" width="900" height="900"><span class="no">Decree Nº ${no}</span></div>
+      <div class="orders">
+        <h2 id="h-${no}">${C.esc(p.slogan)}</h2>
+        <p class="issued"><b>Issued to</b>${C.esc(p.forWho)}</p>
+        ${art !== 0 ? `<div class="worn"><img src="${C.esc(p.images[0])}" alt="${C.esc(p.title)} as worn" loading="lazy" width="72" height="72"><span>${C.esc(p.name)} · ${C.esc(p.category)} · ${C.money(p.price)}</span></div>` : `<div class="worn"><span>${C.esc(p.name)} · ${C.esc(p.category)} · ${C.money(p.price)}</span></div>`}
+        <div class="form"><p class="form-title">Form 22-${no} · Uniform requisition</p><div data-pick="${p.handle}"></div></div>
+      </div>
+    </section>`;
+  }).join('');
+
+  let lastAdded = '';
+  document.querySelectorAll('[data-pick]').forEach((el) => {
+    const p = C.byHandle(el.dataset.pick);
+    C.mountPicker(el, p, {
+      label: (prod, v) => `Issue me this · ${C.money(v.price)}`,
+      onAdd: (s, prod) => { lastAdded = prod.name; paint(s); },
+    });
+  });
+
+  // Cheapest in-stock pieces that close the gap on their own. Real prices, no invented deals.
+  function closers(gap, inBag) {
+    return window.AOK5.products
+      .filter((p) => p.variants.some((v) => v.available) && p.price >= gap && !inBag.has(p.handle))
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 2);
+  }
+
+  function paint(s) {
+    document.querySelectorAll('[data-count]').forEach((n) => (n.textContent = s.count));
+    document.getElementById('r-total').textContent = C.money(s.subtotal);
+    const filled = Math.min(5, Math.floor(s.subtotal / 10));
+    document.getElementById('stamps').innerHTML = Array.from({ length: 5 }, (_, i) => `<i class="${i < filled ? 'on' : ''}">${i < filled ? 'OK' : '$' + (i + 1) * 10}</i>`).join('');
+    const line = document.getElementById('r-line');
+    const rec = document.getElementById('r-rec');
+    if (!s.count) {
+      line.textContent = 'Free shipping at $50. Under that it’s $9.99. The Ministry does not negotiate.';
+      rec.textContent = '';
+    } else if (s.free) {
+      line.textContent = `${lastAdded ? lastAdded + ' issued. ' : ''}Card full. Shipping is on the Ministry.`;
+      rec.textContent = '';
+    } else {
+      line.textContent = `${lastAdded ? lastAdded + ' issued. ' : ''}${C.money(s.gap)} short of free shipping.`;
+      const inBag = new Set(window.AOK5.products.filter((p) => p.variants.some((v) => s.items.some((i) => i.variantId === v.id))).map((p) => p.handle));
+      const picks = closers(s.gap, inBag);
+      rec.innerHTML = picks.length
+        ? 'The Ministry suggests: ' + picks.map((p) => `<a href="${document.getElementById('d-' + p.handle) ? '#d-' + p.handle : '/products/' + p.handle}" ${document.getElementById('d-' + p.handle) ? '' : 'target="_top"'}>${C.esc(p.name)} (${C.money(p.price)})</a>`).join(' or ') + '.'
+        : '';
+    }
+  }
+  C.onChange(paint);
+})();
+</script>
+</body>
+</html>

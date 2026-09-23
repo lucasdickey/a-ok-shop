@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A–OK 21 — The Router</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bone:#F5F2DC; --ink:#141414; --red:#B91C1C; --deep:#8B1E24; --line:rgba(20,20,20,.18); }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bone); color:var(--ink); font:15px/1.5 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color:inherit; }
+  .review { display:flex; justify-content:space-between; gap:12px; padding:6px 16px; background:var(--ink); color:var(--bone); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  .review a { text-decoration:none; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:14px 24px; border-bottom:2px solid var(--ink); }
+  .mark { font:32px/1 'Bebas Neue', sans-serif; letter-spacing:.04em; text-decoration:none; }
+  .mark small { font:500 11px 'IBM Plex Mono'; letter-spacing:.1em; margin-left:10px; vertical-align:middle; }
+  .bag-link { font-weight:700; text-decoration:none; border:2px solid var(--ink); padding:6px 12px; }
+  .bag-link:hover { background:var(--ink); color:var(--bone); }
+
+  .intro { display:grid; grid-template-columns:1.4fr 1fr; gap:32px; padding:24px 24px 18px; border-bottom:2px solid var(--ink); }
+  .eyebrow { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--red); font-weight:700; margin:0 0 8px; }
+  h1 { font:clamp(44px,5.4vw,80px)/.9 'Bebas Neue', sans-serif; margin:0; letter-spacing:.01em; }
+  h1 em { font-style:normal; color:var(--red); }
+  .intro p { max-width:46ch; margin:12px 0 0; }
+  .sys { background:var(--ink); color:var(--bone); padding:18px; align-self:end; font-size:13px; }
+  .sys b { color:#ff8a80; font-weight:500; }
+
+  main { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); }
+  .tokens { padding:24px; border-right:2px solid var(--ink); }
+  .tokens h2, .out h2 { font:28px/1 'Bebas Neue'; letter-spacing:.03em; margin:0 0 4px; }
+  .hint { font-size:12px; opacity:.7; margin:0 0 16px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font:inherit; font-size:13px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); padding:7px 11px; cursor:pointer; text-align:left; transition:background .15s, color .15s, transform .15s; }
+  .chip:hover { transform:translateY(-1px); }
+  .chip[aria-pressed="true"] { background:var(--ink); color:var(--bone); }
+  .chip[aria-pressed="true"]::before { content:'+ '; color:#ff8a80; }
+  .reset { margin-top:14px; font:inherit; font-size:12px; background:none; border:0; text-decoration:underline; cursor:pointer; padding:0; }
+
+  .weights { margin-top:28px; border-top:1px dashed var(--line); padding-top:16px; }
+  .weights h3 { font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 10px; }
+  .w { display:grid; grid-template-columns:150px 1fr 26px; gap:8px; align-items:center; font-size:12px; margin:4px 0; }
+  .w span:first-child { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar { height:8px; background:var(--line); }
+  .bar i { display:block; height:100%; background:var(--red); transition:width .3s; }
+
+  .out { padding:24px; position:sticky; top:0; align-self:start; }
+  .expert { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; border:2px solid var(--ink); background:#fff; padding:16px; }
+  .expert img { width:100%; aspect-ratio:1; object-fit:cover; display:block; background:var(--bone); }
+  .rank { font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
+  .expert h3 { font:34px/.95 'Bebas Neue'; margin:4px 0 8px; }
+  .tag { font-weight:700; margin:0 0 8px; }
+  .for { font-size:13px; border-left:3px solid var(--red); padding-left:10px; margin:0 0 12px; }
+  .runner { display:grid; grid-template-columns:88px 1fr auto; gap:14px; align-items:center; border:2px solid var(--ink); border-top:0; padding:12px 16px; background:var(--bone); }
+  .runner img { width:88px; height:88px; object-fit:cover; }
+  .runner h4 { font:22px/1 'Bebas Neue'; margin:2px 0; }
+  .runner p { margin:0; font-size:12px; }
+  .runner button { font:inherit; font-size:12px; font-weight:700; border:2px solid var(--ink); background:transparent; padding:8px 10px; cursor:pointer; }
+  .runner button:hover { background:var(--ink); color:var(--bone); }
+  .why { font-size:12px; margin:12px 0 0; opacity:.75; }
+
+  .p5-opt { border:0; padding:0; margin:0 0 10px; }
+  .p5-opt legend { font-size:11px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+  .p5-opt button { font:inherit; font-size:12px; min-width:40px; padding:6px 9px; margin:0 4px 4px 0; border:1.5px solid var(--ink); background:transparent; cursor:pointer; }
+  .p5-opt button[aria-pressed="true"] { background:var(--ink); color:var(--bone); }
+  .p5-opt button:disabled { opacity:.3; text-decoration:line-through; cursor:not-allowed; }
+  .p5-add { width:100%; font:24px/1 'Bebas Neue'; letter-spacing:.04em; padding:14px; background:var(--red); color:#fff; border:0; cursor:pointer; transition:transform .12s, background .15s; }
+  .p5-add:hover:not(:disabled) { background:var(--deep); }
+  .p5-add:active { transform:scale(.98); }
+  .p5-add:disabled { background:#999; cursor:not-allowed; }
+
+  .bagbar { position:sticky; bottom:0; z-index:5; display:flex; flex-wrap:wrap; gap:8px 20px; align-items:center; justify-content:space-between; padding:12px 24px; background:var(--ink); color:var(--bone); font-size:13px; }
+  .meter { flex:1 1 220px; max-width:360px; height:6px; background:rgba(245,242,220,.2); }
+  .meter i { display:block; height:100%; background:#ff8a80; transition:width .4s; }
+  .bagbar a { font-weight:700; color:var(--bone); }
+  .toast { position:fixed; left:50%; bottom:96px; transform:translateX(-50%); background:var(--red); color:#fff; padding:10px 16px; font-size:13px; z-index:9; max-width:calc(100% - 32px); }
+  footer { padding:24px; font-size:12px; border-top:2px solid var(--ink); display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:space-between; }
+
+  @media (max-width: 860px) {
+    header { padding:12px 16px; }
+    .mark small { display:none; }
+    .intro { grid-template-columns:1fr; padding:24px 16px 16px; gap:16px; }
+    main { grid-template-columns:1fr; }
+    .tokens { border-right:0; border-bottom:2px solid var(--ink); padding:16px; }
+    .out { position:static; padding:16px; }
+    .expert { grid-template-columns:1fr; }
+    .w { grid-template-columns:110px 1fr 22px; }
+    .runner { grid-template-columns:64px 1fr; }
+    .runner img { width:64px; height:64px; }
+    .runner button { grid-column:1 / -1; }
+    .bagbar { padding:10px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="review"><a href="/concepts" target="_top">← Concept gallery</a><span>Round 05 / 21 · The Router</span><span>Adds to the real bag</span></div>
+<header>
+  <a class="mark" href="#top">A–OK<small>MIXTURE OF APES / ROUTING LAYER</small></a>
+  <a class="bag-link" href="/products" target="_top">Bag <span data-count>0</span></a>
+</header>
+
+<section class="intro" id="top">
+  <div>
+    <p class="eyebrow">Apes On Keys · 24 experts · 1 router</p>
+    <h1>You are the prompt.<br><em>Pick your tokens.</em></h1>
+    <p>Every shirt in the shop was written for someone. Tap the lines that are true about you. The router sends you to the two experts that fit. Then you get dressed.</p>
+  </div>
+  <div class="sys" aria-label="How the router works">
+    <div>system: the router read the product copy.</div>
+    <div>system: that is all it read.</div>
+    <div>system: it is still <b>unreasonably confident</b>.</div>
+  </div>
+</section>
+
+<main>
+  <section class="tokens" aria-labelledby="tok-h">
+    <h2 id="tok-h">Input tokens</h2>
+    <p class="hint">Every line comes from a product description’s “for” list. Pick as many as apply. Nobody is watching. (The router is watching.)</p>
+    <div class="chips" id="chips" role="group" aria-label="Traits"></div>
+    <button class="reset" id="reset" type="button">Clear context window</button>
+    <div class="weights" aria-live="polite">
+      <h3>Router weights · how many of your picks each piece’s copy mentions</h3>
+      <div id="weights"></div>
+    </div>
+  </section>
+
+  <section class="out" aria-labelledby="out-h">
+    <h2 id="out-h">Output</h2>
+    <p class="hint" id="out-hint">No tokens yet. Defaulting to the expert everyone ends up routed to eventually.</p>
+    <article class="expert" id="expert"></article>
+    <div class="runner" id="runner"></div>
+    <p class="why" id="why"></p>
+  </section>
+</main>
+
+<div class="bagbar" role="status">
+  <span id="bag-line">Bag empty. Free shipping at $50.</span>
+  <div class="meter" aria-hidden="true"><i id="meter" style="width:0"></i></div>
+  <a href="/products" target="_top">Review bag &amp; check out on the store →</a>
+</div>
+<footer>
+  <span>Apes On Keys · AI Nerdwear · Optimized for inference. Prone to vibes.</span>
+  <span><a href="/returns" target="_top">Returns</a> · <a href="/products" target="_top">Every expert, unrouted</a></span>
+</footer>
+<div class="toast" id="toast" hidden></div>
+
+<script src="round-five-data.js"></script>
+<script src="round-five-cart.js"></script>
+<script>
+(function () {
+  const { products, traits } = window.AOK5;
+  const C = window.AOK5Cart;
+  const picked = new Set();
+  const DEFAULT = 'hallucination-club-inference-error-edition';
+  const chips = document.getElementById('chips');
+
+  chips.innerHTML = Object.entries(traits)
+    .map(([k, label]) => `<button type="button" class="chip" data-t="${k}" aria-pressed="false">${C.esc(label)}</button>`)
+    .join('');
+
+  function rank() {
+    return products
+      .filter((p) => p.variants.some((v) => v.available))
+      .map((p, i) => ({ p, i, score: p.traits.filter((t) => picked.has(t)).length }))
+      .sort((a, b) => b.score - a.score || (a.p.handle === DEFAULT ? -1 : b.p.handle === DEFAULT ? 1 : a.i - b.i));
+  }
+
+  let runnerHandle = null;
+  function render() {
+    const ranked = rank();
+    const [first, second] = ranked;
+    const top = picked.size ? first.p : C.byHandle(DEFAULT);
+    const next = picked.size ? second.p : ranked.find((r) => r.p.handle !== DEFAULT).p;
+    runnerHandle = next.handle;
+
+    document.getElementById('out-hint').textContent = picked.size
+      ? `${picked.size} token${picked.size > 1 ? 's' : ''} in. Top expert matched ${first.score} of them.`
+      : 'No tokens yet. Defaulting to the expert everyone ends up routed to eventually.';
+
+    const ex = document.getElementById('expert');
+    ex.innerHTML = `<img src="${C.esc(top.images[0])}" alt="${C.esc(top.title)}" width="600" height="600">
+      <div><div class="rank">Expert #1 · ${C.esc(top.category)}</div><h3>${C.esc(top.name)}</h3>
+      <p class="tag">${C.esc(top.tag)}</p><p class="for">${C.esc(top.forWho)}</p><div id="pick"></div></div>`;
+    C.mountPicker(document.getElementById('pick'), top, { onAdd: added });
+
+    const pair = Math.round((top.price + next.price) * 100) / 100;
+    document.getElementById('runner').innerHTML = `<img src="${C.esc(next.images[0])}" alt="${C.esc(next.title)}" width="88" height="88">
+      <div><div class="rank">Expert #2</div><h4>${C.esc(next.name)}</h4><p>${C.esc(next.tag)}</p></div>
+      <button type="button" id="swap">Route me here instead · ${C.money(next.price)}</button>`;
+    document.getElementById('why').textContent = top.price >= 50
+      ? `${top.name} ships free on its own. Both experts together: ${C.money(pair)}.`
+      : `${top.name} is ${C.money(50 - top.price)} short of free shipping. Expert #2 covers that.`;
+
+    const max = Math.max(1, ...ranked.map((r) => r.score));
+    document.getElementById('weights').innerHTML = ranked
+      .slice(0, 8)
+      .map((r) => `<div class="w"><span>${C.esc(r.p.name)}</span><span class="bar"><i style="width:${(r.score / max) * 100}%"></i></span><span>${r.score}</span></div>`)
+      .join('');
+  }
+
+  // Puts expert #2 in the top slot for this visit. The ranking itself doesn't change.
+  document.getElementById('runner').addEventListener('click', (e) => {
+    if (!e.target.closest('#swap')) return;
+    const p = C.byHandle(runnerHandle);
+    const ex = document.getElementById('expert');
+    ex.innerHTML = `<img src="${C.esc(p.images[0])}" alt="${C.esc(p.title)}" width="600" height="600">
+      <div><div class="rank">Expert #2, promoted by you</div><h3>${C.esc(p.name)}</h3>
+      <p class="tag">${C.esc(p.tag)}</p><p class="for">${C.esc(p.forWho)}</p><div id="pick"></div></div>`;
+    C.mountPicker(document.getElementById('pick'), p, { onAdd: added });
+    ex.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' });
+  });
+
+  chips.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    const t = b.dataset.t;
+    picked.has(t) ? picked.delete(t) : picked.add(t);
+    b.setAttribute('aria-pressed', picked.has(t));
+    render();
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    picked.clear();
+    chips.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    render();
+  });
+
+  let toastTimer;
+  function added(s, product) {
+    const t = document.getElementById('toast');
+    t.textContent = s.free
+      ? `${product.name} is in your bag. Free shipping: unlocked.`
+      : `${product.name} is in your bag. ${C.money(s.gap)} from free shipping.`;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => (t.hidden = true), 3200);
+  }
+
+  C.onChange((s) => {
+    document.querySelectorAll('[data-count]').forEach((n) => (n.textContent = s.count));
+    document.getElementById('meter').style.width = Math.min(100, (s.subtotal / 50) * 100) + '%';
+    document.getElementById('bag-line').textContent = !s.count
+      ? 'Bag empty. Free shipping at $50.'
+      : s.free
+        ? `${s.count} in bag · ${C.money(s.subtotal)} · Free shipping unlocked.`
+        : `${s.count} in bag · ${C.money(s.subtotal)} · ${C.money(s.gap)} from free shipping.`;
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
