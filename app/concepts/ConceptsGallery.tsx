@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
-type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6" | "opus55";
+type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6" | "opus55" | "astra5";
 
 const ORIGIN_LABEL: Record<Concept["harness"], string> = {
   Cursor: "Cursor",
@@ -33,7 +33,8 @@ const FILTERS: ReadonlyArray<readonly [Filter, string]> = [
   ["droid", "Droid · Grok 4.6"],
   ["sol", "Codex · Sol 5.6"],
   ["gpt6", "Codex · GPT-6"],
-  ["opus55", "Claude Code · Opus 5.5 · New"],
+  ["opus55", "Claude Code · Opus 5.5"],
+  ["astra5", "Codex · Astra · Round 5"],
 ];
 
 const VIEWPORTS: ReadonlyArray<readonly [Viewport, string]> = [
@@ -109,14 +110,17 @@ function ArrowButton({
 export default function ConceptsGallery() {
   const [index, setIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>("desktop");
-  const [filter, setFilter] = useState<Filter>("opus55");
+  const [filter, setFilter] = useState<Filter>("astra5");
   const [expanded, setExpanded] = useState(false);
+  const fullscreenRef = useRef<HTMLDialogElement>(null);
+  const expandRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const visible = useMemo(
     () =>
       filter === "all"
         ? concepts
-        : concepts.filter((c) => filter === "opus55" ? c.harness === "Claude Code" : filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
+        : concepts.filter((c) => filter === "astra5" ? c.model === "Astra (GPT-6)" : filter === "opus55" ? c.harness === "Claude Code" : filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
     [filter]
   );
 
@@ -153,10 +157,15 @@ export default function ConceptsGallery() {
   // Keep the page behind the lightbox from scrolling.
   useEffect(() => {
     if (!expanded) return;
+    const dialog = fullscreenRef.current;
+    dialog?.showModal();
+    closeRef.current?.focus();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
+      dialog?.close();
       document.body.style.overflow = previous;
+      expandRef.current?.focus();
     };
   }, [expanded]);
 
@@ -235,6 +244,7 @@ export default function ConceptsGallery() {
                 a-ok.shop{current.file}
               </div>
               <button
+                ref={expandRef}
                 onClick={() => setExpanded(true)}
                 className="shrink-0 rounded border border-[#F5F2DC]/20 px-2.5 py-1 text-xs uppercase tracking-wider text-[#F5F2DC]/70 transition hover:border-[#F5F2DC]/60 hover:text-[#F5F2DC]"
               >
@@ -339,11 +349,13 @@ export default function ConceptsGallery() {
 
       {/* Fullscreen lightbox */}
       {expanded && (
-        <div
+        <dialog
+          ref={fullscreenRef}
+          onCancel={(event) => { event.preventDefault(); setExpanded(false); }}
           role="dialog"
           aria-modal="true"
           aria-label={`${current.id} — ${current.title}`}
-          className="fixed inset-0 z-50 flex flex-col bg-[#0A0A0A]"
+          className="fixed inset-0 z-50 m-0 flex h-[100dvh] w-screen max-h-none max-w-none flex-col border-0 bg-[#0A0A0A] p-0 text-[#F5F2DC]"
         >
           <div className="flex flex-wrap items-center gap-3 border-b border-[#F5F2DC]/10 px-4 py-3">
             <OriginBadge concept={current} />
@@ -353,7 +365,7 @@ export default function ConceptsGallery() {
             >
               {current.id} — {current.title}
             </h2>
-            <span className="text-xs uppercase tracking-wider text-[#F5F2DC]/40">
+            <span role="status" className="text-xs uppercase tracking-wider text-[#F5F2DC]/40">
               {index + 1} / {visible.length}
             </span>
 
@@ -370,6 +382,7 @@ export default function ConceptsGallery() {
               <button
                 onClick={() => setExpanded(false)}
                 aria-label="Close fullscreen"
+                ref={closeRef}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F5F2DC]/20 text-lg text-[#F5F2DC] transition hover:border-[#F5F2DC]/60"
               >
                 ✕
@@ -404,6 +417,11 @@ export default function ConceptsGallery() {
             />
           </div>
 
+          <div className="flex items-center justify-between border-t border-[#F5F2DC]/10 px-4 py-2 sm:hidden">
+            <ArrowButton direction="prev" onClick={() => go(-1)} className="h-11 w-11" />
+            <span aria-hidden="true" className="text-xs">{index + 1} / {visible.length}</span>
+            <ArrowButton direction="next" onClick={() => go(1)} className="h-11 w-11" />
+          </div>
           <div
             className="flex gap-2 overflow-x-auto border-t border-[#F5F2DC]/10 px-4 py-2.5"
             role="group"
@@ -430,7 +448,7 @@ export default function ConceptsGallery() {
               );
             })}
           </div>
-        </div>
+        </dialog>
       )}
     </div>
   );

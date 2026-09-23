@@ -1,0 +1,9 @@
+{
+  "entries": 26,
+  "astraRoundFive": 3,
+  "fullscreen": "desktop and 390/320px touch navigation: entered, advanced, returned, exited",
+  "baselines": "16 and 20 selectable",
+  "mobilePreviewFrameWidth": 390,
+  "iframeWidth": 388,
+  "narrowGallery": "no horizontal overflow"
+}
