@@ -75,7 +75,6 @@
   .p5-opt button { font:500 13px 'JetBrains Mono'; min-width:40px; padding:6px 9px; margin:0 4px 4px 0; border:1px solid var(--line); border-radius:6px; background:#fff; cursor:pointer; }
   .p5-opt button[aria-pressed="true"] { background:var(--ink); color:#fff; border-color:var(--ink); }
   .p5-opt button:disabled { opacity:.35; text-decoration:line-through; cursor:not-allowed; }
-  .p5-note { font-size:13px; color:var(--tee); margin:0 0 10px; }
   .p5-add { width:100%; font:700 16px 'Space Grotesk'; padding:13px; border:0; border-radius:8px; background:var(--red); color:#fff; cursor:pointer; transition:background .15s, transform .12s; }
   .p5-add:hover:not(:disabled) { background:var(--tee); }
   .p5-add:active { transform:scale(.98); }
@@ -166,7 +165,7 @@
     const sizes = p.options.find((o) => o.name === 'Size');
     const inStock = p.variants.some((v) => v.available);
     const limits = [];
-    if (!sizes && p.category !== 'Hats') limits.push('No size option is published for this checkpoint yet. Treat that as a known issue, not a feature.');
+    const pod = !sizes && p.category !== 'Hats';
     if (p.images.length > 1 || (colors && colors.values.length > 1)) limits.push('Photos are not matched to the color you pick. What you see is one color; what you pick is what ships.');
     if (!inStock) limits.push('Currently sold out. The weights are frozen.');
     limits.push('Will not make you better at prompting. Will make you look like you are.');
@@ -177,7 +176,7 @@
     document.getElementById('card').innerHTML = `
       <div class="card-head">
         <h2 class="repo-name"><span>apesonkeys/</span>${C.esc(p.handle)}</h2>
-        <div class="pills"><span class="pill cat ${C.esc(p.category)}">${C.esc(p.category)}</span><span class="pill">${C.money(p.price)}</span>${colors ? `<span class="pill">${colors.values.length} color${colors.values.length > 1 ? 's' : ''}</span>` : ''}<span class="pill">${sizes ? sizes.values.length + ' sizes' : 'sizes: unlisted'}</span><span class="pill">${inStock ? 'in stock' : 'sold out'}</span></div>
+        <div class="pills"><span class="pill cat ${C.esc(p.category)}">${C.esc(p.category)}</span><span class="pill">${C.money(p.price)}</span>${colors ? `<span class="pill">${colors.values.length} color${colors.values.length > 1 ? 's' : ''}</span>` : ''}<span class="pill">${sizes ? sizes.values.length + ' sizes' : pod ? '2XS–3XL · printed on demand' : 'one size'}</span><span class="pill">${inStock ? 'in stock' : 'sold out'}</span></div>
       </div>
       <div class="doc">
         <h2>Model summary</h2>
@@ -195,7 +194,7 @@
         <table>
           <tr><th>Price</th><td>${C.money(p.price)}</td></tr>
           <tr><th>Colors</th><td>${colors ? C.esc(colors.values.join(', ')) : 'One'}</td></tr>
-          <tr><th>Sizes</th><td>${sizes ? C.esc(sizes.values.join(', ')) : 'Not listed'}</td></tr>
+          <tr><th>Sizes</th><td>${sizes ? C.esc(sizes.values.join(', ')) : pod ? C.esc(C.STANDARD_SIZES.join(', ')) + ' (printed on demand)' : 'One size'}</td></tr>
           <tr><th>Ships free on its own</th><td>${p.price >= 50 ? 'Yes ($50+)' : `No. ${C.money(50 - p.price)} more in the bag and it does.`}</td></tr>
         </table>
         <h2>Citation</h2>

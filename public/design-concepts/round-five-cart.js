@@ -6,6 +6,8 @@
   const DATA = window.AOK5;
   const KEY = 'cart';
   const listeners = new Set();
+  // Same list the store's product page offers for print-on-demand clothing with no size variants.
+  const STANDARD_SIZES = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = (n) => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
@@ -35,20 +37,21 @@
     return { items, count, subtotal, gap, free: subtotal >= DATA.freeShippingAt };
   }
 
-  // Keyed by variant id: the store's product page keys by product id, which merges different sizes.
-  function add(product, variant, quantity = 1) {
+  // Keyed by variant (plus size when the size isn't part of the variant), so different picks stay on separate lines.
+  function add(product, variant, quantity = 1, podSize) {
     const items = read();
-    const existing = items.find((i) => i.id === variant.id);
+    const id = podSize ? `${variant.id}:${podSize}` : variant.id;
+    const existing = items.find((i) => i.id === id);
     if (existing) existing.quantity = Math.min(20, existing.quantity + quantity);
     else
       items.push({
-        id: variant.id,
-        title: product.title,
+        id,
+        title: product.title + (podSize ? ` - ${podSize}` : ''),
         price: variant.price,
         quantity,
         image: product.images[0] || '/product-placeholder.jpg',
         variantId: variant.id,
-        size: variant.options.Size,
+        size: variant.options.Size || podSize,
         color: variant.options.Color,
       });
     write(items);
@@ -77,6 +80,8 @@
     const firstAvailable = product.variants.find((v) => v.available) || product.variants[0];
     product.options.forEach((o) => (chosen[o.name] = firstAvailable.options[o.name]));
     const hasSize = product.options.some((o) => o.name === 'Size');
+    const podSizes = !hasSize && /T-Shirts|Hoodies/.test(product.category) ? STANDARD_SIZES : null;
+    let podSize = podSizes ? 'M' : undefined;
     const soldOut = !product.variants.some((v) => v.available);
 
     function render() {
@@ -94,15 +99,23 @@
               .join('')}</fieldset>`
           )
           .join('') +
-        (hasSize || !product.options.length || product.category === 'Hats'
-          ? ''
-          : `<p class="p5-note">No size is listed for this piece in the catalog yet.</p>`) +
+        (podSizes
+          ? `<fieldset class="p5-opt"><legend>Size</legend>${podSizes
+              .map((val) => `<button type="button" data-pod="${val}" aria-pressed="${podSize === val}">${val}</button>`)
+              .join('')}</fieldset>`
+          : '') +
         `<button type="button" class="p5-add" ${canAdd ? '' : 'disabled'}>${
           soldOut ? 'Sold out' : canAdd ? esc(opts.label ? opts.label(product, variant) : `Add to bag · ${money(variant.price)}`) : 'Pick another option'
         }</button>`;
     }
 
     root.addEventListener('click', (e) => {
+      const pod = e.target.closest('[data-pod]');
+      if (pod) {
+        podSize = pod.dataset.pod;
+        render();
+        return;
+      }
       const opt = e.target.closest('[data-opt]');
       if (opt && !opt.disabled) {
         chosen[opt.dataset.opt] = opt.dataset.val;
@@ -117,12 +130,12 @@
       const btn = e.target.closest('.p5-add');
       if (btn && !btn.disabled) {
         const variant = findVariant(product, chosen);
-        const s = add(product, variant);
+        const s = add(product, variant, 1, podSize);
         if (opts.onAdd) opts.onAdd(s, product, variant);
       }
     });
     render();
   }
 
-  window.AOK5Cart = { read, add, summary, onChange, mountPicker, byHandle, money, esc, storeUrl: '/products' };
+  window.AOK5Cart = { read, add, summary, onChange, mountPicker, byHandle, money, esc, STANDARD_SIZES, storeUrl: '/products' };
 })();

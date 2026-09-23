@@ -8,20 +8,20 @@ September 23, 2026. A hard look at the 20 existing concepts next to the original
 - **The art is the product, and it's been treated as decoration.** The red, black, and bone screen-print posters are the most recognizable thing A-OK owns. Only one of the 20 (06 Wheatpaste Wall) opens with it; the rest open with type, interface chrome, or lifestyle photos.
 - **No concept has put anything in the real cart.** Rounds 1–3 link to `#`. Round four has a preview bag that resets and ends at the product page.
 - **Recommendation:** use **23 Model Card** as the pattern for product pages and the catalog, **22 Ministry of Alignment** for the homepage or a drop campaign, and **21 The Router** as a "not sure what to get?" entry point (gift finder, email and social links).
-- **Fix the four store problems below first.** No redesign gets past a clothing store where most items have no size.
+- **Fix the store problems below first.** Since #29, checkout rejects 20 of the 23 tees and hoodies. No redesign matters until that's fixed. The fixes are on a separate branch (`claude/store-cart-checkout-fixes`).
 
-## Before any redesign: four things stopping people from buying
+## Before any redesign: what's stopping people from buying
 
 These come from the catalog data and the checkout code, not from taste.
 
-1. **20 of 24 products have no size option.** Only Make America Go A-OK, Hallucination Club, Business Logic, and A-OK For America offer sizes. On every other tee and hoodie, the shopper picks a color and never a size. Round four called this "some records." It's most of the store.
+1. **Checkout rejects most of the store.** 20 of the 24 catalog items have no size in their variants. The product page makes up for that by offering a standard 2XS–3XL list, because the clothes are printed on demand. But since #29, checkout matches the chosen size against the variant's size, finds nothing, and returns "An item in your cart is no longer available." Only Hallucination Club, Business Logic, and A-OK For America check out. Even before #29, the chosen size never reached the order, because checkout records the size from the variant, and the owner's order email reads it from there.
 2. **Options are listed that can't be bought.**
    - Hallucination Club lists Purple and White, and a product photo shows purple, but no Purple or White version exists.
    - Make America Go A-OK lists 6 sizes × 3 colors, but only 10 of the 18 combinations exist, with no S or M in any color.
    - A-OKool as a Cucumber is sold out.
    - Two items are filed under the wrong type: the Business Logic crewneck is filed as T-Shirts, and "A-OKool as a Cucumber Tee" is filed as Hoodies.
 3. **The game's 25% code can't be used.** `/api/discount` creates the code in Shopify, but checkout is Stripe (`app/api/catalog/checkout/route.ts`), and that session doesn't accept promotion codes. A player who wins has nowhere to enter the code. None of the new concepts mention the discount because of this.
-4. **A second color or size of the same product replaces the first.** The product page adds to the cart using the product's id (`ProductPageClient.tsx` passes `id: product.id`). `CartProvider.addToCart` matches on that id and adds to the quantity of the existing line, which keeps the first variant. If someone adds a Red M and then a Green L, the order becomes 2 × Red M. The round-five concepts key by variant to avoid this. Fixing it in the store is a one-line change, but it's outside this round.
+4. **A second color or size of the same product replaces the first.** The product page adds to the cart using the product's id (`ProductPageClient.tsx` passes `id: product.id`). `CartProvider.addToCart` matches on that id and adds to the quantity of the existing line, which keeps the first variant. If someone adds a Red M and then a Green L, the order becomes 2 × Red M. The round-five concepts key by variant to avoid this. The store fix is on the separate branch.
 
 ## What the original voice actually is
 
@@ -54,7 +54,7 @@ From the 24 catalog descriptions, the homepage theorem, and the footer:
 4. **Use the audience roll calls.** Every description already says who it's for. That's a ready-made way to choose.
 5. **Use the political and corporate parody.** 2034 Prophecy, Make America Go A-OK, March of the Agents, A-OK For America, and Business Logic form a clear thread that no concept touched.
 6. **Give an honest reason to add a second item.** Checkout gives free shipping at $50 and charges $9.99 below that. March of the Agents and Mixture of Apes are $40 and Hallucination Club is $45, so for those shoppers a second piece nearly pays for its own shipping. That's true, and it doesn't need a fake countdown.
-7. **Treat missing sizes as the main blocker.**
+7. **Notice that sizes live on the product page, not in the catalog.** Any page that adds to the cart has to send the size itself.
 
 What round four got right, and this round keeps: real catalog data, no fake urgency, reviews, or stock counts, keyboard support, and respect for reduced-motion settings.
 
@@ -94,7 +94,7 @@ AI models come with "model cards." Here each piece gets one:
 - **Model summary:** the opening line.
 - **Intended use:** the audience roll call.
 - **Out-of-scope use:** "Being the only person in the room who gets the joke. Deploy a second checkpoint for a friend."
-- **Known limitations:** the honest gaps, stated plainly ("No size option is published for this checkpoint yet", "Photos are not matched to the color you pick").
+- **Known limitations:** the honest gaps, stated plainly ("Photos are not matched to the color you pick", "Currently sold out").
 - **Training data:** the full description, not cut short.
 - **Evaluation:** price, colors, sizes, and whether the piece ships free on its own.
 - **Citation:** the sign-off as a BibTeX entry with `doi = {hallucinated}`.
@@ -107,7 +107,8 @@ AI models come with "model cards." Here each piece gets one:
 ## How the real bag works in these prototypes
 
 - The store keeps its cart in `localStorage["cart"]` (`app/components/cart/CartProvider.tsx`). The concepts are served from the same site, so they write items in the same shape, and those items show up in the store's cart drawer.
-- Items are keyed by variant id, so different sizes and colors stay on separate lines.
+- Items are keyed by variant id, plus the size when the size isn't part of the variant, so different sizes and colors stay on separate lines.
+- For tees and hoodies with no size variants, the picker offers the same 2XS–3XL list the store's product page does, and sends the chosen size with the item.
 - Checkout re-prices every line on the server from the catalog by `variantId`. A concept page can't set a price, and nothing is charged from a concept page. "Review bag & check out on the store" goes to `/products`, where the cart button shows the count and the normal checkout runs.
 - **Worth knowing:** `/design-concepts/` is public on the live site, so anyone who finds these pages can add real items to their own bag. That's the point of this round, but it's a change from earlier rounds.
 - **Small follow-up if a concept moves forward:** the store has no way to open the cart drawer from a link. A `?bag=open` check in `CartProvider` would let the handoff land with the drawer already open.

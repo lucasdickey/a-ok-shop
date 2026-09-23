@@ -306,6 +306,6 @@ export const concepts: Concept[] = [
     tags: ["Long copy", "Full catalog", "Real cart"],
     description:
       "Every piece gets a model card: summary, intended use, known limitations, the full description as training data, and a hallucinated citation. Searchable across all 24 pieces.",
-    highlights: ["Full product copy, not truncated", "Honest limitations (missing sizes)", "Search + category + price sort", "Deploy to bag from every card"],
+    highlights: ["Full product copy, not truncated", "Honest known limitations", "Search + category + price sort", "Deploy to bag from every card"],
   },
 ];
