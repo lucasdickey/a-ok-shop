@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { SimpleProduct } from '@/app/lib/catalog';
-import { CLOTHING_SIZES } from '@/app/lib/sizes';
+import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
 
 type ProductCardProps = {
   product: SimpleProduct;
@@ -92,8 +92,11 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   
   // Tees and hoodies are printed on demand, so every standard size can be ordered.
-  if (cardType === 't-shirt' || cardType === 'hoodie') {
+  if (isClothing(productType, tags)) {
     sizeValues = [...standardSizes];
+  } else if (cardType === 't-shirt') {
+    // Non-clothing items that fall back to the t-shirt card (e.g. stickers) have no sizes.
+    sizeValues = [];
   }
   
   // Sort sizes in the standard order

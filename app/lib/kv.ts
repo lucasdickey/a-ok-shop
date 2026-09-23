@@ -225,6 +225,12 @@ export async function takeRateLimit(
   }
 
   const now = Date.now();
+  if (localCounts.size > 10_000) {
+    // Drop expired windows so the map stays bounded on long-lived servers.
+    localCounts.forEach((value, mapKey) => {
+      if (value.resetAt <= now) localCounts.delete(mapKey);
+    });
+  }
   const entry = localCounts.get(rateKey);
   if (!entry || entry.resetAt <= now) {
     localCounts.set(rateKey, { count: 1, resetAt: now + windowSeconds * 1000 });

@@ -99,7 +99,7 @@ export default function AddToCartButton({
           <button
             onClick={() => setItemQuantity(prev => Math.min(MAX_QUANTITY, prev + 1))}
             disabled={itemQuantity >= MAX_QUANTITY}
-            className="px-3 py-2 hover:bg-secondary-light"
+            className="px-3 py-2 hover:bg-secondary-light disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Increase quantity"
           >
             +
@@ -108,18 +108,24 @@ export default function AddToCartButton({
         
         <button
           onClick={handleAddToCart}
-          disabled={isAdding || unavailable}
-          className="btn btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isAdding}
+          // aria-disabled (not disabled) keeps the button focusable so the reason is reachable.
+          aria-disabled={unavailable || undefined}
+          aria-describedby={unavailable ? 'add-to-cart-reason' : undefined}
+          className={`btn btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50 ${
+            unavailable ? 'cursor-not-allowed opacity-50' : ''
+          }`}
         >
           {isAdding ? 'Adding...' : unavailable ? 'Unavailable' : 'Add to Cart'}
         </button>
       </div>
       
-      {/* Always rendered so screen readers announce the message when it appears. */}
-      <div role="alert" className="mt-2 text-sm text-red-500">
-        {unavailable
-          ? 'That combination isn’t available. Try another size or color.'
-          : showWarning && warningMessage}
+      {/* The lasting reason is a polite status tied to the button; short warnings are alerts. */}
+      <p id="add-to-cart-reason" role="status" className="mt-2 text-sm text-red-500">
+        {unavailable ? 'That combination isn’t available. Try another size or color.' : ''}
+      </p>
+      <div role="alert" className="text-sm text-red-500">
+        {showWarning && !unavailable ? warningMessage : ''}
       </div>
     </div>
   );

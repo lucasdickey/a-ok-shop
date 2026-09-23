@@ -15,7 +15,7 @@ const GAME_COUPON_ID = "aok-game-reward-25";
 
 // Letters and digits only: Stripe promotion codes allow nothing else.
 function generateDiscountCode() {
-  return `AOK${randomBytes(4).toString("hex").toUpperCase()}`;
+  return `AOK${randomBytes(6).toString("hex").toUpperCase()}`;
 }
 
 async function getGameCoupon(stripe: Stripe): Promise<Stripe.Coupon> {
@@ -61,8 +61,14 @@ function generateMockDiscountCode() {
   return code;
 }
 
+// Vercel sets x-real-ip itself, so clients can't choose it. The x-forwarded-for fallback
+// is only trustworthy behind a proxy that overwrites that header.
 function clientIp(request: NextRequest): string {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  return (
+    request.headers.get("x-real-ip")?.trim() ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
 }
 
 export async function POST(request: NextRequest) {
