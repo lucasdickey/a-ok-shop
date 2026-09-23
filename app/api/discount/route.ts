@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getStripeClient } from "@/app/lib/stripe-client";
 
 // Shopify Admin API client configuration
 async function getShopifyAdminClient() {
@@ -21,13 +22,44 @@ async function getShopifyAdminClient() {
   };
 }
 
-// Generate a unique discount code
+// Generate a unique discount code. Letters and digits only: Stripe promotion codes allow nothing else.
 function generateDiscountCode() {
-  const code = `AOK-${Math.random()
+  const code = `AOK${Math.random()
     .toString(36)
     .substring(2, 8)
     .toUpperCase()}`;
   return code;
+}
+
+// Checkout runs on Stripe (app/api/catalog/checkout/route.ts), so a code the shopper can
+// actually redeem has to be a Stripe promotion code: 25% off, single use, 30 days.
+async function createStripeDiscount() {
+  const stripe = getStripeClient();
+  if (!stripe) throw new Error("Stripe not configured");
+
+  const code = generateDiscountCode();
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+  const coupon = await stripe.coupons.create({
+    percent_off: 25,
+    duration: "once",
+    max_redemptions: 1,
+    redeem_by: Math.floor(expiresAt.getTime() / 1000),
+    name: "Run, Human, Run! reward",
+  });
+  const promotionCode = await stripe.promotionCodes.create({
+    promotion: { type: "coupon", coupon: coupon.id },
+    code,
+    max_redemptions: 1,
+    expires_at: Math.floor(expiresAt.getTime() / 1000),
+  });
+
+  return {
+    code,
+    id: promotionCode.id,
+    percentage: 25,
+    expiresAt: expiresAt.toISOString(),
+  };
 }
 
 // Create a price rule and discount code using Shopify Admin API
@@ -153,7 +185,7 @@ async function createShopifyDiscount() {
 
 // Mock discount code generation for development
 function generateMockDiscountCode() {
-  const code = `AOK-${Math.random()
+  const code = `AOK${Math.random()
     .toString(36)
     .substring(2, 8)
     .toUpperCase()}`;
@@ -163,6 +195,11 @@ function generateMockDiscountCode() {
 
 export async function POST() {
   try {
+    if (getStripeClient()) {
+      const discount = await createStripeDiscount();
+      return NextResponse.json(discount);
+    }
+
     // Check if we have Admin API credentials
     const hasAdminApiAccess =
       process.env.SHOPIFY_ADMIN_API_TOKEN && process.env.SHOPIFY_STORE_DOMAIN;
