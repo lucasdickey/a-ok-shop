@@ -41,6 +41,10 @@ function getLocalImages() {
 
 // Helper to fetch external images from self-replicating-art API
 async function getExternalImages() {
+  // Fail fast if the upstream API is slow or unresponsive so the endpoint can
+  // still return the local images promptly instead of hanging the response.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
   try {
     const response = await fetch(
       "https://self-replicating-art.vercel.app/api/daily",
@@ -48,6 +52,7 @@ async function getExternalImages() {
         method: "GET",
         headers: { Accept: "application/json" },
         next: { revalidate: 3600 },
+        signal: controller.signal,
       }
     );
     if (!response.ok) return [];
@@ -63,6 +68,8 @@ async function getExternalImages() {
   } catch (err) {
     console.error("Error fetching external images:", err);
     return [];
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 

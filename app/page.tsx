@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
+import ProductCard from "@/app/components/product/ProductCard";
+import { SimpleProduct } from "@/app/lib/catalog";
 import fs from "fs";
 import path from "path";
 
@@ -76,7 +78,7 @@ const getFeaturedProductsData = async () => {
 
 export default async function Home() {
   // Fetch featured products with error handling
-  let productsToShow: Array<any> = [];
+  let productsToShow: SimpleProduct[] = [];
   try {
     productsToShow = await getFeaturedProductsData();
     console.log(`Fetched ${productsToShow.length} featured products successfully`);
@@ -126,32 +128,7 @@ export default async function Home() {
         <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productsToShow.map((product) => (
-            <Link
-              href={`/products/${product.handle}`}
-              key={product.id}
-              className="group"
-            >
-              <div className="border-2 border-[#1F1F1F] bg-[#F5F2DC] p-5 rounded-xl text-[#1F1F1F] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] h-full">
-                <div className="relative aspect-square bg-light mb-4 rounded-lg overflow-hidden border border-[#1F1F1F]">
-                  <Image
-                    src={product.images.edges[0]?.node.url || "/product-placeholder.jpg"}
-                    alt={product.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
-                    unoptimized={!product.images.edges[0]?.node.url?.startsWith('http')}
-                  />
-                </div>
-                <h3 className="font-bebas-neue text-xl mb-1 tracking-wide">
-                  {product.title}
-                </h3>
-                <p className="text-[#8B1E24] font-bebas-neue text-lg mb-4">
-                  $
-                  {parseFloat(
-                    product.priceRange.minVariantPrice.amount
-                  ).toFixed(2)}
-                </p>
-              </div>
-            </Link>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
         <div className="text-center mt-8">

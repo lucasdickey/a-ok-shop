@@ -18,7 +18,7 @@ export default function GalleryPage() {
         console.log("Fetching images from API...");
         // Use the new local-gallery endpoint with cache control
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
         // Use the correct base URL - important for both development and production
         const baseUrl = window.location.origin;
@@ -100,9 +100,13 @@ export default function GalleryPage() {
         setDebugInfo(null);
       } catch (err) {
         console.error("Error fetching gallery images:", err);
-        setError(
-          err.message || "Failed to load gallery. Please try again later."
-        );
+        // Give a clearer, user-friendly message for aborted/timed-out requests
+        // instead of the raw "signal is aborted without reason".
+        const message =
+          err.name === "AbortError"
+            ? "The gallery took too long to load. Please refresh to try again."
+            : err.message || "Failed to load gallery. Please try again later.";
+        setError(message);
         setDebugInfo({ error: err.toString() });
       } finally {
         setLoading(false);
