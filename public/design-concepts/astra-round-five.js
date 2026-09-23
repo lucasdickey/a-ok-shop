@@ -99,12 +99,12 @@
   }
   function openArt(index, trigger) {
     const a = art[index];
-    $('#inspect-dialog').innerHTML = `${dialogTop('A–OK / Art archive')}<h2 id="inspect-title">${a.name}</h2><p class="dialog-note">Existing artwork from the A–OK archive.</p><img class="inspect-image" src="${artPath(a)}" alt="${a.name}" width="900" height="900"><button class="text-button" data-close>Return to shopping</button>`;
+    $('#inspect-dialog').innerHTML = `${dialogTop('A–OK / Art archive')}<h2 id="inspect-title">${safe(a.name)}</h2><p class="dialog-note">Existing artwork from the A–OK archive.</p><img class="inspect-image" src="${safe(artPath(a))}" alt="${safe(a.name)}" width="900" height="900"><button class="text-button" data-close>Return to shopping</button>`;
     show($('#inspect-dialog'), trigger);
   }
   function openGenerator(trigger) {
     sampleIndex = 0;
-    $('#generator-dialog').innerHTML = `${dialogTop('Existing-sample generator preview')}<div class="generator-layout"><div><h2 id="generator-title">Existing-sample generator preview</h2><p class="dialog-note">This shows three existing A–OK artworks. It does not generate new images or send anything to a model.</p><label for="sample-choice">Choose an existing sample</label><select id="sample-choice">${art.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('')}</select><button class="action" id="show-sample">Show existing sample <span>↗</span></button><button class="text-button" id="inspect-sample">Inspect this artwork ↗</button><button class="action" data-close>Return to shopping <span>↗</span></button></div><figure><img id="sample-image" src="${artPath(art[0])}" alt="${art[0].name}" width="600" height="600"><figcaption id="sample-status" role="status">Existing sample 1 / ${art[0].name}. No new image generated.</figcaption></figure></div>`;
+    $('#generator-dialog').innerHTML = `${dialogTop('Existing-sample generator preview')}<div class="generator-layout"><div><h2 id="generator-title">Existing-sample generator preview</h2><p class="dialog-note">This shows three existing A–OK artworks. It does not generate new images or send anything to a model.</p><label for="sample-choice">Choose an existing sample</label><select id="sample-choice">${art.map((a,i)=>`<option value="${i}">${safe(a.name)}</option>`).join('')}</select><button class="action" id="show-sample">Show existing sample <span>↗</span></button><button class="text-button" id="inspect-sample">Inspect displayed artwork ↗</button><button class="action" data-close>Return to shopping <span>↗</span></button></div><figure><img id="sample-image" src="${safe(artPath(art[0]))}" alt="${safe(art[0].name)}" width="600" height="600"><figcaption id="sample-status" role="status">Existing sample 1 / ${safe(art[0].name)}. No new image generated.</figcaption></figure></div>`;
     show($('#generator-dialog'), trigger);
   }
   function filterCatalog(button) {
@@ -233,7 +233,7 @@
     if (b.hasAttribute('data-inspect-photo')) {
       const photo = Number(b.dataset.inspectPhoto), p = products[inspectProduct];
       $('#inspect-image').src = p.images[photo];$('#inspect-image').alt = `${p.title} — catalog photograph ${photo+1}`;
-      $('#inspect-caption').textContent = `Catalog photograph ${photo+1} of ${p.images.length}`;
+      $('#inspect-caption').textContent = `${photo?'Alternate':'Catalog'} photograph ${photo+1} of ${p.images.length}`;
       $$('[data-inspect-photo]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));return;
     }
     if (b.hasAttribute('data-art')) {openArt(Number(b.dataset.art),b);return;}

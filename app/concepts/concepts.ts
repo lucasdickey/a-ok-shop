@@ -7,7 +7,6 @@ export interface Concept {
   file: string;
   harness: Harness;
   model: string;
-  round?: number;
   tags: string[];
   description: string;
   /** Key moments of the web experience to look at inside each prototype. */
@@ -315,7 +314,6 @@ export const concepts: Concept[] = [
     file: "/design-concepts/24-print-room.html",
     harness: "Codex",
     model: "Astra (GPT-6)",
-    round: 5,
     tags: ["Art on clothes", "Bone + crimson", "Print details"],
     description: "A compact masthead and three asymmetric, priced garments. Actual artwork supplies the character. The provisional art-brand favorite, not a measured conversion winner.",
     highlights: ["Inspect print opens a labeled alternate photograph", "Real catalog options and editable preview bag", "Keyboard focus survives quantity changes", "Existing-sample generator preview below shopping"],
@@ -326,7 +324,6 @@ export const concepts: Concept[] = [
     file: "/design-concepts/25-human-edit.html",
     harness: "Codex",
     model: "Astra (GPT-6)",
-    round: 5,
     tags: ["Collection first", "Human selections", "Shopping clarity"],
     description: "An immediately browsable collection, with specific garment notes and a compact art studio. The shopping-usability challenger to Print Room.",
     highlights: ["Six named, priced pieces with direct options actions", "Category changes retain focus and announce results", "Selection notes point to inspectable garment details", "Separate preview bag and clear sample-only studio"],
@@ -337,7 +334,6 @@ export const concepts: Concept[] = [
     file: "/design-concepts/26-off-model.html",
     harness: "Codex",
     model: "Astra (GPT-6)",
-    round: 5,
     tags: ["Fashion", "Photographic diptych", "Named selectors"],
     description: "A shoppable photographic diptych with compact campaign type. Named selectors synchronize the photograph, price and purchase target using existing catalog imagery.",
     highlights: ["Stable selected frame and alternate-photo controls", "Product names replace persona labels", "Collection follows the compact campaign", "Actual availability, inspectable art and isolated bag"],

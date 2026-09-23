@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
@@ -112,6 +112,8 @@ export default function ConceptsGallery() {
   const [viewport, setViewport] = useState<Viewport>("desktop");
   const [filter, setFilter] = useState<Filter>("astra5");
   const [expanded, setExpanded] = useState(false);
+  const fullscreenRef = useRef<HTMLDialogElement>(null);
+  const expandRef = useRef<HTMLButtonElement>(null);
 
   const visible = useMemo(
     () =>
@@ -154,10 +156,14 @@ export default function ConceptsGallery() {
   // Keep the page behind the lightbox from scrolling.
   useEffect(() => {
     if (!expanded) return;
+    const dialog = fullscreenRef.current;
+    dialog?.showModal();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
+      dialog?.close();
       document.body.style.overflow = previous;
+      expandRef.current?.focus();
     };
   }, [expanded]);
 
@@ -236,6 +242,7 @@ export default function ConceptsGallery() {
                 a-ok.shop{current.file}
               </div>
               <button
+                ref={expandRef}
                 onClick={() => setExpanded(true)}
                 className="shrink-0 rounded border border-[#F5F2DC]/20 px-2.5 py-1 text-xs uppercase tracking-wider text-[#F5F2DC]/70 transition hover:border-[#F5F2DC]/60 hover:text-[#F5F2DC]"
               >
@@ -340,11 +347,13 @@ export default function ConceptsGallery() {
 
       {/* Fullscreen lightbox */}
       {expanded && (
-        <div
+        <dialog
+          ref={fullscreenRef}
+          onCancel={(event) => { event.preventDefault(); setExpanded(false); }}
           role="dialog"
           aria-modal="true"
           aria-label={`${current.id} — ${current.title}`}
-          className="fixed inset-0 z-50 flex flex-col bg-[#0A0A0A]"
+          className="fixed inset-0 z-50 m-0 flex h-[100dvh] w-screen max-h-none max-w-none flex-col border-0 bg-[#0A0A0A] p-0 text-[#F5F2DC]"
         >
           <div className="flex flex-wrap items-center gap-3 border-b border-[#F5F2DC]/10 px-4 py-3">
             <OriginBadge concept={current} />
@@ -354,7 +363,7 @@ export default function ConceptsGallery() {
             >
               {current.id} — {current.title}
             </h2>
-            <span className="text-xs uppercase tracking-wider text-[#F5F2DC]/40">
+            <span role="status" className="text-xs uppercase tracking-wider text-[#F5F2DC]/40">
               {index + 1} / {visible.length}
             </span>
 
@@ -371,6 +380,7 @@ export default function ConceptsGallery() {
               <button
                 onClick={() => setExpanded(false)}
                 aria-label="Close fullscreen"
+                autoFocus
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F5F2DC]/20 text-lg text-[#F5F2DC] transition hover:border-[#F5F2DC]/60"
               >
                 ✕
@@ -407,7 +417,7 @@ export default function ConceptsGallery() {
 
           <div className="flex items-center justify-between border-t border-[#F5F2DC]/10 px-4 py-2 sm:hidden">
             <ArrowButton direction="prev" onClick={() => go(-1)} className="h-11 w-11" />
-            <span className="text-xs">{index + 1} / {visible.length}</span>
+            <span role="status" className="text-xs">{index + 1} / {visible.length}</span>
             <ArrowButton direction="next" onClick={() => go(1)} className="h-11 w-11" />
           </div>
           <div
@@ -436,7 +446,7 @@ export default function ConceptsGallery() {
               );
             })}
           </div>
-        </div>
+        </dialog>
       )}
     </div>
   );

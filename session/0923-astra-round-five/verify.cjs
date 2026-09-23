@@ -41,6 +41,7 @@ const result = {catalog:'Six products match source prices, variants, availabilit
       await page.goto(`${origin}/design-concepts/${target}.html`);
       await page.locator('.product-card').first().waitFor();
       assert.equal(await page.locator('.product-card').count(),6);
+      if(target==='25-human-edit')assert.equal(await page.locator('.product-card h2').count(),6,'Collection-first cards follow h1');
       assert.match(await page.locator('.product-card').first().innerText(),/Hallucination Club[\s\S]*\$45/);
       const productTrigger = page.locator('.product-card [data-product="0"]').first();
       await productTrigger.click();
@@ -95,9 +96,16 @@ const result = {catalog:'Six products match source prices, variants, availabilit
       assert.match(generatorText,/existing/i);
       if(current){
         assert.match(generatorText,/Existing-sample generator preview/);
-        await page.locator('#sample-choice').selectOption('2');await page.locator('#show-sample').click();
+        await page.locator('#sample-choice').selectOption('2');
+        const displayed = await page.locator('#sample-image').getAttribute('src');
+        await page.locator('#inspect-sample').click();
+        assert.equal(await page.locator('#inspect-dialog img').getAttribute('src'),displayed,'Inspect follows displayed art before Show');
+        await page.keyboard.press('Escape');
+        await page.locator('#show-sample').click();
         assert.match(await page.locator('#sample-status').innerText(),/Existing sample 3/);
-        await page.locator('#inspect-sample').click();await page.keyboard.press('Escape');
+        await page.locator('#inspect-sample').click();
+        assert.equal(await page.locator('#inspect-dialog img').getAttribute('src'),await page.locator('#sample-image').getAttribute('src'),'Inspect follows displayed art after Show');
+        await page.keyboard.press('Escape');
         await page.waitForFunction(()=>document.activeElement.id==='inspect-sample');
       }
       await page.keyboard.press('Escape');
