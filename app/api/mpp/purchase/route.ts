@@ -1,4 +1,4 @@
-import { getProductByHandle } from '@/app/lib/catalog';
+import { getProductByHandle, isSameId } from '@/app/lib/catalog';
 import { getStripeClient } from '@/app/lib/stripe-client';
 import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
 import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       }
 
       const variant = product.variants?.edges?.find(
-        (edge: any) => edge.node.id === item.variantId
+        (edge: any) => isSameId(edge.node.id, item.variantId)
       )?.node;
 
       if (!variant) {

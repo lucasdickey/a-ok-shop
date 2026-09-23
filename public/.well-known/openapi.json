@@ -158,7 +158,7 @@
           "id": {
             "type": "string",
             "description": "Unique product identifier",
-            "example": "gid://shopify/Product/8755818758363"
+            "example": "gid://a-ok/Product/8755818758363"
           },
           "handle": {
             "type": "string",
@@ -221,7 +221,7 @@
           "id": {
             "type": "string",
             "description": "Unique variant identifier - use this in checkout requests",
-            "example": "gid://shopify/ProductVariant/46776424202459"
+            "example": "gid://a-ok/ProductVariant/46776424202459"
           },
           "title": {
             "type": "string",
@@ -265,7 +265,7 @@
                     "variantId": {
                       "type": "string",
                       "description": "Product variant ID from the catalog",
-                      "example": "gid://shopify/ProductVariant/46776424202459"
+                      "example": "gid://a-ok/ProductVariant/46776424202459"
                     },
                     "quantity": {
                       "type": "integer",

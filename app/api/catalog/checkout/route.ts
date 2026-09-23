@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
-import { getAllProducts, type SimpleProduct } from "@/app/lib/catalog";
+import { getAllProducts, isSameId, type SimpleProduct } from "@/app/lib/catalog";
 import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 
 const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
@@ -61,7 +61,7 @@ function resolveVariant(
   item: CartItemInput
 ): Resolved | { error: string } | null {
   const product = products.find((p) =>
-    p.variants.edges.some((v) => v.node.id === item.variantId)
+    p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
   );
   if (!product) return null;
 
@@ -81,7 +81,7 @@ function resolveVariant(
     !matchColor || !item.color || getOption(variant, "color") === item.color;
 
   const variant =
-    variants.find((v) => v.id === item.variantId && matchesColor(v)) ||
+    variants.find((v) => isSameId(v.id, item.variantId) && matchesColor(v)) ||
     variants.find(matchesColor);
 
   return variant ? { product, variant, size } : null;

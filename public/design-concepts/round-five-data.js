@@ -22,7 +22,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776424202459",
+     "id": "gid://a-ok/ProductVariant/46776424202459",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -31,7 +31,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776424235227",
+     "id": "gid://a-ok/ProductVariant/46776424235227",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -71,7 +71,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46334618566875",
+     "id": "gid://a-ok/ProductVariant/46334618566875",
      "title": "Gray",
      "price": 50,
      "available": true,
@@ -80,7 +80,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46334618632411",
+     "id": "gid://a-ok/ProductVariant/46334618632411",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -120,7 +120,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776423219419",
+     "id": "gid://a-ok/ProductVariant/46776423219419",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -129,7 +129,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776423252187",
+     "id": "gid://a-ok/ProductVariant/46776423252187",
      "title": "Beige",
      "price": 50,
      "available": true,
@@ -138,7 +138,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776423284955",
+     "id": "gid://a-ok/ProductVariant/46776423284955",
      "title": "Brown",
      "price": 50,
      "available": true,
@@ -179,7 +179,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776423153883",
+     "id": "gid://a-ok/ProductVariant/46776423153883",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -188,7 +188,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776423186651",
+     "id": "gid://a-ok/ProductVariant/46776423186651",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -228,7 +228,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776423088347",
+     "id": "gid://a-ok/ProductVariant/46776423088347",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -237,7 +237,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776423121115",
+     "id": "gid://a-ok/ProductVariant/46776423121115",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -278,7 +278,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422957275",
+     "id": "gid://a-ok/ProductVariant/46776422957275",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -287,7 +287,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422990043",
+     "id": "gid://a-ok/ProductVariant/46776422990043",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -296,7 +296,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776423022811",
+     "id": "gid://a-ok/ProductVariant/46776423022811",
      "title": "White",
      "price": 50,
      "available": true,
@@ -339,7 +339,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422727899",
+     "id": "gid://a-ok/ProductVariant/46776422727899",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -348,7 +348,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422760667",
+     "id": "gid://a-ok/ProductVariant/46776422760667",
      "title": "Beige",
      "price": 50,
      "available": true,
@@ -357,7 +357,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422793435",
+     "id": "gid://a-ok/ProductVariant/46776422793435",
      "title": "White",
      "price": 50,
      "available": true,
@@ -366,7 +366,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422826203",
+     "id": "gid://a-ok/ProductVariant/46776422826203",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -375,7 +375,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422858971",
+     "id": "gid://a-ok/ProductVariant/46776422858971",
      "title": "Brown",
      "price": 50,
      "available": true,
@@ -413,7 +413,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422465755",
+     "id": "gid://a-ok/ProductVariant/46776422465755",
      "title": "Gray",
      "price": 50,
      "available": true,
@@ -457,7 +457,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422367451",
+     "id": "gid://a-ok/ProductVariant/46776422367451",
      "title": "White",
      "price": 50,
      "available": true,
@@ -466,7 +466,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422400219",
+     "id": "gid://a-ok/ProductVariant/46776422400219",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -475,7 +475,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422432987",
+     "id": "gid://a-ok/ProductVariant/46776422432987",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -517,7 +517,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422236379",
+     "id": "gid://a-ok/ProductVariant/46776422236379",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -526,7 +526,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422269147",
+     "id": "gid://a-ok/ProductVariant/46776422269147",
      "title": "White",
      "price": 50,
      "available": true,
@@ -535,7 +535,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422301915",
+     "id": "gid://a-ok/ProductVariant/46776422301915",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -575,7 +575,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776422138075",
+     "id": "gid://a-ok/ProductVariant/46776422138075",
      "title": "Red",
      "price": 75,
      "available": true,
@@ -584,7 +584,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422170843",
+     "id": "gid://a-ok/ProductVariant/46776422170843",
      "title": "Black",
      "price": 75,
      "available": true,
@@ -593,7 +593,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776422203611",
+     "id": "gid://a-ok/ProductVariant/46776422203611",
      "title": "White",
      "price": 75,
      "available": true,
@@ -628,7 +628,7 @@ window.AOK5 = {
    "options": [],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46735214346459",
+     "id": "gid://a-ok/ProductVariant/46735214346459",
      "title": "Default Title",
      "price": 75,
      "available": true,
@@ -670,7 +670,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46744874942683",
+     "id": "gid://a-ok/ProductVariant/46744874942683",
      "title": "Black",
      "price": 75,
      "available": true,
@@ -679,7 +679,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776421843163",
+     "id": "gid://a-ok/ProductVariant/46776421843163",
      "title": "Beige",
      "price": 75,
      "available": true,
@@ -731,7 +731,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46755886661851",
+     "id": "gid://a-ok/ProductVariant/46755886661851",
      "title": "2XL / Black",
      "price": 50,
      "available": true,
@@ -741,7 +741,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420368603",
+     "id": "gid://a-ok/ProductVariant/46776420368603",
      "title": "2XL / White",
      "price": 50,
      "available": true,
@@ -751,7 +751,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420401371",
+     "id": "gid://a-ok/ProductVariant/46776420401371",
      "title": "2XL / Beige",
      "price": 50,
      "available": true,
@@ -761,7 +761,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46755886694619",
+     "id": "gid://a-ok/ProductVariant/46755886694619",
      "title": "2XS / Black",
      "price": 50,
      "available": true,
@@ -771,7 +771,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420434139",
+     "id": "gid://a-ok/ProductVariant/46776420434139",
      "title": "2XS / White",
      "price": 50,
      "available": true,
@@ -781,7 +781,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420466907",
+     "id": "gid://a-ok/ProductVariant/46776420466907",
      "title": "2XS / Beige",
      "price": 50,
      "available": true,
@@ -791,7 +791,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46755886727387",
+     "id": "gid://a-ok/ProductVariant/46755886727387",
      "title": "XL / Black",
      "price": 50,
      "available": true,
@@ -801,7 +801,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420499675",
+     "id": "gid://a-ok/ProductVariant/46776420499675",
      "title": "XL / White",
      "price": 50,
      "available": true,
@@ -811,7 +811,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420532443",
+     "id": "gid://a-ok/ProductVariant/46776420532443",
      "title": "XL / Beige",
      "price": 50,
      "available": true,
@@ -821,7 +821,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46755886760155",
+     "id": "gid://a-ok/ProductVariant/46755886760155",
      "title": "L / Black",
      "price": 50,
      "available": true,
@@ -864,7 +864,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776420270299",
+     "id": "gid://a-ok/ProductVariant/46776420270299",
      "title": "Black",
      "price": 50,
      "available": true,
@@ -873,7 +873,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420303067",
+     "id": "gid://a-ok/ProductVariant/46776420303067",
      "title": "Beige",
      "price": 50,
      "available": true,
@@ -882,7 +882,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776420335835",
+     "id": "gid://a-ok/ProductVariant/46776420335835",
      "title": "Red",
      "price": 50,
      "available": true,
@@ -921,7 +921,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776420237531",
+     "id": "gid://a-ok/ProductVariant/46776420237531",
      "title": "Black",
      "price": 60,
      "available": true,
@@ -960,7 +960,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776418894043",
+     "id": "gid://a-ok/ProductVariant/46776418894043",
      "title": "Black",
      "price": 75,
      "available": true,
@@ -1001,7 +1001,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776420204763",
+     "id": "gid://a-ok/ProductVariant/46776420204763",
      "title": "Black",
      "price": 75,
      "available": false,
@@ -1044,7 +1044,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46776419877083",
+     "id": "gid://a-ok/ProductVariant/46776419877083",
      "title": "Red",
      "price": 40,
      "available": true,
@@ -1053,7 +1053,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776419909851",
+     "id": "gid://a-ok/ProductVariant/46776419909851",
      "title": "White",
      "price": 40,
      "available": true,
@@ -1062,7 +1062,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46776419942619",
+     "id": "gid://a-ok/ProductVariant/46776419942619",
      "title": "Blue",
      "price": 40,
      "available": true,
@@ -1108,7 +1108,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46793011691739",
+     "id": "gid://a-ok/ProductVariant/46793011691739",
      "title": "Beige",
      "price": 75,
      "available": true,
@@ -1117,7 +1117,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793011724507",
+     "id": "gid://a-ok/ProductVariant/46793011724507",
      "title": "White",
      "price": 75,
      "available": true,
@@ -1126,7 +1126,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793011757275",
+     "id": "gid://a-ok/ProductVariant/46793011757275",
      "title": "Gray",
      "price": 75,
      "available": true,
@@ -1135,7 +1135,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793011790043",
+     "id": "gid://a-ok/ProductVariant/46793011790043",
      "title": "Navy",
      "price": 75,
      "available": true,
@@ -1181,7 +1181,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46793035055323",
+     "id": "gid://a-ok/ProductVariant/46793035055323",
      "title": "Yellow",
      "price": 40,
      "available": true,
@@ -1190,7 +1190,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793035088091",
+     "id": "gid://a-ok/ProductVariant/46793035088091",
      "title": "Gray",
      "price": 40,
      "available": true,
@@ -1199,7 +1199,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793035120859",
+     "id": "gid://a-ok/ProductVariant/46793035120859",
      "title": "Red",
      "price": 40,
      "available": true,
@@ -1208,7 +1208,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46793035317467",
+     "id": "gid://a-ok/ProductVariant/46793035317467",
      "title": "Green",
      "price": 40,
      "available": true,
@@ -1262,7 +1262,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/46905344032987",
+     "id": "gid://a-ok/ProductVariant/46905344032987",
      "title": "Green / XS",
      "price": 45,
      "available": true,
@@ -1272,7 +1272,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344065755",
+     "id": "gid://a-ok/ProductVariant/46905344065755",
      "title": "Green / XL",
      "price": 45,
      "available": true,
@@ -1282,7 +1282,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344098523",
+     "id": "gid://a-ok/ProductVariant/46905344098523",
      "title": "Green / L",
      "price": 45,
      "available": true,
@@ -1292,7 +1292,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344131291",
+     "id": "gid://a-ok/ProductVariant/46905344131291",
      "title": "Green / M",
      "price": 45,
      "available": true,
@@ -1302,7 +1302,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344164059",
+     "id": "gid://a-ok/ProductVariant/46905344164059",
      "title": "Green / S",
      "price": 45,
      "available": true,
@@ -1312,7 +1312,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344196827",
+     "id": "gid://a-ok/ProductVariant/46905344196827",
      "title": "Red / XS",
      "price": 45,
      "available": true,
@@ -1322,7 +1322,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344229595",
+     "id": "gid://a-ok/ProductVariant/46905344229595",
      "title": "Red / XL",
      "price": 45,
      "available": true,
@@ -1332,7 +1332,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344262363",
+     "id": "gid://a-ok/ProductVariant/46905344262363",
      "title": "Red / L",
      "price": 45,
      "available": true,
@@ -1342,7 +1342,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344295131",
+     "id": "gid://a-ok/ProductVariant/46905344295131",
      "title": "Red / M",
      "price": 45,
      "available": true,
@@ -1352,7 +1352,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/46905344327899",
+     "id": "gid://a-ok/ProductVariant/46905344327899",
      "title": "Red / S",
      "price": 45,
      "available": true,
@@ -1404,7 +1404,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/47102065639643",
+     "id": "gid://a-ok/ProductVariant/47102065639643",
      "title": "Black / L",
      "price": 53.14,
      "available": true,
@@ -1414,7 +1414,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/47102065672411",
+     "id": "gid://a-ok/ProductVariant/47102065672411",
      "title": "Black / XL",
      "price": 53.14,
      "available": true,
@@ -1424,7 +1424,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/47102065705179",
+     "id": "gid://a-ok/ProductVariant/47102065705179",
      "title": "Black / M",
      "price": 53.14,
      "available": true,
@@ -1434,7 +1434,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/47102065737947",
+     "id": "gid://a-ok/ProductVariant/47102065737947",
      "title": "Black / S",
      "price": 53.14,
      "available": true,
@@ -1444,7 +1444,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/47102065770715",
+     "id": "gid://a-ok/ProductVariant/47102065770715",
      "title": "Black / XS",
      "price": 53.14,
      "available": true,
@@ -1495,7 +1495,7 @@ window.AOK5 = {
    ],
    "variants": [
     {
-     "id": "gid://shopify/ProductVariant/aok-america-XS-Black",
+     "id": "gid://a-ok/ProductVariant/aok-america-XS-Black",
      "title": "XS / Black",
      "price": 60,
      "available": true,
@@ -1505,7 +1505,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-XS-DarkChocolate",
+     "id": "gid://a-ok/ProductVariant/aok-america-XS-DarkChocolate",
      "title": "XS / Dark Chocolate",
      "price": 60,
      "available": true,
@@ -1515,7 +1515,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-S-Black",
+     "id": "gid://a-ok/ProductVariant/aok-america-S-Black",
      "title": "S / Black",
      "price": 60,
      "available": true,
@@ -1525,7 +1525,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-S-DarkChocolate",
+     "id": "gid://a-ok/ProductVariant/aok-america-S-DarkChocolate",
      "title": "S / Dark Chocolate",
      "price": 60,
      "available": true,
@@ -1535,7 +1535,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-M-Black",
+     "id": "gid://a-ok/ProductVariant/aok-america-M-Black",
      "title": "M / Black",
      "price": 60,
      "available": true,
@@ -1545,7 +1545,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-M-DarkChocolate",
+     "id": "gid://a-ok/ProductVariant/aok-america-M-DarkChocolate",
      "title": "M / Dark Chocolate",
      "price": 60,
      "available": true,
@@ -1555,7 +1555,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-L-Black",
+     "id": "gid://a-ok/ProductVariant/aok-america-L-Black",
      "title": "L / Black",
      "price": 60,
      "available": true,
@@ -1565,7 +1565,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-L-DarkChocolate",
+     "id": "gid://a-ok/ProductVariant/aok-america-L-DarkChocolate",
      "title": "L / Dark Chocolate",
      "price": 60,
      "available": true,
@@ -1575,7 +1575,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-XL-Black",
+     "id": "gid://a-ok/ProductVariant/aok-america-XL-Black",
      "title": "XL / Black",
      "price": 60,
      "available": true,
@@ -1585,7 +1585,7 @@ window.AOK5 = {
      }
     },
     {
-     "id": "gid://shopify/ProductVariant/aok-america-XL-DarkChocolate",
+     "id": "gid://a-ok/ProductVariant/aok-america-XL-DarkChocolate",
      "title": "XL / Dark Chocolate",
      "price": 60,
      "available": true,

@@ -162,6 +162,17 @@ function getNumericProductId(id: string): number {
 }
 
 /**
+ * True when two product or variant ids refer to the same item. Ids used to
+ * carry a different prefix; carts and agents may still send those, and the
+ * trailing number never changed, so it is compared too.
+ */
+export function isSameId(a: string, b: string): boolean {
+  if (a === b) return true;
+  const n = getNumericProductId(a);
+  return n > 0 && n === getNumericProductId(b);
+}
+
+/**
  * Tag marking a SKU that exists for machine buyers only.
  *
  * The machine-payable sticker is priced at $0.05 so an MPP settlement can be
@@ -349,15 +360,15 @@ export function createCheckoutLineItems(cartItems: Array<{
   return cartItems.map((item) => {
     // Find the product and variant
     const product = products.find((p) =>
-      p.variants.edges.some((v) => v.node.id === item.variantId)
+      p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
     );
 
     if (!product) {
       throw new Error(`Product not found for variant ${item.variantId}`);
     }
 
-    const variant = product.variants.edges.find(
-      (v) => v.node.id === item.variantId
+    const variant = product.variants.edges.find((v) =>
+      isSameId(v.node.id, item.variantId)
     )?.node;
 
     if (!variant) {
