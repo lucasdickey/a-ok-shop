@@ -7,6 +7,10 @@ const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const FLAT_SHIPPING_CENTS = 999;
 const MAX_QUANTITY_PER_ITEM = 20;
 
+// Sizes the product page offers for print-on-demand clothing whose variants carry no size.
+// Kept in sync with app/products/[handle]/page.tsx.
+const PRINT_ON_DEMAND_SIZES = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"];
+
 type CartItemInput = {
   variantId: string;
   quantity: number;
@@ -52,26 +56,41 @@ function getOption(variant: ProductVariant, name: string): string | undefined {
  * Resolve the variant the customer actually picked. The product page can send
  * a variantId that matches the chosen size but not the chosen color, so prefer
  * the variant whose options match the customer's size/color selection.
+ *
+ * Only options the product's variants actually carry are matched. Most clothing
+ * is printed on demand with no size in its variants; for those the chosen size
+ * is returned separately so it can be recorded on the order.
  */
 function resolveVariant(
   products: SimpleProduct[],
   item: CartItemInput
-): { product: SimpleProduct; variant: ProductVariant } | null {
+): { product: SimpleProduct; variant: ProductVariant; size?: string } | null {
   const product = products.find((p) =>
     p.variants.edges.some((v) => v.node.id === item.variantId)
   );
   if (!product) return null;
 
   const variants = product.variants.edges.map((v) => v.node);
+  const variantsHave = (name: string) => variants.some((v) => getOption(v, name));
+  const matchSize = variantsHave("size");
+  const matchColor = variantsHave("color");
+
+  let printOnDemandSize: string | undefined;
+  if (!matchSize && item.size) {
+    // Only accept known sizes: this value ends up in Stripe metadata and the owner's email.
+    if (!PRINT_ON_DEMAND_SIZES.includes(item.size)) return null;
+    printOnDemandSize = item.size;
+  }
+
   const matchesSelection = (variant: ProductVariant) =>
-    (!item.size || getOption(variant, "size") === item.size) &&
-    (!item.color || getOption(variant, "color") === item.color);
+    (!matchSize || !item.size || getOption(variant, "size") === item.size) &&
+    (!matchColor || !item.color || getOption(variant, "color") === item.color);
 
   const variant =
     variants.find((v) => v.id === item.variantId && matchesSelection(v)) ||
     variants.find(matchesSelection);
 
-  return variant ? { product, variant } : null;
+  return variant ? { product, variant, size: printOnDemandSize } : null;
 }
 
 function getBaseUrl(request: NextRequest): string {
@@ -128,6 +147,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { product, variant } = resolved;
+      const size = getOption(variant, "size") || resolved.size || "";
       const unitAmount = Math.round(parseFloat(variant.price.amount) * 100);
       if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
         return NextResponse.json(
@@ -142,10 +162,10 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: "usd",
           product_data: {
-            name: `${product.title} - ${variant.title}`,
+            name: `${product.title} - ${variant.title}${resolved.size ? ` / ${resolved.size}` : ""}`,
             images: image && image.startsWith("http") ? [image] : [],
             metadata: {
-              size: getOption(variant, "size") || "",
+              size,
               color: getOption(variant, "color") || "",
               variantId: variant.id,
               sku: variant.sku || "",
@@ -180,6 +200,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       phone_number_collection: { enabled: true },
+      // Lets shoppers enter the code they win in Run, Human, Run! (created by /api/discount).
+      allow_promotion_codes: true,
       customer_creation: "always",
       metadata: {
         source: "a-ok-shop-catalog",
