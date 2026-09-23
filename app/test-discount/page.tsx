@@ -12,12 +12,12 @@ export default function TestDiscountPage() {
           <h2 className="text-xl font-semibold mb-4">Test Instructions</h2>
           <div className="space-y-3 text-gray-700">
             <p>
-              • <strong>Without Admin API:</strong> Will generate mock codes
-              (AOK-XXXXXX)
+              • <strong>Without Stripe:</strong> Will generate mock codes
+              (AOKXXXXXX)
             </p>
             <p>
-              • <strong>With Admin API:</strong> Will create real 25% discount
-              codes in Shopify
+              • <strong>With Stripe:</strong> Will create real single-use 25%
+              promotion codes in Stripe, redeemable at checkout
             </p>
             <p>
               • <strong>Error Testing:</strong> Try disconnecting internet to
@@ -37,17 +37,9 @@ export default function TestDiscountPage() {
           <h2 className="text-xl font-semibold mb-4">Environment Status</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-gray-50 rounded">
-              <h3 className="font-medium mb-2">Shopify Store Domain</h3>
+              <h3 className="font-medium mb-2">Stripe Secret Key</h3>
               <p className="text-sm text-gray-600">
-                {process.env.SHOPIFY_STORE_DOMAIN
-                  ? "✅ Configured"
-                  : "❌ Not configured"}
-              </p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded">
-              <h3 className="font-medium mb-2">Admin API Token</h3>
-              <p className="text-sm text-gray-600">
-                {process.env.SHOPIFY_ADMIN_API_TOKEN
+                {process.env.STRIPE_SECRET_KEY
                   ? "✅ Configured (Real discounts)"
                   : "❌ Not configured (Mock discounts)"}
               </p>

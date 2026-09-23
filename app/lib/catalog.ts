@@ -152,10 +152,10 @@ function loadProducts(): Product[] {
   return catalogData.products.edges.map(({ node }: any) => node as Product);
 }
 
-// Extract the trailing numeric identifier from a Shopify GID
-// (e.g. "gid://shopify/Product/8755818758363" -> 8755818758363).
-// Newer products in Shopify receive larger numeric IDs, so sorting
-// by this value in descending order yields newest-first ordering.
+// Extract the trailing numeric identifier from a product id
+// (e.g. "gid://a-ok/Product/8755818758363" -> 8755818758363).
+// Newer products have larger numeric IDs, so sorting by this value
+// in descending order yields newest-first ordering.
 function getNumericProductId(id: string): number {
   const match = id.match(/(\d+)(?!.*\d)/);
   return match ? Number(match[1]) : 0;

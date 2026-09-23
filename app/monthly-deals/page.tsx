@@ -13,9 +13,9 @@ const MONTHLY_DEAL = {
   price: 50.00,
   originalPrice: 75.00,
   images: [
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-front-modeled.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588"
+    "/images/monthly-deals/hoodie-lids-front-modeled.png",
+    "/images/monthly-deals/pullover-hoodie.png",
+    "/images/monthly-deals/hoodie-worn.jpg"
   ],
   sizes: [...CLOTHING_SIZES],
   colors: ["Black", "Navy", "Heather Grey"],
