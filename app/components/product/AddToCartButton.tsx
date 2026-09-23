@@ -16,13 +16,16 @@ type AddToCartButtonProps = {
   quantity?: number;
   showSizeWarning?: boolean;
   showColorWarning?: boolean;
+  /** True when the chosen options don't match any variant that can be bought. */
+  unavailable?: boolean;
 };
 
 export default function AddToCartButton({ 
   product, 
   quantity = 1, 
   showSizeWarning = false,
-  showColorWarning = false 
+  showColorWarning = false,
+  unavailable = false,
 }: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const [isAdding, setIsAdding] = useState(false);
@@ -33,6 +36,15 @@ export default function AddToCartButton({
   const handleAddToCart = () => {
     if (showSizeWarning) {
       setWarningMessage('Please select a size before adding to cart.');
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 3000);
+      return;
+    }
+
+    if (unavailable) {
+      setWarningMessage('That combination isn’t available. Try another size or color.');
       setShowWarning(true);
       setTimeout(() => {
         setShowWarning(false);
