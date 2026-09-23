@@ -8,207 +8,90 @@ type ProductCardProps = {
   product: ShopifyProduct;
 };
 
+type CardType = 't-shirt' | 'hoodie' | 'hat';
+
+function getCardType(productType: string, tags: string[]): CardType {
+  const type = productType.toLowerCase();
+  const hasTag = (needle: string) =>
+    tags.some((tag) => tag.toLowerCase().includes(needle));
+
+  if (type.includes('hoodie') || hasTag('hoodie')) return 'hoodie';
+  if (type.includes('hat') || hasTag('hat')) return 'hat';
+  return 't-shirt';
+}
+
+const badgeStyles: Record<CardType, string> = {
+  't-shirt': 'bg-charcoal-dark text-bone',
+  hoodie: 'bg-bone text-charcoal-dark border border-charcoal-dark/20',
+  hat: 'bg-maroon text-bone',
+};
+
+const badgeLabels: Record<CardType, string> = {
+  't-shirt': 'Tee',
+  hoodie: 'Hoodie',
+  hat: 'Hat',
+};
+
 export default function ProductCard({ product }: ProductCardProps) {
-  const { handle, title, priceRange, images, options, variants, productType, tags } = product;
-  
+  const { handle, title, priceRange, images, productType, tags } = product;
+
   const price = parseFloat(priceRange.minVariantPrice.amount);
   const imageUrl = images.edges[0]?.node.url || '/images/product-placeholder.jpg';
   const imageAlt = images.edges[0]?.node.altText || title;
-  
-  // Determine product type for styling
-  let cardType = '';
-  let bgColor = '';
-  let textColor = 'white';
-  let priceColor = '#FCEFB9'; // Default yellow highlight
-  let sizeBgColor = 'rgba(255, 255, 255, 0.1)';
-  let sizeBorderColor = '#F5F2DC';
-  let sizeTextColor = 'white';
-  
-  if (productType.toLowerCase().includes('hoodie') || tags.some(tag => tag.toLowerCase().includes('hoodie'))) {
-    cardType = 'hoodie';
-    bgColor = '#F5F2DC'; // Bone White
-    textColor = '#1F1F1F';
-    priceColor = '#8B1E24';
-    sizeBgColor = 'rgba(0, 0, 0, 0.1)';
-    sizeBorderColor = '#1F1F1F';
-    sizeTextColor = '#1F1F1F';
-  } else if (productType.toLowerCase().includes('hat') || tags.some(tag => tag.toLowerCase().includes('hat'))) {
-    cardType = 'hat';
-    bgColor = '#8B1E24'; // Dark Maroon for hats
-  } else {
-    // Default to t-shirt
-    cardType = 't-shirt';
-    bgColor = '#2C2C2C'; // Black for t-shirts
-  }
-  
-  // Extract size information - include all standard clothing sizes
-  const standardSizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
-  let sizeValues: string[] = [];
-  
-  // Track availability for each size
-  const sizeAvailability: Record<string, boolean> = {};
-  standardSizes.forEach(size => {
-    sizeAvailability[size] = false; // Default to unavailable
-  });
-  
-  // First try to get size options from the product options
-  const sizeOption = options?.find(option => 
-    option.name.toLowerCase() === 'size'
-  );
-  
-  if (sizeOption && sizeOption.values.length > 0) {
-    // Filter to only include standard sizes
-    sizeValues = sizeOption.values.filter(size => standardSizes.includes(size));
-    
-    // Update size availability
-    sizeValues.forEach(size => {
-      sizeAvailability[size] = true;
-    });
-  }
-  
-  // If no size options found, try to extract from variants
-  if (sizeValues.length === 0 && variants?.edges) {
-    const sizeSet = new Set<string>();
-    
-    variants.edges.forEach(({ node }) => {
-      if (node.selectedOptions) {
-        const sizeOption = node.selectedOptions.find((opt: any) => 
-          opt.name.toLowerCase() === 'size'
-        );
-        
-        if (sizeOption && standardSizes.includes(sizeOption.value)) {
-          sizeSet.add(sizeOption.value);
-          sizeAvailability[sizeOption.value] = node.availableForSale;
-        } else if (standardSizes.includes(node.title)) {
-          // If variant title is a standard size
-          sizeSet.add(node.title);
-          sizeAvailability[node.title] = node.availableForSale;
-        }
-      }
-    });
-    
-    sizeValues = Array.from(sizeSet);
-  }
-  
-  // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // But mark them as unavailable unless we have specific availability information
-  if ((cardType === 't-shirt' || cardType === 'hoodie') && sizeValues.length === 0) {
-    sizeValues = [...standardSizes];
-  }
-  
-  // Sort sizes in the standard order
-  sizeValues.sort((a, b) => {
-    return standardSizes.indexOf(a) - standardSizes.indexOf(b);
-  });
-  
-  const hasSizes = sizeValues.length > 0;
-
-  // Card styles
-  const cardStyle = {
-    backgroundColor: bgColor,
-    color: textColor,
-    border: '2px solid #1F1F1F',
-    borderRadius: '12px',
-    padding: '1.25rem 1rem',
-    display: 'flex',
-    flexDirection: 'column' as 'column',
-    justifyContent: 'space-between',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    fontFamily: "'Space Grotesk', sans-serif",
-    height: '100%',
-    cursor: 'pointer',
-    maxWidth: '100%'
-  };
-
-  const titleStyle = {
-    fontSize: '1rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
-    marginBottom: '0.5rem',
-    color: textColor,
-    fontFamily: "'Space Grotesk', sans-serif",
-    letterSpacing: '0.01em'
-  };
-
-  const priceStyle = {
-    fontSize: '1.25rem',
-    fontWeight: 500,
-    color: priceColor,
-    marginBottom: '1rem',
-    fontFamily: "'Space Grotesk', sans-serif",
-    letterSpacing: '0.02em'
-  };
-
-  const sizeOptionsStyle = {
-    display: 'flex',
-    gap: '0.5rem',
-    marginTop: 'auto',
-    flexWrap: 'wrap' as 'wrap'
-  };
-
-  const sizeButtonStyle = {
-    backgroundColor: sizeBgColor,
-    border: `1px solid ${sizeBorderColor}`,
-    color: sizeTextColor,
-    padding: '0.25rem 0.6rem',
-    borderRadius: '50px',
-    fontSize: '0.75rem',
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease',
-    fontFamily: "'Space Grotesk', sans-serif",
-    minWidth: '2rem',
-    textAlign: 'center' as 'center'
-  };
-
-  const imageContainerStyle = {
-    position: 'relative' as 'relative',
-    aspectRatio: '1/1' as '1/1',
-    overflow: 'hidden',
-    borderRadius: '8px',
-    border: '1px solid #1F1F1F',
-    marginBottom: '1rem',
-    width: '100%',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#f8f8f8'
-  };
+  const cardType = getCardType(productType, tags);
 
   return (
-    <Link 
-      href={`/products/${handle}`} 
+    <Link
+      href={`/products/${handle}`}
       aria-label={`View ${title} details`}
-      style={{
-        textDecoration: 'none',
-        color: 'inherit'
-      }}
+      className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon focus-visible:ring-offset-2 rounded-2xl"
     >
-      <div 
-        style={cardStyle}
-      >
-        <div style={imageContainerStyle} className="image-container-hover">
+      <article className="card card-hover flex h-full flex-col">
+        <div className="relative aspect-square w-full overflow-hidden bg-light-dark">
           <Image
             src={imageUrl}
             alt={imageAlt}
             fill
-            style={{
-              objectFit: 'cover',
-              transition: 'transform 0.3s ease'
-            }}
-            className="product-image-hover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-500 ease-out-expo group-hover:scale-105"
             unoptimized={!imageUrl.startsWith('http')}
           />
+          <span aria-hidden="true" className="shine" />
+          <span
+            className={`absolute left-2 top-2 z-10 -rotate-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm transition-transform duration-200 group-hover:rotate-0 sm:left-3 sm:top-3 sm:px-3 sm:py-1 sm:text-xs ${badgeStyles[cardType]}`}
+          >
+            {badgeLabels[cardType]}
+          </span>
+          {/* Reveal CTA on hover (desktop only — whole card is the tap target on mobile) */}
+          <div className="absolute inset-x-0 bottom-0 z-10 hidden translate-y-full p-3 transition-transform duration-300 ease-out-expo group-hover:translate-y-0 sm:block">
+            <span className="flex w-full items-center justify-center rounded-lg bg-charcoal-dark/90 py-2.5 text-sm font-semibold text-bone backdrop-blur-sm">
+              View Product
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </span>
+          </div>
         </div>
-        
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1
-        }}>
-          <h3 style={titleStyle}>{title}</h3>
-          <p style={priceStyle}>${price.toFixed(2)}</p>
-          
-          {/* Size options removed from product list view */}
+
+        <div className="flex flex-1 flex-col justify-between gap-1 p-3 sm:p-4">
+          <h3 className="line-clamp-2 font-space-grotesk text-sm font-semibold leading-snug text-dark transition-colors duration-200 group-hover:text-maroon sm:text-base">
+            {title}
+          </h3>
+          <p className="font-space-grotesk text-base font-medium text-maroon sm:text-lg">
+            ${price.toFixed(2)}
+          </p>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }
