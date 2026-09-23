@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShopifyProduct } from '@/app/lib/shopify';
+import type { SimpleProduct } from '@/app/lib/catalog';
+import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
 
 type ProductCardProps = {
-  product: ShopifyProduct;
+  product: SimpleProduct;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -42,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   
   // Extract size information - include all standard clothing sizes
-  const standardSizes = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+  const standardSizes = [...CLOTHING_SIZES];
   let sizeValues: string[] = [];
   
   // Track availability for each size
@@ -90,10 +91,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     sizeValues = Array.from(sizeSet);
   }
   
-  // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // But mark them as unavailable unless we have specific availability information
-  if ((cardType === 't-shirt' || cardType === 'hoodie') && sizeValues.length === 0) {
+  // Tees and hoodies are printed on demand, so every standard size can be ordered.
+  if (isClothing(productType, tags)) {
     sizeValues = [...standardSizes];
+  } else if (cardType === 't-shirt') {
+    // Non-clothing items that fall back to the t-shirt card (e.g. stickers) have no sizes.
+    sizeValues = [];
   }
   
   // Sort sizes in the standard order

@@ -162,10 +162,10 @@
   function renderCard() {
     const p = current;
     const colors = p.options.find((o) => o.name === 'Color');
-    const sizes = p.options.find((o) => o.name === 'Size');
+    const pod = /T-Shirts|Hoodies/.test(p.category);
+    const sizes = pod ? { values: C.STANDARD_SIZES } : p.options.find((o) => o.name === 'Size');
     const inStock = p.variants.some((v) => v.available);
     const limits = [];
-    const pod = !sizes && p.category !== 'Hats';
     if (p.images.length > 1 || (colors && colors.values.length > 1)) limits.push('Photos are not matched to the color you pick. What you see is one color; what you pick is what ships.');
     if (!inStock) limits.push('Currently sold out. The weights are frozen.');
     limits.push('Will not make you better at prompting. Will make you look like you are.');
@@ -176,7 +176,7 @@
     document.getElementById('card').innerHTML = `
       <div class="card-head">
         <h2 class="repo-name"><span>apesonkeys/</span>${C.esc(p.handle)}</h2>
-        <div class="pills"><span class="pill cat ${C.esc(p.category)}">${C.esc(p.category)}</span><span class="pill">${C.money(p.price)}</span>${colors ? `<span class="pill">${colors.values.length} color${colors.values.length > 1 ? 's' : ''}</span>` : ''}<span class="pill">${sizes ? sizes.values.length + ' sizes' : pod ? '2XS–3XL · printed on demand' : 'one size'}</span><span class="pill">${inStock ? 'in stock' : 'sold out'}</span></div>
+        <div class="pills"><span class="pill cat ${C.esc(p.category)}">${C.esc(p.category)}</span><span class="pill">${C.money(p.price)}</span>${colors ? `<span class="pill">${colors.values.length} color${colors.values.length > 1 ? 's' : ''}</span>` : ''}<span class="pill">${pod ? 'XS–2XL · printed on demand' : sizes ? sizes.values.length + ' sizes' : 'one size'}</span><span class="pill">${inStock ? 'in stock' : 'sold out'}</span></div>
       </div>
       <div class="doc">
         <h2>Model summary</h2>
@@ -194,7 +194,7 @@
         <table>
           <tr><th>Price</th><td>${C.money(p.price)}</td></tr>
           <tr><th>Colors</th><td>${colors ? C.esc(colors.values.join(', ')) : 'One'}</td></tr>
-          <tr><th>Sizes</th><td>${sizes ? C.esc(sizes.values.join(', ')) : pod ? C.esc(C.STANDARD_SIZES.join(', ')) + ' (printed on demand)' : 'One size'}</td></tr>
+          <tr><th>Sizes</th><td>${sizes ? C.esc(sizes.values.join(', ')) + (pod ? ' (printed on demand)' : '') : 'One size'}</td></tr>
           <tr><th>Ships free on its own</th><td>${p.price >= 50 ? 'Yes ($50+)' : `No. ${C.money(50 - p.price)} more in the bag and it does.`}</td></tr>
         </table>
         <h2>Citation</h2>

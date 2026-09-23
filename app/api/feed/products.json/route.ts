@@ -11,7 +11,6 @@ import { generateProductFeed } from '@/app/lib/product-feed';
 
 export async function GET() {
   try {
-    // TODO: Generate product feed from Shopify
     const feed = await generateProductFeed();
 
     return NextResponse.json(feed, {

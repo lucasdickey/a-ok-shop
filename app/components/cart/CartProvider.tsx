@@ -21,10 +21,14 @@ type CartContextType = {
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  updateSize: (id: string, size: string) => void;
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
 };
+
+// Checkout rejects more than this per line (see app/api/catalog/checkout/route.ts).
+export const MAX_QUANTITY_PER_ITEM = 20;
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -70,13 +74,19 @@ export default function CartProvider({ children }: { children: ReactNode }) {
       const existingItemIndex = prevCart.findIndex((cartItem) => cartItem.id === item.id);
       
       if (existingItemIndex > -1) {
-        // Update quantity if item already exists
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += item.quantity;
-        return updatedCart;
+        // Update quantity if item already exists. Copy the line instead of editing it in place:
+        // React can run this updater twice, which would add the quantity twice.
+        return prevCart.map((cartItem, index) =>
+          index === existingItemIndex
+            ? {
+                ...cartItem,
+                quantity: Math.min(MAX_QUANTITY_PER_ITEM, cartItem.quantity + item.quantity),
+              }
+            : cartItem
+        );
       } else {
         // Add new item
-        return [...prevCart, item];
+        return [...prevCart, { ...item, quantity: Math.min(MAX_QUANTITY_PER_ITEM, item.quantity) }];
       }
     });
     openCart();
@@ -94,7 +104,22 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === id ? { ...item, quantity } : item
+        item.id === id ? { ...item, quantity: Math.min(MAX_QUANTITY_PER_ITEM, quantity) } : item
+      )
+    );
+  };
+
+  // Lets a shopper fix a saved line whose size is no longer offered.
+  const updateSize = (id: string, size: string) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              size,
+              title: item.size ? item.title.replace(` - ${item.size}`, ` - ${size}`) : item.title,
+            }
+          : item
       )
     );
   };
@@ -118,6 +143,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        updateSize,
         clearCart,
         totalItems,
         subtotal,

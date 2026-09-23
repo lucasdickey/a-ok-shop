@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface DiscountInfo {
   percentage?: number;
@@ -17,12 +17,15 @@ export default function SpecialOffer() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string>("");
 
-  // Auto-generate discount code when component mounts (for game wins)
+  // Auto-generate discount code once when the component mounts (for game wins).
+  // Only once: a failed or rate-limited request must not trigger another.
+  const hasRequested = useRef(false);
   useEffect(() => {
-    if (!discountCode && !showCode && !isLoading) {
-      generateDiscountCode();
-    }
-  }, [discountCode, showCode, isLoading]);
+    if (hasRequested.current) return;
+    hasRequested.current = true;
+    generateDiscountCode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const generateDiscountCode = async () => {
     console.log("generateDiscountCode called");
@@ -37,7 +40,8 @@ export default function SpecialOffer() {
 
       console.log("Response status:", response.status);
       if (!response.ok) {
-        throw new Error(`Failed to generate discount: ${response.status}`);
+        const { error } = await response.json().catch(() => ({ error: undefined }));
+        throw new Error(typeof error === "string" ? error : `Failed to generate discount: ${response.status}`);
       }
 
       const data = await response.json();

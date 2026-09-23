@@ -30,7 +30,7 @@ This document provides detailed technical specifications for implementing OpenAI
 ```typescript
 interface ProductFeedItem {
   // Required: Basic Product Data
-  id: string;                    // Shopify product ID
+  id: string;                    // Catalog product ID
   title: string;                 // Max 150 chars
   description: string;           // Max 5000 chars, plain text
   link: string;                  // Product detail page URL
@@ -74,7 +74,7 @@ interface ProductFeedItem {
 ```json
 [
   {
-    "id": "gid://shopify/Product/8755818758363",
+    "id": "gid://a-ok/Product/8755818758363",
     "title": "A-OK GLITCHED VECTORS TEE",
     "description": "Emergent Patterns. Corrupted Glyphs...",
     "link": "https://www.a-ok.shop/products/a-ok-glitch-art-face-mask-t-shirt",
@@ -91,7 +91,7 @@ interface ProductFeedItem {
     "return_window": 30,
     "enable_search": true,
     "enable_checkout": true,
-    "item_group_id": "gid://shopify/Product/8755818758363",
+    "item_group_id": "gid://a-ok/Product/8755818758363",
     "color": "Red"
   }
 ]
@@ -721,7 +721,7 @@ export async function deleteCheckoutSession(id: string) {
 
 **Product Feed**: No caching (real-time)
 **Checkout Sessions**: In-memory via Vercel KV
-**Shopify Catalog**: Consider 5-minute cache for catalog endpoint
+**Catalog**: Consider 5-minute cache for catalog endpoint
 
 ---
 

@@ -1,11 +1,11 @@
-# A-OK Shop - Custom Shopify Storefront
+# A-OK Shop
 
-A modern, custom Shopify storefront for [Apes on Keys](https://www.apesonkeys.com), built with Next.js 14, TypeScript, and Tailwind CSS. This project uses the Shopify Storefront GraphQL API to create a seamless shopping experience for AI-inspired streetwear.
+A custom storefront for [Apes on Keys](https://www.apesonkeys.com), built with Next.js 14, TypeScript, and Tailwind CSS. Products come from a bundled catalog (`product-catalog.json`) and checkout runs on Stripe.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)
-[![Shopify](https://img.shields.io/badge/Shopify-API-7AB55C.svg)](https://shopify.dev/docs/api/storefront)
+[![Stripe](https://img.shields.io/badge/Stripe-Checkout-635BFF.svg)](https://stripe.com/docs/payments/checkout)
 
 ## About Apes on Keys
 
@@ -28,19 +28,19 @@ Our products are designed for AI enthusiasts, tech professionals, and anyone who
 - 🚀 Built with Next.js 14 App Router
 - 🔒 TypeScript for type safety
 - 💅 Responsive design with Tailwind CSS
-- 🛍️ Shopify Storefront API integration
+- 🛍️ Stripe Checkout, with prices checked against the catalog on the server
+- 👕 Every tee and hoodie printed on demand in XS–2XL
 - 🛒 Shopping cart with local storage persistence
 - 🔍 Product filtering by category and price
 - 📱 Mobile-friendly interface
-- 🎟️ Discount code generation (mock or real via Shopify Admin API)
+- 🎟️ Game reward codes (mock in development, Stripe promotion codes in production)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18.x or later
-- A Shopify store with Storefront API access
-- (Optional) Shopify Admin API access for real discount code generation
+- (Optional) A Stripe account for checkout and real discount codes
 
 ### Installation
 
@@ -57,16 +57,7 @@ cd a-ok-shop
 npm install
 ```
 
-3. Create a `.env.local` file in the root directory with your Shopify credentials:
-
-```
-# Required: Shopify Storefront API
-SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-SHOPIFY_STOREFRONT_API_TOKEN=your-storefront-api-token
-
-# Optional: Shopify Admin API (for real discount codes)
-SHOPIFY_ADMIN_API_TOKEN=your-admin-api-token
-```
+3. Copy `.env.example` to `.env.local` and fill in the values. The store runs without any keys; add `STRIPE_SECRET_KEY` to enable checkout and real discount codes.
 
 4. Start the development server:
 
@@ -94,45 +85,28 @@ This app is deployed using [Vercel](https://vercel.com):
 
    - In the Vercel project settings, go to the "Environment Variables" tab
    - Add the following variables:
-     - `SHOPIFY_STORE_DOMAIN`: Your Shopify store domain (e.g., your-store.myshopify.com)
-     - `SHOPIFY_STOREFRONT_API_TOKEN`: Your Shopify Storefront API access token
-     - `SHOPIFY_ADMIN_API_TOKEN`: (Optional) Your Shopify Admin API token for real discount codes
+     - `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`: checkout, discount codes, and paid-order webhooks
+     - `SITE_URL`: your production domain, used for Stripe redirects
+     - `RESEND_API_KEY` and `ORDER_NOTIFICATION_EMAIL`: paid-order alerts to the owner
+     - See `.env.example` for the full list
 
 4. Deploy the project.
 
 ### Important Production Considerations
 
-1. **Secure API Access**: Make sure your Shopify API tokens have the appropriate access scopes and are kept secure.
+1. **Secure API Access**: Keep Stripe and Resend keys in Vercel environment variables only.
 
-2. **CORS Configuration**: Ensure your Shopify store allows requests from your production domain.
+2. **Performance Optimization**: Consider enabling caching strategies for product data to improve performance.
 
-3. **Performance Optimization**: Consider enabling caching strategies for product data to improve performance.
+3. **Analytics**: Set up analytics to track user behavior and conversion rates.
 
-4. **Analytics**: Set up analytics to track user behavior and conversion rates.
+4. **Testing**: Thoroughly test the checkout process and discount code generation in production.
 
-5. **Testing**: Thoroughly test the checkout process and discount code generation in production.
+## Catalog and Checkout
 
-## Connecting to Shopify
-
-### Getting Your Shopify API Credentials
-
-#### Storefront API (Required)
-
-1. Log in to your Shopify admin panel.
-2. Go to "Settings" > "Apps and sales channels".
-3. Click on "Develop apps".
-4. Create a new app or select an existing one.
-5. Under "API credentials", create a Storefront API access token.
-6. Copy the token and store domain for use in your environment variables.
-
-#### Admin API (Optional - for discount codes)
-
-1. In the same app, click "Configure Admin API scopes".
-2. Enable these scopes:
-   - `write_discounts` - Required to create discount codes
-   - `read_discounts` - Required to query existing discounts
-3. Click "Save" and then "Install app".
-4. Copy the Admin API access token (you'll only see it once!).
+- **Catalog:** `product-catalog.json`, read through `app/lib/catalog.ts`. Edit it to change content; see [STRIPE_CATALOG_SYNC.md](./STRIPE_CATALOG_SYNC.md) to keep Stripe products and prices in step.
+- **Sizes:** every tee and hoodie is printed on demand in XS–2XL (`app/lib/sizes.ts`). The size a shopper picks is recorded on the Stripe line item and in the owner's order email.
+- **Checkout:** `/api/catalog/checkout` re-prices every line from the catalog and creates a Stripe Checkout session. Free shipping at $50; $9.99 below that.
 
 ### Testing the Storefront
 
@@ -141,21 +115,19 @@ After deployment, verify that:
 - Products are loading correctly
 - Category filtering works as expected
 - The cart functionality operates properly
-- Checkout redirects to Shopify correctly
-- Discount code generation works (will be mock codes without Admin API)
+- Checkout redirects to Stripe with the chosen size and color on each line
+- Discount code generation works (mock codes without Stripe)
 
 ## Discount Code Feature
 
-The app includes a special offer component that generates discount codes:
+Winning Run, Human, Run! calls `/api/discount`:
 
-- **Without Admin API**: Generates mock discount codes for testing
-- **With Admin API**: Creates real 10% discount codes in your Shopify store
-
-See [SHOPIFY_DISCOUNT_SETUP.md](./SHOPIFY_DISCOUNT_SETUP.md) for detailed setup instructions.
+- **Without Stripe**: Generates mock discount codes for testing
+- **With Stripe**: Creates a real single-use 25% Stripe promotion code, valid for 30 days, that shoppers enter at checkout
 
 ## Agentic Commerce Protocol (ACP) Integration
 
-The storefront now exposes a draft implementation of the Agentic Commerce Protocol to support agent-to-merchant interactions over HTTP using Stripe for delegated payments and checkout orchestration. All endpoints live under `/api/acp/*` and share the existing `STRIPE_SECRET_KEY` configuration. Product metadata is served directly from the bundled `product-catalog.json` snapshot, so no Shopify API dependency is required for ACP flows.
+The storefront now exposes a draft implementation of the Agentic Commerce Protocol to support agent-to-merchant interactions over HTTP using Stripe for delegated payments and checkout orchestration. All endpoints live under `/api/acp/*` and share the existing `STRIPE_SECRET_KEY` configuration. Product metadata is served directly from the bundled `product-catalog.json` snapshot.
 
 | Endpoint | Method | Description |
 | --- | --- | --- |

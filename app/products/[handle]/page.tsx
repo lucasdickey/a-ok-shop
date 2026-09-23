@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductByHandle } from "@/app/lib/catalog";
+import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
 
 export const dynamic = "force-dynamic";
@@ -90,31 +91,28 @@ export default async function ProductPage({
   }
 
   // Check if this is a clothing item (shirt or hoodie)
-  const isClothingItem =
-    product.productType.toLowerCase().includes("t-shirt") ||
-    product.productType.toLowerCase().includes("hoodie") ||
-    product.tags.some(
-      (tag) =>
-        tag.toLowerCase().includes("t-shirt") ||
-        tag.toLowerCase().includes("tshirt") ||
-        tag.toLowerCase().includes("hoodie")
+  // Same check checkout uses, so a size picked here is always recorded on the order.
+  const isClothingItem = isClothing(product.productType, product.tags);
+
+  // Values of an option that exist on a variant (in stock only, by default).
+  const optionValues = (name: string, inStockOnly = true) =>
+    Array.from(
+      new Set(
+        variants
+          .filter((v) => !inStockOnly || v.available)
+          .map((v) => v.selectedOptions?.find((o) => o.name.toLowerCase() === name)?.value)
+          .filter((value): value is string => Boolean(value))
+      )
     );
 
-  // If still no size values and this is a clothing item, use all standard sizes as a fallback
-  // Since products are printed on demand, all sizes are always available
-  if ((sizeValues.length === 0 || true) && isClothingItem) {
-    console.log("Using standard sizes for clothing item");
+  // Every tee and hoodie is printed on demand, so every standard size is offered.
+  if (isClothingItem) {
     sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
-    sizeValues.push(...["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"]);
+    sizeValues.push(...CLOTHING_SIZES);
   }
 
   // Sort sizes in the standard order
-  sizeValues.sort((a, b) => {
-    return (
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(a) -
-      ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"].indexOf(b)
-    );
-  });
+  sizeValues.sort((a, b) => CLOTHING_SIZES.indexOf(a) - CLOTHING_SIZES.indexOf(b));
 
   const hasSizeOptions = sizeValues.length > 0;
 
@@ -273,7 +271,16 @@ export default async function ProductPage({
     );
   }
 
-  // All colors are always available since products are printed on demand
+  // When variants carry colors, drop listed colors that have no in-stock variant behind them.
+  // Fully sold-out products still drop listed colors that have no variant at all.
+  const inStockColors = optionValues("color");
+  const variantColors = inStockColors.length > 0 ? inStockColors : optionValues("color", false);
+  if (variantColors.length > 0) {
+    const inStock = colorValues.filter((color) => variantColors.includes(color));
+    colorValues.length = 0;
+    colorValues.push(...inStock);
+  }
+
   const colorAvailability: Record<string, boolean> = {};
   colorValues.forEach((color) => {
     colorAvailability[color] = true;

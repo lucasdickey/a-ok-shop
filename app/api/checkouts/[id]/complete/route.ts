@@ -88,7 +88,7 @@ export async function POST(
 
       // Check payment status
       if (paymentIntent.status === 'succeeded') {
-        // TODO: Create Shopify order
+        // TODO: Record the order and alert the owner, as the Stripe webhook does for store orders
         // TODO: Trigger fulfillment workflow
 
         // Update session to completed
@@ -106,7 +106,7 @@ export async function POST(
 
         return NextResponse.json({
           status: 'completed',
-          order_id: `order_${session.id}`, // TODO: Use real Shopify order ID
+          order_id: `order_${session.id}`,
           payment_intent_id: paymentIntent.id,
         });
       } else if (paymentIntent.status === 'requires_action') {

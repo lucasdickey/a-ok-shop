@@ -152,13 +152,24 @@ function loadProducts(): Product[] {
   return catalogData.products.edges.map(({ node }: any) => node as Product);
 }
 
-// Extract the trailing numeric identifier from a Shopify GID
-// (e.g. "gid://shopify/Product/8755818758363" -> 8755818758363).
-// Newer products in Shopify receive larger numeric IDs, so sorting
-// by this value in descending order yields newest-first ordering.
+// Extract the trailing numeric identifier from a product id
+// (e.g. "gid://a-ok/Product/8755818758363" -> 8755818758363).
+// Newer products have larger numeric IDs, so sorting by this value
+// in descending order yields newest-first ordering.
 function getNumericProductId(id: string): number {
   const match = id.match(/(\d+)(?!.*\d)/);
   return match ? Number(match[1]) : 0;
+}
+
+/**
+ * True when two product or variant ids refer to the same item. Ids used to
+ * carry a different prefix; carts and agents may still send those, and the
+ * trailing number never changed, so it is compared too.
+ */
+export function isSameId(a: string, b: string): boolean {
+  if (a === b) return true;
+  const n = getNumericProductId(a);
+  return n > 0 && n === getNumericProductId(b);
 }
 
 /**
@@ -349,15 +360,15 @@ export function createCheckoutLineItems(cartItems: Array<{
   return cartItems.map((item) => {
     // Find the product and variant
     const product = products.find((p) =>
-      p.variants.edges.some((v) => v.node.id === item.variantId)
+      p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
     );
 
     if (!product) {
       throw new Error(`Product not found for variant ${item.variantId}`);
     }
 
-    const variant = product.variants.edges.find(
-      (v) => v.node.id === item.variantId
+    const variant = product.variants.edges.find((v) =>
+      isSameId(v.node.id, item.variantId)
     )?.node;
 
     if (!variant) {

@@ -17,6 +17,7 @@ This document explains the hybrid catalog management approach for A-OK Shop.
 - Product and Price IDs
 - Active/inactive status
 - Variant information
+- Sizes: every tee and hoodie product carries `metadata.sizes = XS,S,M,L,XL,2XL`. They're printed on demand, so size isn't a separate price; the size a shopper picks is recorded on each checkout line item.
 
 ### Stored in Local JSON
 - Rich HTML descriptions
@@ -68,6 +69,14 @@ Once products are synced:
 - The checkout route will automatically use Stripe price IDs
 - Products without Stripe IDs will fall back to `price_data`
 - You can update prices in Stripe Dashboard without code deploys
+
+## Setting Sizes on Existing Products
+
+Run from the project root with the [Stripe CLI](https://stripe.com/docs/stripe-cli) and `jq`. It sets `metadata.sizes` on every tee and hoodie listed in `product-catalog.json` (add `--live` to update live mode):
+
+```bash
+jq -r '.products.edges[].node | select(.productType=="T-Shirts" or .productType=="Hoodies") | .stripeProductId' product-catalog.json | xargs -I{} stripe products update {} -d "metadata[sizes]=XS,S,M,L,XL,2XL"
+```
 
 ## Featured Products
 

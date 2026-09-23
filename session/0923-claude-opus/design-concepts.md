@@ -20,7 +20,7 @@ These come from the catalog data and the checkout code, not from taste.
    - Make America Go A-OK lists 6 sizes × 3 colors, but only 10 of the 18 combinations exist, with no S or M in any color.
    - A-OKool as a Cucumber is sold out.
    - Two items are filed under the wrong type: the Business Logic crewneck is filed as T-Shirts, and "A-OKool as a Cucumber Tee" is filed as Hoodies.
-3. **The game's 25% code can't be used.** `/api/discount` creates the code in Shopify, but checkout is Stripe (`app/api/catalog/checkout/route.ts`), and that session doesn't accept promotion codes. A player who wins has nowhere to enter the code. None of the new concepts mention the discount because of this.
+3. **The game's 25% code can't be used.** `/api/discount` created the code outside Stripe, but checkout is Stripe (`app/api/catalog/checkout/route.ts`), and that session doesn't accept promotion codes. A player who wins has nowhere to enter the code. None of the new concepts mention the discount because of this.
 4. **A second color or size of the same product replaces the first.** The product page adds to the cart using the product's id (`ProductPageClient.tsx` passes `id: product.id`). `CartProvider.addToCart` matches on that id and adds to the quantity of the existing line, which keeps the first variant. If someone adds a Red M and then a Green L, the order becomes 2 × Red M. The round-five concepts key by variant to avoid this. The store fix is on the separate branch.
 
 ## What the original voice actually is

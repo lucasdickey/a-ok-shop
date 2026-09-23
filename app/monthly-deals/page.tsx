@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart, CartItem } from "@/app/components/cart/CartProvider";
+import { CLOTHING_SIZES } from "@/app/lib/sizes";
 
 // Monthly deal product data - will be updated monthly
 const MONTHLY_DEAL = {
@@ -12,11 +13,11 @@ const MONTHLY_DEAL = {
   price: 50.00,
   originalPrice: 75.00,
   images: [
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/a-ok-lids-front-modeled.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/50PulloverHoodie.png?v=1746932606",
-    "https://cdn.shopify.com/s/files/1/0732/5941/7819/files/Photo_on_5-6-25_at_10.16_AM.jpg?v=1746932588"
+    "/images/monthly-deals/hoodie-lids-front-modeled.png",
+    "/images/monthly-deals/pullover-hoodie.png",
+    "/images/monthly-deals/hoodie-worn.jpg"
   ],
-  sizes: ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL"],
+  sizes: [...CLOTHING_SIZES],
   colors: ["Black", "Navy", "Heather Grey"],
   features: [
     "Cozy fleece interior",

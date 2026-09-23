@@ -204,22 +204,36 @@ export function ProductDetails({
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedVariantId, setSelectedVariantId] = useState<string>(
-    variants[0]?.id || ''
-  );
 
-  const handleSizeSelect = (size: string, variantId: string) => {
+  const handleSizeSelect = (size: string) => {
     setSelectedSize(size);
-    setSelectedVariantId(variantId);
   };
 
-  const handleColorSelect = (color: string, variantId: string) => {
+  const handleColorSelect = (color: string) => {
     setSelectedColor(color);
-    // Only update variant ID if it's valid
-    if (variantId) {
-      setSelectedVariantId(variantId);
-    }
   };
+
+  // Pick the variant by color. Size isn't part of the match: clothing is printed on demand in
+  // every standard size, and products without a size picker have one size.
+  const optionOf = (variant: any, name: string): string | undefined =>
+    variant.selectedOptions?.find(
+      (option: { name: string; value: string }) => option.name.toLowerCase() === name
+    )?.value;
+  const variantsHaveColor = variants.some((v) => optionOf(v, 'color'));
+  const matchesColor = (v: any) =>
+    v.available !== false &&
+    (!variantsHaveColor ||
+      !selectedColor ||
+      optionOf(v, 'color')?.toLowerCase() === selectedColor.toLowerCase());
+  // Prefer the variant carrying the chosen size when the catalog has one, as checkout does.
+  const selectedVariant =
+    variants.find((v) => matchesColor(v) && optionOf(v, 'size') === selectedSize) ||
+    variants.find(matchesColor);
+  const selectedVariantId = selectedVariant?.id || '';
+  // One cart line per variant + size + color, so a second size or color doesn't merge into the first.
+  const cartLineId = [selectedVariantId || product.id, selectedSize, selectedColor]
+    .filter(Boolean)
+    .join(':');
 
   return (
     <div>
@@ -269,7 +283,7 @@ export function ProductDetails({
       <div className="mt-6">
         <AddToCartButton
           product={{
-            id: product.id,
+            id: cartLineId,
             title:
               product.title +
               (selectedSize ? ` - ${selectedSize}` : '') +
@@ -277,12 +291,13 @@ export function ProductDetails({
             price: price,
             image:
               images[selectedImageIndex]?.url || '/product-placeholder.jpg',
-            variantId: selectedVariantId || variants[0]?.id || '',
+            variantId: selectedVariantId,
             size: selectedSize || undefined,
             color: selectedColor || undefined,
           }}
           showSizeWarning={isClothingItem && hasSizeOptions && !selectedSize}
           showColorWarning={hasColorOptions && !selectedColor}
+          unavailable={!selectedVariant}
         />
       </div>
 

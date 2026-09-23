@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
-import { getAllProducts, type SimpleProduct } from "@/app/lib/catalog";
+import { getAllProducts, isSameId, type SimpleProduct } from "@/app/lib/catalog";
+import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 
 const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const FLAT_SHIPPING_CENTS = 999;
@@ -48,30 +49,57 @@ function getOption(variant: ProductVariant, name: string): string | undefined {
   )?.value;
 }
 
+type Resolved = { product: SimpleProduct; variant: ProductVariant; size?: string };
+
 /**
- * Resolve the variant the customer actually picked. The product page can send
- * a variantId that matches the chosen size but not the chosen color, so prefer
- * the variant whose options match the customer's size/color selection.
+ * Resolve the variant the customer actually picked, by color. Tees and hoodies
+ * are printed on demand in any of CLOTHING_SIZES, so size is not part of the
+ * match: it must be one of those sizes and is recorded on the order instead.
  */
 function resolveVariant(
   products: SimpleProduct[],
   item: CartItemInput
-): { product: SimpleProduct; variant: ProductVariant } | null {
+): Resolved | { error: string } | null {
   const product = products.find((p) =>
-    p.variants.edges.some((v) => v.node.id === item.variantId)
+    p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
   );
   if (!product) return null;
 
-  const variants = product.variants.edges.map((v) => v.node);
-  const matchesSelection = (variant: ProductVariant) =>
-    (!item.size || getOption(variant, "size") === item.size) &&
-    (!item.color || getOption(variant, "color") === item.color);
+  let size: string | undefined;
+  if (isClothing(product.productType, product.tags)) {
+    // Only accept known sizes: this value ends up in Stripe metadata and the owner's email.
+    if (!item.size) return { error: `Choose a size for ${product.title}` };
+    if (!CLOTHING_SIZES.includes(item.size)) {
+      return { error: `${item.size.slice(0, 10)} is no longer offered for ${product.title}` };
+    }
+    size = item.size;
+  }
 
+  const allVariants = product.variants.edges.map((v) => v.node);
+  // A sold-out variant is never swapped for another one, unless the shopper's color
+  // points elsewhere (the id is then only a stale pointer from the product page).
+  const requested = allVariants.find((v) => isSameId(v.id, item.variantId));
+  if (
+    requested &&
+    !requested.availableForSale &&
+    (!item.color || getOption(requested, "color") === item.color)
+  ) {
+    return null;
+  }
+
+  const variants = allVariants.filter((v) => v.availableForSale);
+  const matchColor = variants.some((v) => getOption(v, "color"));
+  const matchesColor = (variant: ProductVariant) =>
+    !matchColor || !item.color || getOption(variant, "color") === item.color;
+
+  // Prefer a variant whose size also matches (some products carry sizes in the catalog),
+  // so variantId and sku agree with the size recorded on the order.
   const variant =
-    variants.find((v) => v.id === item.variantId && matchesSelection(v)) ||
-    variants.find(matchesSelection);
+    (size && variants.find((v) => matchesColor(v) && getOption(v, "size") === size)) ||
+    variants.find((v) => isSameId(v.id, item.variantId) && matchesColor(v)) ||
+    variants.find(matchesColor);
 
-  return variant ? { product, variant } : null;
+  return variant ? { product, variant, size } : null;
 }
 
 function getBaseUrl(request: NextRequest): string {
@@ -120,7 +148,10 @@ export async function POST(request: NextRequest) {
 
     for (const item of items) {
       const resolved = resolveVariant(products, item);
-      if (!resolved || !resolved.variant.availableForSale) {
+      if (resolved && "error" in resolved) {
+        return NextResponse.json({ error: resolved.error }, { status: 400 });
+      }
+      if (!resolved) {
         return NextResponse.json(
           { error: "An item in your cart is no longer available" },
           { status: 400 }
@@ -128,6 +159,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { product, variant } = resolved;
+      const size = resolved.size || "";
       const unitAmount = Math.round(parseFloat(variant.price.amount) * 100);
       if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
         return NextResponse.json(
@@ -142,10 +174,12 @@ export async function POST(request: NextRequest) {
         price_data: {
           currency: "usd",
           product_data: {
-            name: `${product.title} - ${variant.title}`,
+            name: `${product.title} - ${[getOption(variant, "color") || variant.title, size]
+              .filter(Boolean)
+              .join(" / ")}`,
             images: image && image.startsWith("http") ? [image] : [],
             metadata: {
-              size: getOption(variant, "size") || "",
+              size,
               color: getOption(variant, "color") || "",
               variantId: variant.id,
               sku: variant.sku || "",
@@ -180,6 +214,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       phone_number_collection: { enabled: true },
+      // Lets shoppers enter the code they win in Run, Human, Run! (created by /api/discount).
+      allow_promotion_codes: true,
       customer_creation: "always",
       metadata: {
         source: "a-ok-shop-catalog",

@@ -95,7 +95,7 @@ This document outlines the complete integration of OpenAI's Agentic Commerce Pro
 - `app/lib/product-feed.ts` - Feed generation logic
 
 **Tasks**:
-- [x] Map Shopify products to OpenAI schema
+- [x] Map catalog products to OpenAI schema
 - [ ] Add control flags (`enable_search`, `enable_checkout`)
 - [ ] Generate stock legal pages
 - [ ] Test feed validation
@@ -167,8 +167,6 @@ WEBHOOK_SECRET=...                 # For HMAC signing
 
 # Existing (already configured)
 STRIPE_SECRET_KEY=sk_live_...
-SHOPIFY_STORE_DOMAIN=...
-SHOPIFY_STOREFRONT_API_TOKEN=...
 ```
 
 ## Success Criteria

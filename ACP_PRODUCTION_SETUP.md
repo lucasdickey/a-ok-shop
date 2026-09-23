@@ -54,12 +54,6 @@ STRIPE_WEBHOOK_SECRET=whsec_...your-webhook-secret...
 ACP_ALLOWED_ORIGINS=https://agent.example.com,https://partner-api.example.com
 ```
 
-**Existing (keep these):**
-```bash
-SHOPIFY_STORE_DOMAIN=aokstore.myshopify.com
-SHOPIFY_STOREFRONT_API_TOKEN=...your-token...
-```
-
 3. Set environment for each variable:
    - **Production** - for live site
    - **Preview** - for PR deployments (use test keys)
@@ -93,7 +87,7 @@ curl -X POST https://a-ok.shop/api/acp/checkout \
   -d '{
     "cart": {
       "items": [
-        {"variantId": "gid://shopify/ProductVariant/46776424202459", "quantity": 1}
+        {"variantId": "gid://a-ok/ProductVariant/46776424202459", "quantity": 1}
       ]
     },
     "customer": {"email": "test@example.com"}

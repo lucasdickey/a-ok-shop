@@ -35,7 +35,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/46905344032987",
+        "id": "gid://a-ok/ProductVariant/46905344032987",
         "title": "Green / XS",
         "price": 45,
         "available": true,
@@ -51,7 +51,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344065755",
+        "id": "gid://a-ok/ProductVariant/46905344065755",
         "title": "Green / XL",
         "price": 45,
         "available": true,
@@ -67,7 +67,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344098523",
+        "id": "gid://a-ok/ProductVariant/46905344098523",
         "title": "Green / L",
         "price": 45,
         "available": true,
@@ -83,7 +83,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344131291",
+        "id": "gid://a-ok/ProductVariant/46905344131291",
         "title": "Green / M",
         "price": 45,
         "available": true,
@@ -99,7 +99,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344164059",
+        "id": "gid://a-ok/ProductVariant/46905344164059",
         "title": "Green / S",
         "price": 45,
         "available": true,
@@ -115,7 +115,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344196827",
+        "id": "gid://a-ok/ProductVariant/46905344196827",
         "title": "Red / XS",
         "price": 45,
         "available": true,
@@ -131,7 +131,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344229595",
+        "id": "gid://a-ok/ProductVariant/46905344229595",
         "title": "Red / XL",
         "price": 45,
         "available": true,
@@ -147,7 +147,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344262363",
+        "id": "gid://a-ok/ProductVariant/46905344262363",
         "title": "Red / L",
         "price": 45,
         "available": true,
@@ -163,7 +163,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344295131",
+        "id": "gid://a-ok/ProductVariant/46905344295131",
         "title": "Red / M",
         "price": 45,
         "available": true,
@@ -179,7 +179,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46905344327899",
+        "id": "gid://a-ok/ProductVariant/46905344327899",
         "title": "Red / S",
         "price": 45,
         "available": true,
@@ -221,7 +221,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/46776422367451",
+        "id": "gid://a-ok/ProductVariant/46776422367451",
         "title": "White",
         "price": 50,
         "available": true,
@@ -233,7 +233,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46776422400219",
+        "id": "gid://a-ok/ProductVariant/46776422400219",
         "title": "Black",
         "price": 50,
         "available": true,
@@ -245,7 +245,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46776422432987",
+        "id": "gid://a-ok/ProductVariant/46776422432987",
         "title": "Red",
         "price": 50,
         "available": true,
@@ -281,7 +281,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/46744874942683",
+        "id": "gid://a-ok/ProductVariant/46744874942683",
         "title": "Black",
         "price": 75,
         "available": true,
@@ -293,7 +293,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46776421843163",
+        "id": "gid://a-ok/ProductVariant/46776421843163",
         "title": "Beige",
         "price": 75,
         "available": true,
@@ -330,7 +330,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/46735214346459",
+        "id": "gid://a-ok/ProductVariant/46735214346459",
         "title": "Default Title",
         "price": 75,
         "available": true,
@@ -368,7 +368,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/46776419877083",
+        "id": "gid://a-ok/ProductVariant/46776419877083",
         "title": "Red",
         "price": 40,
         "available": true,
@@ -380,7 +380,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46776419909851",
+        "id": "gid://a-ok/ProductVariant/46776419909851",
         "title": "White",
         "price": 40,
         "available": true,
@@ -392,7 +392,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/46776419942619",
+        "id": "gid://a-ok/ProductVariant/46776419942619",
         "title": "Blue",
         "price": 40,
         "available": true,
@@ -436,7 +436,7 @@ window.AOK_PRODUCTS = [
     ],
     "variants": [
       {
-        "id": "gid://shopify/ProductVariant/47102065639643",
+        "id": "gid://a-ok/ProductVariant/47102065639643",
         "title": "Black / L",
         "price": 53.14,
         "available": true,
@@ -452,7 +452,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/47102065672411",
+        "id": "gid://a-ok/ProductVariant/47102065672411",
         "title": "Black / XL",
         "price": 53.14,
         "available": true,
@@ -468,7 +468,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/47102065705179",
+        "id": "gid://a-ok/ProductVariant/47102065705179",
         "title": "Black / M",
         "price": 53.14,
         "available": true,
@@ -484,7 +484,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/47102065737947",
+        "id": "gid://a-ok/ProductVariant/47102065737947",
         "title": "Black / S",
         "price": 53.14,
         "available": true,
@@ -500,7 +500,7 @@ window.AOK_PRODUCTS = [
         ]
       },
       {
-        "id": "gid://shopify/ProductVariant/47102065770715",
+        "id": "gid://a-ok/ProductVariant/47102065770715",
         "title": "Black / XS",
         "price": 53.14,
         "available": true,

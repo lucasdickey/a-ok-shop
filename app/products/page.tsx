@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getAllProducts, getProductsByCategory, SimpleProduct as ShopifyProduct } from "@/app/lib/catalog";
+import { getAllProducts, getProductsByCategory, type SimpleProduct } from "@/app/lib/catalog";
 import ProductCard from "@/app/components/product/ProductCard";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export default async function ProductsPage({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  let products: ShopifyProduct[] = [];
+  let products: SimpleProduct[] = [];
   let error = null;
 
   // Extract filter values from search params

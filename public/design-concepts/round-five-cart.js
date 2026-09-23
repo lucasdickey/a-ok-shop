@@ -6,8 +6,9 @@
   const DATA = window.AOK5;
   const KEY = 'cart';
   const listeners = new Set();
-  // Same list the store's product page offers for print-on-demand clothing with no size variants.
-  const STANDARD_SIZES = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+  // Every tee and hoodie is printed on demand in these sizes. Same list as app/lib/sizes.ts.
+  const STANDARD_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+  const isClothing = (product) => /T-Shirts|Hoodies/.test(product.category);
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = (n) => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
@@ -37,7 +38,7 @@
     return { items, count, subtotal, gap, free: subtotal >= DATA.freeShippingAt };
   }
 
-  // Keyed by variant (plus size when the size isn't part of the variant), so different picks stay on separate lines.
+  // Keyed by variant plus size, so different picks stay on separate lines.
   function add(product, variant, quantity = 1, podSize) {
     const items = read();
     const id = podSize ? `${variant.id}:${podSize}` : variant.id;
@@ -51,7 +52,7 @@
         quantity,
         image: product.images[0] || '/product-placeholder.jpg',
         variantId: variant.id,
-        size: variant.options.Size || podSize,
+        size: podSize,
         color: variant.options.Color,
       });
     write(items);
@@ -69,8 +70,11 @@
 
   const byHandle = (h) => DATA.products.find((p) => p.handle === h);
 
+  // Options the shopper picks from the catalog. For clothing, size comes from STANDARD_SIZES instead.
+  const pickOptions = (product) => (isClothing(product) ? product.options.filter((o) => o.name !== 'Size') : product.options);
+
   function findVariant(product, chosen) {
-    return product.variants.find((v) => product.options.every((o) => v.options[o.name] === chosen[o.name]));
+    return product.variants.find((v) => v.available && pickOptions(product).every((o) => v.options[o.name] === chosen[o.name]));
   }
 
   // Renders option buttons + an add button into `root`. Only offers values the catalog has.
@@ -78,9 +82,9 @@
   function mountPicker(root, product, opts = {}) {
     const chosen = {};
     const firstAvailable = product.variants.find((v) => v.available) || product.variants[0];
-    product.options.forEach((o) => (chosen[o.name] = firstAvailable.options[o.name]));
-    const hasSize = product.options.some((o) => o.name === 'Size');
-    const podSizes = !hasSize && /T-Shirts|Hoodies/.test(product.category) ? STANDARD_SIZES : null;
+    const options = pickOptions(product);
+    options.forEach((o) => (chosen[o.name] = firstAvailable.options[o.name]));
+    const podSizes = isClothing(product) ? STANDARD_SIZES : null;
     let podSize = podSizes ? 'M' : undefined;
     const soldOut = !product.variants.some((v) => v.available);
 
@@ -88,7 +92,7 @@
       const variant = findVariant(product, chosen);
       const canAdd = variant && variant.available;
       root.innerHTML =
-        product.options
+        options
           .map(
             (o) => `<fieldset class="p5-opt"><legend>${esc(o.name)}</legend>${o.values
               .map((val) => {
@@ -122,7 +126,7 @@
         const exact = findVariant(product, chosen);
         if (!exact || !exact.available) {
           const fallback = product.variants.find((v) => v.available && v.options[opt.dataset.opt] === opt.dataset.val);
-          if (fallback) product.options.forEach((o) => (chosen[o.name] = fallback.options[o.name]));
+          if (fallback) options.forEach((o) => (chosen[o.name] = fallback.options[o.name]));
         }
         render();
         return;

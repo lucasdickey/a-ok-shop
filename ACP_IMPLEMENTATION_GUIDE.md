@@ -59,7 +59,7 @@ app/
 ## Phase 4: Implementation Checklist
 
 ### Product Feed (`app/api/feed/products.json/route.ts`)
-- [ ] Fetch products from Shopify
+- [ ] Fetch products from the catalog
 - [ ] Map to OpenAI schema (see `ACP_TECHNICAL_SPEC.md`)
 - [ ] Add control flags (`enable_search`, `enable_checkout`)
 - [ ] Include merchant URLs (privacy, terms, returns)
@@ -125,8 +125,6 @@ WEBHOOK_SECRET=...                       # Generate: openssl rand -hex 32
 
 # Existing (already configured)
 STRIPE_SECRET_KEY=sk_live_...
-SHOPIFY_STORE_DOMAIN=...
-SHOPIFY_STOREFRONT_API_TOKEN=...
 ```
 
 ## Testing Workflow
@@ -143,7 +141,7 @@ curl http://localhost:3000/api/feed/products.json | jq .
 curl -X POST http://localhost:3000/api/checkouts \
   -H "Authorization: Bearer test-key" \
   -H "Content-Type: application/json" \
-  -d '{"items":[{"id":"gid://shopify/ProductVariant/46776424202459","quantity":1}]}'
+  -d '{"items":[{"id":"gid://a-ok/ProductVariant/46776424202459","quantity":1}]}'
 ```
 
 2. **Stripe Test Mode**:

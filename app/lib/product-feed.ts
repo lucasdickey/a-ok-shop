@@ -93,7 +93,7 @@ export async function generateProductFeed(): Promise<ProductFeedItem[]> {
       return_window: 0, // All sales final due to just-in-time manufacturing
       enable_search: true,
       enable_checkout: true,
-      item_group_id: product.id, // Use Shopify product ID as group ID
+      item_group_id: product.id, // Group variants under their product id
     });
   }
 

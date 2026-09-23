@@ -70,7 +70,7 @@ export async function PUT(
 
     if (body.items) {
       updates.items = body.items;
-      // TODO: Recalculate line_items from Shopify
+      // TODO: Recalculate line_items from the catalog
     }
 
     if (body.fulfillment_address) {
