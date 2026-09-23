@@ -323,6 +323,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Storefront design review
 
-Open `/concepts` to compare all 20 storefront concepts at desktop or mobile width. The latest Codex / GPT-6 round (16–20) opens by default and includes interactive product options, a preview bag, an art-generator demonstration, and an on-demand game embed. These are design previews; the bag and sample generator do not create orders or new images.
+Open `/concepts` to compare all 26 storefront concepts at desktop or mobile width, including fullscreen comparison. The Astra Round 5 filter opens Print Room (24), The Human Edit (25), and Off Model (26). These three use six identical catalog products, isolated preview bags, artwork inspection, and an explicitly labeled existing-sample generator preview. Their bags never create orders. The separate Claude Code round (21–23) retains its real-cart behavior.
 
 See [the round-four review](session/0907-codex-gpt6/design-concepts.md) for the recommendation, tradeoffs, verification, and regeneration instructions. Direct previews are also listed at `/design-concepts/`.
+
+See [the Astra round-five review](session/0923-astra-round-five/review.md) for the 20-concept audit, weighted comparison, and verification. Astra’s original draft numbers 21–23 became 24–26 at publication to preserve the already-published Claude Code trio.

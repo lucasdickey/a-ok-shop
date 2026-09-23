@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { concepts, Concept } from "./concepts";
 
 type Viewport = "desktop" | "mobile";
-type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6" | "opus55";
+type Filter = "all" | "cursor" | "droid" | "sol" | "gpt6" | "opus55" | "astra5";
 
 const ORIGIN_LABEL: Record<Concept["harness"], string> = {
   Cursor: "Cursor",
@@ -33,7 +33,8 @@ const FILTERS: ReadonlyArray<readonly [Filter, string]> = [
   ["droid", "Droid · Grok 4.6"],
   ["sol", "Codex · Sol 5.6"],
   ["gpt6", "Codex · GPT-6"],
-  ["opus55", "Claude Code · Opus 5.5 · New"],
+  ["opus55", "Claude Code · Opus 5.5"],
+  ["astra5", "Codex · Astra · Round 5"],
 ];
 
 const VIEWPORTS: ReadonlyArray<readonly [Viewport, string]> = [
@@ -109,14 +110,14 @@ function ArrowButton({
 export default function ConceptsGallery() {
   const [index, setIndex] = useState(0);
   const [viewport, setViewport] = useState<Viewport>("desktop");
-  const [filter, setFilter] = useState<Filter>("opus55");
+  const [filter, setFilter] = useState<Filter>("astra5");
   const [expanded, setExpanded] = useState(false);
 
   const visible = useMemo(
     () =>
       filter === "all"
         ? concepts
-        : concepts.filter((c) => filter === "opus55" ? c.harness === "Claude Code" : filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
+        : concepts.filter((c) => filter === "astra5" ? c.model === "Astra (GPT-6)" : filter === "opus55" ? c.harness === "Claude Code" : filter === "gpt6" ? c.model === "GPT-6" : filter === "sol" ? c.model === "Sol 5.6" : c.harness.toLowerCase() === filter),
     [filter]
   );
 
@@ -404,6 +405,11 @@ export default function ConceptsGallery() {
             />
           </div>
 
+          <div className="flex items-center justify-between border-t border-[#F5F2DC]/10 px-4 py-2 sm:hidden">
+            <ArrowButton direction="prev" onClick={() => go(-1)} className="h-11 w-11" />
+            <span className="text-xs">{index + 1} / {visible.length}</span>
+            <ArrowButton direction="next" onClick={() => go(1)} className="h-11 w-11" />
+          </div>
           <div
             className="flex gap-2 overflow-x-auto border-t border-[#F5F2DC]/10 px-4 py-2.5"
             role="group"

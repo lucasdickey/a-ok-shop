@@ -1,0 +1,135 @@
+{
+  "catalog": "Six products match source prices, variants, availability, options and photos",
+  "originals": "23 original files unchanged",
+  "flows": [
+    {
+      "target": "16-human-standard",
+      "width": 1440,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "baseline resets to Close",
+      "commerceWrites": 0
+    },
+    {
+      "target": "20-living-index",
+      "width": 1440,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "baseline resets to Close",
+      "commerceWrites": 0
+    },
+    {
+      "target": "24-print-room",
+      "width": 1440,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    },
+    {
+      "target": "25-human-edit",
+      "width": 1440,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    },
+    {
+      "target": "26-off-model",
+      "width": 1440,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    },
+    {
+      "target": "16-human-standard",
+      "width": 390,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "baseline resets to Close",
+      "commerceWrites": 0
+    },
+    {
+      "target": "20-living-index",
+      "width": 390,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "baseline resets to Close",
+      "commerceWrites": 0
+    },
+    {
+      "target": "24-print-room",
+      "width": 390,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    },
+    {
+      "target": "25-human-edit",
+      "width": 390,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    },
+    {
+      "target": "26-off-model",
+      "width": 390,
+      "tasks": "find price, unavailable option, select variant, add, increase, decrease, remove, inspect art, generator, return, filter, mobile menu: PASS",
+      "quantityFocus": "retained",
+      "commerceWrites": 0
+    }
+  ],
+  "responsive": [
+    {
+      "target": "24-print-room",
+      "width": 320,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "target": "24-print-room",
+      "width": 768,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "target": "25-human-edit",
+      "width": 320,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "target": "25-human-edit",
+      "width": 768,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "target": "26-off-model",
+      "width": 320,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "target": "26-off-model",
+      "width": 768,
+      "reducedMotion": "PASS",
+      "emptyBag": "PASS",
+      "minimumQuantity": "PASS",
+      "focusTrap": "PASS",
+      "horizontalOverflow": false
+    }
+  ],
+  "errors": [],
+  "campaignNetwork": "PASS: old selection retained during delay/failure; latest request wins",
+  "editorialPairs": "PASS: all four notes open the correct specific garment"
+}
