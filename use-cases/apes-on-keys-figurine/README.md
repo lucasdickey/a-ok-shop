@@ -5,6 +5,8 @@ The approved R03 clay and current face paint are the latest appearance study. R0
 
 ## Open from anywhere
 
+[Hosted review page](https://a-ok-shop-3ckcjf86f-lucasdickeys-projects.vercel.app/use-cases/apes-on-keys-figurine/) — follows the shop’s existing Vercel preview access policy. The Blob downloads below are public and require no sign-in.
+
 - [Branded painted orbit (1080 × 1080)](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Painted_Orbit.mp4)
 - [Synchronized clay/paint comparison (1920 × 1080)](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Clay_to_Paint.mp4)
 - [Sales media package: three videos, two posters, caption](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Sales_Collateral.zip)

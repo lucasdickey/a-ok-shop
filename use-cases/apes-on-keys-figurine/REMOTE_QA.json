@@ -129,5 +129,6 @@
       ]
     },
     "media_source": "Vercel Blob public URLs"
-  }
+  },
+  "remote_archive_full_sha256_verified": true
 }
