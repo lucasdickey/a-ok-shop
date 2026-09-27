@@ -5,7 +5,7 @@ The approved R03 clay and current face paint are the latest appearance study. R0
 
 ## Open from anywhere
 
-[Hosted review page](https://a-ok-shop-3ckcjf86f-lucasdickeys-projects.vercel.app/use-cases/apes-on-keys-figurine/) — follows the shop’s existing Vercel preview access policy. The Blob downloads below are public and require no sign-in.
+[Hosted review page](https://a-ok-shop-3ckcjf86f-lucasdickeys-projects.vercel.app/use-cases/apes-on-keys-figurine/index.html) — follows the shop’s existing Vercel preview access policy. The Blob downloads below are public and require no sign-in.
 
 - [Branded painted orbit (1080 × 1080)](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Painted_Orbit.mp4)
 - [Synchronized clay/paint comparison (1920 × 1080)](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Clay_to_Paint.mp4)
@@ -14,7 +14,7 @@ The approved R03 clay and current face paint are the latest appearance study. R0
 - [Current painted Blender animation](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/R03_painted_globular_animation.blend)
 - [Clay Blender animation](https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/R03_clay_globular_animation.blend)
 
-The web review lives at `/use-cases/apes-on-keys-figurine/` on a deployment containing this change. Its HTML lives in `public/use-cases/apes-on-keys-figurine/index.html`; every image, video, and download references Blob directly. You can also open that HTML locally without restoring the large assets.
+The web review lives at `/use-cases/apes-on-keys-figurine/index.html` on a deployment containing this change. Its HTML lives in `public/use-cases/apes-on-keys-figurine/index.html`; every image, video, and download references Blob directly. You can also open that HTML locally without restoring the large assets.
 
 ## Storage and project layout
 

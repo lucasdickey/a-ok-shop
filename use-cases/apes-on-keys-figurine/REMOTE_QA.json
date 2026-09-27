@@ -130,5 +130,11 @@
     },
     "media_source": "Vercel Blob public URLs"
   },
-  "remote_archive_full_sha256_verified": true
+  "remote_archive_full_sha256_verified": true,
+  "hosted_review": {
+    "url": "https://a-ok-shop-3ckcjf86f-lucasdickeys-projects.vercel.app/use-cases/apes-on-keys-figurine/index.html",
+    "authenticated_http_status": 200,
+    "matches_generated_html": true,
+    "access": "Existing Vercel preview sign-in policy"
+  }
 }
