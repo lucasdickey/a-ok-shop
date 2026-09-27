@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "store": "a-ok-shop-figure-assets",
+  "storeId": "store_5GhiACaWDPWX1CYI",
+  "access": "public",
+  "prefix": "apes-on-keys-figurine/r03/2026-09-27",
+  "assets": [
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint_Poster.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Clay_to_Paint_Poster.png",
+      "bytes": 514165,
+      "sha256": "180d50e3a2c9a3cbabbcf7ee595533a8b768c9f415debf91cd06936ac1e3153c"
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit_Poster.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Painted_Orbit_Poster.png",
+      "bytes": 324053,
+      "sha256": "0b429ce016132c531b2ab4d300198a51a75e62c2c70c768c880d85e03eb92dc6"
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Painted_Orbit.mp4",
+      "bytes": 5181362,
+      "sha256": "a912910b3d1908238406b5df33fa04918444a8eb60536b21952f85e362794cf9"
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Clay_to_Paint.mp4",
+      "bytes": 7461536,
+      "sha256": "335bf57581f83260120f7386decdaa5f171b08cab9ce1055625189e9e65596f9"
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/AOK_R03_Painted_Globular_Orbit.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_R03_Painted_Globular_Orbit.mp4",
+      "bytes": 4891069,
+      "sha256": "cc5721857b71e81608b5eb68882c6f0a30d2d2b11cd983bbc8aa2018397e2571"
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/AOK_R03_Clay_Globular_Orbit.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_R03_Clay_Globular_Orbit.mp4",
+      "bytes": 2316187,
+      "sha256": "01e026e8679227b02972d46adb14e9f94ad1836c732f4bfed06753a7bff55259"
+    },
+    {
+      "path": "aok-reconstruction-r03/AOK_WIP_Sales_Collateral.zip",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Sales_Collateral.zip",
+      "bytes": 18366399,
+      "sha256": "ab16ac341c49a6817ed50525a73081771a5957a2a79e4537b4c75fc37a2e034e"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_above.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_above.png",
+      "bytes": 182919,
+      "sha256": "34af075e67cc1ce16a8f518bfec58bcfd6cb04fa51e5a9b4c12b078a52c760ba"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_back.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_back.png",
+      "bytes": 215776,
+      "sha256": "c881b38d295ceb2d2194b3b5b782577c37338f2db666f5ff2cd9aa108c59fce4"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_below.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_below.png",
+      "bytes": 175693,
+      "sha256": "bcfc19a36e8fe4ef1b5851d88ae2df226e4d8c6aaf5fb2c17ed02ac7b1cd3fcd"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_front.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_front.png",
+      "bytes": 251250,
+      "sha256": "435022812c0bf91e0b5dac6b440ba617bbde5e71d1383c7c1db0d72a49b2b7c3"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_left.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_left.png",
+      "bytes": 191734,
+      "sha256": "ed67e7e8621365a20e078f6a7ffd4e5f0f7a75ec1a9fa9a910b5e1a412344fe7"
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_right.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/painted_orbit_right.png",
+      "bytes": 213925,
+      "sha256": "8bc94b87ac5680180d74103bc497518e2aec0de2b74156571334a95815c72202"
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Video_Edit.blend",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_WIP_Video_Edit.blend",
+      "bytes": 465098,
+      "sha256": "1bc4c231c2d75235b97b7b9f6a5472b2f9cdcc570ceb9b17d15d880ee1e1157d"
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/R03_painted_globular_animation.blend",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/R03_painted_globular_animation.blend",
+      "bytes": 262551875,
+      "sha256": "77ad209a2cffd454b3261769d2c39a09a1b383f7f91c5b8f570ab05acc3d35d6"
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/R03_clay_globular_animation.blend",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/R03_clay_globular_animation.blend",
+      "bytes": 139328333,
+      "sha256": "ad71dc7adc1c54d760b49e1a1d4003219c6c9a4e115c923c7c118c6f077fe8e3"
+    },
+    {
+      "path": ".remote-cache/AOK_Figure_Project_2026-09-27.zip",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_Figure_Project_2026-09-27.zip",
+      "bytes": 1529627462,
+      "sha256": "0d129c488a3f29eb752b6f6e4686f7cbe07a0d57b905d5101c268f28807e6208"
+    }
+  ],
+  "archive": {
+    "path": ".remote-cache/AOK_Figure_Project_2026-09-27.zip",
+    "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/apes-on-keys-figurine/r03/2026-09-27/AOK_Figure_Project_2026-09-27.zip",
+    "bytes": 1529627462,
+    "sha256": "0d129c488a3f29eb752b6f6e4686f7cbe07a0d57b905d5101c268f28807e6208"
+  }
+}

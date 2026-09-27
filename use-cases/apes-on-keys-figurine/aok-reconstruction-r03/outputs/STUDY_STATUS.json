@@ -1,0 +1,23 @@
+{
+  "status": "unfinished likeness study; do not print",
+  "raw_generation_vertices": 568365,
+  "raw_generation_faces": 1136772,
+  "geometry_extraction_resolution": 512,
+  "blender_study": "R03_experimental_reconstruction.blend",
+  "raw_mesh_preserved": true,
+  "visual_views_reviewed": [
+    "front",
+    "three_quarter",
+    "side",
+    "face_detail"
+  ],
+  "manufacturing_release": false,
+  "remaining": [
+    "facial likeness",
+    "sneaker construction",
+    "graphics and surface details",
+    "paint regions",
+    "attachment",
+    "manufacturing validation"
+  ]
+}

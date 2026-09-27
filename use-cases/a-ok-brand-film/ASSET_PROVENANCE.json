@@ -1,0 +1,28 @@
+{
+  "concept": "TRUST THE NOISE / From signal to object",
+  "duration_seconds": 15,
+  "fps": 30,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "catalog_images": {
+    "poster": "public/images/hp-art-grid-collection/a-ok-keyboard-inspired-by.png",
+    "glitch": "public/images/products/a-ok-glitch-art-face-mask-t-shirt-0.png",
+    "octo": "public/images/products/a-ok-octo-ape-0.png",
+    "business": "public/images/products/business-logic-crew-neck-sweatshirt-0.png"
+  },
+  "copy_sources": {
+    "Find the pattern. Trust the noise.": "GLITCHED VECTORS TEE",
+    "All outputs lead to A-OK.": "HALLUCINATED KEYSTROKES TEE"
+  },
+  "new_copy": [
+    "Wear the output.",
+    "From signal to object.",
+    "Culture in the making."
+  ],
+  "figure": "Approved R03 geometry, face paint pass2; new camera and softbox lighting, no geometry edits",
+  "audio": "Original procedural synthesis, 120BPM; no third-party audio samples",
+  "renderer": "Blender4.5.3 Cycles + deterministic Canvas motion compositing",
+  "canvas_version": "1.0.9"
+}

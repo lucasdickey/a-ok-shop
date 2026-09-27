@@ -1,0 +1,91 @@
+diff --git a/hy3dgen/shapegen/models/autoencoders/volume_decoders.py b/hy3dgen/shapegen/models/autoencoders/volume_decoders.py
+index d7bfd84..f0b6330 100644
+--- a/hy3dgen/shapegen/models/autoencoders/volume_decoders.py
++++ b/hy3dgen/shapegen/models/autoencoders/volume_decoders.py
+@@ -1,3 +1,4 @@
++# Local AOK adaptation: floating-point hierarchical grid coordinates; CPU binary dilation for MPS portability.
+ # Hunyuan 3D is licensed under the TENCENT HUNYUAN NON-COMMERCIAL LICENSE AGREEMENT
+ # except for the third-party components listed below.
+ # Hunyuan 3D does not impose any additional limitations beyond what is outlined
+@@ -221,8 +222,7 @@ class HierarchicalVolumeDecoding:
+             indexing="ij"
+         )
+ 
+-        dilate = nn.Conv3d(1, 1, 3, padding=1, bias=False, device=device, dtype=dtype)
+-        dilate.weight = torch.nn.Parameter(torch.ones(dilate.weight.shape, dtype=dtype, device=device))
++        dilate = lambda x: F.max_pool3d(x.to(device="cpu", dtype=torch.float32), 3, stride=1, padding=1).to(device=device, dtype=dtype)
+ 
+         grid_size = np.array(grid_size)
+         xyz_samples = torch.from_numpy(xyz_samples).to(device, dtype=dtype).contiguous().reshape(-1, 3)
+@@ -259,7 +259,7 @@ class HierarchicalVolumeDecoding:
+                 next_index = dilate(next_index.unsqueeze(0)).squeeze(0)
+             nidx = torch.where(next_index > 0)
+ 
+-            next_points = torch.stack(nidx, dim=1)
++            next_points = torch.stack(nidx, dim=1).to(dtype)
+             next_points = (next_points * torch.tensor(resolution, dtype=next_points.dtype, device=device) +
+                            torch.tensor(bbox_min, dtype=next_points.dtype, device=device))
+             batch_logits = []
+@@ -272,7 +272,9 @@ class HierarchicalVolumeDecoding:
+             grid_logits = torch.cat(batch_logits, dim=1)
+             next_logits[nidx] = grid_logits[0, ..., 0]
+             grid_logits = next_logits.unsqueeze(0)
+-        grid_logits[grid_logits == -10000.] = float('nan')
++        # Local MPS adaptation: avoid large GPU advanced-index allocations.
++        grid_logits = grid_logits.to('cpu')
++        grid_logits.masked_fill_(grid_logits == -10000., float('nan'))
+ 
+         return grid_logits
+ 
+@@ -334,8 +336,7 @@ class FlashVDMVolumeDecoding:
+             indexing="ij"
+         )
+ 
+-        dilate = nn.Conv3d(1, 1, 3, padding=1, bias=False, device=device, dtype=dtype)
+-        dilate.weight = torch.nn.Parameter(torch.ones(dilate.weight.shape, dtype=dtype, device=device))
++        dilate = lambda x: F.max_pool3d(x.to(device="cpu", dtype=torch.float32), 3, stride=1, padding=1).to(device=device, dtype=dtype)
+ 
+         grid_size = np.array(grid_size)
+ 
+@@ -391,7 +392,7 @@ class FlashVDMVolumeDecoding:
+                 next_index = dilate(next_index.unsqueeze(0)).squeeze(0)
+             nidx = torch.where(next_index > 0)
+ 
+-            next_points = torch.stack(nidx, dim=1)
++            next_points = torch.stack(nidx, dim=1).to(dtype)
+             next_points = (next_points * torch.tensor(resolution, dtype=torch.float32, device=device) +
+                            torch.tensor(bbox_min, dtype=torch.float32, device=device))
+ 
+@@ -430,6 +431,8 @@ class FlashVDMVolumeDecoding:
+             next_logits[nidx] = grid_logits
+             grid_logits = next_logits.unsqueeze(0)
+ 
+-        grid_logits[grid_logits == -10000.] = float('nan')
++        # Local MPS adaptation: avoid large GPU advanced-index allocations.
++        grid_logits = grid_logits.to('cpu')
++        grid_logits.masked_fill_(grid_logits == -10000., float('nan'))
+ 
+         return grid_logits
+diff --git a/hy3dgen/shapegen/utils.py b/hy3dgen/shapegen/utils.py
+index 6ac8f5d..dd116c5 100644
+--- a/hy3dgen/shapegen/utils.py
++++ b/hy3dgen/shapegen/utils.py
+@@ -1,3 +1,4 @@
++# Local AOK adaptation: download only the selected checkpoint format, avoiding a duplicate 3.8 GB checkpoint.
+ # Hunyuan 3D is licensed under the TENCENT HUNYUAN NON-COMMERCIAL LICENSE AGREEMENT
+ # except for the third-party components listed below.
+ # Hunyuan 3D does not impose any additional limitations beyond what is outlined
+@@ -102,9 +103,12 @@ def smart_load_model(
+         try:
+             from huggingface_hub import snapshot_download
+             # 只下载指定子目录
++            suffix = '.' + variant if variant else ''
++            extension = 'safetensors' if use_safetensors else 'ckpt'
++            checkpoint_name = f'model{suffix}.{extension}'
+             path = snapshot_download(
+                 repo_id=original_model_path,
+-                allow_patterns=[f"{subfolder}/*"],  # 关键修改：模式匹配子文件夹
++                allow_patterns=[f"{subfolder}/config.yaml", f"{subfolder}/{checkpoint_name}"],
+             )
+             model_path = os.path.join(path, subfolder)  # 保持路径拼接逻辑不变
+         except ImportError:

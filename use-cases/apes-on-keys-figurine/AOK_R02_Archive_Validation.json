@@ -1,0 +1,16 @@
+[
+  {
+    "name": "AOK_Print_Shop_Prototype_R02.zip",
+    "files": 30,
+    "bytes": 86675607,
+    "sha256": "b684703b2a182f57e3e1564333b2b63e53d15dd6898f95af733cb754235bce55",
+    "zip_crc_and_internal_hashes": "PASS"
+  },
+  {
+    "name": "AOK_Blender_Full_Source_R02.zip",
+    "files": 40,
+    "bytes": 161635280,
+    "sha256": "1ae5887b70520eafb0e3dbd0c423e5160f886c023cff893d333760cc30583d4e",
+    "zip_crc_and_internal_hashes": "PASS"
+  }
+]

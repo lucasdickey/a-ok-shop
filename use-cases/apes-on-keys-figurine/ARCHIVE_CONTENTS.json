@@ -1,0 +1,977 @@
+[
+  {
+    "path": ".gitignore",
+    "bytes": 210,
+    "sha256": "192816e42242122f125ecf9d2437f37dcc16085b4938a4099cf50f11291790e8"
+  },
+  {
+    "path": "AOK_Apes_on_Keys_4in_Keychain_Codex_Brief.md",
+    "bytes": 17131,
+    "sha256": "9f6476b354c3a82daf45f82f65563e4d716d241673a2f2b4d80543b5710b079b"
+  },
+  {
+    "path": "AOK_Prototype_Quote_Package_DRAFT.zip",
+    "bytes": 2231418,
+    "sha256": "7e269444ad60615dbdadc38dd748ec245cb822b4bab80e434f3af4e9f1f2cf68"
+  },
+  {
+    "path": "AOK_R02_Archive_Validation.json",
+    "bytes": 444,
+    "sha256": "d4bc4f252a5cc542b2b1f6c78ab67b2f7215208af1d74410ec21b113afa8e77f"
+  },
+  {
+    "path": "CURRENT_STATUS_DO_NOT_PRINT.md",
+    "bytes": 1285,
+    "sha256": "d050989558f6fbcce05fd43d182c5514257a15105f21ef19258129773f1b1119"
+  },
+  {
+    "path": "R02_Iteration_Notes/disconnected_components.json",
+    "bytes": 224,
+    "sha256": "8b5c77f0fd41f71c0be26edf0ae22744f59e62bc8abace00cdabbedc0361f2dc"
+  },
+  {
+    "path": "R02_Iteration_Notes/preview_front.png",
+    "bytes": 1211631,
+    "sha256": "181c0faf51243ead762a2d835669b9c89723a690933e91518526a64f16dd1fe1"
+  },
+  {
+    "path": "R02_Iteration_Notes/preview_three_quarter.png",
+    "bytes": 1346622,
+    "sha256": "b08618ce2711dc3f8b4e5c3b7a276d8a60e077a3d397fdf402afea26486fbe54"
+  },
+  {
+    "path": "REJECTED_AOK_Blender_Full_Source_R01.zip",
+    "bytes": 164196178,
+    "sha256": "d78a55c0eeb69c641b8bd6a04d13fa5bed06f4921e4d4dc212190e8431b1f0fc"
+  },
+  {
+    "path": "REJECTED_AOK_Blender_Full_Source_R02.zip",
+    "bytes": 161635280,
+    "sha256": "1ae5887b70520eafb0e3dbd0c423e5160f886c023cff893d333760cc30583d4e"
+  },
+  {
+    "path": "REJECTED_AOK_Print_Shop_Prototype_R01.zip",
+    "bytes": 87225837,
+    "sha256": "01858763dc298d26f097a11914e2fe18149c536b96e7c71a5c969a3ec714be2d"
+  },
+  {
+    "path": "REJECTED_AOK_Print_Shop_Prototype_R02.zip",
+    "bytes": 86675607,
+    "sha256": "b684703b2a182f57e3e1564333b2b63e53d15dd6898f95af733cb754235bce55"
+  },
+  {
+    "path": "Reviewed_Prototype_Handoff/REVISED_CODEX_PROMPT.md",
+    "bytes": 5222,
+    "sha256": "56a701cdc835acaad926a2d3bdceaeaff6653d6f69a88188683708024723af6d"
+  },
+  {
+    "path": "Reviewed_Prototype_Handoff/START_HERE.md",
+    "bytes": 4884,
+    "sha256": "b4a10d36266196001864765e31201da4cb9bf0e341087b77fe5e91030b2520a4"
+  },
+  {
+    "path": "Reviewed_Prototype_Handoff/VENDOR_BRIEF.md",
+    "bytes": 7457,
+    "sha256": "6ed39f217de78cfe745e356e5799adf749d59d7bcc7975c74e81a9ae2d61a70c"
+  },
+  {
+    "path": "Reviewed_Prototype_Handoff/references/01_original_character_reference.png",
+    "bytes": 340550,
+    "sha256": "fec4b55f89e250086c706f13258479a70caaf20eb0b610f8a65b796ebcdf8d8c"
+  },
+  {
+    "path": "Reviewed_Prototype_Handoff/references/02_concept_spec_sheet_NOT_DIMENSION_AUTHORITY.png",
+    "bytes": 2012201,
+    "sha256": "7cb948ab656a50082c4559fb7a06ae1e9ec3c766417826dbda8c8f56b4007d51"
+  },
+  {
+    "path": "aok-keychain/AOK_Prototype_Specification_R01.pdf",
+    "bytes": 13238807,
+    "sha256": "3c2c90ff72b7d26caa6457501b5a990f2e1ca96b18df0eccecb94da0ac8243ff"
+  },
+  {
+    "path": "aok-keychain/MANIFEST.sha256",
+    "bytes": 2791,
+    "sha256": "11ffc084f6adeac842faf9eb6869697fbe514f4dd7867d286fa604bcf865da0f"
+  },
+  {
+    "path": "aok-keychain/PRINT_SHOP_REQUEST.md",
+    "bytes": 1610,
+    "sha256": "218e1134a52dddd155446f650942773418df8555ecf964fd874ff986a136dada"
+  },
+  {
+    "path": "aok-keychain/README.md",
+    "bytes": 6038,
+    "sha256": "2dcd665d37c0deab555b196d93b3cdef8fb34597f7ab43971fa54ae8b8d03e31"
+  },
+  {
+    "path": "aok-keychain/REJECTED_DO_NOT_PRINT.md",
+    "bytes": 825,
+    "sha256": "f4d9c7f27bcb4abdc00e8897f4993f7b525ef36617ca6cee2ea9ca6376e75998"
+  },
+  {
+    "path": "aok-keychain/blender/aok_ape_keychain_master.blend",
+    "bytes": 245853817,
+    "sha256": "7feffe03d562ae799917867f952177e562db8ea0f5f5e7bfbf9dbc1c01802fb0"
+  },
+  {
+    "path": "aok-keychain/blender/aok_ape_keychain_master.blend1",
+    "bytes": 245853817,
+    "sha256": "84cc4fc3847da4e8634ac4e531047503a544ba157886b10ba3cc94783abfc242"
+  },
+  {
+    "path": "aok-keychain/build_aok_keychain.py",
+    "bytes": 18845,
+    "sha256": "6960d1a8e09c1a70bdc36a3321fb60a7138d6653be3cbff49e767c11e0eebf5e"
+  },
+  {
+    "path": "aok-keychain/exports/aok_ape_keychain_4in.3mf",
+    "bytes": 14577623,
+    "sha256": "203050b4e60056a384a01ac790bf2ca599aa6745bcf9a66e01dd0d788f575ec0"
+  },
+  {
+    "path": "aok-keychain/exports/aok_ape_keychain_4in.mtl",
+    "bytes": 886,
+    "sha256": "38ff5e0e05f60ce3c54d6c2aab7dd5c04d9929d8079d53dfe7b9ca81a3980a31"
+  },
+  {
+    "path": "aok-keychain/exports/aok_ape_keychain_4in.obj",
+    "bytes": 41660025,
+    "sha256": "40aaf1da168108b166b39537ff51de9a63658f4de3ef1103f265836d92a6bc4f"
+  },
+  {
+    "path": "aok-keychain/exports/aok_ape_keychain_4in.stl",
+    "bytes": 52346984,
+    "sha256": "ff82aa01a781352a271cedba08c6aecc6cacc94246f005221174ebc5b67892d2"
+  },
+  {
+    "path": "aok-keychain/finalize_aok_keychain.py",
+    "bytes": 12504,
+    "sha256": "52c468d80249f04f524b66d38760ce0ddbed4b729734cc2317f70066c75dbe40"
+  },
+  {
+    "path": "aok-keychain/package_handoff.py",
+    "bytes": 17260,
+    "sha256": "fe3ea94510887155548c0644def3a3dbd3bdae9715ec908e33da20efe2e7953c"
+  },
+  {
+    "path": "aok-keychain/qa/blender_validation.json",
+    "bytes": 8226,
+    "sha256": "713714e41e899426421de0283d1bf7fa64ec47d62d184fe7347ffd0d50a1e662"
+  },
+  {
+    "path": "aok-keychain/qa/independent_export_validation.json",
+    "bytes": 2102,
+    "sha256": "2ba74052022a83c37ed558e4a58c0677839c6e697370eeb09a1d0be03945e470"
+  },
+  {
+    "path": "aok-keychain/qa/saved_master_validation.json",
+    "bytes": 354,
+    "sha256": "7b3414d6155133575a3735524a5394282c8d9d25124fe19bc91dcf15bbb01ac1"
+  },
+  {
+    "path": "aok-keychain/qa/validation_report.md",
+    "bytes": 3340,
+    "sha256": "6321c52a743b9f7edf4a4cb1ff62746a319647b286031642e525a71e0242b24c"
+  },
+  {
+    "path": "aok-keychain/references/01_original_character_reference.png",
+    "bytes": 340550,
+    "sha256": "fec4b55f89e250086c706f13258479a70caaf20eb0b610f8a65b796ebcdf8d8c"
+  },
+  {
+    "path": "aok-keychain/references/02_concept_spec_sheet_NOT_DIMENSION_AUTHORITY.png",
+    "bytes": 2012201,
+    "sha256": "7cb948ab656a50082c4559fb7a06ae1e9ec3c766417826dbda8c8f56b4007d51"
+  },
+  {
+    "path": "aok-keychain/renders/bottom.png",
+    "bytes": 1510642,
+    "sha256": "2ee72e2954bd87bf92a9ae5165c6a765b0de3c88494b27eacddc5502401c3a65"
+  },
+  {
+    "path": "aok-keychain/renders/clay_front.png",
+    "bytes": 1532207,
+    "sha256": "3c9ecead99a5af5dccec02b40d2ac293decd8f1a3c8d6c875e79c45c2d0c0e42"
+  },
+  {
+    "path": "aok-keychain/renders/clay_three_quarter.png",
+    "bytes": 1649685,
+    "sha256": "91cc8b80980a7b592f77a5b1ee526dbe5ab3b6c6d3b29e483d1bbd5aaf4de7b6"
+  },
+  {
+    "path": "aok-keychain/renders/eyelet_detail.png",
+    "bytes": 1787334,
+    "sha256": "3d666cb7fde9e5243dad6c791b5f9bf2378cc6b8c8ab948898ef2debc7e73909"
+  },
+  {
+    "path": "aok-keychain/renders/front.png",
+    "bytes": 1708771,
+    "sha256": "4d7eabf888d5247e202943481f511e2221c70081abf871dd325f9febb3796896"
+  },
+  {
+    "path": "aok-keychain/renders/keyring_mockup.png",
+    "bytes": 1802365,
+    "sha256": "454d8e4522202aa6652c4e2b6e2759dd43e09150b81fef6071e4fa1250af58c9"
+  },
+  {
+    "path": "aok-keychain/renders/left.png",
+    "bytes": 1537329,
+    "sha256": "feff0c54cf382fdf3739eb3f2ca3768c5127a33d3cb299d26861257b3723c54f"
+  },
+  {
+    "path": "aok-keychain/renders/rear.png",
+    "bytes": 1533246,
+    "sha256": "95792bcacb328d10d0cf8a8ffdf28e1e62145c4af194e02a870c6d6b2b717db4"
+  },
+  {
+    "path": "aok-keychain/renders/right.png",
+    "bytes": 1548741,
+    "sha256": "c32d165603ca22a32ac6861316c933e63996ad6ea06cbbfb4183b10a715f103d"
+  },
+  {
+    "path": "aok-keychain/renders/three_quarter.png",
+    "bytes": 1888160,
+    "sha256": "14889d47ffb9bd677c466174f5ee57c9e8c670deab0d8dc682e47b74c996c179"
+  },
+  {
+    "path": "aok-keychain/renders/top.png",
+    "bytes": 1681930,
+    "sha256": "6fd4fd261f78d8824dc45841a50904bc819ed4a2a7032ac5fb9049a4274dc01e"
+  },
+  {
+    "path": "aok-keychain/requirements-qa.txt",
+    "bytes": 126,
+    "sha256": "d34cd2a23bced5e4b866e9fc856791a1a128327ec171102e9e8a38fc3a3fb87d"
+  },
+  {
+    "path": "aok-keychain/validate_exports.py",
+    "bytes": 1912,
+    "sha256": "a696239d2d5b560caffd40d8b7d795f3ff54f1ef056289d2c63351bbfbb8e625"
+  },
+  {
+    "path": "aok-keychain-r02/AOK_Prototype_Specification_R02.pdf",
+    "bytes": 13009152,
+    "sha256": "83b97c75add022648224741e78a42eead0695caa0608f44de01d170990ceec10"
+  },
+  {
+    "path": "aok-keychain-r02/MANIFEST.sha256",
+    "bytes": 3603,
+    "sha256": "40fad430b5dc8be4fe66f591becbab6cb9d6db3c21fe04fc53689a1c59419069"
+  },
+  {
+    "path": "aok-keychain-r02/PRINT_SHOP_REQUEST.md",
+    "bytes": 1610,
+    "sha256": "9aab0544bc842eb14c6bde310a8b07d4e85b1fbd944201740204bb8487c9e96e"
+  },
+  {
+    "path": "aok-keychain-r02/PROPORTION_COMPARISON.html",
+    "bytes": 5289,
+    "sha256": "b1f569f9b1545922e0c5c902d6a99bab3cd5b7b159f5680c76009c16a5652ae3"
+  },
+  {
+    "path": "aok-keychain-r02/PROPORTION_COMPARISON.md",
+    "bytes": 2583,
+    "sha256": "76859c849eb6c26a34d8db2784dd30102a381a052cc0cb4c23cb0331abee3849"
+  },
+  {
+    "path": "aok-keychain-r02/README.md",
+    "bytes": 6168,
+    "sha256": "5f617646e83aa8e163601be92df7603cabc933494b2bcd039e152e7ba4da2cb4"
+  },
+  {
+    "path": "aok-keychain-r02/REJECTED_DO_NOT_PRINT.md",
+    "bytes": 825,
+    "sha256": "f4d9c7f27bcb4abdc00e8897f4993f7b525ef36617ca6cee2ea9ca6376e75998"
+  },
+  {
+    "path": "aok-keychain-r02/audit_proportions.py",
+    "bytes": 1326,
+    "sha256": "38b1e1431fe8c91cbf26f8f780fae30d606bf7790cd1486a2d453f34917d0b47"
+  },
+  {
+    "path": "aok-keychain-r02/blender/aok_ape_keychain_master.blend",
+    "bytes": 241398043,
+    "sha256": "40c43d1b8cff0923a1e82ef63eeba01baab395254e8a833fdd151bde057cc816"
+  },
+  {
+    "path": "aok-keychain-r02/blender/aok_ape_keychain_master.blend1",
+    "bytes": 241398043,
+    "sha256": "9db1c4555c993c688f6ae976a77a9ac7ed4d2f2e2bd0df338157ee386ab7dbee"
+  },
+  {
+    "path": "aok-keychain-r02/build_aok_keychain.py",
+    "bytes": 20430,
+    "sha256": "2309006c8cbc222ce5f67fc6c88c88e96436160e607010b8649a4bed5eac8de7"
+  },
+  {
+    "path": "aok-keychain-r02/comparison/rejected_r01_front.png",
+    "bytes": 1708771,
+    "sha256": "4d7eabf888d5247e202943481f511e2221c70081abf871dd325f9febb3796896"
+  },
+  {
+    "path": "aok-keychain-r02/exports/aok_ape_keychain_4in.3mf",
+    "bytes": 14076322,
+    "sha256": "a6d51af0a8d019ba982ead759119df16e5e3287a6333761d5c50ce11150cf52c"
+  },
+  {
+    "path": "aok-keychain-r02/exports/aok_ape_keychain_4in.mtl",
+    "bytes": 886,
+    "sha256": "c64124dbfbbbef395ef043bb74b16e9c69ce13543170b2a6592f6604e664083d"
+  },
+  {
+    "path": "aok-keychain-r02/exports/aok_ape_keychain_4in.obj",
+    "bytes": 40095539,
+    "sha256": "b0b5c017a8eca313b8723f3b95f1750e54a0fc5d407a4aeeaba69f093f19140f"
+  },
+  {
+    "path": "aok-keychain-r02/exports/aok_ape_keychain_4in.stl",
+    "bytes": 50513384,
+    "sha256": "0b917e3d43828da49eb0170c3f2c49ade658bab2b00a19e6d98c1845ef585863"
+  },
+  {
+    "path": "aok-keychain-r02/finalize_aok_keychain.py",
+    "bytes": 13011,
+    "sha256": "964e6dfc3736c70852f2437549780cba32017c70b6d210eedc75bb9d797df8a1"
+  },
+  {
+    "path": "aok-keychain-r02/make_comparison.py",
+    "bytes": 8073,
+    "sha256": "03b89bfc7706ce943ede3509cb1b864de7a8d8a3814bfdaf21817f2d7747dbac"
+  },
+  {
+    "path": "aok-keychain-r02/package_archives.py",
+    "bytes": 1938,
+    "sha256": "143f3b4de7300c0f3b49033a84ae60a067fa94fc27eb89310fb0582fa1ad1e3f"
+  },
+  {
+    "path": "aok-keychain-r02/package_handoff.py",
+    "bytes": 17539,
+    "sha256": "1f88d92cbcb394b9cf9d0479f94d3e5374368d805e62009649446a8561379fac"
+  },
+  {
+    "path": "aok-keychain-r02/qa/blender_validation.json",
+    "bytes": 4573,
+    "sha256": "b347a39c7f69759c97a9efac96c7e644e5b63be78d0f0507a55f6007c8eca70b"
+  },
+  {
+    "path": "aok-keychain-r02/qa/independent_export_validation.json",
+    "bytes": 2100,
+    "sha256": "68236ba2426960d1fa1f52610341f7163ec3c2a84f7bf07879600254f417be17"
+  },
+  {
+    "path": "aok-keychain-r02/qa/proportions_r01.json",
+    "bytes": 2863,
+    "sha256": "972eaccea7b92e18913832efbbee755e8e050a2908db81b4579269559db4f4ea"
+  },
+  {
+    "path": "aok-keychain-r02/qa/proportions_r02.json",
+    "bytes": 2885,
+    "sha256": "87f68cf8e624dde0c15d04f78a0c7bd8c6d0c0f37c45acad8aa154876aa1d1d2"
+  },
+  {
+    "path": "aok-keychain-r02/qa/saved_master_validation.json",
+    "bytes": 361,
+    "sha256": "3b736e95a1fd1e41262d09c54e9f90ffe6f62b09e2a300859aca434e17f61cbe"
+  },
+  {
+    "path": "aok-keychain-r02/qa/validation_report.md",
+    "bytes": 3101,
+    "sha256": "217958b6221415dd7067c31ec27a7aa096d41bf4a86b8a1cc6fb2414357a2f16"
+  },
+  {
+    "path": "aok-keychain-r02/references/01_original_character_reference.png",
+    "bytes": 340550,
+    "sha256": "fec4b55f89e250086c706f13258479a70caaf20eb0b610f8a65b796ebcdf8d8c"
+  },
+  {
+    "path": "aok-keychain-r02/references/02_concept_spec_sheet_NOT_DIMENSION_AUTHORITY.png",
+    "bytes": 2012201,
+    "sha256": "7cb948ab656a50082c4559fb7a06ae1e9ec3c766417826dbda8c8f56b4007d51"
+  },
+  {
+    "path": "aok-keychain-r02/renders/bottom.png",
+    "bytes": 1425134,
+    "sha256": "a26fcfb0db936b5adf3b2e9b7da3c213fb338048504deefd29608774b7c7e1b8"
+  },
+  {
+    "path": "aok-keychain-r02/renders/clay_front.png",
+    "bytes": 1512293,
+    "sha256": "d97de81de191ef56744423b916c6db3595a6a65e61380b7c88fbf1cf29fbdb8d"
+  },
+  {
+    "path": "aok-keychain-r02/renders/clay_three_quarter.png",
+    "bytes": 1676002,
+    "sha256": "f1ebf2bb7dd2a56b11bb388087f999b5f97272bd6de5c27e1325dbfbc329bfa6"
+  },
+  {
+    "path": "aok-keychain-r02/renders/eyelet_detail.png",
+    "bytes": 1807781,
+    "sha256": "4c1f031944a42eb39eb8c411fe6e3b41b91aba6f2da87077acd4b6386caa159b"
+  },
+  {
+    "path": "aok-keychain-r02/renders/front.png",
+    "bytes": 1689063,
+    "sha256": "3a63a4a502a28ab521d3e5dc62746d4d66b8a8c804683e5c4e6bfd98fdf46f4c"
+  },
+  {
+    "path": "aok-keychain-r02/renders/keyring_mockup.png",
+    "bytes": 1793412,
+    "sha256": "307b852a0ef29e2622efc2c6de74aee49e020cdd29bea06da29f1fec97264cda"
+  },
+  {
+    "path": "aok-keychain-r02/renders/left.png",
+    "bytes": 1517450,
+    "sha256": "a1c6b7e09037f4622db1dffffb2a40e286f5ef26267da6f09b8a6af24cd16612"
+  },
+  {
+    "path": "aok-keychain-r02/renders/rear.png",
+    "bytes": 1530616,
+    "sha256": "30cf42cfad29882d5e576c24c841b20ad683b243ae65dde70b8fad3774f8a2c6"
+  },
+  {
+    "path": "aok-keychain-r02/renders/right.png",
+    "bytes": 1538917,
+    "sha256": "5a852912535c185c163aa65403a056c0c54c224bf6e30aadfea7813dd412c1f4"
+  },
+  {
+    "path": "aok-keychain-r02/renders/three_quarter.png",
+    "bytes": 1876596,
+    "sha256": "fcc78902ade246dc1980f5650bdd7b27b8de785d5749d3bfac8d20f373767981"
+  },
+  {
+    "path": "aok-keychain-r02/renders/top.png",
+    "bytes": 1695693,
+    "sha256": "564108cfd0aae2a717b5ea4d3c03754cd7c012057309bbf0c42fa68c8f6e2f73"
+  },
+  {
+    "path": "aok-keychain-r02/requirements-qa.txt",
+    "bytes": 126,
+    "sha256": "d34cd2a23bced5e4b866e9fc856791a1a128327ec171102e9e8a38fc3a3fb87d"
+  },
+  {
+    "path": "aok-keychain-r02/validate_exports.py",
+    "bytes": 1912,
+    "sha256": "a696239d2d5b560caffd40d8b7d795f3ff54f1ef056289d2c63351bbfbb8e625"
+  },
+  {
+    "path": "aok-keychain-r02/validate_saved_blend.py",
+    "bytes": 1328,
+    "sha256": "07ce8a948ad2f510508ac6805c3398671cc64dd1b47b6800d0d9d5cb3156f336"
+  },
+  {
+    "path": "aok-reconstruction-r03/AOK_WIP_Sales_Collateral.zip",
+    "bytes": 18366399,
+    "sha256": "ab16ac341c49a6817ed50525a73081771a5957a2a79e4537b4c75fc37a2e034e"
+  },
+  {
+    "path": "aok-reconstruction-r03/FACE_PAINT_NOTES.md",
+    "bytes": 1719,
+    "sha256": "5abbe1bbbf95b5b1f985599ff937f5e67369e4076fd98a00fa0d84a1875c0de7"
+  },
+  {
+    "path": "aok-reconstruction-r03/FACE_REVIEW.html",
+    "bytes": 3540,
+    "sha256": "30232e5ab835ecdf01c7277c2890c1874e0e58beb3c1b87cb76dfee83ffe1955"
+  },
+  {
+    "path": "aok-reconstruction-r03/HUNYUAN_LICENSE.txt",
+    "bytes": 17829,
+    "sha256": "94259df223918a5733677965c1bfe1774a2dba25042d9c3b47a3418ea6c1f324"
+  },
+  {
+    "path": "aok-reconstruction-r03/ORBIT_NOTES.md",
+    "bytes": 1398,
+    "sha256": "b48a2637f6ad60389af909c86c2003ecb22d3f213f05d7dd2dead5decee56a2e"
+  },
+  {
+    "path": "aok-reconstruction-r03/ORBIT_REVIEW.html",
+    "bytes": 3500,
+    "sha256": "96e370840686a55dedf0c37ebdd6913c64c1eef02e874bebe6f54bdf9335d44a"
+  },
+  {
+    "path": "aok-reconstruction-r03/PAINTED_ORBIT_REVIEW.html",
+    "bytes": 4038,
+    "sha256": "f4a4b19d7ab55c09661ec7ac7ebe495a5cc28036dd7dd7c1e7207c6a7ef60942"
+  },
+  {
+    "path": "aok-reconstruction-r03/PAINT_NOTES.md",
+    "bytes": 2061,
+    "sha256": "f6b0456cb271509e3e720c60ab718f797377e1647d9f8209cbb1dbfdae46dc52"
+  },
+  {
+    "path": "aok-reconstruction-r03/README.md",
+    "bytes": 4280,
+    "sha256": "cabb41dafa6199404c450aca1addf46b6c3278595722b0c38c5128dee9452670"
+  },
+  {
+    "path": "aok-reconstruction-r03/REVIEW.html",
+    "bytes": 5235,
+    "sha256": "6f9ba80ba7d6deeeca17e811baac5e5bbc5da4b7dad8af1884abc85b61a6ad75"
+  },
+  {
+    "path": "aok-reconstruction-r03/REVIEW_CLAY.html",
+    "bytes": 4760,
+    "sha256": "2d38af72f47ebefbfe4f658c174510a0be3e36c1601cb561b64462b8194fb265"
+  },
+  {
+    "path": "aok-reconstruction-r03/REVIEW_PAINT_V1.html",
+    "bytes": 5033,
+    "sha256": "c8050bf99363284e72eafb5400b3ed1a16a837a5931f694cc7d5e19d8b9cf06a"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint.mp4",
+    "bytes": 7461536,
+    "sha256": "335bf57581f83260120f7386decdaa5f171b08cab9ce1055625189e9e65596f9"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint_Poster.png",
+    "bytes": 514165,
+    "sha256": "180d50e3a2c9a3cbabbcf7ee595533a8b768c9f415debf91cd06936ac1e3153c"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit.mp4",
+    "bytes": 5181362,
+    "sha256": "a912910b3d1908238406b5df33fa04918444a8eb60536b21952f85e362794cf9"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit_Poster.png",
+    "bytes": 324053,
+    "sha256": "0b429ce016132c531b2ab4d300198a51a75e62c2c70c768c880d85e03eb92dc6"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Video_Edit.blend",
+    "bytes": 465098,
+    "sha256": "1bc4c231c2d75235b97b7b9f6a5472b2f9cdcc570ceb9b17d15d880ee1e1157d"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/AOK_WIP_Video_Edit.blend1",
+    "bytes": 465098,
+    "sha256": "d6993f55b414fee205ef7c544613d65a08d24bd9a179d4dd302890ea64bea4b6"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/CAPTION.txt",
+    "bytes": 149,
+    "sha256": "b9384d87d18de3901cab9157a650de220807fb19e9083f41fe4a6c7b8542ed4b"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/README.md",
+    "bytes": 1151,
+    "sha256": "930f16afb2d82787885b75366fa10685586cf934d6671698b5b3cee57d53361f"
+  },
+  {
+    "path": "aok-reconstruction-r03/collateral/VIDEO_QA.json",
+    "bytes": 675,
+    "sha256": "cfb155a553ca607200e230a686e7ce353908bde0e24e4f86db13504940686d81"
+  },
+  {
+    "path": "aok-reconstruction-r03/finalize_orbit_video.py",
+    "bytes": 1892,
+    "sha256": "7fca511f19969de764123c563a71b4eacc2a7198f0ea916184de10499cacdae9"
+  },
+  {
+    "path": "aok-reconstruction-r03/finalize_wip_collateral.py",
+    "bytes": 3746,
+    "sha256": "1abb8824131c8ffc47a555f2a0ab6cb35962b6052d3c7fdad030a5ed4a899adc"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/conditioning_preview.jpg",
+    "bytes": 164403,
+    "sha256": "311039b0a8c3717dc2ef7588ede4a8079dc0f2e545e38511a37e2cbe122fd877"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/corrected_conditioning.png",
+    "bytes": 1406639,
+    "sha256": "ddbc8d37a10eb99beb8892e615d9e97ba3034e483b4952a4d14e71894a50c725"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/corrected_preview.jpg",
+    "bytes": 161966,
+    "sha256": "98b99bd9442f7e701bdad14b08432b623ae72ffa09b6acc8015894418fbc788a"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/original_character_conditioning.png",
+    "bytes": 1408267,
+    "sha256": "417c28849ed61826df15b820d3d5bcf61289888cb65d4a2d7210fcf144d459da"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/segmented_conditioning.png",
+    "bytes": 1389582,
+    "sha256": "3c2f99ca602c80f1919d891b187a04379b9f1df576a19395bc161b3fa95ce3c0"
+  },
+  {
+    "path": "aok-reconstruction-r03/inputs/segmented_preview.jpg",
+    "bytes": 150775,
+    "sha256": "66e39c43933274e17e70e56741989ebaab726e0c0c2304c8dfc709a791c94852"
+  },
+  {
+    "path": "aok-reconstruction-r03/local_mps_adaptations.patch",
+    "bytes": 4871,
+    "sha256": "7da3e4677bf5b05690d5849f78b999a7aef5e5d7fe725994c86773324ace4dd5"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/AOK_R03_Clay_Globular_Orbit.mp4",
+    "bytes": 2316187,
+    "sha256": "01e026e8679227b02972d46adb14e9f94ad1836c732f4bfed06753a7bff55259"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/AOK_R03_Painted_Globular_Orbit.mp4",
+    "bytes": 4891069,
+    "sha256": "cc5721857b71e81608b5eb68882c6f0a30d2d2b11cd983bbc8aa2018397e2571"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/FACE_PAINT_V2_STATUS.json",
+    "bytes": 310,
+    "sha256": "8b997faa036008e3e2a958023e58416452a87ddbe057cff240ca34ccafbf9ca4"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/ORBIT_FRAMING_QA.json",
+    "bytes": 21491,
+    "sha256": "df42d382e1d28b7bf3bf8d3aa5e226982c99ea6add6b3d0a9d690356577a2185"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/ORBIT_STATUS.json",
+    "bytes": 435,
+    "sha256": "b57423631d4658cbb65460dc03d1fa4f47a6292ddef26ec7fadf2824c9d74a51"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/ORBIT_VIDEO_QA.json",
+    "bytes": 375,
+    "sha256": "1c7cfbbfda704487f75c6b5fd9ca852a00cb2598fa84a7e11617b6c3d4feb7ca"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/PAINTED_ORBIT_STATUS.json",
+    "bytes": 460,
+    "sha256": "46b7670d47dfc2daf0dfb6eceeaab917e7459c4130cc3815615204b16560b88c"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/PAINTED_ORBIT_VIDEO_QA.json",
+    "bytes": 205,
+    "sha256": "96b0152a4e92e345ea40b03a745c539c3d152bc25a541b101f9ac1a58645ece9"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/PAINT_STATUS.json",
+    "bytes": 282,
+    "sha256": "dfb7a71af1b0ec785b85534efde2cede9d59b653b28ff6b6c11fa975ca4b6e02"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_clay_globular_animation.blend",
+    "bytes": 139328333,
+    "sha256": "ad71dc7adc1c54d760b49e1a1d4003219c6c9a4e115c923c7c118c6f077fe8e3"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_clay_globular_animation.blend1",
+    "bytes": 139328333,
+    "sha256": "9e42c5c210c6717aaba3445e4475b26888999e3e4e3d8b0cbc6ded54c7ce210e"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_experimental_reconstruction.blend",
+    "bytes": 137881212,
+    "sha256": "26e2f62a73326e9db2a724954cf3b0b4e9103c478ee4d3fcb163818c661ce940"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_experimental_reconstruction.blend1",
+    "bytes": 34608404,
+    "sha256": "ce56cf684f21d59a95600bc44524afc46b50cd05050c2fd41d866dc378bcdd8d"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_face_paint_v2.blend",
+    "bytes": 178762323,
+    "sha256": "d3056b2430c9ed64948e2eb8b8a5deb002e241dfcbb5560747b609e684adc4b1"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_face_paint_v2.blend1",
+    "bytes": 178707651,
+    "sha256": "88a09662ecf41670cdd5fea03bc404498c42469f2b986f2d592ee40a7dc7e869"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_painted_globular_animation.blend",
+    "bytes": 262551875,
+    "sha256": "77ad209a2cffd454b3261769d2c39a09a1b383f7f91c5b8f570ab05acc3d35d6"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_painted_globular_animation.blend1",
+    "bytes": 262551875,
+    "sha256": "d01f6769bccc5532330e1eac2199e079bcf14dacb4c84a851b642a9e5150fc24"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_painted_preview.blend",
+    "bytes": 177074151,
+    "sha256": "3e7f49ef0191cf7010739d4a8910fb447bec7230dd009c8d927a857a22db825f"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/R03_painted_preview.blend1",
+    "bytes": 177074151,
+    "sha256": "b64dd732bc78842416570d7a18bc7f3681d7ce4847248c4c69f3737c7275afe1"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/STUDY_STATUS.json",
+    "bytes": 571,
+    "sha256": "8b71175dc34313e7288534f296ec8d40f561bae9b46d04dde6735cffad6f9351"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/orbit_parts/consecutive_frames.txt",
+    "bytes": 54,
+    "sha256": "054a4875bbc750139fe8eb194d045a26491b457b4322c9b3f2e424502f1add56"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/orbit_parts/part1_0001_0203.mp4",
+    "bytes": 617083,
+    "sha256": "ab12179b1cae66359f607e0fd680835e0447803233aba6066165de99e0627f61"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/orbit_parts/part2_0204_0720.mp4",
+    "bytes": 1698288,
+    "sha256": "b61face25652faf21ad9420def65b6e0de3be3eb3f0003b95ecd09e235da09ee"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/reconstruction_metadata.json",
+    "bytes": 626,
+    "sha256": "3544eaef59994c8c4e04cad077f3b634107689534333c5a63b8eba1f68003d9a"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/reference_conditioned_raw.glb",
+    "bytes": 20462432,
+    "sha256": "91a09b102665aa75f56cbb66214162c98a3e8de67bf19ed215df1dcaab08be75"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/reference_conditioned_raw.ply",
+    "bytes": 21598638,
+    "sha256": "ffc75350574b02826d5d05cdb99ce3946ee36e696e2a4968717ef475778f6b19"
+  },
+  {
+    "path": "aok-reconstruction-r03/outputs/shape_latents.pt",
+    "bytes": 67155,
+    "sha256": "a1b4ed77dcae38875f706e18b2abe1c74457a9f3dc9f2e273123c3c685629396"
+  },
+  {
+    "path": "aok-reconstruction-r03/package_wip_video.py",
+    "bytes": 4063,
+    "sha256": "c8de9d2d08d4d57a43934011319cd5bfc5b4f0202780d7409726e0a2cb28e610"
+  },
+  {
+    "path": "aok-reconstruction-r03/paint_reconstruction.py",
+    "bytes": 10775,
+    "sha256": "bf271c3d5f659338ab8326b7156e5ac30bfd201a6832caeae46aca14488eb3a8"
+  },
+  {
+    "path": "aok-reconstruction-r03/prepare_input.py",
+    "bytes": 609,
+    "sha256": "83788ccf78536459c676cbd92ad8282dfaf4259c907539ceb1ea59e4884e8d29"
+  },
+  {
+    "path": "aok-reconstruction-r03/reconstruct.py",
+    "bytes": 2511,
+    "sha256": "9d5f702b75aeadf75c5125656b30898852ad908cb65badfdef2a8a647f183ce6"
+  },
+  {
+    "path": "aok-reconstruction-r03/refine_face_paint.py",
+    "bytes": 8815,
+    "sha256": "2dce68c53ce4674665b645adeb29ea1ae7b8050d5f0bd4ce62df6eec1bee06d2"
+  },
+  {
+    "path": "aok-reconstruction-r03/render_clay_orbit.py",
+    "bytes": 4981,
+    "sha256": "c01892bc27527b687d57f997e11e5a0a8e47ebbbd7f2b90c81ebb8640c93c7b4"
+  },
+  {
+    "path": "aok-reconstruction-r03/render_painted_orbit.py",
+    "bytes": 2701,
+    "sha256": "d4fe1929b9715e54a50aec6411733e2d86cb74a63d416e3f9404c4c42d9eef03"
+  },
+  {
+    "path": "aok-reconstruction-r03/render_reconstruction.py",
+    "bytes": 4390,
+    "sha256": "947347a4308bd8d344c2ab1b7ec8e1e82f95d8e58c889bb01c2fbd83fbd72848"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/AOK_WIP_Clay_to_Paint_layout.png",
+    "bytes": 869970,
+    "sha256": "7afba423952098e03b6fd758e8026429ba76cf4c6e53d5bf017a439c00eb7994"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/AOK_WIP_Painted_Orbit_layout.png",
+    "bytes": 669473,
+    "sha256": "ce7ad816f06c1065fdea1c4600319f1e8c9b922237298f684434d2551f694905"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/clay_face_detail.png",
+    "bytes": 1482144,
+    "sha256": "d60b59902701c9615f121b3a7a9ca9cb2ec47a532d69c36ada70448950df297a"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/clay_front.png",
+    "bytes": 1351770,
+    "sha256": "2a1cd3ce244b30be50afbc3aed733f5499288b2753ec490816b317d8f703dc2a"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/clay_rear.png",
+    "bytes": 1340199,
+    "sha256": "d38cbfdc3365f2d81c8a0be59cd60a610beffc9d27ff0bca5171ebc6ba163e55"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/clay_side.png",
+    "bytes": 1306870,
+    "sha256": "e1935195d599783e231129871774c102c801b7ccfdb0823049bdc566b176597a"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/clay_three_quarter.png",
+    "bytes": 1498807,
+    "sha256": "923be11ff76370c54cc0fbe467f0d2242ab9e1740c2700bfe0a8d375d43fef49"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/face_v2_face_detail.png",
+    "bytes": 1711716,
+    "sha256": "6f1a278e455b6bf032fe7fbc4c23bf8ae5ed5750750b56ba2f1355e9f5a70141"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/face_v2_front.png",
+    "bytes": 1527946,
+    "sha256": "91123f34b6d119792c045d3c128ad60297a143f8df13f883b48b5209aedde857"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/face_v2_rear.png",
+    "bytes": 1408525,
+    "sha256": "d8be8fddcffccf713d9779ddb5bbc0a67c88a9065b7e2aecfc7914eb9d0ccbe6"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/face_v2_side.png",
+    "bytes": 1422536,
+    "sha256": "80191abff35a5b6d3acaae504a41ebfca8ae6770e1f6b2260c74da8e87f5d6f2"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/face_v2_three_quarter.png",
+    "bytes": 1705345,
+    "sha256": "5cadcf9fdf939ac3334391c09122592cc65d90d5bf3ac107503ff56369f810e5"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_above.png",
+    "bytes": 132884,
+    "sha256": "7cec4fb67992df7d9fe35ac70b82ae24f3a046f301ca0cb5f1895a8528090a22"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_back.png",
+    "bytes": 165616,
+    "sha256": "115741c5e844d2b51f7b1acee491031cf3dd028be7b57ee534b2f20144717a6f"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_below.png",
+    "bytes": 102799,
+    "sha256": "1f46a00822304f18a39eadc5b1711ec03e9a150b4573d38b530870dbf6f9a1ad"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_cycles_probe.png",
+    "bytes": 895525,
+    "sha256": "eeebb692cd53ea2d2a55078c2d9f0e6b93a9e4b3e90266343c8af8e17b34bb2b"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_eevee_probe.png",
+    "bytes": 857826,
+    "sha256": "0b46217904588e42caa817ce866f4e52da20be3eb2f96a804d5e47e335536b48"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_front.png",
+    "bytes": 143894,
+    "sha256": "4f32895e9421483b9423ef02cbbd2f86a937659d4823012e20adae067f0e3710"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_left.png",
+    "bytes": 125938,
+    "sha256": "465481f51fa97091f85dd0649dc5194bc68137d9727460e1eab325a01caa6154"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_matcap_probe.png",
+    "bytes": 1042169,
+    "sha256": "47680003dbae833403997a33a37a8d9be959f7e0d6eed6c627cbd02039deda25"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_right.png",
+    "bytes": 138420,
+    "sha256": "4081adcce991bca48d7aa785a1f5239f23be62089fcd19d4dc4edbe5a135e82c"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/orbit_style_probe.png",
+    "bytes": 1086917,
+    "sha256": "00199a25be013193cf0bede5d15872cf21802fb592da4a16e0e1d5bc932c8938"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_face_detail.png",
+    "bytes": 1689940,
+    "sha256": "918d3cdacc125f62ac218609c1f2ba762983352c3701026b51edcbb59ad97017"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_front.png",
+    "bytes": 1525583,
+    "sha256": "58909d6d440378d3adb154f18843ef6542d5f73cac5e43b171c8ba05ac56ec88"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_above.png",
+    "bytes": 182919,
+    "sha256": "34af075e67cc1ce16a8f518bfec58bcfd6cb04fa51e5a9b4c12b078a52c760ba"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_back.png",
+    "bytes": 215776,
+    "sha256": "c881b38d295ceb2d2194b3b5b782577c37338f2db666f5ff2cd9aa108c59fce4"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_below.png",
+    "bytes": 175693,
+    "sha256": "bcfc19a36e8fe4ef1b5851d88ae2df226e4d8c6aaf5fb2c17ed02ac7b1cd3fcd"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_front.png",
+    "bytes": 251250,
+    "sha256": "435022812c0bf91e0b5dac6b440ba617bbde5e71d1383c7c1db0d72a49b2b7c3"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_left.png",
+    "bytes": 191734,
+    "sha256": "ed67e7e8621365a20e078f6a7ffd4e5f0f7a75ec1a9fa9a910b5e1a412344fe7"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_orbit_right.png",
+    "bytes": 213925,
+    "sha256": "8bc94b87ac5680180d74103bc497518e2aec0de2b74156571334a95815c72202"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_rear.png",
+    "bytes": 1408747,
+    "sha256": "b70fa6199beccc6e9d0846f38430c6e90c5c64e38631e378b2d0943a5cbb13b4"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_side.png",
+    "bytes": 1421541,
+    "sha256": "4577fc8fc205c588cf57e21fee99648c652c9a7b6f1e280c46603ae869362034"
+  },
+  {
+    "path": "aok-reconstruction-r03/renders/painted_three_quarter.png",
+    "bytes": 1703563,
+    "sha256": "8d659c6da1ada1a32b9425fc2996dc0f17f511335dcedbda4f207fd136b98db0"
+  },
+  {
+    "path": "aok-reconstruction-r03/resume_orbit_render.py",
+    "bytes": 716,
+    "sha256": "2c4c52d590fda3c507e039cd135983aa8d58a60f661feed17bbe900ab473d1f2"
+  },
+  {
+    "path": "aok-reconstruction-r03/serve_review.py",
+    "bytes": 1847,
+    "sha256": "74a43752354e4c86dff9add59124daf4f75a0a5d54208b5bb1e155e78d77f5e5"
+  },
+  {
+    "path": "aok_ape_keychain_reference.png",
+    "bytes": 340550,
+    "sha256": "fec4b55f89e250086c706f13258479a70caaf20eb0b610f8a65b796ebcdf8d8c"
+  },
+  {
+    "path": "references/original-keychain-concept-sheet.png",
+    "bytes": 2012201,
+    "sha256": "7cb948ab656a50082c4559fb7a06ae1e9ec3c766417826dbda8c8f56b4007d51"
+  },
+  {
+    "path": "references/rejected-proportions-user-feedback.png",
+    "bytes": 1532221,
+    "sha256": "8caa4441d44ad8c75bba3bf1932ae26d1656dcdda7d4b80e5f1adfa539507c1f"
+  }
+]

@@ -1,0 +1,72 @@
+{
+  "store": "a-ok-shop-figure-assets",
+  "prefix": "a-ok-brand-film/trust-the-noise/2026-09-27",
+  "assets": [
+    {
+      "path": "outputs/AOK_Trust_The_Noise_15s.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/AOK_Trust_The_Noise_15s.mp4",
+      "bytes": 8370124,
+      "sha256": "3e8f951ea952d95ad240ac5412b61cf60980e9e38602a22747a99496058411bb"
+    },
+    {
+      "path": "outputs/AOK_Trust_The_Noise_15s_Silent.mp4",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/AOK_Trust_The_Noise_15s_Silent.mp4",
+      "bytes": 7801623,
+      "sha256": "fc78a11bab05408cc8bb17b0ce57fbadfe755c90712a60d3be0b1eba6b174e19"
+    },
+    {
+      "path": "outputs/AOK_Trust_The_Noise_Poster.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/AOK_Trust_The_Noise_Poster.png",
+      "bytes": 676121,
+      "sha256": "9044a09249339acf49bc681b8120916c70dfd09a7e43dac27872cdb43aad94dc"
+    },
+    {
+      "path": "outputs/AOK_Brand_Film_Source.zip",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/AOK_Brand_Film_Source.zip",
+      "bytes": 77728307,
+      "sha256": "099954b72786cee5c9e85abe0853b5dab97192b5ccd57b9cfe0cf827f7dc64bc"
+    },
+    {
+      "path": "sound/AOK_15s_Original_Score.wav",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/AOK_15s_Original_Score.wav",
+      "bytes": 4320044,
+      "sha256": "9af43875f819b2748cd3b6c359014ba4465ff6936b1787149bfac631b4d806e3"
+    },
+    {
+      "path": "renders/01-signal.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/01-signal.png",
+      "bytes": 143599,
+      "sha256": "be2c548ee000e9cbf8ff3b50cdcf3cf4d3471e13a1304423b4ea3a9a50144a45"
+    },
+    {
+      "path": "renders/02-pattern.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/02-pattern.png",
+      "bytes": 1531280,
+      "sha256": "4759ce36a926f3b4669bbfe2b2a5e1c9cb24cc5b484ed15922a07e7fd24251c8"
+    },
+    {
+      "path": "renders/03-products.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/03-products.png",
+      "bytes": 726595,
+      "sha256": "b0e3f9ecdd1117dd5596f037604e61ca66d21a7dc5327b12f688fdcb2527cfd5"
+    },
+    {
+      "path": "renders/04-object.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/04-object.png",
+      "bytes": 580030,
+      "sha256": "07571e7c91dad16f35ed2ddcd9acf6648af6c2350426314258716b5a59773a04"
+    },
+    {
+      "path": "renders/05-output.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/05-output.png",
+      "bytes": 247764,
+      "sha256": "f4040ed1b53ab11ab90a851c0fd2267adc981bfdf3de62fc8ba17854598630cd"
+    },
+    {
+      "path": "renders/06-brand.png",
+      "url": "https://5ghiacawdpwx1cyi.public.blob.vercel-storage.com/a-ok-brand-film/trust-the-noise/2026-09-27/06-brand.png",
+      "bytes": 114060,
+      "sha256": "fb9fd56702f14a305154297504304f0fba927f41cf70a1a116ba78b1ed82a9c2"
+    }
+  ]
+}

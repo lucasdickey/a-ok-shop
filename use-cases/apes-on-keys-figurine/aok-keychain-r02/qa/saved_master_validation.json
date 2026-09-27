@@ -1,0 +1,16 @@
+{
+  "revision": "R02",
+  "saved_blend_matches_export_metrics": true,
+  "vertices": 505123,
+  "triangles": 1010266,
+  "editable_objects": 540,
+  "used_print_material_regions": 14,
+  "packed_reference_images": 2,
+  "cameras": 9,
+  "character_height_datum_mm": 101.6,
+  "bounds_size_mm": [
+    55.31936836242676,
+    37.20911979675293,
+    109.38647756068531
+  ]
+}

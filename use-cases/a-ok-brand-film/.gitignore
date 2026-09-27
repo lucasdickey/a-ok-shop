@@ -1,0 +1,9 @@
+*.mp4
+*.mov
+*.png
+*.wav
+*.blend
+*.blend1
+.runtime/
+__pycache__/
+*.zip

@@ -1,0 +1,94 @@
+{
+  "stl": {
+    "size_bytes": 50513384,
+    "vertices": 505123,
+    "faces": 1010266,
+    "bounds_mm": [
+      [
+        -27.65969467163086,
+        -21.665321350097656,
+        -0.00010976283374475315
+      ],
+      [
+        27.6596736907959,
+        15.543798446655273,
+        109.38636779785156
+      ]
+    ],
+    "extents_mm": [
+      55.31936836242676,
+      37.20911979675293,
+      109.38647756068531
+    ],
+    "watertight": true,
+    "winding_consistent": true,
+    "positive_volume": true,
+    "volume_mm3": 72459.27649648632,
+    "connected_components": 1,
+    "zero_area_faces": 0,
+    "finite_coordinates": true,
+    "sha256": "0b917e3d43828da49eb0170c3f2c49ade658bab2b00a19e6d98c1845ef585863"
+  },
+  "obj": {
+    "size_bytes": 40095539,
+    "vertices": 505123,
+    "faces": 1010266,
+    "bounds_mm": [
+      [
+        -27.659695,
+        -21.665321,
+        -0.00011
+      ],
+      [
+        27.659674,
+        15.543798,
+        109.386368
+      ]
+    ],
+    "extents_mm": [
+      55.319368999999995,
+      37.209119,
+      109.38647800000001
+    ],
+    "watertight": true,
+    "winding_consistent": true,
+    "positive_volume": true,
+    "volume_mm3": 72459.27651913943,
+    "connected_components": 1,
+    "zero_area_faces": 0,
+    "finite_coordinates": true,
+    "sha256": "b0b5c017a8eca313b8723f3b95f1750e54a0fc5d407a4aeeaba69f093f19140f"
+  },
+  "3mf": {
+    "size_bytes": 14076322,
+    "vertices": 505123,
+    "faces": 1010266,
+    "bounds_mm": [
+      [
+        -27.659695,
+        -21.665321,
+        -0.00011
+      ],
+      [
+        27.659674,
+        15.543798,
+        109.386368
+      ]
+    ],
+    "extents_mm": [
+      55.319368999999995,
+      37.209119,
+      109.38647800000001
+    ],
+    "watertight": true,
+    "winding_consistent": true,
+    "positive_volume": true,
+    "volume_mm3": 72459.27651913943,
+    "connected_components": 1,
+    "zero_area_faces": 0,
+    "finite_coordinates": true,
+    "sha256": "a6d51af0a8d019ba982ead759119df16e5e3287a6333761d5c50ce11150cf52c"
+  },
+  "cross_format_geometry_match": true,
+  "three_mf_explicit_millimeter_units": true
+}

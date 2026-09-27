@@ -300,3 +300,11 @@ Open `/concepts` to compare all 26 storefront concepts at desktop or mobile widt
 See [the round-four review](session/0907-codex-gpt6/design-concepts.md) for the recommendation, tradeoffs, verification, and regeneration instructions. Direct previews are also listed at `/design-concepts/`.
 
 See [the Astra round-five review](session/0923-astra-round-five/review.md) for the 20-concept audit, weighted comparison, and verification. Astra’s original draft numbers 21–23 became 24–26 at publication to preserve the already-published Claude Code trio.
+
+## Figure prototype and WIP footage
+
+The [Apes on Keys figure project](use-cases/apes-on-keys-figurine/README.md) contains the sculpting scripts, design history, review pages, and a manifest of Vercel Blob downloads. Large models, videos, and the complete project archive live in the shop’s `a-ok-shop-figure-assets` store. Blender and inference tooling remain local.
+
+## A-OK brand film
+
+[Trust the Noise](use-cases/a-ok-brand-film/README.md) is a 15-second motion film with kinetic typography, catalog art, newly rendered Blender cinematography, and an original score. Video and editable source downloads are hosted in Vercel Blob. The review page is `/use-cases/a-ok-brand-film/index.html`.

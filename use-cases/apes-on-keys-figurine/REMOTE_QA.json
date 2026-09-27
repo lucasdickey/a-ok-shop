@@ -1,0 +1,140 @@
+{
+  "range_checks": [
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint_Poster.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit_Poster.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit.mp4",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint.mp4",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/AOK_R03_Painted_Globular_Orbit.mp4",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/AOK_R03_Clay_Globular_Orbit.mp4",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/AOK_WIP_Sales_Collateral.zip",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_above.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_back.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_below.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_front.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_left.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/renders/painted_orbit_right.png",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/collateral/AOK_WIP_Video_Edit.blend",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/R03_painted_globular_animation.blend",
+      "http": 206,
+      "range_matches_local": true
+    },
+    {
+      "path": "aok-reconstruction-r03/outputs/R03_clay_globular_animation.blend",
+      "http": 206,
+      "range_matches_local": true
+    }
+  ],
+  "archive_contents": {
+    "files": 195,
+    "all_file_sha256_match": true
+  },
+  "restore_integration": {
+    "missing_files_restored": 194,
+    "existing_file_preserved": true,
+    "source": "local snapshot of the uploaded archive"
+  },
+  "repository_checks": {
+    "lint": "passed with pre-existing warnings",
+    "build": "passed",
+    "base": "origin/main"
+  },
+  "remote_full_sha256_verified": [
+    "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint_Poster.png",
+    "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit_Poster.png",
+    "aok-reconstruction-r03/collateral/AOK_WIP_Painted_Orbit.mp4",
+    "aok-reconstruction-r03/collateral/AOK_WIP_Clay_to_Paint.mp4",
+    "aok-reconstruction-r03/outputs/AOK_R03_Painted_Globular_Orbit.mp4",
+    "aok-reconstruction-r03/outputs/AOK_R03_Clay_Globular_Orbit.mp4",
+    "aok-reconstruction-r03/AOK_WIP_Sales_Collateral.zip",
+    "aok-reconstruction-r03/renders/painted_orbit_above.png",
+    "aok-reconstruction-r03/renders/painted_orbit_back.png",
+    "aok-reconstruction-r03/renders/painted_orbit_below.png",
+    "aok-reconstruction-r03/renders/painted_orbit_front.png",
+    "aok-reconstruction-r03/renders/painted_orbit_left.png",
+    "aok-reconstruction-r03/renders/painted_orbit_right.png",
+    "aok-reconstruction-r03/collateral/AOK_WIP_Video_Edit.blend"
+  ],
+  "browser": {
+    "painted": {
+      "duration": 30,
+      "ready_state": 4,
+      "seekable": [
+        0,
+        30
+      ]
+    },
+    "comparison": {
+      "duration": 30,
+      "ready_state": 4,
+      "seekable": [
+        0,
+        30
+      ]
+    },
+    "media_source": "Vercel Blob public URLs"
+  },
+  "remote_archive_full_sha256_verified": true,
+  "hosted_review": {
+    "url": "https://a-ok-shop-3ckcjf86f-lucasdickeys-projects.vercel.app/use-cases/apes-on-keys-figurine/index.html",
+    "authenticated_http_status": 200,
+    "matches_generated_html": true,
+    "access": "Existing Vercel preview sign-in policy"
+  }
+}

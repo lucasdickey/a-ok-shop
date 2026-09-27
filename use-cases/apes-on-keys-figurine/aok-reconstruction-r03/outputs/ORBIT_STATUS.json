@@ -1,0 +1,17 @@
+{
+  "base_geometry_changed": false,
+  "vertex_sha256": "a440587b580628500d529e5037e96cc2864b573da765961911d233bc00b46a93",
+  "fps": 24,
+  "frames": 720,
+  "duration_seconds": 30,
+  "resolution": [
+    900,
+    900
+  ],
+  "elevation_degrees": [
+    -83,
+    83
+  ],
+  "method": "Blender Cycles native camera animation and H.264/MPEG-4 animation output",
+  "appearance": "Original unpainted clay; floor hidden for underside inspection"
+}
