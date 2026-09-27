@@ -1,0 +1,35 @@
+[
+  {
+    "file": "AOK_R03_Painted_Globular_Orbit.mp4",
+    "frames": 720,
+    "duration": 30.0,
+    "width": 900,
+    "height": 900,
+    "fps": "24/1",
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "bytes": 4891069
+  },
+  {
+    "file": "AOK_WIP_Painted_Orbit.mp4",
+    "frames": 720,
+    "duration": 30.0,
+    "width": 1080,
+    "height": 1080,
+    "fps": "24/1",
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "bytes": 5181362
+  },
+  {
+    "file": "AOK_WIP_Clay_to_Paint.mp4",
+    "frames": 720,
+    "duration": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "fps": "24/1",
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "bytes": 7461536
+  }
+]

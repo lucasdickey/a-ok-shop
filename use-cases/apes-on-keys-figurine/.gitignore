@@ -1,0 +1,20 @@
+# Large assets are restored from the Blob manifest, never committed.
+*.blend
+*.blend1
+*.zip
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.3mf
+*.stl
+*.obj
+*.glb
+*.ply
+*.pt
+*.mp4
+*.pyc
+__pycache__/
+.DS_Store
+tooling
+.remote-cache/

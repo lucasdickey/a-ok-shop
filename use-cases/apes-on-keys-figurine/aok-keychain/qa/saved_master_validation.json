@@ -1,0 +1,17 @@
+{
+  "blend_reopened": true,
+  "print_master_name": "AOK_PRINT_MASTER_MM",
+  "vertices": 523445,
+  "triangles": 1046938,
+  "applied_scale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "scene_unit_scale": 0.0010000000474974513,
+  "used_materials": 14,
+  "camera_count": 9,
+  "editable_objects": 432,
+  "packed_reference_images": 2,
+  "matches_export_counts": true
+}

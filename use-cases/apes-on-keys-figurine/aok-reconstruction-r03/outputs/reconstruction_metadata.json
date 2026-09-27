@@ -1,0 +1,25 @@
+{
+  "status": "experimental geometry; not approved for printing",
+  "model": "tencent/Hunyuan3D-2mini",
+  "subfolder": "hunyuan3d-dit-v2-mini",
+  "device": "mps",
+  "seed": 29,
+  "steps": 30,
+  "octree_resolution": 512,
+  "vertices": 568365,
+  "faces": 1136772,
+  "bounds": [
+    [
+      -0.57762610912323,
+      -0.9998268485069275,
+      -0.4261602759361267
+    ],
+    [
+      0.5760769248008728,
+      0.9998983144760132,
+      0.41689836978912354
+    ]
+  ],
+  "elapsed_seconds": 124.60155177116394,
+  "input_method": "Unmodified source RGB pixels; main-figure crop and rembg alpha mask only. No raster image generation."
+}

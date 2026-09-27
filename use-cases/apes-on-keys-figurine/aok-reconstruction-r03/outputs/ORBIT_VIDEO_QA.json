@@ -1,0 +1,21 @@
+{
+  "width": 900,
+  "height": 900,
+  "fps": "24/1",
+  "decoded_frames": 720,
+  "duration_seconds": 30.0,
+  "codec": "h264",
+  "pixel_format": "yuv420p",
+  "file_bytes": 2316187,
+  "consecutive_frame_ranges": [
+    [
+      1,
+      203
+    ],
+    [
+      204,
+      720
+    ]
+  ],
+  "assembly": "Lossless concat; no frame interpolation or image manipulation; fast-start MP4"
+}

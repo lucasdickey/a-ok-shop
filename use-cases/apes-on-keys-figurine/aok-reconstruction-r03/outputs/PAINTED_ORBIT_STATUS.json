@@ -1,0 +1,15 @@
+{
+  "base_geometry_changed": false,
+  "vertex_sha256": "a440587b580628500d529e5037e96cc2864b573da765961911d233bc00b46a93",
+  "fps": 24,
+  "frames": 720,
+  "duration_seconds": 30,
+  "resolution": [
+    900,
+    900
+  ],
+  "paint_source": "R03_face_paint_v2.blend",
+  "camera_source": "R03_clay_globular_animation.blend",
+  "comparison": "Identical camera, lighting, timing and base mesh; appearance changes only",
+  "status": "Work-in-progress digital render"
+}
