@@ -1,0 +1,35 @@
+{
+  "programs": [],
+  "stream_groups": [],
+  "streams": [
+    {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30/1",
+      "duration": "15.000000",
+      "nb_read_frames": "450"
+    },
+    {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "sample_rate": "48000",
+      "channels": 2,
+      "r_frame_rate": "0/0",
+      "duration": "15.000000",
+      "nb_read_frames": "704"
+    }
+  ],
+  "format": {
+    "duration": "15.000000",
+    "size": "8370124"
+  },
+  "visual_review": {
+    "sampled_frames": 14,
+    "transition_gaps": false,
+    "hero_clears_frame": true,
+    "end_card_legible": true,
+    "independent_review": "passed"
+  }
+}

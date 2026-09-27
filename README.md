@@ -304,3 +304,7 @@ See [the Astra round-five review](session/0923-astra-round-five/review.md) for t
 ## Figure prototype and WIP footage
 
 The [Apes on Keys figure project](use-cases/apes-on-keys-figurine/README.md) contains the sculpting scripts, design history, review pages, and a manifest of Vercel Blob downloads. Large models, videos, and the complete project archive live in the shop’s `a-ok-shop-figure-assets` store. Blender and inference tooling remain local.
+
+## A-OK brand film
+
+[Trust the Noise](use-cases/a-ok-brand-film/README.md) is a 15-second motion film with kinetic typography, catalog art, newly rendered Blender cinematography, and an original score. Video and editable source downloads are hosted in Vercel Blob. The review page is `/use-cases/a-ok-brand-film/index.html`.

@@ -1,0 +1,18 @@
+{
+  "path": "/Users/ld/Documents/github-lucasdickey/a-ok-shop/use-cases/a-ok-brand-film/sound/AOK_15s_Original_Score.wav",
+  "duration_seconds": 15.0,
+  "sample_rate": 48000,
+  "channels": 2,
+  "bit_depth": 24,
+  "tempo_bpm": 120,
+  "beats": 30,
+  "sample_peak_dbfs": -1.2000000000000006,
+  "rms_dbfs": -18.255822421713155,
+  "clipped_samples": 0,
+  "provenance": "Original procedural synthesis. No third-party samples, voices, or recordings.",
+  "seed": 260927,
+  "integrated_lufs": -16.8,
+  "true_peak_dbfs": -1.2,
+  "loudness_range_lu": 1.6,
+  "loudness_measurement": "FFmpeg ebur128=peak=true"
+}
