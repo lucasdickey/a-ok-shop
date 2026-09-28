@@ -88,10 +88,11 @@ export default function TextAnimatedLogo() {
     <Link
       href="/"
       className="flex items-center"
+      aria-label="A-OK home"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="logo-text-container">
+      <div className="logo-text-container" aria-hidden="true">
         {/* A letter - appears first */}
         <span className={`logo-letter ${isAnimating ? "animate-a" : ""}`}>
           A

@@ -20,6 +20,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://a-ok.ai"),
   title: "ꓘO-∀ - A-OK Merch",
   description: "Apes On Keys - Nerd Streetwear (for real)",
   icons: {

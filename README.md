@@ -149,8 +149,10 @@ ACP endpoints implement origin-based CORS validation for security.
 
 **Production Mode**:
 Default allowed origins:
-- `https://a-ok.shop`
-- `https://www.a-ok.shop`
+- `https://a-ok.ai`
+- `https://www.a-ok.ai`
+- `https://a-ok.shop` (legacy, during the domain move)
+- `https://www.a-ok.shop` (legacy, during the domain move)
 
 To configure custom allowed origins for production, set the `ACP_ALLOWED_ORIGINS` environment variable:
 
@@ -285,7 +287,7 @@ a-ok-shop/
 
 - Website: [apesonkeys.com](https://www.apesonkeys.com)
 - Twitter: [@apesonkeys](https://x.com/apesonkeys)
-- Email: info@a-ok.shop
+- Email: info@a-ok.ai
 
 ## License
 
