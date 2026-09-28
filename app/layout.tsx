@@ -20,23 +20,23 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "ꓘO-∀ - Shop A-OK Merch",
+  title: "ꓘO-∀ - A-OK Merch",
   description: "Apes On Keys - Nerd Streetwear (for real)",
   icons: {
     icon: [{ url: "/images/a-ok-o-face.png" }],
     apple: [{ url: "/images/a-ok-o-face.png" }],
   },
   openGraph: {
-    title: "ꓘO-∀ - Shop A-OK Merch",
+    title: "ꓘO-∀ - A-OK Merch",
     description: "Apes On Keys - Nerd Streetwear (for real)",
-    url: "https://www.a-ok.shop/",
-    siteName: "a-ok.shop",
+    url: "https://a-ok.ai/",
+    siteName: "a-ok.ai",
     images: [
       {
         url: "/images/og_image.png",
         width: 768,
         height: 512,
-        alt: "A-OK Shop - Apes On Keys",
+        alt: "A-OK - Apes On Keys",
       }
     ],
     locale: "en_US",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ꓘO-∀ - Shop A-OK Merch",
+    title: "ꓘO-∀ - A-OK Merch",
     description: "Apes On Keys - Nerd Streetwear (for real)",
     images: ["/images/og_image.png"],
   },

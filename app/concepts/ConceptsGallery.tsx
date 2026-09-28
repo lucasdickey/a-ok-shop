@@ -181,7 +181,7 @@ export default function ConceptsGallery() {
         {/* Header */}
         <header className="mb-8">
           <p className="text-[11px] uppercase tracking-[5px] text-[#F5F2DC]/40">
-            A-OK.SHOP · Design review
+            A-OK.AI · Design review
           </p>
           <h1
             className="mt-2 text-4xl leading-none tracking-wide text-[#F5F2DC] sm:text-6xl"
@@ -241,7 +241,7 @@ export default function ConceptsGallery() {
                 <span className="h-3 w-3 rounded-full bg-[#28c840]" />
               </div>
               <div className="flex-1 truncate rounded bg-[#0A0A0A] px-3 py-1 font-mono text-xs text-[#F5F2DC]/50">
-                a-ok.shop{current.file}
+                a-ok.ai{current.file}
               </div>
               <button
                 ref={expandRef}

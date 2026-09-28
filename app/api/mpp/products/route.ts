@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(
     {
       version: "1.0.0",
-      shop: "A-OK Shop",
+      shop: "A-OK",
       description: "Agentic commerce feed for machine-to-machine shopping.",
       products: agentProducts,
       endpoints: {

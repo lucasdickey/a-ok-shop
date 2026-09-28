@@ -120,13 +120,13 @@ export default function TextAnimatedLogo() {
           .
         </span>
 
-        {/* Shop - appears last */}
+        {/* .ai - appears last */}
         <span
           className={`logo-letter shop-text ${
             isAnimating ? "animate-shop" : ""
           }`}
         >
-          shop
+          ai
         </span>
       </div>
     </Link>
