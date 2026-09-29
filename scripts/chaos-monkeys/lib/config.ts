@@ -5,7 +5,7 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 
 export const TOOL_DIR = path.resolve(import.meta.dirname, "..");
-/** Everything local to this Mac: the publish worktree, drafts, fonts, and logs. */
+/** Everything local to this Mac: the publish clone, drafts, fonts, and logs. */
 export const STATE_DIR = process.env.CHAOS_STATE ?? path.join(os.homedir(), ".a-ok-chaos");
 export const SITE_DIR = path.join(STATE_DIR, "site");
 export const RUNS_DIR = path.join(STATE_DIR, "runs");

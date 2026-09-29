@@ -15,7 +15,7 @@ Every morning at 9:07 (or at login if the Mac was off), this Mac drafts about si
 
 ## Ship
 
-Only ship the draft numbers the user names; never choose for them. Run `~/.a-ok-chaos/bin/chaos ship <numbers>`, e.g. `ship 2 4 5`. It assigns the next series numbers, writes WebP images and the manifest in the publish worktree, runs lint and build, commits, pushes to main, and waits for Vercel. Report the new numbers and the deployment result. If lint or build fails, the tool discards its changes; report the log path it prints.
+Only ship the draft numbers the user names; never choose for them. Run `~/.a-ok-chaos/bin/chaos ship <numbers>`, e.g. `ship 2 4 5`. It assigns the next series numbers, writes WebP images and the manifest in the publish clone, runs lint and build, commits, pushes to main, and waits for Vercel. Report the new numbers and the deployment result. If lint or build fails, the tool discards its changes; report the log path it prints.
 
 ## Other commands
 
@@ -26,5 +26,5 @@ Only ship the draft numbers the user names; never choose for them. Run `~/.a-ok-
 
 ## Rules
 
-- Never edit the manifest by hand, and never commit or push from the user's own checkout; the tool publishes from its own worktree.
+- Never edit the manifest by hand, and never commit or push from the user's own checkout; the tool publishes from its own clone.
 - If a command fails because Codex or Claude is logged out, tell the user to run `codex login`, or to open Claude Code and log in, and stop.

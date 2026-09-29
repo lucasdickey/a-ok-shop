@@ -456,10 +456,10 @@ async function install(): Promise<void> {
   fs.writeFileSync(
     launcher,
     `#!/bin/zsh
-# A-OK Chaos Monkeys: runs the tool from the publish worktree, synced to origin/main. Written by \`chaos install\`.
+# A-OK Chaos Monkeys: runs the tool from the publish clone, synced to origin/main. Written by \`chaos install\`.
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export CHAOS_STATE="${STATE_DIR}"
-cd "${SITE_DIR}" || { echo "no publish worktree; run chaos install"; exit 1; }
+cd "${SITE_DIR}" || { echo "no publish clone; run chaos install"; exit 1; }
 if git fetch --quiet origin main; then
   if [ -z "$(git status --porcelain)" ] && { [ -z "$(git rev-list origin/main..HEAD)" ] || [ -n "$(git branch -r --contains HEAD)" ]; }; then
     git checkout --quiet --detach origin/main
@@ -521,7 +521,7 @@ async function uninstall(): Promise<void> {
   await run("launchctl", ["bootout", `gui/${os.userInfo().uid}`, PLIST]);
   fs.rmSync(PLIST, { force: true });
   fs.rmSync(path.dirname(SKILL_TARGET), { recursive: true, force: true });
-  log(`removed the daily job and the skill; drafts and the publish worktree stay in ${STATE_DIR}`);
+  log(`removed the daily job and the skill; drafts and the publish clone stay in ${STATE_DIR}`);
 }
 
 /* ------------------------------------------------------------------ main */

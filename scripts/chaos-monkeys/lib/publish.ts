@@ -1,14 +1,14 @@
 /**
- * Publishing: a dedicated, detached git worktree of the shop (never your working checkout). Shipping writes the
- * images and the manifest there, runs lint and build like any other change, then commits and pushes; Vercel
- * deploys from the branch.
+ * Publishing: a dedicated clone of the shop in ~/.a-ok-chaos/site, never your working checkout. It lives outside
+ * ~/Documents because macOS keeps background jobs out of that folder. Shipping writes the images and the manifest
+ * there, runs lint and build like any other change, then commits and pushes; Vercel deploys from the branch.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { IMAGE_DIR, LOGS_DIR, MANIFEST_PATH, SITE_DIR, TOOL_DIR, log, run, runOrThrow, type ManifestEntry } from "./config.ts";
 
-/** The main repository this tool belongs to, even when the tool runs from a worktree. */
+/** The repository this copy of the tool runs from (your checkout, or the publish clone under launchd). */
 export async function repoRoot(): Promise<string> {
   const common = (await runOrThrow("git", ["-C", TOOL_DIR, "rev-parse", "--path-format=absolute", "--git-common-dir"])).trim();
   return path.dirname(common);
@@ -16,27 +16,27 @@ export async function repoRoot(): Promise<string> {
 
 const git = (...args: string[]) => runOrThrow("git", ["-C", SITE_DIR, ...args]);
 
-/** Creates the publish worktree if needed and moves it to origin/<branch>, refusing to discard any work. */
+/** Creates the publish clone if needed and moves it to origin/<branch>, refusing to discard any work. */
 export async function syncSite(branch: string): Promise<void> {
-  const repo = await repoRoot();
-  await runOrThrow("git", ["-C", repo, "fetch", "--quiet", "origin", branch]);
-  if (!fs.existsSync(SITE_DIR)) {
+  if (!fs.existsSync(path.join(SITE_DIR, ".git"))) {
+    const origin = (await runOrThrow("git", ["-C", TOOL_DIR, "remote", "get-url", "origin"])).trim();
     fs.mkdirSync(path.dirname(SITE_DIR), { recursive: true });
-    await runOrThrow("git", ["-C", repo, "worktree", "add", "--detach", SITE_DIR, `origin/${branch}`]);
-    log(`created the publish worktree at ${SITE_DIR}`);
+    log(`cloning the shop into ${SITE_DIR} (once; history blobs are fetched on demand)…`);
+    await runOrThrow("git", ["clone", "--quiet", "--filter=blob:none", "--branch", branch, origin, SITE_DIR], { timeoutMs: 30 * 60_000 });
+    await git("checkout", "--quiet", "--detach");
     return;
   }
   await git("fetch", "--quiet", "origin", branch);
   const dirty = (await git("status", "--porcelain")).trim();
-  if (dirty) throw new Error(`the publish worktree has uncommitted changes:\n${dirty}\nInspect ${SITE_DIR} before shipping.`);
+  if (dirty) throw new Error(`the publish clone has uncommitted changes:\n${dirty}\nInspect ${SITE_DIR} before shipping.`);
   const unpushed = (await git("log", "--oneline", `origin/${branch}..HEAD`)).trim();
   if (unpushed && (await git("branch", "-r", "--contains", "HEAD")).trim() === "") {
-    throw new Error(`the publish worktree has commits that were never pushed:\n${unpushed}`);
+    throw new Error(`the publish clone has commits that were never pushed:\n${unpushed}`);
   }
   await git("checkout", "--quiet", "--detach", `origin/${branch}`);
 }
 
-/** Published monkeys on a branch, read without touching any worktree. Empty before the site supports them. */
+/** Published monkeys on a branch, read from git without touching any working tree. Empty before the site supports them. */
 export async function publishedOn(branch: string): Promise<ManifestEntry[]> {
   const repo = await repoRoot();
   await run("git", ["-C", repo, "fetch", "--quiet", "origin", branch]);
@@ -62,13 +62,13 @@ export function imagePath(id: string): { file: string; url: string; relative: st
   return { file: path.join(SITE_DIR, relative), url: `/chaos-monkeys/${id}.webp`, relative };
 }
 
-/** Installs dependencies in the publish worktree when its lockfile changes. */
+/** Installs dependencies in the publish clone when its lockfile changes. */
 async function ensureDependencies(): Promise<void> {
   const lock = fs.readFileSync(path.join(SITE_DIR, "package-lock.json"));
   const digest = crypto.createHash("sha256").update(lock).digest("hex");
   const stamp = path.join(SITE_DIR, "node_modules", ".chaos-lock-sha256");
   if (fs.existsSync(stamp) && fs.readFileSync(stamp, "utf8") === digest) return;
-  log("installing dependencies in the publish worktree (npm ci)…");
+  log("installing dependencies in the publish clone (npm ci)…");
   await runOrThrow("npm", ["ci", "--no-audit", "--no-fund"], { cwd: SITE_DIR, timeoutMs: 15 * 60_000 });
   fs.writeFileSync(stamp, digest);
 }
@@ -85,7 +85,7 @@ export async function verifySite(): Promise<void> {
   }
 }
 
-/** Puts the worktree back on its commit, removing anything shipping added. */
+/** Puts the clone back on its commit, removing anything shipping added. */
 export async function discardChanges(): Promise<void> {
   await git("checkout", "--quiet", "--", ".");
   await git("clean", "--quiet", "-fd", "--", IMAGE_DIR);

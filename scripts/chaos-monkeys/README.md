@@ -10,7 +10,7 @@ The daily drop of new A-OK apes, made on this Mac using the Claude Code and Code
 | Compose | Claude's templates | `render/templates.ts` in headless Chrome: **specimen** (giant title behind the ape) and **form** (die-cut sticker, rubber-stamp title) |
 | Judge | Claude | Reads every draft and scores spelling, character, rules, and whether the joke lands at thumbnail size |
 | Pick | You | `/chaos-monkeys` in Claude Code, or `chaos status`, then `chaos ship 2 4 5` |
-| Publish | The tool | WebP images and `app/data/chaos-monkeys.json` in a dedicated worktree, then `npm run lint`, `npm run build`, commit, and push to `main`. Vercel deploys |
+| Publish | The tool | WebP images and `app/data/chaos-monkeys.json` in a dedicated clone at `~/.a-ok-chaos/site` (outside ~/Documents, which macOS keeps from background jobs), then `npm run lint`, `npm run build`, commit, and push to `main`. Vercel deploys |
 
 If Codex hits a usage limit, the rest of the day's drafts fall back to the A-OK badge in the same templates, so there is always something to pick.
 
@@ -22,7 +22,7 @@ Requirements: Node 23.6 or later (runs the TypeScript directly), Google Chrome, 
 node scripts/chaos-monkeys/chaos.ts install
 ```
 
-This creates `~/.a-ok-chaos/` (the publish worktree, drafts, logs, and a font cache), writes the launcher `~/.a-ok-chaos/bin/chaos`, loads the launch agent `shop.a-ok.chaos-monkeys` (daily at 9:07, and at login to catch up), and installs the `/chaos-monkeys` skill for Claude Code. The launcher always runs the tool from `main`, so merged changes take effect the next morning. `chaos uninstall` removes the job and the skill but keeps the drafts.
+This creates `~/.a-ok-chaos/` (the publish clone, drafts, logs, and a font cache), writes the launcher `~/.a-ok-chaos/bin/chaos`, loads the launch agent `shop.a-ok.chaos-monkeys` (daily at 9:07, and at login to catch up), and installs the `/chaos-monkeys` skill for Claude Code. The launcher always runs the tool from `main`, so merged changes take effect the next morning. `chaos uninstall` removes the job and the skill but keeps the drafts.
 
 ## Commands
 
@@ -41,7 +41,7 @@ This creates `~/.a-ok-chaos/` (the publish worktree, drafts, logs, and a font ca
 - Claude runs with `--restricted`: no shell or code tools, no settings or hooks, and file access confined to the run directory. `--bare` must not be used, because it ignores the Claude login and requires an API key.
 - Codex runs with `--sandbox workspace-write`, confined to one job directory, and is told never to use its API-key fallback.
 - Nothing is published without a human pick. Every ship goes through the same lint and build as any other change, and the site rejects a malformed manifest at build time (`app/lib/chaos-monkeys.ts`).
-- Shipping never touches your working checkout. It refuses to run if the publish worktree has uncommitted or unpushed work.
+- Shipping never touches your working checkout. It refuses to run if the publish clone has uncommitted or unpushed work.
 
 ## Editing
 
