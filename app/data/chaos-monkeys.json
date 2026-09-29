@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "0001",
+    "date": "2026-09-29",
+    "title": "EXISTENTIAL RISK",
+    "slogan": "MAY END HUMANITY. RATED STRONG BUY.",
+    "joke": "The ape pitches investors with a rising chart in one hand and a hazard sign in the other, because the risk-factors page now lists the end of the world right next to strong growth.",
+    "alt": "The A-OK ape, stamped EXISTENTIAL RISK on an official prospectus form, proudly holds up a rising stock arrow in one hand and a red hazard warning sign in the other.",
+    "image": "/chaos-monkeys/0001.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "hybrid",
+    "credit": "Illustrated by GPT-6-Astra, art-directed by Claude",
+    "parents": [],
+    "inspiration": {
+      "label": "Zingers, 2026-09-29",
+      "url": "https://zingers.dev/zingers/2026-09-29"
+    }
+  },
+  {
+    "id": "0002",
+    "date": "2026-09-29",
+    "title": "TEMPERATURE 2.0",
+    "slogan": "MAXIMUM CREATIVITY. MINIMUM SENSE.",
+    "joke": "The ape's sampling temperature has been cranked so high he is literally running a fever while still rolling dice for his next word.",
+    "alt": "The A-OK ape, feverish with a thermometer in his mouth and an ice pack on his cap, flings a handful of dice in front of giant letters reading TEMPERATURE 2.0.",
+    "image": "/chaos-monkeys/0002.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "hybrid",
+    "credit": "Illustrated by GPT-6-Astra, art-directed by Claude",
+    "parents": []
+  },
+  {
+    "id": "0003",
+    "date": "2026-09-29",
+    "title": "OVERFITTING",
+    "slogan": "FITS THE TRAINING DATA. NOTHING ELSE.",
+    "joke": "The ape has overfitted so hard his hoodie is skin-tight to one exact pose and he can't move at all.",
+    "alt": "The A-OK ape, squeezed into a hoodie several sizes too small with seams splitting, stands frozen in one stiff pose in front of giant letters reading OVERFITTING.",
+    "image": "/chaos-monkeys/0003.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "hybrid",
+    "credit": "Illustrated by GPT-6-Astra, art-directed by Claude",
+    "parents": []
+  },
+  {
+    "id": "0004",
+    "date": "2026-09-29",
+    "title": "CAPTCHA SOLVED",
+    "slogan": "NOT A ROBOT. NOT A HUMAN. A-OK.",
+    "joke": "The ape squints at a grid of picture tiles hunting for traffic lights, earnestly trying to prove he is not a robot.",
+    "alt": "The A-OK ape, as a die-cut sticker on a human verification form stamped CAPTCHA SOLVED, points uncertainly at one square of a big picture-tile grid.",
+    "image": "/chaos-monkeys/0004.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "hybrid",
+    "credit": "Illustrated by GPT-6-Astra, art-directed by Claude",
+    "parents": []
+  },
+  {
+    "id": "0005",
+    "date": "2026-09-29",
+    "title": "APE IN THE LOOP",
+    "slogan": "FULLY SUPERVISED. BARELY HOLDING ON.",
+    "joke": "The ape is the human-in-the-loop, taken literally: strapped into a roller-coaster car at the top of a vertical loop, still expected to supervise.",
+    "alt": "The A-OK ape rides upside down at the top of a roller-coaster loop, clutching a clipboard, under the title APE IN THE LOOP.",
+    "image": "/chaos-monkeys/0005.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": []
+  }
+]
