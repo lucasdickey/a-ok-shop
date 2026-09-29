@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
+import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
+import { formatDropDate, getChaosMonkeys, getLatestDrop } from "@/app/lib/chaos-monkeys";
 import fs from "fs";
 import path from "path";
 
@@ -84,9 +86,15 @@ export default async function Home() {
     console.error("Error fetching featured products:", error);
   }
 
-  // Get gallery images using the new function
-  const galleryImages = await getGalleryImages();
+  // Get gallery images using the new function. Published Chaos Monkeys join the grid's pool.
+  const chaosMonkeyImages = getChaosMonkeys().map((monkey) => ({
+    name: monkey.title,
+    url: monkey.image,
+    source: "chaos-monkeys",
+  }));
+  const galleryImages = [...chaosMonkeyImages, ...(await getGalleryImages())];
   const hasGalleryImages = galleryImages.length > 0;
+  const latestDrop = getLatestDrop();
 
   return (
     <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
@@ -299,6 +307,25 @@ export default async function Home() {
             </h2>
           </Link>
         </div>
+        {latestDrop.length > 0 && (
+          <div className="mb-10">
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
+                Latest drop · {formatDropDate(latestDrop[0].date)}
+              </p>
+              <Link href="/chaos-monkeys" className="text-sm font-semibold underline hover:text-primary">
+                Every Chaos Monkey →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {latestDrop.map((monkey) => (
+                <Link key={monkey.id} href={`/chaos-monkeys#n${monkey.id}`} className="group block">
+                  <ChaosMonkeyCard monkey={monkey} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
         {galleryImages && galleryImages.length > 0 ? (
           <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
         ) : (
