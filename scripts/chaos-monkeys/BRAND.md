@@ -21,6 +21,7 @@ Dry, specific AI-culture satire that is in on its own joke. The brand is made by
 - **Title:** one to three words. Take a real AI or computing term and make the ape literally do it, suffer it, or work as it, e.g. ZERO-SHOT, RATE-LIMITED, CONTEXT WINDOW WASHER, CERTIFIED A-OK.
 - **Slogan:** one line of at most 45 characters with a two- or three-beat rhythm, e.g. NO EXAMPLES. NO PROBLEM. NO IDEA. / CLEAN CONTEXT. CLEAR CONSCIENCE. / PLEASE HOLD. YOUR APE IS IMPORTANT TO US. / 95% CONFIDENCE. 100% APE.
 - **The picture carries the joke on its own.** Someone who sees only the thumbnail should get the gag from what the ape is doing.
+- **Dry, not silly.** The joke comes from the idea. Skip banana punchlines, slapstick, and other monkey clichés.
 - **Good territory:** tokens, context windows, hallucination, temperature, rate limits, fine-tuning, overfitting, benchmarks, evals, alignment, agents, tool calls, retries, prompts, system prompts, latency, caching, embeddings, attention, inference, model cards, datasets, labeling, GPUs (generic), chain of thought, guardrails.
 - **Avoid** jokes that only land if you know a specific company, product, person, or news story.
 
