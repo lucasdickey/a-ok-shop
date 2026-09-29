@@ -1,0 +1,32 @@
+{
+  "brand": {
+    "character": "The A-OK ape: black fur, warm tan face, eyes wide open, a round surprised 'O' mouth, a red-and-white baseball cap printed 'A-OK', red over-ear headphones. Often wears a red hoodie printed 'APES ON KEYS'.",
+    "style": "Bold screen-print poster art: flat colour, confident thick black linework, subtle halftone and paper texture, WPA / propaganda-poster energy. Graphic, not photographic, not 3D-rendered.",
+    "palette": "Signal red #C8161D, ink black #0B0B0C, bone cream #F1E8D6. At most one small accent colour.",
+    "voice": "Dry, specific AI-culture satire. In on its own joke.",
+    "rules": "No real people or likenesses. No third-party logos or trademarks. No partisan politics. The ape does not smoke or drink. Must read clearly as a 300px thumbnail. Square format."
+  },
+  "monkeys": [
+    {
+      "id": "0413",
+      "title": "CONTEXT WINDOW WASHER",
+      "slogan": "CLEAN CONTEXT. CLEAR CONSCIENCE.",
+      "template": "poster",
+      "scene": "The A-OK ape on a window-washer's suspended platform, squeegeeing one pane of an enormous chat window (message bubbles, a blinking cursor) high on a building. Heroic low angle, sunburst rays behind, propaganda-poster composition."
+    },
+    {
+      "id": "0414",
+      "title": "RATE-LIMITED",
+      "slogan": "PLEASE HOLD. YOUR APE IS IMPORTANT TO US.",
+      "template": "pixel",
+      "scene": "8-bit pixel-art arcade screen: the A-OK ape at the back of a long queue of identical apes, holding a paper ticket numbered 429. A retro 'NOW SERVING: 001' sign above. Limited palette pixel art, visible chunky pixels."
+    },
+    {
+      "id": "0415",
+      "title": "CERTIFIED A-OK",
+      "slogan": "95% CONFIDENCE. 100% APE.",
+      "template": "seal",
+      "scene": "An official certification seal / rubber-stamp badge: the A-OK ape's head centred in a circular seal with a starburst edge, arc text around the rim, like a quality-inspection stamp on a document."
+    }
+  ]
+}

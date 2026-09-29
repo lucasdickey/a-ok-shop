@@ -1,0 +1,27 @@
+Saved: `out/0415.png`  
+Pixel size: **1254 × 1254**
+
+Exact prompt given to the built-in image tool:
+
+```text
+Create a finished square 1024x1024 PNG brand artwork for monkey id 0415.
+
+Use case: logo-brand.
+Asset type: official certification seal / rubber-stamp badge, rendered as bold screen-print poster art.
+
+Scene and composition: The A-OK ape's head centered in a circular seal with a starburst edge, arc text around the rim, like a quality-inspection stamp on a bone-cream document. Make the seal large and centered, with generous safe margins so nothing is cropped. Strong, simple silhouette and highly legible lettering that read clearly as a 300px thumbnail.
+
+Character: The A-OK ape has black fur, a warm tan face, eyes wide open, and a round surprised 'O' mouth. It wears a red-and-white baseball cap printed with the exact text "A-OK", and red over-ear headphones. Show the head as the central emblem.
+
+Text, rendered directly as part of the artwork, exactly:
+Top rim arc title: "CERTIFIED A-OK"
+Bottom rim arc slogan: "95% CONFIDENCE. 100% APE."
+Cap lettering: "A-OK"
+Keep every letter, numeral, percent sign, hyphen, and period accurate. Make the title and slogan bold and cleanly readable, with clear spacing and no other text.
+
+Style: Bold screen-print poster art; flat colour; confident thick black linework; subtle halftone and paper texture; WPA / propaganda-poster energy. Graphic, not photographic, not 3D-rendered. Official stamp geometry with a dry, specific AI-culture satirical tone, in on its own joke.
+
+Palette: Signal red #C8161D, ink black #0B0B0C, bone cream #F1E8D6. Use bone cream as the print's white for the cap. The warm tan face is the only small accent colour. No other accent colours. Keep print distress subtle enough to preserve the face and typography.
+
+Rules: No real people or likenesses. No third-party logos or trademarks. No partisan politics. The ape does not smoke or drink. No photorealism, no 3D, no gradients, no mockup perspective. Square format, at least 1024x1024.
+```

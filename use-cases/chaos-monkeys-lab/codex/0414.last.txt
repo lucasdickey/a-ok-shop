@@ -1,0 +1,25 @@
+Saved path: `out/0414.png`  
+Pixel size: **1254 × 1254**
+
+Exact prompt given to the built-in image tool:
+
+```text
+Create a finished square 1024x1024 PNG artwork for A-OK monkey id 0414.
+
+Use case: illustration-story. Asset type: pixel-art arcade poster.
+Title, verbatim: "RATE-LIMITED"
+Slogan, verbatim: "PLEASE HOLD. YOUR APE IS IMPORTANT TO US."
+
+Scene: An 8-bit pixel-art arcade screen showing the A-OK ape at the back of a long queue of identical apes, holding a clearly visible paper ticket numbered "429". Above the front of the queue is a retro sign reading exactly "NOW SERVING: 001". Compose a clearly readable long queue receding from the large foreground protagonist at the back toward the service area; all queued characters share the same A-OK ape design. The protagonist and ticket should be immediately clear at a 300px thumbnail size.
+
+Brand character, required: black fur, warm tan face, eyes wide open, a round surprised "O" mouth, a red-and-white baseball cap printed "A-OK", red over-ear headphones. Wear a red hoodie printed "APES ON KEYS". Preserve these defining features in the chunky pixel-art character design. The identical queued apes have the same cap, headphones, face, and hoodie.
+
+Style: Follow the specific pixel template: authentic limited-palette 8-bit pixel art with visible chunky square pixels and crisp stepped edges throughout, including pixel lettering. Bring the brand's bold screen-print poster energy through flat colour, confident thick ink-black stepped outlines, strong graphic hierarchy, and a propaganda-poster sense of scale. Any subtle halftone and paper texture must remain subordinate to the clean chunky pixel grid. Graphic, not photographic, not 3D-rendered.
+
+Palette: signal red #C8161D, ink black #0B0B0C, bone cream #F1E8D6. Use bone cream as the cap's white. At most one small accent colour: warm tan for the faces only. No other colours.
+
+Layout and text: Large, highly legible "RATE-LIMITED" title at top. Retro "NOW SERVING: 001" sign clearly visible above the front of the queue. The paper ticket shows "429" large and unambiguous. Place the complete slogan "PLEASE HOLD. YOUR APE IS IMPORTANT TO US." along the bottom, split across lines if needed for legibility. Render every word as part of the artwork, spelled exactly, using bold pixel typography. Keep text and character safely inside the square edges. Do not render the id number or any extra copy.
+
+Tone: Dry, specific AI-culture satire, in on its own joke. The queue should make the joke immediately clear.
+Rules: No real people or likenesses. No third-party logos or trademarks. No partisan politics. The apes do not smoke or drink. Square composition, at least 1024x1024 pixels.
+```
