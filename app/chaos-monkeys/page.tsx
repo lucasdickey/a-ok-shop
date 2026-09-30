@@ -37,7 +37,9 @@ export default function ChaosMonkeysPage() {
     <div className="container mx-auto px-8 py-12 md:px-16 lg:px-24 xl:px-32">
       <header className="mb-12 max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
-          {ids.length > 0 ? `${ids.length} published · Nº ${ids[0]}–${ids[ids.length - 1]}` : "Series starting soon"}
+          {ids.length === 0
+            ? "Series starting soon"
+            : `${ids.length} published · Nº ${ids.length === 1 ? ids[0] : `${ids[0]}–${ids[ids.length - 1]}`}`}
         </p>
         <h1 className="mt-2 font-bebas-neue text-6xl leading-none md:text-7xl">Chaos Monkeys</h1>
         <p className="mt-4 text-lg leading-relaxed text-dark-light">{DESCRIPTION}</p>

@@ -297,8 +297,11 @@ async function draft(options: Options): Promise<void> {
           d.image = `drafts/${d.n}.png`;
           fs.writeFileSync(path.join(runDir, d.image), png);
         } catch (error) {
+          // Losing Chrome itself is not this draft's fault: stop, and keep the day's Astra art for a rerun.
+          const message = (error as Error).message;
+          if (/^Chrome (is not connected|closed the connection|did not answer)/.test(message)) throw error;
           d.image = null;
-          d.error = `could not compose: ${(error as Error).message.split("\n")[0].slice(0, 160)}`;
+          d.error = `could not compose: ${message.split("\n")[0].slice(0, 160)}`;
           log(`draft ${d.n} ${d.brief.title}: ${d.error}`);
         }
       }
@@ -454,7 +457,8 @@ async function unpublish(options: Options): Promise<void> {
   const manifest = readManifest();
   const entry = manifest.find((m) => m.id === id);
   if (!entry) throw new Error(`Nº ${id} is not published on ${branch}`);
-  writeManifest(manifest.filter((m) => m.id !== id).map((m) => ({ ...m, parents: m.parents.filter((parent) => parent !== id) })));
+  // Other monkeys keep their "riffs on" provenance; the site hides links to unpublished parents.
+  writeManifest(manifest.filter((m) => m.id !== id));
   fs.rmSync(imagePath(id).file, { force: true });
   try {
     await verifySite();

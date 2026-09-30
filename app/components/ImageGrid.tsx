@@ -259,7 +259,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               // Use regular img tag for external images to avoid Next.js Image component CORS issues
               <img
                 src={cell.src}
-                alt={cell.alt || `Chaos Monkey Art ${index + 1}`}
+                alt={cell.alt || "A-OK artwork"}
                 className="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-700"
                 loading="lazy"
                 crossOrigin="anonymous"
@@ -273,7 +273,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               // Use Next.js Image component for local images
               <Image
                 src={cell.src}
-                alt={cell.alt || `Chaos Monkey Art ${index + 1}`}
+                alt={cell.alt || "A-OK artwork"}
                 fill
                 className="object-cover hover:scale-110 transition-transform duration-700"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

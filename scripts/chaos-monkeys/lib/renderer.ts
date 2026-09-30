@@ -132,14 +132,16 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
     const browserUrl = await new Promise<string>((resolve, reject) => {
       let buffer = "";
       const timer = setTimeout(() => reject(new Error("Chrome did not start")), 30_000);
-      chrome.stderr.on("data", (chunk: Buffer) => {
+      const onData = (chunk: Buffer) => {
         buffer += chunk;
         const match = buffer.match(/DevTools listening on (ws:\/\/\S+)/);
         if (match) {
           clearTimeout(timer);
+          chrome.stderr.off("data", onData);
           resolve(match[1]);
         }
-      });
+      };
+      chrome.stderr.on("data", onData);
       chrome.on("error", reject);
       chrome.on("exit", () => reject(new Error("Chrome exited during startup")));
     });

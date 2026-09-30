@@ -116,9 +116,8 @@ export async function commitAndPush(paths: string[], message: string, branch: st
     // Either way a failure drops the local commit, so the clone stays clean and the ship can simply be rerun.
     const raced = /non-fast-forward|fetch first|\[rejected\]/i.test(pushed.stderr);
     if (!raced) {
-      await git("reset", "--quiet", "--hard", `origin/${branch}`);
       const reason = pushed.stderr.trim().split("\n").slice(-2).join(" ");
-      throw new Error(`push failed, so nothing was published (${reason}). Fix that and run ship again.`);
+      throw new Error(`push failed, so nothing was published (${reason}). ${await dropLocalCommit(branch)}Fix that and run ship again.`);
     }
     log(`${branch} moved during the build; replaying on its new tip…`);
     await git("fetch", "--quiet", "origin", branch);
@@ -133,13 +132,18 @@ export async function commitAndPush(paths: string[], message: string, branch: st
       if (rebased.code !== 0 && (await run("git", ["-C", SITE_DIR, "rebase", "--abort"])).code !== 0) {
         await run("git", ["-C", SITE_DIR, "rebase", "--quit"]);
       }
-      await git("reset", "--quiet", "--hard", `origin/${branch}`);
-      throw new Error(`nothing was published: ${(error as Error).message}. Run ship again.`);
+      throw new Error(`nothing was published: ${(error as Error).message}. ${await dropLocalCommit(branch)}Run ship again.`);
     }
   }
   const sha = (await git("rev-parse", "HEAD")).trim();
   log(`pushed ${sha.slice(0, 8)} to ${branch}`);
   return sha;
+}
+
+/** Resets the clone to origin/<branch>. Returns a note if even that failed, so the original error stays visible. */
+async function dropLocalCommit(branch: string): Promise<string> {
+  const reset = await run("git", ["-C", SITE_DIR, "reset", "--quiet", "--hard", `origin/${branch}`]);
+  return reset.code === 0 ? "" : `The publish clone could not be reset (${reset.stderr.trim()}); inspect ${SITE_DIR}. `;
 }
 
 /** Waits for Vercel's commit status (via the GitHub CLI) and returns the deployment URL, or null if it can't tell. */
