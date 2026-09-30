@@ -257,7 +257,7 @@ async function draft(options: Options): Promise<void> {
     // Astra illustrates, three at a time. A usage limit stops the rest; those drafts fall back to the badge.
     const refs = REFERENCE_IMAGES.map((ref) => path.join(CHECKOUT, ref));
     let astraDown = false;
-    for (const dir of ["drafts", "cutouts"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
+    for (const dir of ["drafts", "cutouts", "posters"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
     await pool(record.drafts, 3, async (d) => {
       const started = Date.now();
       if (astraDown) {
@@ -266,10 +266,10 @@ async function draft(options: Options): Promise<void> {
         try {
           const mode = d.brief.engine === "hybrid" ? "cutout" : "poster";
           const out = await illustrate(d.brief, path.join(runDir, "jobs", String(d.n)), refs, mode);
-          const target = mode === "cutout" ? `cutouts/${d.n}.png` : `drafts/${d.n}.png`;
+          // Astra's poster is kept as delivered; the draft is a square crop of it (made below).
+          const target = mode === "cutout" ? `cutouts/${d.n}.png` : `posters/${d.n}.png`;
           fs.copyFileSync(out, path.join(runDir, target));
           if (mode === "cutout") d.cutout = target;
-          else d.image = target;
         } catch (error) {
           if (error instanceof AstraUnavailable) {
             astraDown = true;
@@ -286,8 +286,12 @@ async function draft(options: Options): Promise<void> {
     const renderer = await openRenderer({ run: runDir, site: path.join(CHECKOUT, "public") });
     try {
       for (const d of record.drafts) {
-        if (d.error || d.engine === "astra") continue;
-        const png = await renderer.render(compositionSpec(d, `DRAFT ${d.n}`, date, "png"));
+        if (d.error) continue;
+        const spec =
+          d.engine === "astra"
+            ? { kind: "image", size: IMAGE_SIZE, format: "png", image: `/run/posters/${d.n}.png` }
+            : compositionSpec(d, `DRAFT ${d.n}`, date, "png");
+        const png = await renderer.render(spec);
         d.image = `drafts/${d.n}.png`;
         fs.writeFileSync(path.join(runDir, d.image), png);
       }
@@ -344,6 +348,10 @@ async function status(options: Options): Promise<void> {
     const state = shipped.has(d.n) ? `shipped as Nº ${shipped.get(d.n)}` : d.error ? `failed: ${d.error}` : (d.judgment?.note ?? "");
     const tags = [d.engine === "hybrid" ? `hybrid/${d.brief.template}` : d.engine, d.brief.inspiration ? "zingers" : ""].filter(Boolean).join(", ");
     console.log(`  ${d.n}. ${d.brief.title.padEnd(24)} ${score.padStart(5)}  ${tags.padEnd(24)} ${state}`);
+    // The slogan, joke, and alt text publish verbatim, so they are shown for review alongside the image.
+    console.log(`       ${d.brief.slogan}`);
+    console.log(`       joke: ${d.brief.joke}`);
+    console.log(`       alt:  ${d.brief.alt}`);
   }
 }
 
@@ -352,6 +360,7 @@ async function status(options: Options): Promise<void> {
 async function ship(options: Options): Promise<void> {
   const picks = options.positional.map(Number);
   if (!picks.length || picks.some((n) => !Number.isInteger(n) || n < 1)) throw new Error("usage: chaos ship 1 3 5");
+  if (new Set(picks).size !== picks.length) throw new Error("each draft can be named only once");
   const date = flag(options, "--date") ?? latestRunDate();
   const branch = flag(options, "--branch") ?? "main";
   const push = !options.flags.has("--no-push");
@@ -434,7 +443,7 @@ async function unpublish(options: Options): Promise<void> {
   const manifest = readManifest();
   const entry = manifest.find((m) => m.id === id);
   if (!entry) throw new Error(`Nº ${id} is not published on ${branch}`);
-  writeManifest(manifest.filter((m) => m.id !== id));
+  writeManifest(manifest.filter((m) => m.id !== id).map((m) => ({ ...m, parents: m.parents.filter((parent) => parent !== id) })));
   fs.rmSync(imagePath(id).file, { force: true });
   try {
     await verifySite();
@@ -447,6 +456,11 @@ async function unpublish(options: Options): Promise<void> {
 
 /* ------------------------------------------------------------------ install */
 
+/** A path as a single-quoted shell word. */
+const shellQuote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
+/** A path as XML text for the launchd plist. */
+const xmlText = (value: string): string => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 async function install(): Promise<void> {
   for (const dir of [STATE_DIR, path.join(STATE_DIR, "bin"), LOGS_DIR, RUNS_DIR]) fs.mkdirSync(dir, { recursive: true });
   await syncSite("main");
@@ -458,14 +472,14 @@ async function install(): Promise<void> {
     `#!/bin/zsh
 # A-OK Chaos Monkeys: runs the tool from the publish clone, synced to origin/main. Written by \`chaos install\`.
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
-export CHAOS_STATE="${STATE_DIR}"
-cd "${SITE_DIR}" || { echo "no publish clone; run chaos install"; exit 1; }
+export CHAOS_STATE=${shellQuote(STATE_DIR)}
+cd ${shellQuote(SITE_DIR)} || { echo "no publish clone; run chaos install"; exit 1; }
 if git fetch --quiet origin main; then
   if [ -z "$(git status --porcelain)" ] && { [ -z "$(git rev-list origin/main..HEAD)" ] || [ -n "$(git branch -r --contains HEAD)" ]; }; then
     git checkout --quiet --detach origin/main
   fi
 fi
-TOOL="${SITE_DIR}/scripts/chaos-monkeys/chaos.ts"
+TOOL=${shellQuote(path.join(SITE_DIR, "scripts", "chaos-monkeys", "chaos.ts"))}
 if [ ! -f "$TOOL" ]; then echo "$(date '+%F %T') chaos-monkeys is not on main yet; nothing to do"; exit 0; fi
 exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
 `,
@@ -480,11 +494,11 @@ exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>${LAUNCHD_LABEL}</string>
+  <string>${xmlText(LAUNCHD_LABEL)}</string>
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
-    <string>${launcher}</string>
+    <string>${xmlText(launcher)}</string>
     <string>draft</string>
   </array>
   <!-- Daily at 9:07. If the Mac is asleep, launchd runs it on wake; if it was off, RunAtLoad catches up at login.
@@ -497,9 +511,9 @@ exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
   <key>RunAtLoad</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>${path.join(LOGS_DIR, "launchd.out.log")}</string>
+  <string>${xmlText(path.join(LOGS_DIR, "launchd.out.log"))}</string>
   <key>StandardErrorPath</key>
-  <string>${path.join(LOGS_DIR, "launchd.err.log")}</string>
+  <string>${xmlText(path.join(LOGS_DIR, "launchd.err.log"))}</string>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>

@@ -93,11 +93,11 @@ export async function discardChanges(): Promise<void> {
 
 /** Commits exactly `paths` (restoring anything the build regenerated) and pushes to `branch`. Returns the new commit. */
 export async function commitAndPush(paths: string[], message: string, branch: string, push: boolean): Promise<string> {
-  // Tracked files the build rewrote (untracked ones are never added, so they can stay).
-  const changed = (await git("status", "--porcelain"))
-    .split("\n")
-    .filter((line) => line && !line.startsWith("??"))
-    .map((line) => line.slice(3));
+  // Tracked files the build rewrote (untracked ones are never added, so they can stay). -z keeps paths unquoted.
+  const changed = (await git("status", "--porcelain", "-z", "--no-renames"))
+    .split("\0")
+    .filter((entry) => entry && !entry.startsWith("??"))
+    .map((entry) => entry.slice(3));
   const stray = changed.filter((file) => !paths.includes(file) && !file.startsWith(`${IMAGE_DIR}/`));
   if (stray.length) {
     log(`restoring files the build touched: ${stray.join(", ")}`);
@@ -105,13 +105,31 @@ export async function commitAndPush(paths: string[], message: string, branch: st
   }
   await git("add", "--", ...paths);
   await git("commit", "--quiet", "-m", message);
-  const sha = (await git("rev-parse", "HEAD")).trim();
-  if (push) {
-    await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
-    log(`pushed ${sha.slice(0, 8)} to ${branch}`);
-  } else {
+  if (!push) {
+    const sha = (await git("rev-parse", "HEAD")).trim();
     log(`committed ${sha.slice(0, 8)} without pushing (--no-push)`);
+    return sha;
   }
+  try {
+    await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
+  } catch {
+    // The branch moved while this was building. Replay onto its new tip, check again, and push once more;
+    // if that fails, drop the local commit so the clone is clean and the ship can simply be rerun.
+    log(`${branch} moved during the build; replaying on its new tip…`);
+    await git("fetch", "--quiet", "origin", branch);
+    const rebased = await run("git", ["-C", SITE_DIR, "rebase", "--quiet", `origin/${branch}`]);
+    try {
+      if (rebased.code !== 0) throw new Error("the new commits conflict with this ship");
+      await verifySite();
+      await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
+    } catch (error) {
+      if (rebased.code !== 0) await run("git", ["-C", SITE_DIR, "rebase", "--abort"]);
+      await git("reset", "--quiet", "--hard", `origin/${branch}`);
+      throw new Error(`nothing was published: ${(error as Error).message}. Run ship again.`);
+    }
+  }
+  const sha = (await git("rev-parse", "HEAD")).trim();
+  log(`pushed ${sha.slice(0, 8)} to ${branch}`);
   return sha;
 }
 
