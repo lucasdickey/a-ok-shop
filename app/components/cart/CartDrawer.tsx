@@ -30,6 +30,56 @@ export default function CartDrawer() {
     };
   }, [isOpen, closeCart]);
 
+  // Keyboard support for the dialog: focus moves in on open, Tab stays inside,
+  // Escape closes, and focus returns to where it was. closeCart changes every
+  // render, so read it through a ref to run this only when the drawer opens or closes.
+  const closeCartRef = useRef(closeCart);
+  closeCartRef.current = closeCart;
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Add to Cart disables itself briefly, which drops focus to the page body;
+    // fall back to the header's cart button so focus has somewhere to return.
+    const active = document.activeElement as HTMLElement | null;
+    const previouslyFocused =
+      active && active !== document.body
+        ? active
+        : document.querySelector<HTMLElement>('button[aria-label^="Open cart"]');
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeCartRef.current();
+        return;
+      }
+      const drawer = drawerRef.current;
+      if (event.key !== 'Tab' || !drawer) return;
+      const focusable = Array.from(
+        drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), select, input')
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!drawer.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [isOpen]);
+
   // Prevent scrolling when drawer is open
   useEffect(() => {
     if (isOpen) {
@@ -106,6 +156,7 @@ export default function CartDrawer() {
             </h2>
           </div>
           <button
+            ref={closeButtonRef}
             onClick={closeCart}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center border-2 border-dark bg-club-paper hover:bg-club-yellow"
             aria-label="Close cart"
@@ -198,7 +249,7 @@ export default function CartDrawer() {
                       <div className="flex items-center border-2 border-dark bg-club-paper font-mono">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="min-h-[32px] min-w-[32px] text-xs hover:bg-club-yellow"
+                          className="min-h-[40px] min-w-[40px] text-xs hover:bg-club-yellow"
                           aria-label="Decrease quantity"
                         >
                           -
@@ -207,7 +258,7 @@ export default function CartDrawer() {
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           disabled={item.quantity >= MAX_QUANTITY_PER_ITEM}
-                          className="min-h-[32px] min-w-[32px] text-xs hover:bg-club-yellow disabled:cursor-not-allowed disabled:opacity-40"
+                          className="min-h-[40px] min-w-[40px] text-xs hover:bg-club-yellow disabled:cursor-not-allowed disabled:opacity-40"
                           aria-label="Increase quantity"
                         >
                           +
@@ -215,7 +266,7 @@ export default function CartDrawer() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="font-mono text-[11px] uppercase text-primary underline underline-offset-4 hover:text-primary-dark"
+                        className="min-h-[44px] px-1 font-mono text-[11px] uppercase text-primary underline underline-offset-4 hover:text-primary-dark"
                       >
                         Remove
                       </button>
@@ -243,7 +294,7 @@ export default function CartDrawer() {
               <div className="mt-3 flex justify-center text-xs">
                 <button
                   onClick={closeCart}
-                  className="micro min-h-[36px] underline underline-offset-4 hover:text-primary"
+                  className="micro min-h-[44px] px-2 underline underline-offset-4 hover:text-primary"
                 >
                   Continue Shopping
                 </button>
