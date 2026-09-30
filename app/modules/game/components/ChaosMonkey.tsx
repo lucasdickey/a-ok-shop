@@ -1075,7 +1075,7 @@ export default function ChaosMonkey({
       {!gameStarted && (
         <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto relative">
           <div
-            className="flex flex-col items-center justify-center p-8 w-full h-[600px] relative overflow-hidden"
+            className="flex flex-col items-center justify-center p-5 sm:p-8 w-full min-h-[600px] relative overflow-hidden"
             style={{
               backgroundImage: "url('/game/a-ok-8bit-retro.png')",
               backgroundSize: "cover",
@@ -1085,7 +1085,7 @@ export default function ChaosMonkey({
             {/* Overlay for readability */}
             <div className="absolute inset-0 bg-black bg-opacity-60 z-0" />
             <div className="relative z-10 flex flex-col items-center">
-              <h2 className="text-5xl mb-24 text-center font-bold text-white drop-shadow-lg">
+              <h2 className="text-4xl sm:text-5xl mb-10 sm:mb-24 text-center font-bold text-white drop-shadow-lg">
                 RUN, HUMAN, RUN!
               </h2>
               <div className="mb-8 text-center text-white drop-shadow-lg font-bold">
@@ -1104,7 +1104,7 @@ export default function ChaosMonkey({
               </div>
               <button
                 onClick={() => setGameStarted(true)}
-                className="px-8 py-4 mt-16 bg-green-500 text-white font-bold rounded shadow-lg"
+                className="px-8 py-4 mt-8 sm:mt-16 bg-green-500 text-white font-bold rounded shadow-lg"
               >
                 START GAME
               </button>
