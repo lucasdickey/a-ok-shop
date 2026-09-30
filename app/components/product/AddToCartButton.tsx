@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart, CartItem } from '@/app/components/cart/CartProvider';
 
 // Checkout accepts at most this many of one item (see app/api/catalog/checkout/route.ts).
@@ -35,6 +35,28 @@ export default function AddToCartButton({
   const [itemQuantity, setItemQuantity] = useState(quantity);
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
+  // Phones get a bar pinned to the bottom of the screen while the main button is scrolled away.
+  const mainRowRef = useRef<HTMLDivElement>(null);
+  const [showPinnedBar, setShowPinnedBar] = useState(false);
+
+  useEffect(() => {
+    const row = mainRowRef.current;
+    if (!row || typeof IntersectionObserver === 'undefined') return;
+    const footer = document.querySelector('footer');
+    let rowVisible = true;
+    let footerVisible = false;
+    // Hide the bar near the footer so it never covers the footer links.
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === row) rowVisible = entry.isIntersecting;
+        else footerVisible = entry.isIntersecting;
+      }
+      setShowPinnedBar(!rowVisible && !footerVisible);
+    });
+    observer.observe(row);
+    if (footer) observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
 
   const handleAddToCart = () => {
     if (showSizeWarning) {
@@ -78,9 +100,19 @@ export default function AddToCartButton({
     }, 1000);
   };
 
+  // A missing choice or an unavailable combination is explained next to the main button,
+  // so the pinned bar scrolls back up to it instead of adding.
+  const needsAttention = showSizeWarning || showColorWarning || unavailable;
+  const handlePinnedAdd = () => {
+    if (needsAttention) {
+      mainRowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    handleAddToCart();
+  };
+
   return (
     <div>
-      <div className="flex items-center gap-4">
+      <div ref={mainRowRef} className="flex items-center gap-4">
         <div className="flex min-h-[48px] items-center border-2 border-dark bg-club-slip font-mono">
           <button
             onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
@@ -121,6 +153,31 @@ export default function AddToCartButton({
       <div role="alert" className="text-sm font-semibold text-primary">
         {showWarning && !unavailable ? warningMessage : ''}
       </div>
+
+      {showPinnedBar && (
+        <div
+          role="region"
+          aria-label="Quick add to cart"
+          className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t-2 border-dark bg-club-yellow px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-6px_0_#22221E] md:hidden"
+        >
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-bold leading-tight">{product.title}</p>
+            <p className="font-mono text-sm">
+              ${(product.price * itemQuantity).toFixed(2)}
+              {itemQuantity > 1 && <span className="text-dark-light"> · {itemQuantity} × ${product.price.toFixed(2)}</span>}
+            </p>
+          </div>
+          <button
+            onClick={handlePinnedAdd}
+            disabled={isAdding}
+            className={`btn btn-primary min-h-[48px] shrink-0 px-4 disabled:cursor-not-allowed disabled:opacity-50 ${
+              unavailable ? 'opacity-50' : ''
+            }`}
+          >
+            {isAdding ? 'Adding...' : unavailable ? 'Unavailable' : 'Add to Cart'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
