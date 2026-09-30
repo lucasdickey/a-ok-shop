@@ -63,7 +63,7 @@
 
   /* The paper sheet that holds every page, sitting on the blue background. */
   .receipt-sheet {
-    @apply mx-auto flex min-h-screen w-full max-w-[1440px] flex-col border-2 border-dark bg-club-paper;
+    @apply mx-auto flex min-h-screen w-full max-w-[1360px] flex-col border-2 border-dark bg-club-paper;
     box-shadow: 12px 12px 0 theme("colors.club.blue-dark");
   }
   @media (max-width: 720px) {
