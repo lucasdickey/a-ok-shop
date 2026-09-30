@@ -9,12 +9,21 @@
 }
 
 @layer base {
+  html {
+    scroll-padding-top: 20px;
+  }
+
   body {
-    @apply bg-light text-dark antialiased;
+    @apply bg-club-blue text-dark antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid theme("colors.club.blue");
+    outline-offset: 4px;
   }
 
   .bebas-heading {
-    font-family: var(--font-bebas-neue), sans-serif;
+    font-family: var(--font-display), Impact, sans-serif;
   }
 
   .text-shadow-bold {
@@ -23,8 +32,10 @@
     letter-spacing: 0.05em;
   }
   h1 {
-    @apply text-4xl font-bold md:text-5xl;
-    font-family: var(--font-bebas-neue), sans-serif;
+    @apply text-4xl font-extrabold uppercase md:text-5xl;
+    font-family: var(--font-display), Impact, sans-serif;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
   }
   h2 {
     @apply text-3xl font-bold md:text-4xl;
@@ -44,18 +55,110 @@
 }
 
 @layer components {
+  /* Buttons: square, inked border, hard offset shadow (Club Receipt). */
   .btn {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-3 border-2 border-dark px-5 py-2.5 text-sm font-semibold shadow-hard transition-[transform,box-shadow] duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#22221E] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:translate-x-0 motion-reduce:hover:translate-y-0;
   }
   .btn-primary {
-    @apply bg-primary text-light hover:bg-primary-dark;
+    @apply bg-dark text-club-yellow shadow-hard-red hover:shadow-[7px_7px_0_#C52224];
   }
   .btn-secondary {
-    @apply bg-secondary text-dark hover:bg-secondary-dark;
+    @apply bg-club-yellow text-dark;
   }
   .btn-outline {
-    @apply border border-dark bg-transparent hover:bg-secondary-light;
+    @apply bg-club-paper text-dark;
   }
+
+  /* Small monospace label used for receipt details. */
+  .micro {
+    font: 11px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  /* The paper sheet that holds every page, sitting on the blue background. */
+  .receipt-sheet {
+    @apply mx-auto flex min-h-screen w-full max-w-[1440px] flex-col border-2 border-dark bg-club-paper;
+    box-shadow: 12px 12px 0 theme("colors.club.blue-dark");
+  }
+  @media (max-width: 720px) {
+    .receipt-sheet {
+      box-shadow: 5px 5px 0 theme("colors.club.blue-dark");
+    }
+  }
+
+  .display-heading {
+    font-family: var(--font-display), Impact, sans-serif;
+    font-weight: 800;
+    line-height: 0.88;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+  }
+
+  /* A till receipt slip with a torn bottom edge. */
+  .receipt-slip {
+    @apply relative border border-dark bg-club-slip p-5 shadow-hard;
+  }
+  .receipt-slip::after {
+    content: "";
+    position: absolute;
+    height: 8px;
+    bottom: -8px;
+    left: -1px;
+    right: -1px;
+    background: linear-gradient(135deg, #fffbed 25%, transparent 25%) -8px 0/16px 16px,
+      linear-gradient(225deg, #fffbed 25%, transparent 25%) -8px 0/16px 16px;
+  }
+  .receipt-line {
+    @apply flex justify-between gap-3 pt-3;
+    font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+
+  .barcode {
+    background: repeating-linear-gradient(
+      90deg,
+      #22221e 0 3px,
+      transparent 3px 6px,
+      #22221e 6px 7px,
+      transparent 7px 12px,
+      #22221e 12px 17px,
+      transparent 17px 19px
+    );
+  }
+
+  /* Long-form text pages (terms, privacy, returns) printed like a receipt. */
+  .receipt-doc {
+    @apply mx-auto max-w-3xl px-5 py-10 md:px-8 md:py-14;
+  }
+  .receipt-doc > h1 {
+    @apply mb-8 border-b-2 border-dashed border-dark pb-6 text-6xl md:text-7xl;
+  }
+  .receipt-doc section {
+    @apply border-b border-dashed border-dark/40 pb-2;
+  }
+  .receipt-doc h2 {
+    @apply mt-8 text-4xl font-extrabold uppercase md:text-5xl;
+    font-family: var(--font-display), Impact, sans-serif;
+    line-height: 0.95;
+  }
+  .receipt-doc h3 {
+    @apply mt-4 text-lg font-bold;
+  }
+  .receipt-doc p,
+  .receipt-doc li {
+    @apply leading-relaxed;
+  }
+  .receipt-doc ul {
+    @apply marker:text-primary;
+  }
+  .receipt-doc a {
+    @apply font-semibold text-dark underline decoration-primary decoration-2 underline-offset-4 hover:text-primary;
+  }
+  .receipt-doc .text-gray-500,
+  .receipt-doc .text-gray-600 {
+    @apply text-dark-light;
+  }
+
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8;
   }

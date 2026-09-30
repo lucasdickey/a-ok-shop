@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Bebas_Neue } from "next/font/google";
+import { Space_Grotesk, Barlow_Condensed } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import SiteChrome from "./components/layout/SiteChrome";
 import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
 
-const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
   variable: '--font-space-grotesk',
   display: 'swap',
 });
-const bebasNeue = Bebas_Neue({
+// Headline face for the Club Receipt design.
+const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  variable: '--font-bebas-neue',
-  weight: '400',
+  variable: '--font-display',
+  weight: ['700', '800', '900'],
   display: 'swap',
 });
 
@@ -73,7 +73,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} ${spaceGrotesk.variable} ${bebasNeue.variable}`}>
+      <body className={`${spaceGrotesk.className} ${spaceGrotesk.variable} ${barlowCondensed.variable}`}>
         <CartProvider>
           <SiteChrome>{children}</SiteChrome>
           <CartDrawer />
