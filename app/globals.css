@@ -99,6 +99,18 @@
     font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
   }
 
+  /* Decorative ✳: a springy half-turn on hover (on the star or its .star-trigger area). */
+  .star-spin {
+    display: inline-block;
+    transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .star-spin:hover,
+    .star-trigger:hover .star-spin {
+      transform: rotate(180deg) scale(1.15);
+    }
+  }
+
   .barcode {
     background: repeating-linear-gradient(
       90deg,

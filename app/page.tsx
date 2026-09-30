@@ -163,13 +163,13 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative flex min-h-[575px] min-w-0 items-center justify-center overflow-hidden px-7 pb-[142px] pt-12 lg:px-12 lg:pb-[155px] lg:pt-16">
+        <div className="star-trigger relative flex min-h-[575px] min-w-0 items-center justify-center overflow-hidden px-7 pb-[142px] pt-12 lg:px-12 lg:pb-[155px] lg:pt-16">
           <div
             className="absolute h-[60%] w-[90%] -rotate-[35deg] rounded-[50%] border border-dark"
             aria-hidden="true"
           />
           <span className="absolute left-4 top-6 z-[1] text-[66px] text-primary lg:top-16 lg:text-[84px]" aria-hidden="true">
-            ✳
+            <span className="star-spin">✳</span>
           </span>
           {heroImage && (
             <div className="relative w-full max-w-[510px] -rotate-[4deg] rounded-t-[260px] border-2 border-dark bg-club-paper px-4 pt-4 shadow-[8px_8px_0_#22221E] lg:px-5 lg:pt-5 lg:shadow-hard-lg">
@@ -217,13 +217,14 @@ export default async function Home() {
 
       {/* Ticker */}
       <div
-        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
+        className="star-trigger flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
         aria-label="Brand statement"
       >
         {TICKER.map((line, index) => (
           <span key={line} className={`flex items-center gap-4 ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}>
             {index > 0 && (
-              <b className="text-[17px] sm:text-2xl" aria-hidden="true">
+              // Stars spin one after another when the ticker is hovered.
+              <b className="star-spin text-[17px] sm:text-2xl" style={{ transitionDelay: `${(index - 1) * 90}ms` }} aria-hidden="true">
                 ✳
               </b>
             )}
