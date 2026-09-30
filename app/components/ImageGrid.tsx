@@ -7,6 +7,8 @@ import { useInView } from "react-intersection-observer";
 interface GalleryImage {
   url: string;
   name?: string;
+  /** Screen-reader text; Chaos Monkeys carry their own. */
+  alt?: string;
   source?: string;
   date?: string;
 }
@@ -24,6 +26,7 @@ type CellSize = "small" | "medium" | "large" | "tall" | "wide";
 interface BentoCell {
   id: string;
   src: string;
+  alt: string;
   size: CellSize;
 }
 
@@ -111,6 +114,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
         cells.push({
           id: `${src}-${index}-${layoutSeed}`,
           src,
+          alt: typeof img === "string" ? "" : img.alt ?? "",
           size,
         });
       }
@@ -255,7 +259,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               // Use regular img tag for external images to avoid Next.js Image component CORS issues
               <img
                 src={cell.src}
-                alt={`Chaos Monkey Art ${index + 1}`}
+                alt={cell.alt || `Chaos Monkey Art ${index + 1}`}
                 className="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-700"
                 loading="lazy"
                 crossOrigin="anonymous"
@@ -269,7 +273,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
               // Use Next.js Image component for local images
               <Image
                 src={cell.src}
-                alt={`Chaos Monkey Art ${index + 1}`}
+                alt={cell.alt || `Chaos Monkey Art ${index + 1}`}
                 fill
                 className="object-cover hover:scale-110 transition-transform duration-700"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

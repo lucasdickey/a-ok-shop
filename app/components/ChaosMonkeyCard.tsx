@@ -49,7 +49,12 @@ export default function ChaosMonkeyCard({ monkey, detailed = false, priority = f
               {monkey.inspiration && (
                 <>
                   {" · Inspired by "}
-                  <a href={monkey.inspiration.url} className="underline hover:text-dark" rel="noopener">
+                  <a
+                    href={monkey.inspiration.url}
+                    className="underline hover:text-dark"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {monkey.inspiration.label}
                   </a>
                 </>
