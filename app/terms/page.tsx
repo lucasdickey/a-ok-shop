@@ -7,8 +7,9 @@ export const metadata = {
 
 export default function TermsOfService() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">Terms of Service</h1>
+    <div className="receipt-doc">
+      <p className="micro mb-4">A–OK / Terms / Keep this receipt</p>
+      <h1 className="display-heading">Terms of Service</h1>
 
       <div className="prose prose-lg max-w-none">
         <p className="text-gray-600 mb-6">
@@ -195,7 +196,7 @@ export default function TermsOfService() {
           <p className="mb-4">
             For questions about these Terms of Service, please contact us:
           </p>
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="receipt-slip mb-6 p-6">
             <p className="mb-2">
               <strong>Email:</strong>{' '}
               <a href="mailto:info@a-ok.shop" className="text-blue-600 hover:underline">
@@ -217,7 +218,7 @@ export default function TermsOfService() {
           </div>
         </section>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 border-t-2 border-dashed border-dark pt-8">
           <p className="text-sm text-gray-500">
             These terms of service were last updated on November 6, 2025.
           </p>

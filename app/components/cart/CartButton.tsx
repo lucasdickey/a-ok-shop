@@ -8,27 +8,15 @@ export default function CartButton() {
   return (
     <button
       onClick={openCart}
-      className="relative flex items-center justify-center rounded-md p-2 hover:bg-secondary-light"
-      aria-label="Open cart"
+      className="relative flex min-h-[44px] items-center gap-2 border-2 border-dark bg-club-paper px-3 py-2 text-xs font-semibold shadow-[4px_4px_0_#22221E] transition-[transform,box-shadow] duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#22221E] motion-reduce:transition-none sm:px-5 sm:text-sm"
+      aria-label={totalItems > 0 ? `Open cart, ${totalItems} item${totalItems === 1 ? '' : 's'}` : 'Open cart'}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-5 w-5"
-      >
-        <circle cx="8" cy="21" r="1" />
-        <circle cx="19" cy="21" r="1" />
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-      </svg>
+      Cart <span aria-hidden="true">↗</span>
       {totalItems > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-light">
+        <span
+          aria-hidden="true"
+          className="absolute -right-2.5 -top-2.5 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-dark bg-primary px-1 text-[11px] font-bold text-club-paper"
+        >
           {totalItems}
         </span>
       )}

@@ -12,7 +12,7 @@ type ChaosMonkeyCardProps = {
 export default function ChaosMonkeyCard({ monkey, detailed = false, priority = false }: ChaosMonkeyCardProps) {
   return (
     <figure id={`n${monkey.id}`} className="scroll-mt-24">
-      <div className="relative aspect-square overflow-hidden rounded-lg border-2 border-[#1F1F1F] bg-[#F5F2DC]">
+      <div className="relative aspect-square overflow-hidden border-2 border-dark bg-club-slip shadow-hard">
         <Image
           src={monkey.image}
           alt={monkey.alt}
@@ -22,16 +22,16 @@ export default function ChaosMonkeyCard({ monkey, detailed = false, priority = f
           className="object-cover"
         />
       </div>
-      <figcaption className="mt-3">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
+      <figcaption className="mt-4">
+        <p className="micro text-primary">
           Nº {monkey.id} · {formatDropDate(monkey.date)}
         </p>
-        <p className="mt-1 font-bebas-neue text-3xl leading-none tracking-wide text-dark">{monkey.title}</p>
+        <p className="display-heading mt-1 text-4xl text-dark">{monkey.title}</p>
         <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-dark-light">{monkey.slogan}</p>
         {detailed && (
           <>
-            <p className="mt-3 text-sm leading-relaxed text-dark-light">{monkey.joke}</p>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-3 border-t border-dashed border-dark pt-3 text-sm leading-relaxed text-dark-light">{monkey.joke}</p>
+            <p className="mt-2 font-mono text-[11px] text-dark-light">
               {monkey.credit}
               {monkey.parents.length > 0 && (
                 <>

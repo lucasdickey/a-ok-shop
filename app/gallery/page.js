@@ -138,31 +138,32 @@ export default function GalleryPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bebas-neue tracking-wide mb-6 text-center">
+    <div className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-14">
+      <p className="micro mb-4 text-center">Fig. 04 / The art archive</p>
+      <h1 className="display-heading mb-8 text-center text-[clamp(52px,6vw,88px)]">
         A-OK Art Gallery
       </h1>
 
       {/* Filter tabs */}
-      <div className="flex justify-center mb-6">
-        <div className="inline-flex rounded-md shadow-sm" role="group">
+      <div className="mb-8 flex justify-center border-y-2 border-dashed border-dark py-3.5">
+        <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Filter images">
           <button
             type="button"
-            className={`px-4 py-2 text-sm font-medium border ${
+            className={`min-h-[44px] px-4 py-2 text-sm font-medium border ${
               activeFilter === "all"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            } rounded-l-lg`}
+                ? "bg-dark text-club-paper border-dark shadow-[3px_3px_0_#C52224]"
+                : "bg-club-paper text-dark border-dark hover:bg-club-yellow"
+            }`}
             onClick={() => setActiveFilter("all")}
           >
             All ({counts.total})
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-sm font-medium border-t border-b border-r ${
+            className={`min-h-[44px] px-4 py-2 text-sm font-medium border ${
               activeFilter === "local"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                ? "bg-dark text-club-paper border-dark shadow-[3px_3px_0_#C52224]"
+                : "bg-club-paper text-dark border-dark hover:bg-club-yellow"
             }`}
             onClick={() => setActiveFilter("local")}
           >
@@ -170,11 +171,11 @@ export default function GalleryPage() {
           </button>
           <button
             type="button"
-            className={`px-4 py-2 text-sm font-medium border-t border-b border-r ${
+            className={`min-h-[44px] px-4 py-2 text-sm font-medium border ${
               activeFilter === "self-replicating-art"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            } rounded-r-lg`}
+                ? "bg-dark text-club-paper border-dark shadow-[3px_3px_0_#C52224]"
+                : "bg-club-paper text-dark border-dark hover:bg-club-yellow"
+            }`}
             onClick={() => setActiveFilter("self-replicating-art")}
           >
             Self-Replicating Art ({counts.external})
@@ -217,10 +218,10 @@ export default function GalleryPage() {
           {filteredImages.map((image) => (
             <div
               key={`${image.source}-${image.name}`}
-              className="overflow-hidden rounded-lg shadow-lg"
+              className="overflow-hidden border-2 border-dark bg-club-paper shadow-hard"
             >
               <Link href={image.url} target="_blank" rel="noopener noreferrer">
-                <div className="h-64 w-full">
+                <div className="h-64 w-full border-b-2 border-dark">
                   {image.source === "self-replicating-art" ? (
                     // Use a different approach for external images to avoid CORS issues
                     <div
@@ -255,21 +256,21 @@ export default function GalleryPage() {
                     />
                   )}
                 </div>
-                <div className="p-4 bg-gray-50">
-                  <h3 className="font-bebas-neue tracking-wide text-lg">
+                <div className="p-4">
+                  <h3 className="display-heading text-2xl">
                     {image.name.replace(/\.[^/.]+$/, "").replace(/-/g, " ")}
                   </h3>
                   {image.date && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="micro mt-1">
                       Date: {image.date}
                     </p>
                   )}
                   <div className="mt-2">
                     <span
-                      className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
+                      className={`inline-block border border-dark px-2 py-1 font-mono text-[11px] uppercase ${
                         image.source === "local"
-                          ? "bg-indigo-100 text-indigo-800"
-                          : "bg-green-100 text-green-800"
+                          ? "bg-club-yellow text-dark"
+                          : "bg-club-sky text-dark"
                       }`}
                     >
                       {image.source === "local"

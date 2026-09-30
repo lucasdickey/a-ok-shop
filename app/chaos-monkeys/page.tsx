@@ -31,17 +31,21 @@ export default function ChaosMonkeysPage() {
   const drops = groupByDate(monkeys);
 
   return (
-    <div className="container mx-auto px-8 py-12 md:px-16 lg:px-24 xl:px-32">
+    <div className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-16">
       <header className="mb-12 max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
+        <p className="micro">
           {monkeys.length > 0 ? `${monkeys.length} published · Nº 0001–${monkeys[0].id}` : "Series starting soon"}
         </p>
-        <h1 className="mt-2 font-bebas-neue text-6xl leading-none md:text-7xl">Chaos Monkeys</h1>
-        <p className="mt-4 text-lg leading-relaxed text-dark-light">{DESCRIPTION}</p>
+        <h1 className="display-heading mt-4 text-[clamp(64px,9vw,126px)]">
+          Chaos
+          <br />
+          <span className="text-primary">monkeys.</span>
+        </h1>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed">{DESCRIPTION}</p>
       </header>
 
       {drops.length === 0 && (
-        <p className="rounded-lg border-2 border-dashed border-[#1F1F1F] p-8 text-center text-dark-light">
+        <p className="border-2 border-dashed border-dark p-8 text-center">
           The first monkeys are still at their keyboards.
         </p>
       )}
@@ -50,7 +54,7 @@ export default function ChaosMonkeysPage() {
         <section key={date} aria-labelledby={`drop-${date}`} className="mb-16">
           <h2
             id={`drop-${date}`}
-            className="mb-6 border-b-2 border-[#1F1F1F] pb-2 font-bebas-neue text-3xl tracking-wide md:text-4xl"
+            className="display-heading mb-8 border-y-2 border-dashed border-dark py-3 text-4xl md:text-5xl"
           >
             {formatDropDate(date)}
           </h2>

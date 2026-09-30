@@ -81,10 +81,10 @@ export default function AddToCartButton({
   return (
     <div>
       <div className="flex items-center gap-4">
-        <div className="flex items-center border border-secondary rounded-md">
+        <div className="flex min-h-[48px] items-center border-2 border-dark bg-club-slip font-mono">
           <button
             onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
-            className="px-3 py-2 hover:bg-secondary-light"
+            className="min-h-[44px] min-w-[44px] px-3.5 py-2 hover:bg-club-yellow"
             aria-label="Decrease quantity"
           >
             -
@@ -93,7 +93,7 @@ export default function AddToCartButton({
           <button
             onClick={() => setItemQuantity(prev => Math.min(MAX_QUANTITY, prev + 1))}
             disabled={itemQuantity >= MAX_QUANTITY}
-            className="px-3 py-2 hover:bg-secondary-light disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[44px] min-w-[44px] px-3.5 py-2 hover:bg-club-yellow disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Increase quantity"
           >
             +
@@ -106,7 +106,7 @@ export default function AddToCartButton({
           // aria-disabled (not disabled) keeps the button focusable so the reason is reachable.
           aria-disabled={unavailable || undefined}
           aria-describedby={unavailable ? 'add-to-cart-reason' : undefined}
-          className={`btn btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50 ${
+          className={`btn btn-primary min-h-[52px] flex-1 disabled:cursor-not-allowed disabled:opacity-50 ${
             unavailable ? 'cursor-not-allowed opacity-50' : ''
           }`}
         >
@@ -115,10 +115,10 @@ export default function AddToCartButton({
       </div>
       
       {/* The lasting reason is a polite status tied to the button; short warnings are alerts. */}
-      <p id="add-to-cart-reason" role="status" className="mt-2 text-sm text-red-500">
+      <p id="add-to-cart-reason" role="status" className="mt-3 text-sm font-semibold text-primary">
         {unavailable ? 'That combination isn’t available. Try another size or color.' : ''}
       </p>
-      <div role="alert" className="text-sm text-red-500">
+      <div role="alert" className="text-sm font-semibold text-primary">
         {showWarning && !unavailable ? warningMessage : ''}
       </div>
     </div>
