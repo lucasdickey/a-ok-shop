@@ -1156,7 +1156,8 @@ export default function ChaosMonkey({
               <div className="mb-6">
                 <p className="text-white text-lg mb-4">Your 25% OFF code:</p>
                 <div className="bg-gray-800 border border-gray-600 rounded p-3 mb-4">
-                  <code className="text-yellow-400 text-xl font-mono">
+                  {/* ph-no-capture keeps the code out of PostHog's automatic click capture. */}
+                  <code className="ph-no-capture text-yellow-400 text-xl font-mono">
                     {discountCode}
                   </code>
                 </div>
