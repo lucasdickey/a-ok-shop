@@ -146,16 +146,30 @@ export default function CartDrawer() {
     }
   };
 
-  if (!isOpen) return null;
-
+  // The drawer stays in the page so it can slide in and out. When closed it is
+  // hidden (visibility), which also keeps it out of the tab order and screen readers;
+  // on close, hiding waits until the 300ms slide-out has finished.
   return (
-    <div className="fixed inset-0 z-50 bg-club-blue-dark/60">
+    <div
+      className={`fixed inset-0 z-50 motion-reduce:[transition:none] ${
+        isOpen ? 'visible [transition:visibility_0s]' : 'pointer-events-none invisible [transition:visibility_0s_linear_300ms]'
+      }`}
+    >
+      {/* Only the backdrop fades; the drawer stays solid while it slides. */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-club-blue-dark/60 transition-opacity duration-300 motion-reduce:transition-none ${
+          isOpen ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
       <div
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-title"
-        className="fixed right-0 top-0 flex h-full w-full max-w-md flex-col border-l-2 border-dark bg-club-slip p-5 shadow-[-10px_0_0_#22221E] sm:w-[420px] sm:p-6"
+        className={`fixed right-0 top-0 flex h-full w-full max-w-md flex-col border-l-2 border-dark bg-club-slip p-5 shadow-[-10px_0_0_#22221E] transition-transform duration-300 motion-reduce:transition-none sm:w-[420px] sm:p-6 ${
+          isOpen ? 'translate-x-0 ease-out' : 'translate-x-[calc(100%+12px)] ease-in'
+        }`}
       >
         <div className="flex items-start justify-between border-b-2 border-dashed border-dark pb-4">
           <div>
