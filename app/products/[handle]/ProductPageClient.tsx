@@ -56,14 +56,14 @@ export function SizeSelector({
 
   return (
     <div className="mt-6">
-      <label htmlFor="size-select" className="block text-sm font-medium mb-2">
-        Size
+      <label htmlFor="size-select" className="micro mb-2 block">
+        Size / XS–2XL
       </label>
       <select
         id="size-select"
         value={selectedSize}
         onChange={handleSizeChange}
-        className="w-full p-2 border border-secondary rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+        className="min-h-[48px] w-full rounded-none border-2 border-dark bg-club-slip px-3 font-mono text-sm shadow-hard-sm"
       >
         <option value="" disabled>
           Select a size
@@ -151,16 +151,17 @@ export function ColorSelector({
 
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium mb-2">Color</h3>
+      <h3 className="micro mb-2 font-normal">Color</h3>
       <div className="flex flex-wrap gap-2">
         {colors.map((color) => (
           <button
             key={color}
             onClick={() => handleColorClick(color)}
-            className={`w-8 h-8 rounded-full border ${getColorStyle(color)} ${
+            aria-pressed={selectedColor === color}
+            className={`h-10 w-10 rounded-full border-2 border-dark ${getColorStyle(color)} ${
               selectedColor === color
-                ? 'ring-2 ring-primary ring-offset-2'
-                : 'hover:ring-1 hover:ring-gray-300'
+                ? 'shadow-hard-sm ring-2 ring-dark ring-offset-2 ring-offset-club-paper'
+                : 'hover:-translate-y-0.5'
             }`}
             title={color}
             aria-label={`Select ${color} color`}
@@ -168,7 +169,7 @@ export function ColorSelector({
         ))}
       </div>
       {selectedColor && (
-        <p className="mt-2 text-sm text-gray-600">Selected: {selectedColor}</p>
+        <p className="micro mt-2">Selected: {selectedColor}</p>
       )}
     </div>
   );
@@ -236,11 +237,13 @@ export function ProductDetails({
     .join(':');
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold">{product.title}</h1>
+    <div className="min-w-0">
+      <p className="micro">A–OK / Line item</p>
+      <h1 className="display-heading mt-4 text-[clamp(48px,6vw,84px)]">{product.title}</h1>
 
-      <div className="mt-4">
-        <p className="text-2xl font-medium text-primary">${price.toFixed(2)}</p>
+      <div className="mt-6 flex items-baseline justify-between gap-4 border-y-2 border-dashed border-dark py-4">
+        <span className="micro">Price, before the good decisions</span>
+        <p className="text-3xl font-bold">${price.toFixed(2)}</p>
       </div>
 
       {/* Color selector for products with color options */}
@@ -265,12 +268,12 @@ export function ProductDetails({
       {/* Variant selector for non-clothing items with multiple variants */}
       {!isClothingItem && !hasColorOptions && variants.length > 1 && (
         <div className="mt-6">
-          <h3 className="text-sm font-medium">Variants</h3>
+          <h3 className="micro font-normal">Variants</h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {variants.map((variant) => (
               <button
                 key={variant.id}
-                className="rounded-md border border-secondary px-3 py-1 text-sm hover:bg-secondary-light"
+                className="border-2 border-dark px-3 py-1 text-sm hover:bg-club-yellow"
               >
                 {variant.title}
               </button>
@@ -301,8 +304,10 @@ export function ProductDetails({
         />
       </div>
 
-      <div className="mt-8 prose prose-sm max-w-none prose-headings:font-medium prose-ul:list-disc prose-ul:pl-5 prose-li:mt-2 prose-p:mb-4">
-        <h3 className="text-lg font-medium">Description</h3>
+      <div className="receipt-slip mt-10">
+        <h3 className="micro mb-4 border-b border-dashed border-dark pb-3 text-center font-normal">
+          Description / the fine print
+        </h3>
         <div
           dangerouslySetInnerHTML={{
             __html:
@@ -318,13 +323,13 @@ export function ProductDetails({
       </div>
 
       {product.tags.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium">Tags</h3>
+        <div className="mt-10">
+          <h3 className="micro font-normal">Tags</h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {product.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="rounded-full bg-secondary px-3 py-1 text-xs"
+                className="border border-dark bg-club-yellow px-2.5 py-1 font-mono text-[11px] uppercase"
               >
                 {tag}
               </span>
@@ -365,10 +370,10 @@ export function ProductPageContent({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-14">
       {/* Product Images */}
-      <div className="space-y-4">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
+      <div className="min-w-0 space-y-5">
+        <div className="relative aspect-square overflow-hidden border-2 border-dark bg-club-yellow shadow-hard-lg">
           <Image
             src={images[selectedImageIndex]?.url || '/product-placeholder.jpg'}
             alt={images[selectedImageIndex]?.alt || product.title}
@@ -381,12 +386,15 @@ export function ProductPageContent({
         </div>
 
         {images.length > 1 && (
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {images.map((image, index) => (
-              <div
+              <button
+                type="button"
                 key={index}
-                className={`relative aspect-square overflow-hidden rounded-lg bg-secondary-light cursor-pointer ${
-                  selectedImageIndex === index ? 'ring-2 ring-primary' : ''
+                aria-label={`Show photo ${index + 1} of ${images.length}`}
+                aria-pressed={selectedImageIndex === index}
+                className={`relative aspect-square overflow-hidden border-2 border-dark bg-club-sky ${
+                  selectedImageIndex === index ? 'shadow-hard-red' : 'hover:shadow-hard-sm'
                 }`}
                 onClick={() => setSelectedImageIndex(index)}
               >
@@ -398,7 +406,7 @@ export function ProductPageContent({
                   sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
                   unoptimized={!image.url?.startsWith('http')}
                 />
-              </div>
+              </button>
             ))}
           </div>
         )}
