@@ -164,12 +164,14 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
       ws.onerror = () => reject(new Error("could not connect to Chrome"));
     });
     ws.onmessage = (event) => {
-      const message = JSON.parse(String(event.data)) as Reply & { id?: number };
+      const message = JSON.parse(String(event.data)) as Reply & { id?: number; error?: { message?: string } };
       const waiting = message.id === undefined ? undefined : pending.get(message.id);
       if (!waiting || message.id === undefined) return;
       clearTimeout(waiting.timer);
       pending.delete(message.id);
-      waiting.resolve(message);
+      // A protocol-level error (e.g. the page target crashed) is Chrome's failure, not the template's.
+      if (message.error) waiting.reject(new Error(`Chrome reported: ${message.error.message ?? "an error"}`));
+      else waiting.resolve(message);
     };
     ws.onclose = () => {
       for (const waiting of pending.values()) {

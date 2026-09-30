@@ -6,7 +6,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { IMAGE_DIR, LOGS_DIR, MANIFEST_PATH, SITE_DIR, TOOL_DIR, log, run, runOrThrow, type ManifestEntry } from "./config.ts";
+import { IMAGE_DIR, LOGS_DIR, MANIFEST_PATH, SITE_DIR, TOOL_DIR, log, run, runOrThrow, type ManifestEntry, type RunResult } from "./config.ts";
 
 /** The repository this copy of the tool runs from (your checkout, or the publish clone under launchd). */
 export async function repoRoot(): Promise<string> {
@@ -120,16 +120,17 @@ export async function commitAndPush(paths: string[], message: string, branch: st
       throw new Error(`push failed, so nothing was published (${reason}). ${await dropLocalCommit(branch)}Fix that and run ship again.`);
     }
     log(`${branch} moved during the build; replaying on its new tip…`);
-    await git("fetch", "--quiet", "origin", branch);
-    const rebased = await run("git", ["-C", SITE_DIR, "rebase", "--quiet", `origin/${branch}`]);
+    let rebased: RunResult | null = null;
     try {
+      await git("fetch", "--quiet", "origin", branch);
+      rebased = await run("git", ["-C", SITE_DIR, "rebase", "--quiet", `origin/${branch}`]);
       if (rebased.code !== 0) throw new Error("the new commits conflict with this ship");
       await verifySite();
       // The build can rewrite tracked files; the commit already holds everything that ships.
       await git("checkout", "--quiet", "--", ".");
       await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
     } catch (error) {
-      if (rebased.code !== 0 && (await run("git", ["-C", SITE_DIR, "rebase", "--abort"])).code !== 0) {
+      if (rebased && rebased.code !== 0 && (await run("git", ["-C", SITE_DIR, "rebase", "--abort"])).code !== 0) {
         await run("git", ["-C", SITE_DIR, "rebase", "--quit"]);
       }
       throw new Error(`nothing was published: ${(error as Error).message}. ${await dropLocalCommit(branch)}Run ship again.`);

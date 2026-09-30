@@ -228,37 +228,51 @@ async function draft(options: Options): Promise<void> {
   const force = options.flags.has("--force");
   const runDir = runDirFor(date);
   if (fs.existsSync(PAUSE_FILE) && !force) return log("paused; run `chaos resume` to restart the daily drafts");
-  if (fs.existsSync(path.join(runDir, "run.json")) && !force) return log(`drafts for ${date} already exist: ${path.join(runDir, "sheet.png")}`);
+  // A day is done once its contact sheet exists. A run that stopped earlier resumes: its briefs and any
+  // finished art are kept, so a crash never spends the day's Astra usage twice. --force starts over.
+  const hasRun = fs.existsSync(path.join(runDir, "run.json"));
+  if (hasRun && fs.existsSync(path.join(runDir, "sheet.png")) && !force) {
+    return log(`drafts for ${date} already exist: ${path.join(runDir, "sheet.png")}`);
+  }
+  const resume = hasRun && !force;
 
   const release = acquireLock();
   fs.mkdirSync(runDir, { recursive: true });
   setLogFile(path.join(runDir, "log.txt"));
   try {
     await preflight();
-    const published = await publishedOn("main");
-    const topic = await fetchTopic(date);
-    log(`briefing ${count} drafts for ${date}${topic ? `; topical story: ${topic.headline}` : ""}`);
-    const briefs = await writeBriefs({
-      count,
-      cwd: runDir,
-      published: published.map(({ id, title, slogan }) => ({ id, title, slogan })).slice(-80),
-      recentlyDrafted: recentlyDrafted(date),
-      topic,
-    });
-    const record: Run = {
-      date,
-      createdAt: new Date().toISOString(),
-      topic,
-      drafts: briefs.map((brief, i) => ({ n: i + 1, brief, engine: brief.engine, image: null, cutout: null, error: null, seconds: 0, judgment: null })),
-      shipped: [],
-    };
-    saveRun(record);
+    let record: Run;
+    if (resume) {
+      record = loadRun(date);
+      log(`resuming the unfinished ${date} run; keeping its briefs and any finished art`);
+    } else {
+      const published = await publishedOn("main");
+      const topic = await fetchTopic(date);
+      log(`briefing ${count} drafts for ${date}${topic ? `; topical story: ${topic.headline}` : ""}`);
+      const briefs = await writeBriefs({
+        count,
+        cwd: runDir,
+        published: published.map(({ id, title, slogan }) => ({ id, title, slogan })).slice(-80),
+        recentlyDrafted: recentlyDrafted(date),
+        topic,
+      });
+      record = {
+        date,
+        createdAt: new Date().toISOString(),
+        topic,
+        drafts: briefs.map((brief, i) => ({ n: i + 1, brief, engine: brief.engine, image: null, cutout: null, error: null, seconds: 0, judgment: null })),
+        shipped: [],
+      };
+      saveRun(record);
+    }
 
     // Astra illustrates, three at a time. A usage limit stops the rest; those drafts fall back to the badge.
     const refs = REFERENCE_IMAGES.map((ref) => path.join(CHECKOUT, ref));
     let astraDown = false;
     for (const dir of ["drafts", "cutouts", "posters"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
     await pool(record.drafts, 3, async (d) => {
+      const art = path.join(runDir, d.brief.engine === "hybrid" ? `cutouts/${d.n}.png` : `posters/${d.n}.png`);
+      if (resume && (d.error !== null || d.engine === "code" || fs.existsSync(art))) return;
       const started = Date.now();
       if (astraDown) {
         d.engine = "code";
@@ -297,9 +311,9 @@ async function draft(options: Options): Promise<void> {
           d.image = `drafts/${d.n}.png`;
           fs.writeFileSync(path.join(runDir, d.image), png);
         } catch (error) {
-          // Losing Chrome itself is not this draft's fault: stop, and keep the day's Astra art for a rerun.
+          // Losing Chrome is not this draft's fault: stop, and the next `chaos draft` resumes with the art kept.
           const message = (error as Error).message;
-          if (/^Chrome (is not connected|closed the connection|did not answer)/.test(message)) throw error;
+          if (/^Chrome (is not connected|closed the connection|did not answer|reported)/.test(message)) throw error;
           d.image = null;
           d.error = `could not compose: ${message.split("\n")[0].slice(0, 160)}`;
           log(`draft ${d.n} ${d.brief.title}: ${d.error}`);
