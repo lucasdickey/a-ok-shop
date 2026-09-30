@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { track } from "@/app/lib/analytics";
 
 interface GameProps {
   gameStarted?: boolean;
@@ -101,11 +102,12 @@ export default function ChaosMonkey({
 
       const data = await response.json();
       setDiscountCode(data.code);
+      track("discount_code_issued", {});
     } catch (error) {
       console.error("Error generating discount code:", error);
-      setDiscountError(
-        error instanceof Error ? error.message : "Failed to generate discount code. Please try again."
-      );
+      const reason = error instanceof Error ? error.message : "Failed to generate discount code. Please try again.";
+      track("discount_code_failed", { reason });
+      setDiscountError(reason);
     } finally {
       setIsClaimingDiscount(false);
     }
@@ -822,6 +824,7 @@ export default function ChaosMonkey({
 
               // Check win condition
               if (newTokens >= TOKENS_TO_WIN) {
+                track("game_won", { tokens_collected: newTokens });
                 setGameWon(true);
                 setShowWinModal(true);
                 if (onGameComplete) onGameComplete(true);

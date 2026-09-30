@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { track } from '@/app/lib/analytics';
 
 export type CartItem = {
   id: string;
@@ -88,6 +89,15 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         // Add new item
         return [...prevCart, { ...item, quantity: Math.min(MAX_QUANTITY_PER_ITEM, item.quantity) }];
       }
+    });
+    track('product_added_to_cart', {
+      product_id: item.id,
+      variant_id: item.variantId,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+      size: item.size,
+      color: item.color,
     });
     openCart();
   };
