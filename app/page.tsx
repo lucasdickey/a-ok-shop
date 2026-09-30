@@ -142,9 +142,9 @@ export default async function Home() {
             taste.
             <br />
             <span className="text-primary">
-              Keep the
+              Bad
               <br />
-              receipt.
+              models.
             </span>
           </h1>
           <p className="mb-7 text-[17px] leading-normal lg:text-[clamp(16px,1.5vw,22px)]">
