@@ -209,7 +209,7 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
   // Get the appropriate CSS classes for each cell size
   const getCellClasses = (size: CellSize) => {
     const baseClasses =
-      "relative overflow-hidden rounded-lg border-2 border-[#1F1F1F] transition-all duration-700 ease-in-out bento-cell";
+      "relative overflow-hidden border-2 border-dark bg-club-slip transition-all duration-700 ease-in-out bento-cell";
 
     switch (size) {
       case "small":
@@ -231,8 +231,8 @@ export default function ImageGrid({ images, title }: ImageGridProps) {
   if (!hasImages || bentoCells.length === 0) {
     return (
       <div className="w-full">
-        <div className="bento-grid-placeholder bg-gray-100 rounded-lg p-8 text-center">
-          <p className="text-gray-500">Loading image grid...</p>
+        <div className="bento-grid-placeholder border-2 border-dashed border-dark bg-club-slip p-8 text-center">
+          <p className="micro">Loading image grid...</p>
         </div>
       </div>
     );

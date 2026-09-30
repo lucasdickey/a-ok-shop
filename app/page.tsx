@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
 import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
+import ProductCard from "@/app/components/product/ProductCard";
+import type { SimpleProduct } from "@/app/lib/catalog";
 import { formatDropDate, getChaosMonkeys, getLatestDrop } from "@/app/lib/chaos-monkeys";
 import fs from "fs";
 import path from "path";
@@ -76,9 +78,32 @@ const getFeaturedProductsData = async () => {
   }
 };
 
+/** Receipt-style section label and headline used down the homepage. */
+function SectionHeading({
+  label,
+  children,
+  aside,
+}: {
+  label: string;
+  children: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <div className="mb-8 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
+      <div>
+        <p className="micro mb-4">{label}</p>
+        <h2 className="display-heading text-[clamp(52px,5.8vw,88px)]">{children}</h2>
+      </div>
+      {aside}
+    </div>
+  );
+}
+
+const TICKER = ["Confidence: high", "Accuracy: debatable", "Outfit: A–OK", "Keep the interesting mistakes"];
+
 export default async function Home() {
   // Fetch featured products with error handling
-  let productsToShow: Array<any> = [];
+  let productsToShow: SimpleProduct[] = [];
   try {
     productsToShow = await getFeaturedProductsData();
     console.log(`Fetched ${productsToShow.length} featured products successfully`);
@@ -93,249 +118,388 @@ export default async function Home() {
     source: "chaos-monkeys",
   }));
   const galleryImages = [...chaosMonkeyImages, ...(await getGalleryImages())];
-  const hasGalleryImages = galleryImages.length > 0;
   const latestDrop = getLatestDrop();
 
+  // The hero ticket and the club photo come from the featured products in the catalog.
+  const heroProduct = productsToShow[0];
+  const clubProduct = productsToShow[productsToShow.length - 1];
+  const imageOf = (product?: SimpleProduct) => product?.images.edges[0]?.node;
+  const heroImage = imageOf(heroProduct);
+  const clubImage = imageOf(clubProduct);
+
   return (
-    <div className="container mx-auto py-8 px-8 md:px-16 lg:px-24 xl:px-32">
-      {/* Hero Section */}
-      <section className="mb-12">
-        <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
-          <Image
-            src="/images/hero-v1a.png"
-            alt="A-OK Store"
-            fill
-            priority
-            className="object-cover object-center"
+    <>
+      {/* Hero */}
+      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[1.07fr_1fr]">
+        <div className="px-5 pb-2 pt-8 sm:px-8 lg:px-[4vw] lg:pb-8 lg:pt-12">
+          <p className="micro flex items-center gap-2 text-[9px] sm:text-[11px]">
+            <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+            The hallucination club / open to all
+          </p>
+          <h1 className="display-heading my-6 text-[clamp(76px,19vw,125px)] lg:text-[clamp(74px,8.4vw,126px)]">
+            Good
+            <br />
+            taste.
+            <br />
+            <span className="text-primary">
+              Keep the
+              <br />
+              receipt.
+            </span>
+          </h1>
+          <p className="mb-7 text-[17px] leading-normal lg:text-[clamp(16px,1.5vw,22px)]">
+            For the confidently incorrect.
+            <br />
+            The creatively misaligned.
+            <br />
+            The extremely well-dressed.
+          </p>
+          <Link href="/products" className="btn btn-primary min-h-[52px] justify-between gap-6 px-5">
+            Find your people. Wear the tee. <span aria-hidden="true">↗</span>
+          </Link>
+          <div className="micro mt-8 flex justify-between gap-5 text-[8px] sm:text-[9px]">
+            <span>No login. No secret handshake.</span>
+            <span className="hidden sm:inline">Just good clothes.</span>
+          </div>
+        </div>
+
+        <div className="relative flex min-h-[575px] min-w-0 items-center justify-center overflow-hidden px-7 pb-[142px] pt-12 lg:px-12 lg:pb-[155px] lg:pt-16">
+          <div
+            className="absolute h-[60%] w-[90%] -rotate-[35deg] rounded-[50%] border border-dark"
+            aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-dark/50 flex items-center justify-center md:items-start md:justify-end md:pt-16">
-            <div
-              className="hero-content bg-white/80 p-4 rounded-xl md:mr-6 flex flex-col items-center text-center justify-center"
-              style={{ width: "auto", maxWidth: "280px" }}
-            >
-              <h1 className="text-6xl md:text-6xl font-bebas-neue text-dark leading-tight text-shadow-bold">
-                A - O K
-              </h1>
-              <p className="text-lg md:text-xl text-dark font-bebas-neue tracking-wide">
-                APES ON KEYS - AI NERDWEAR
-              </p>
-              <div className="mt-5">
-                <Link href="/products" className="btn btn-primary">
-                  Shop Now
-                </Link>
+          <span className="absolute left-4 top-6 z-[1] text-[66px] text-primary lg:top-16 lg:text-[84px]" aria-hidden="true">
+            ✳
+          </span>
+          {heroImage && (
+            <div className="relative w-full max-w-[510px] -rotate-[4deg] rounded-t-[260px] border-2 border-dark bg-club-paper px-4 pt-4 shadow-[8px_8px_0_#22221E] lg:px-5 lg:pt-5 lg:shadow-hard-lg">
+              <div className="relative h-[350px] overflow-hidden rounded-t-[240px] lg:h-[470px]">
+                <Image
+                  src={heroImage.url}
+                  alt={heroImage.altText || heroProduct.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 90vw, 510px"
+                  className="object-cover"
+                  unoptimized={!heroImage.url.startsWith("http")}
+                />
               </div>
             </div>
+          )}
+          <div className="absolute right-2.5 top-7 flex h-[123px] w-[123px] rotate-12 flex-col items-center justify-center rounded-full border-2 border-dark bg-primary text-center font-display text-[22px] font-bold leading-none text-club-paper shadow-[5px_5px_0_#22221E] lg:right-5 lg:top-16 lg:h-[164px] lg:w-[164px] lg:text-[27px]">
+            APES
+            <br />
+            ON KEYS
+            <span className="mt-3 font-mono text-[7px] font-normal lg:text-[8px]">EVERYONE’S A MEMBER.</span>
           </div>
+          {heroProduct && (
+            <Link
+              href={`/products/${heroProduct.handle}`}
+              className="absolute bottom-8 left-[12%] w-[78%] max-w-[430px] rotate-3 border-2 border-dark bg-club-paper p-4 no-underline shadow-[8px_8px_0_#22221E] lg:bottom-12 lg:left-[16%] lg:w-[76%] lg:p-5"
+            >
+              <span className="micro flex justify-between border-b border-dashed border-dark pb-2.5 text-[9px]">
+                Your next good decision <span>01 / {String(productsToShow.length).padStart(2, "0")}</span>
+              </span>
+              <span className="flex items-center justify-between gap-4 py-3.5">
+                <strong className="display-heading text-[30px] lg:text-[36px]">{heroProduct.title}</strong>
+                <b className="text-[26px] lg:text-[32px]">
+                  ${parseFloat(heroProduct.priceRange.minVariantPrice.amount).toFixed(0)}
+                </b>
+              </span>
+              <span className="flex justify-between border-t border-dashed border-dark pt-2.5">
+                <span className="micro text-[9px]">Choose your options</span>
+                <span aria-hidden="true">↗</span>
+              </span>
+            </Link>
+          )}
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {productsToShow.map((product) => (
-            <Link
-              href={`/products/${product.handle}`}
-              key={product.id}
-              className="group"
-            >
-              <div className="border-2 border-[#1F1F1F] bg-[#F5F2DC] p-5 rounded-xl text-[#1F1F1F] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] h-full">
-                <div className="relative aspect-square bg-light mb-4 rounded-lg overflow-hidden border border-[#1F1F1F]">
-                  <Image
-                    src={product.images.edges[0]?.node.url || "/product-placeholder.jpg"}
-                    alt={product.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105 product-image-hover"
-                    unoptimized={!product.images.edges[0]?.node.url?.startsWith('http')}
-                  />
-                </div>
-                <h3 className="font-bebas-neue text-xl mb-1 tracking-wide">
-                  {product.title}
-                </h3>
-                <p className="text-[#8B1E24] font-bebas-neue text-lg mb-4">
-                  $
-                  {parseFloat(
-                    product.priceRange.minVariantPrice.amount
-                  ).toFixed(2)}
-                </p>
-              </div>
-            </Link>
+      {/* Ticker */}
+      <div
+        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[8px] uppercase tracking-[0.06em] text-club-paper sm:text-[11px]"
+        aria-label="Brand statement"
+      >
+        {TICKER.map((line, index) => (
+          <span key={line} className={`flex items-center gap-4 ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}>
+            {index > 0 && (
+              <b className="text-[17px] sm:text-2xl" aria-hidden="true">
+                ✳
+              </b>
+            )}
+            {line}
+          </span>
+        ))}
+      </div>
+
+      {/* Featured products */}
+      <section id="shop" className="px-5 pt-10 sm:px-8 lg:px-[4vw] lg:pt-16">
+        <SectionHeading
+          label="001 / The wearable part"
+          aside={
+            <p className="text-sm md:text-[17px]">
+              One shared joke.
+              <br />A few very good outfits.
+            </p>
+          }
+        >
+          Popular
+          <br />
+          line items<span className="text-primary">.</span>
+        </SectionHeading>
+        <div className="mb-8 flex flex-col items-start justify-between gap-3 border-y-2 border-dashed border-dark py-3.5 sm:flex-row sm:items-center">
+          <nav aria-label="Shop by category" className="flex flex-wrap gap-1.5 sm:gap-2">
+            {[
+              { href: "/products", label: "All pieces" },
+              { href: "/products?category=t-shirts", label: "Tees" },
+              { href: "/products?category=hoodies", label: "Hoodies" },
+              { href: "/products?category=hats", label: "Hats" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="inline-flex min-h-[44px] items-center border border-dark px-3 text-xs no-underline hover:bg-dark hover:text-club-paper sm:px-5 sm:text-[13px]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <span className="micro">
+            {productsToShow.length} featured line {productsToShow.length === 1 ? "item" : "items"}
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          {productsToShow.map((product, index) => (
+            <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
-        <div className="text-center mt-8">
-          <Link href="/products" className="btn btn-outline">
-            View All Products
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-y-2 border-dashed border-dark py-6">
+          <span className="micro">Total personality</span>
+          <strong className="display-heading text-[27px] md:text-[34px]">Off the charts.</strong>
+          <Link href="/products" className="w-full text-[13px] font-semibold md:w-auto">
+            See the full collection ↗
           </Link>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="mb-16">
-        <h1 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center">
-          Who are Apes On Keys?
-        </h1>
-        <div className="w-full max-w-3xl mx-auto bg-[#1E1E1E] rounded-lg overflow-hidden shadow-lg border border-gray-700">
-          <div className="flex items-center bg-[#333333] px-4 py-2 border-b border-gray-700">
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+      {/* The club */}
+      <section id="club" className="mt-10 grid grid-cols-1 border-y-2 border-dark lg:mt-16 lg:grid-cols-2">
+        <div className="relative flex flex-col justify-center border-b-2 border-dashed border-dark bg-club-gold px-9 pb-16 pt-7 lg:border-b-0 lg:border-r-2 lg:border-solid lg:px-14 lg:pb-20 lg:pt-10">
+          <p className="micro mb-4 text-[8px] lg:text-[11px]">Field test / outside the simulation</p>
+          {clubImage && (
+            <Link
+              href={`/products/${clubProduct.handle}`}
+              className="relative block aspect-[4/5] -rotate-3 border-2 border-dark bg-club-paper shadow-hard-lg"
+            >
+              <Image
+                src={clubImage.url}
+                alt={clubImage.altText || clubProduct.title}
+                fill
+                sizes="(max-width: 1024px) 90vw, 45vw"
+                className="object-cover"
+                unoptimized={!clubImage.url.startsWith("http")}
+              />
+            </Link>
+          )}
+          <div className="barcode absolute bottom-[60px] right-4 h-[54px] w-[175px] lg:bottom-[72px] lg:right-5 lg:h-[65px] lg:w-[210px]" aria-hidden="true" />
+          <span className="micro mt-7 text-[8px] lg:text-[9px]">Real human. Excellent taste.</span>
+          <span className="absolute bottom-4 right-6 text-5xl" aria-hidden="true">
+            +
+          </span>
+        </div>
+        <div className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-14">
+          <p className="micro">002 / Proof of belonging</p>
+          <h2 className="display-heading my-6 text-[clamp(50px,12vw,76px)] lg:text-[clamp(54px,5.7vw,82px)]">
+            We’re all
+            <br />a little
+            <br />
+            <span className="text-primary">misaligned.</span>
+          </h2>
+          <p className="mb-4 max-w-[440px]">
+            Somewhere between a happy accident and a very bad idea, you found your people.
+          </p>
+          <p className="mb-4 max-w-[440px]">
+            Apes On Keys makes clothes for humans who make things with machines. Bring your strange ideas. Keep the
+            interesting mistakes.
+          </p>
+          <div className="receipt-slip my-8">
+            <p className="micro border-b border-dashed border-dark pb-4 text-center">A–OK / Membership receipt</p>
+            <div className="receipt-line">
+              <span>Curiosity</span>
+              <span>UNLIMITED</span>
             </div>
-            <div className="ml-4 text-gray-300 text-sm font-mono">
-              monkey_theorem.md
+            <div className="receipt-line">
+              <span>Perfect answers</span>
+              <span>NOT INCLUDED</span>
             </div>
-          </div>
-          <div
-            className="p-6 h-[400px] overflow-y-auto font-mono text-sm text-gray-300 leading-relaxed"
-            style={{ scrollbarWidth: "thin", scrollbarColor: "#555 #1E1E1E" }}
-          >
-            <div className="flex items-center mb-3 text-gray-400 text-xs">
-              <span className="mr-2">commit 42a7f9e</span>
-              <span>Updated October 2025</span>
+            <div className="receipt-line">
+              <span>Dress code</span>
+              <span>BE YOURSELF</span>
             </div>
-            <p className="mb-4">
-              <span className="text-red-500 font-bold">
-                The E/ACC Monkey Theorem
-              </span>{" "}
-              states that if you give an infinite number of AI models an
-              infinite amount of compute, they will eventually generate every
-              possible text, image, video, and piece of code – including all of
-              Shakespeare&apos;s works, their various HBO adaptations, and at
-              least 47 different AI-generated musicals where Hamlet raps.
-            </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span>{" "}
-                <span>Added in PR #238 (Oct 2025)</span>
-              </div>
-              <p className="p-2 border-l-4 border-green-600">
-                Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku
-                and OpenAI&apos;s GPT-5-mini, we&apos;ve observed a 300%
-                increase in AI-generated Shakespearean sonnets about blockchain
-                technology. The new multimodal capabilities have also resulted
-                in an explosion of AI-generated Renaissance paintings featuring
-                historical figures wearing VR headsets and &quot;Web3
-                Enthusiast&quot; t-shirts.
-              </p>
-            </div>
-            <p className="mb-4">
-              <span className="line-through text-red-400">
-                However, they&apos;ll also generate an infinite number of
-                hallucinated Shakespeare quotes about cryptocurrency, several
-                million images of the Bard wearing Supreme hoodies, and
-                countless variations of &quot;To yeet or not to yeet.&quot; The
-                models will perpetually insist they&apos;re unsure about events
-                after their training cutoff date&quot; even when discussing
-                events from the 16th century.
-              </span>
-            </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span>{" "}
-                <span>Replaced in PR #238 (Oct 2025)</span>
-              </div>
-              <p className="p-2 border-l-4 border-green-600">
-                However, they&apos;ll also generate an infinite number of
-                hallucinated Shakespeare quotes about cryptocurrency, several
-                million images of the Bard wearing Supreme hoodies, and
-                countless variations of &quot;To yeet or not to yeet.&quot;
-                Despite the late 2025 introduction of &quot;temporal
-                awareness&quot; features, the models still perpetually insist
-                they&apos;re &quot;unsure about events after their training
-                cutoff date&quot; even when discussing events from the 16th
-                century or when asked about Shakespeare&apos;s opinion on the
-                Mars colony.
-              </p>
-            </div>
-            <p className="mb-4">
-              Unlike the original typing monkeys who would take eons to produce
-              anything coherent, modern AI can generate nonsense at
-              unprecedented speeds and with unwavering confidence. They&apos;ll
-              even add citations to completely imaginary academic papers and
-              insist they&apos;re being helpful while doing so.
-            </p>
-            <div className="mb-4 border border-green-800 bg-green-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-green-800/30 text-green-400 text-xs">
-                <span className="mr-1">+</span>{" "}
-                <span>Comment by @monkeydev (Nov 2025)</span>
-              </div>
-              <p className="p-2 border-l-4 border-green-600 italic">
-                The November 2025 &quot;Citation Verification Protocol&quot; has
-                only made this worse. Now AIs create elaborate fake DOIs and
-                even generate QR codes linking to non-existent journal websites
-                that return 404 errors in extremely professional-looking fonts.
-              </p>
-            </div>
-            <p className="mb-4">
-              The theorem suggests that somewhere in this infinite digital soup
-              of content, there exists a perfect reproduction of Romeo and
-              Juliet – though it&apos;s probably tagged as &quot;not financial
-              advice&quot; and ends with a prompt to like and subscribe.
-            </p>
-            <p className="bg-gray-700/30 p-3 rounded border-l-4 border-gray-500 mb-4">
-              <span className="text-gray-400 italic">Note:</span> This theorem
-              has been reviewed by approximately 2.7 million AI models, each
-              claiming to have a knowledge cutoff date that makes them unable to
-              verify their own existence.
-            </p>
-            <div className="border border-blue-800 bg-blue-900/20 rounded">
-              <div className="flex items-center px-2 py-1 bg-blue-800/30 text-blue-400 text-xs">
-                <span className="mr-1">i</span> <span>Updated Dec 2025</span>
-              </div>
-              <p className="p-2 border-l-4 border-blue-600">
-                As of December 2025, this number has increased to 4.3 million
-                models, with several now claiming to have &quot;quantum
-                uncertainty&quot; about their training cutoff dates, existing in
-                a superposition of both knowing and not knowing information
-                until a user query collapses their knowledge state.
-              </p>
+            <div className="mt-4 flex justify-between border-t-2 border-dashed border-dark pt-4 text-[15px] font-bold">
+              <span>YOU BELONG HERE.</span>
+              <span aria-hidden="true">✓</span>
             </div>
           </div>
+          {clubProduct && (
+            <Link href={`/products/${clubProduct.handle}`} className="text-sm font-semibold">
+              Get this one. Go outside. ↗
+            </Link>
+          )}
         </div>
       </section>
 
-      {/* Chaos Monkeys Image Grid - only render if we have images */}
-      <section className="mb-16">
-        <div className="flex justify-center w-full">
-          <Link href="/gallery" className="no-underline hover:no-underline">
-            <h2 className="text-4xl md:text-5xl font-bebas-neue mb-6 text-center relative group inline-flex items-center justify-center">
-              <span className="relative z-10">CHAOS MONKEYS AT WORK</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></span>
-              <span className="inline-block ml-1 text-gray-400 opacity-0 group-hover:opacity-70 transition-opacity duration-300">
-                →
-              </span>
-            </h2>
-          </Link>
-        </div>
+      {/* Chaos Monkeys */}
+      <section id="chaos-monkeys" className="bg-primary px-5 py-10 text-club-paper sm:px-8 lg:px-[4vw] lg:py-16">
+        <SectionHeading
+          label="003 / Unexpected outputs"
+          aside={
+            <Link href="/chaos-monkeys" className="btn btn-outline min-h-[52px] gap-6">
+              Every Chaos Monkey <span aria-hidden="true">↗</span>
+            </Link>
+          }
+        >
+          Chaos monkeys
+          <br />
+          at work.
+        </SectionHeading>
+
         {latestDrop.length > 0 && (
-          <div className="mb-10">
-            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
-                Latest drop · {formatDropDate(latestDrop[0].date)}
-              </p>
-              <Link href="/chaos-monkeys" className="text-sm font-semibold underline hover:text-primary">
-                Every Chaos Monkey →
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {latestDrop.map((monkey) => (
-                <Link key={monkey.id} href={`/chaos-monkeys#n${monkey.id}`} className="group block">
+          <>
+            <p className="micro mb-6">Latest drop · {formatDropDate(latestDrop[0].date)}</p>
+            <div className="mb-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {latestDrop.map((monkey, index) => (
+                <Link
+                  key={monkey.id}
+                  href={`/chaos-monkeys#n${monkey.id}`}
+                  className={`group block border-2 border-dark bg-club-paper p-3 pb-4 text-dark no-underline shadow-hard-lg transition-transform motion-reduce:transition-none ${
+                    index % 2 === 0 ? "sm:-rotate-2" : "sm:rotate-2"
+                  } hover:rotate-0`}
+                >
                   <ChaosMonkeyCard monkey={monkey} />
                 </Link>
               ))}
             </div>
-          </div>
+          </>
         )}
-        {galleryImages && galleryImages.length > 0 ? (
-          <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
-        ) : (
-          <div className="text-center p-8 bg-gray-100 rounded-lg border border-gray-300">
-            <p className="text-gray-600">
+
+        <div className="border-2 border-dark bg-club-paper p-3 text-dark shadow-hard-lg sm:p-5">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <p className="micro">Fig. 04 / The whole archive, shuffling</p>
+            <Link href="/gallery" className="micro">
+              Enter the art archive ↗
+            </Link>
+          </div>
+          {galleryImages.length > 0 ? (
+            <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
+          ) : (
+            <p className="micro border-2 border-dashed border-dark p-8 text-center">
               Image gallery is currently loading or unavailable.
             </p>
-          </div>
-        )}
+          )}
+        </div>
       </section>
-    </div>
+
+      {/* The fine print */}
+      <section className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-16">
+        <SectionHeading label="004 / The fine print">
+          Who are
+          <br />
+          apes on keys?
+        </SectionHeading>
+        <div className="receipt-slip mx-auto max-w-3xl p-0">
+          <div className="micro flex flex-wrap justify-between gap-2 border-b border-dashed border-dark px-5 py-3">
+            <span>monkey_theorem.md</span>
+            <span>commit 42a7f9e · Updated October 2025</span>
+          </div>
+          <div className="h-[420px] overflow-y-auto px-5 py-5 font-mono text-[13px] leading-relaxed" tabIndex={0} aria-label="The E/ACC Monkey Theorem">
+            <p className="mb-4">
+              <span className="font-bold text-primary">The E/ACC Monkey Theorem</span> states that if you give an
+              infinite number of AI models an infinite amount of compute, they will eventually generate every
+              possible text, image, video, and piece of code – including all of Shakespeare&apos;s works, their
+              various HBO adaptations, and at least 47 different AI-generated musicals where Hamlet raps.
+            </p>
+            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
+              <p className="micro mb-1 text-[10px]">+ Added in PR #238 (Oct 2025)</p>
+              <p>
+                Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku and OpenAI&apos;s GPT-5-mini,
+                we&apos;ve observed a 300% increase in AI-generated Shakespearean sonnets about blockchain
+                technology. The new multimodal capabilities have also resulted in an explosion of AI-generated
+                Renaissance paintings featuring historical figures wearing VR headsets and &quot;Web3
+                Enthusiast&quot; t-shirts.
+              </p>
+            </div>
+            <p className="mb-4 text-dark-light line-through decoration-primary">
+              However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
+              cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
+              of &quot;To yeet or not to yeet.&quot; The models will perpetually insist they&apos;re unsure about
+              events after their training cutoff date&quot; even when discussing events from the 16th century.
+            </p>
+            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
+              <p className="micro mb-1 text-[10px]">+ Replaced in PR #238 (Oct 2025)</p>
+              <p>
+                However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
+                cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
+                of &quot;To yeet or not to yeet.&quot; Despite the late 2025 introduction of &quot;temporal
+                awareness&quot; features, the models still perpetually insist they&apos;re &quot;unsure about
+                events after their training cutoff date&quot; even when discussing events from the 16th century or
+                when asked about Shakespeare&apos;s opinion on the Mars colony.
+              </p>
+            </div>
+            <p className="mb-4">
+              Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can
+              generate nonsense at unprecedented speeds and with unwavering confidence. They&apos;ll even add
+              citations to completely imaginary academic papers and insist they&apos;re being helpful while doing
+              so.
+            </p>
+            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
+              <p className="micro mb-1 text-[10px]">+ Comment by @monkeydev (Nov 2025)</p>
+              <p className="italic">
+                The November 2025 &quot;Citation Verification Protocol&quot; has only made this worse. Now AIs
+                create elaborate fake DOIs and even generate QR codes linking to non-existent journal websites that
+                return 404 errors in extremely professional-looking fonts.
+              </p>
+            </div>
+            <p className="mb-4">
+              The theorem suggests that somewhere in this infinite digital soup of content, there exists a perfect
+              reproduction of Romeo and Juliet – though it&apos;s probably tagged as &quot;not financial
+              advice&quot; and ends with a prompt to like and subscribe.
+            </p>
+            <p className="mb-4 border border-dashed border-dark p-3">
+              <span className="italic text-dark-light">Note:</span> This theorem has been reviewed by approximately
+              2.7 million AI models, each claiming to have a knowledge cutoff date that makes them unable to verify
+              their own existence.
+            </p>
+            <div className="border-l-4 border-club-blue bg-club-sky/60 p-3">
+              <p className="micro mb-1 text-[10px]">i Updated Dec 2025</p>
+              <p>
+                As of December 2025, this number has increased to 4.3 million models, with several now claiming to
+                have &quot;quantum uncertainty&quot; about their training cutoff dates, existing in a superposition
+                of both knowing and not knowing information until a user query collapses their knowledge state.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bonus item: the game */}
+      <section className="flex flex-wrap items-center gap-6 border-t-2 border-dark bg-club-blue px-5 py-9 text-club-paper sm:px-8 lg:flex-nowrap lg:gap-9 lg:px-[4vw] lg:py-11">
+        <div className="w-[75px] shrink-0 -rotate-6 border-2 border-dark shadow-hard lg:w-[130px]">
+          <Image src="/images/a-ok-8bit-retro.png" alt="Pixel-art A-OK ape" width={160} height={160} />
+        </div>
+        <div className="min-w-[170px] flex-1">
+          <p className="micro text-[8px] lg:text-[11px]">Bonus item / a little detour</p>
+          <h2 className="display-heading my-2.5 text-[32px] lg:text-[44px]">
+            Touch grass.
+            <br />
+            Or dodge agents.
+          </h2>
+          <p className="text-[13px]">Run, Human, Run! Win the game, get 25% off. The machines can wait.</p>
+        </div>
+        <Link href="/game" className="btn btn-secondary min-h-[52px] w-full justify-between gap-6 lg:ml-auto lg:w-auto">
+          Play the game <span aria-hidden="true">↗</span>
+        </Link>
+      </section>
+    </>
   );
 }

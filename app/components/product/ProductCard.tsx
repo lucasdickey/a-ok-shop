@@ -7,9 +7,22 @@ import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
 
 type ProductCardProps = {
   product: SimpleProduct;
+  /** Position in the list, shown as the receipt line number (ITEM / 01). */
+  index?: number;
+  /** Load the photo eagerly (for cards above the fold). */
+  priority?: boolean;
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+// Photo panel colors rotate through the Club Receipt palette.
+const PHOTO_BACKGROUNDS = ['bg-club-yellow', 'bg-club-sky', 'bg-club-gold'];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  hoodie: 'Hoodies',
+  hat: 'Hats',
+  't-shirt': 'Tees',
+};
+
+export default function ProductCard({ product, index = 0, priority = false }: ProductCardProps) {
   const { handle, title, priceRange, images, options, variants, productType, tags } = product;
   
   const price = parseFloat(priceRange.minVariantPrice.amount);
@@ -106,112 +119,48 @@ export default function ProductCard({ product }: ProductCardProps) {
   
   const hasSizes = sizeValues.length > 0;
 
-  // Card styles
-  const cardStyle = {
-    backgroundColor: bgColor,
-    color: textColor,
-    border: '2px solid #1F1F1F',
-    borderRadius: '12px',
-    padding: '1.25rem 1rem',
-    display: 'flex',
-    flexDirection: 'column' as 'column',
-    justifyContent: 'space-between',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    fontFamily: "'Space Grotesk', sans-serif",
-    height: '100%',
-    cursor: 'pointer',
-    maxWidth: '100%'
-  };
-
-  const titleStyle = {
-    fontSize: '1rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
-    marginBottom: '0.5rem',
-    color: textColor,
-    fontFamily: "'Space Grotesk', sans-serif",
-    letterSpacing: '0.01em'
-  };
-
-  const priceStyle = {
-    fontSize: '1.25rem',
-    fontWeight: 500,
-    color: priceColor,
-    marginBottom: '1rem',
-    fontFamily: "'Space Grotesk', sans-serif",
-    letterSpacing: '0.02em'
-  };
-
-  const sizeOptionsStyle = {
-    display: 'flex',
-    gap: '0.5rem',
-    marginTop: 'auto',
-    flexWrap: 'wrap' as 'wrap'
-  };
-
-  const sizeButtonStyle = {
-    backgroundColor: sizeBgColor,
-    border: `1px solid ${sizeBorderColor}`,
-    color: sizeTextColor,
-    padding: '0.25rem 0.6rem',
-    borderRadius: '50px',
-    fontSize: '0.75rem',
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease',
-    fontFamily: "'Space Grotesk', sans-serif",
-    minWidth: '2rem',
-    textAlign: 'center' as 'center'
-  };
-
-  const imageContainerStyle = {
-    position: 'relative' as 'relative',
-    aspectRatio: '1/1' as '1/1',
-    overflow: 'hidden',
-    borderRadius: '8px',
-    border: '1px solid #1F1F1F',
-    marginBottom: '1rem',
-    width: '100%',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#f8f8f8'
-  };
+  const itemNumber = String(index + 1).padStart(2, '0');
+  // Stickers and other non-clothing items fall back to the t-shirt card type.
+  const categoryLabel = isClothing(productType, tags) || cardType !== 't-shirt'
+    ? CATEGORY_LABELS[cardType]
+    : productType || 'Goods';
 
   return (
-    <Link 
-      href={`/products/${handle}`} 
-      aria-label={`View ${title} details`}
-      style={{
-        textDecoration: 'none',
-        color: 'inherit'
-      }}
-    >
-      <div 
-        style={cardStyle}
+    <article className="group flex h-full min-w-0 flex-col border-2 border-dark bg-club-paper shadow-hard">
+      <Link
+        href={`/products/${handle}`}
+        // The title link below is the one keyboard and screen reader stop for this card.
+        tabIndex={-1}
+        aria-hidden="true"
+        className={`relative block overflow-hidden border-b-2 border-dark ${PHOTO_BACKGROUNDS[index % PHOTO_BACKGROUNDS.length]}`}
       >
-        <div style={imageContainerStyle} className="image-container-hover">
+        <span className="absolute left-3 top-3 z-[1] border border-dark bg-club-paper px-2 py-1 font-mono text-[10px]">
+          ITEM / {itemNumber}
+        </span>
+        <div className="relative aspect-[7/8] w-full">
           <Image
             src={imageUrl}
             alt={imageAlt}
             fill
-            style={{
-              objectFit: 'cover',
-              transition: 'transform 0.3s ease'
-            }}
-            className="product-image-hover"
+            priority={priority}
+            sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.035] motion-reduce:transition-none"
             unoptimized={!imageUrl.startsWith('http')}
           />
         </div>
-        
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1
-        }}>
-          <h3 style={titleStyle}>{title}</h3>
-          <p style={priceStyle}>${price.toFixed(2)}</p>
-          
-          {/* Size options removed from product list view */}
-        </div>
+        <span className="absolute bottom-3 right-3 border border-dark bg-club-paper px-3 py-2 text-xs shadow-hard-sm">
+          Choose options <span aria-hidden="true">↗</span>
+        </span>
+      </Link>
+      <div className="flex flex-1 flex-col p-4">
+        <p className="micro text-[9px]">{categoryLabel}</p>
+        <h3 className="mt-2 flex justify-between gap-3 text-[17px] font-bold leading-tight">
+          <Link href={`/products/${handle}`} className="no-underline hover:underline">
+            {title}
+          </Link>
+          <span className="shrink-0">${price.toFixed(2)}</span>
+        </h3>
       </div>
-    </Link>
+    </article>
   );
 }

@@ -403,8 +403,7 @@
   margin: 0 auto;
   height: 600px; /* Fixed height prevents layout shifts */
   overflow-y: hidden; /* Hide overflow content */
-  border-bottom: 16px solid #1f1f1f; /* Fat black border at the bottom */
-  padding-bottom: 2rem; /* Add some space before the border */
+  padding-bottom: 2rem;
 }
 
 .bento-cell {
@@ -414,11 +413,10 @@
   will-change: transform, opacity;
 }
 
+/* Receipt tear line under the grid (Club Receipt). */
 .bento-red-border {
   width: 100%;
-  height: 16px;
-  background-color: #8b1e24; /* Using the same deep red as the t-shirt background */
-  margin-top: 16px;
+  border-top: 2px dashed #22221e;
 }
 
 /* Placeholder with fixed height to avoid layout shifts before images load */
