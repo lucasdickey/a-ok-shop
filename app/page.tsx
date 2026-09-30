@@ -256,7 +256,6 @@ export default async function Home() {
               { href: "/products", label: "All pieces" },
               { href: "/products?category=t-shirts", label: "Tees" },
               { href: "/products?category=hoodies", label: "Hoodies" },
-              { href: "/products?category=hats", label: "Hats" },
             ].map((link) => (
               <Link
                 key={link.href}

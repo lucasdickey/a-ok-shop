@@ -127,7 +127,10 @@ export default function ProductBrowser({
       <section className="px-5 pb-12 pt-6 sm:px-8 lg:px-[4vw] lg:pt-8">
         <div className="mb-8 flex flex-col items-start justify-between gap-3 border-b-2 border-dashed border-dark pb-4 sm:flex-row sm:items-center">
           <nav aria-label="Filter products" className="flex flex-wrap gap-1.5 sm:gap-2">
-            {CATEGORY_FILTERS.map((item) => {
+            {/* A category with nothing in it (e.g. hats between caps) hides its chip. */}
+            {CATEGORY_FILTERS.filter(
+              (item) => !item.category || item.category === category || categoryIds[item.category]?.length
+            ).map((item) => {
               const isCurrent = item.category === category;
               const href = item.category ? `/products?category=${item.category}` : "/products";
               return (

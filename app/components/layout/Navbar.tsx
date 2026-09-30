@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { href: "/products", label: "The collection" },
   { href: "/products?category=t-shirts", label: "Tees" },
   { href: "/products?category=hoodies", label: "Hoodies" },
-  { href: "/products?category=hats", label: "Hats" },
   { href: "/chaos-monkeys", label: "Chaos Monkeys" },
   { href: "/game", label: "Run, Human, Run!" },
 ];
