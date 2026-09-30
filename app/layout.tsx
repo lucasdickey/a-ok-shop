@@ -5,6 +5,7 @@ import "./globals.css";
 import SiteChrome from "./components/layout/SiteChrome";
 import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
+import GameModal from "./components/game/GameModal";
 import PostHogInit from "./components/analytics/PostHogInit";
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -67,6 +68,7 @@ export default function RootLayout({
         <CartProvider>
           <SiteChrome>{children}</SiteChrome>
           <CartDrawer />
+          <GameModal />
         </CartProvider>
         <PostHogInit />
         <Analytics />
