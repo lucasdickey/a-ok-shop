@@ -103,7 +103,7 @@ export default async function Home() {
         <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
           <Image
             src="/images/hero-v1a.png"
-            alt="A-OK Store"
+            alt="A-OK"
             fill
             priority
             className="object-cover object-center"

@@ -70,7 +70,7 @@ function CheckoutSuccessContent() {
               Order Confirmed!
             </h1>
             <p className="text-lg text-gray-600 mb-2">
-              Thank you for your purchase from A-OK Shop
+              Thank you for your purchase from A-OK
             </p>
             <p className="text-sm text-gray-500 mb-8">
               Order ID: {sessionId.slice(-12)}

@@ -1,16 +1,16 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "A-OK Shop - Agentic Commerce Protocol API",
-    "description": "API for browsing products and completing purchases at A-OK Shop using the Agentic Commerce Protocol (ACP). Browse AI-inspired streetwear, get product details with variants and pricing, and create secure Stripe checkout sessions.",
+    "title": "A-OK - Agentic Commerce Protocol API",
+    "description": "API for browsing products and completing purchases at A-OK using the Agentic Commerce Protocol (ACP). Browse AI-inspired streetwear, get product details with variants and pricing, and create secure Stripe checkout sessions.",
     "version": "1.0.0",
     "contact": {
-      "email": "info@a-ok.shop"
+      "email": "info@a-ok.ai"
     }
   },
   "servers": [
     {
-      "url": "https://www.a-ok.shop",
+      "url": "https://a-ok.ai",
       "description": "Production server"
     }
   ],
@@ -131,7 +131,7 @@
               },
               "name": {
                 "type": "string",
-                "example": "A-OK Shop"
+                "example": "A-OK"
               },
               "currency": {
                 "type": "string",

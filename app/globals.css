@@ -425,7 +425,7 @@
 }
 
 .logo-text-container .logo-letter.shop-text {
-  min-width: 2.5em;
+  min-width: 1.2em; /* sized for ".ai" */
 }
 
 /* When not animating, show all parts */

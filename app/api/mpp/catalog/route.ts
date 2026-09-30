@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * MPP Catalog Endpoint
  *
- * Exposes the a-ok.shop product catalog in a machine-readable format for agents.
+ * Exposes the a-ok.ai product catalog in a machine-readable format for agents.
  * Supports catalog discovery without payment requirements.
  *
  * GET /api/mpp/catalog

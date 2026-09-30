@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Return Policy | A-OK Shop',
-  description: 'Return and refund policy for A-OK Shop'
+  title: 'Return Policy | A-OK',
+  description: 'Return and refund policy for A-OK'
 };
 
 export default function ReturnPolicy() {
@@ -16,7 +16,7 @@ export default function ReturnPolicy() {
         </p>
 
         <p className="mb-6">
-          We want you to love your A-OK Shop purchase! Please read our return policy carefully before
+          We want you to love your A-OK purchase! Please read our return policy carefully before
           ordering.
         </p>
 
@@ -53,7 +53,7 @@ export default function ReturnPolicy() {
             If you receive a defective or damaged item, please contact us immediately:
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
-            <li>Email photos of the defect/damage to returns@a-ok.shop</li>
+            <li>Email photos of the defect/damage to returns@a-ok.ai</li>
             <li>Include your order number in the subject line</li>
             <li>We&apos;ll provide a prepaid return label and issue a full refund or replacement</li>
           </ul>
@@ -87,7 +87,7 @@ export default function ReturnPolicy() {
             <li>The same policy applies - all sales are final</li>
             <li>Exceptions for defective or incorrect items still apply</li>
             <li>Reference your order number in all communications</li>
-            <li>Contact returns@a-ok.shop for defects or errors</li>
+            <li>Contact returns@a-ok.ai for defects or errors</li>
           </ul>
         </section>
 
@@ -99,20 +99,20 @@ export default function ReturnPolicy() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="mb-2">
               <strong>Returns Email:</strong>{' '}
-              <a href="mailto:returns@a-ok.shop" className="text-blue-600 hover:underline">
-                returns@a-ok.shop
+              <a href="mailto:returns@a-ok.ai" className="text-blue-600 hover:underline">
+                returns@a-ok.ai
               </a>
             </p>
             <p className="mb-2">
               <strong>General Support:</strong>{' '}
-              <a href="mailto:info@a-ok.shop" className="text-blue-600 hover:underline">
-                info@a-ok.shop
+              <a href="mailto:info@a-ok.ai" className="text-blue-600 hover:underline">
+                info@a-ok.ai
               </a>
             </p>
             <p className="mb-2">
               <strong>Website:</strong>{' '}
-              <a href="https://www.a-ok.shop" className="text-blue-600 hover:underline">
-                www.a-ok.shop
+              <a href="https://a-ok.ai" className="text-blue-600 hover:underline">
+                a-ok.ai
               </a>
             </p>
             <p className="mb-2">

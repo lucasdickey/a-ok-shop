@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container py-8 md:py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="text-lg font-bold">A-OK Store</h3>
+            <h3 className="text-lg font-bold">A-OK</h3>
             <p className="mt-2 text-sm">Nerd streetwear for AI junkies</p>
           </div>
           <div>
@@ -39,7 +39,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold">Contact</h3>
             <ul className="mt-2 space-y-2">
-              <li className="text-sm">Email: info @ a-ok.shop</li>
+              <li className="text-sm">Email: info @ a-ok.ai</li>
               <li>
                 <Link
                   href="https://x.com/apesonkeys"
@@ -95,7 +95,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t border-secondary pt-8 text-center">
           <p className="text-sm">
-            &copy; {new Date().getFullYear()} A-OK Store. All rights reserved.
+            &copy; {new Date().getFullYear()} A-OK. All rights reserved.
           </p>
         </div>
       </div>

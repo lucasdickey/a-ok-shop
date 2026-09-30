@@ -165,7 +165,7 @@ function MonthlyDealsSuccessContent() {
           </Link>
           <div>
             <Link href="/" className="text-gray-600 hover:text-gray-800 underline">
-              Return to A-OK Store
+              Return to A-OK
             </Link>
           </div>
         </div>
@@ -173,7 +173,7 @@ function MonthlyDealsSuccessContent() {
         {/* Support */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <p className="text-gray-500 text-sm">
-            Questions about your order? Contact us at support@a-ok.shop
+            Questions about your order? Contact us at support@a-ok.ai
           </p>
         </div>
       </div>

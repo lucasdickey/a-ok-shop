@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Privacy Policy | A-OK Shop',
-  description: 'Privacy policy for A-OK Shop'
+  title: 'Privacy Policy | A-OK',
+  description: 'Privacy policy for A-OK'
 };
 
 export default function PrivacyPolicy() {
@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Information We Collect</h2>
           <p className="mb-4">
-            When you purchase from A-OK Shop, we collect information necessary to complete your order:
+            When you purchase from A-OK, we collect information necessary to complete your order:
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li><strong>Contact Information:</strong> Name, email address, phone number</li>
@@ -82,8 +82,8 @@ export default function PrivacyPolicy() {
           </ul>
           <p className="mb-4">
             To exercise these rights, contact us at{' '}
-            <a href="mailto:privacy@a-ok.shop" className="text-blue-600 hover:underline">
-              privacy@a-ok.shop
+            <a href="mailto:privacy@a-ok.ai" className="text-blue-600 hover:underline">
+              privacy@a-ok.ai
             </a>
           </p>
         </section>
@@ -140,18 +140,18 @@ export default function PrivacyPolicy() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <p className="mb-2">
               <strong>Email:</strong>{' '}
-              <a href="mailto:privacy@a-ok.shop" className="text-blue-600 hover:underline">
-                privacy@a-ok.shop
+              <a href="mailto:privacy@a-ok.ai" className="text-blue-600 hover:underline">
+                privacy@a-ok.ai
               </a>
             </p>
             <p className="mb-2">
               <strong>Website:</strong>{' '}
-              <a href="https://www.a-ok.shop" className="text-blue-600 hover:underline">
-                www.a-ok.shop
+              <a href="https://a-ok.ai" className="text-blue-600 hover:underline">
+                a-ok.ai
               </a>
             </p>
             <p>
-              <strong>Mail:</strong> A-OK Shop, c/o Apes on Keys
+              <strong>Mail:</strong> A-OK, c/o Apes on Keys
             </p>
           </div>
         </section>

@@ -11,6 +11,6 @@ export const siteConfig = {
   ],
   
   // Site metadata
-  siteName: "a-ok.shop",
+  siteName: "a-ok.ai",
   siteDescription: "Apes On Keys - Nerd Streetwear (for real)",
 };

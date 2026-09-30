@@ -49,7 +49,7 @@ export interface ProductFeedItem {
  */
 export async function generateProductFeed(): Promise<ProductFeedItem[]> {
   const products = getAllProducts();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.a-ok.shop';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://a-ok.ai';
 
   const feed: ProductFeedItem[] = [];
 
@@ -84,8 +84,8 @@ export async function generateProductFeed(): Promise<ProductFeedItem[]> {
       additional_image_link: additionalImages || undefined,
       price: `${price.toFixed(2)} USD`,
       availability: product.availableForSale ? 'in_stock' : 'out_of_stock',
-      brand: 'A-OK Shop',
-      seller_name: 'A-OK Shop',
+      brand: 'A-OK',
+      seller_name: 'A-OK',
       seller_url: baseUrl,
       seller_privacy_policy: `${baseUrl}/privacy`,
       seller_tos: `${baseUrl}/terms`,
