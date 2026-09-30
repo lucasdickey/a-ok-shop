@@ -53,7 +53,7 @@ function ShopTitle({ word }: { word: string }) {
       <span className="sr-only">Shop {word}.</span>
       <span aria-hidden="true">
         Shop{shown ? ` ${shown}` : ""}
-        <span className="text-primary">.</span>
+        <span className="text-primary"><span className="period-pulse">.</span></span>
       </span>
     </h1>
   );

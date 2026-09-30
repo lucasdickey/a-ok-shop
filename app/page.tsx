@@ -246,7 +246,7 @@ export default async function Home() {
         >
           Popular
           <br />
-          line items<span className="text-primary">.</span>
+          line items<span className="text-primary"><span className="period-pulse">.</span></span>
         </SectionHeading>
         {/* These leave the homepage for the shop, so they read as arrow links, not filter toggles. */}
         <div className="mb-8 flex flex-col items-start justify-between gap-2 border-y-2 border-dashed border-dark py-3 sm:flex-row sm:items-center sm:gap-4">
@@ -260,10 +260,15 @@ export default async function Home() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="group inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold underline decoration-dark/30 decoration-2 underline-offset-[6px] hover:decoration-primary"
+                className="group inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold no-underline hover:text-primary"
               >
                 {link.label}
-                <span aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none">
+                {/* The arrow's space is always kept, so showing it on hover shifts nothing.
+                    Touch screens (no hover) don't get the arrow at all. */}
+                <span
+                  aria-hidden="true"
+                  className="hidden w-[1em] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none [@media(hover:hover)]:inline-block"
+                >
                   ↗
                 </span>
               </Link>
@@ -318,7 +323,7 @@ export default async function Home() {
             We’re all
             <br />a little
             <br />
-            <span className="text-primary">misaligned.</span>
+            <span className="text-primary">misaligned<span className="period-pulse">.</span></span>
           </h2>
           <p className="mb-4 max-w-[440px]">
             Somewhere between a happy accident and a very bad idea, you found your people.

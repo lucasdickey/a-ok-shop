@@ -148,6 +148,36 @@
     }
   }
 
+  /* The red period: a small heartbeat while its heading is hovered. */
+  .period-pulse {
+    display: inline-block;
+    transform-origin: 50% 85%;
+  }
+  @keyframes period-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    20% {
+      transform: scale(1.4);
+    }
+    40% {
+      transform: scale(1);
+    }
+    55% {
+      transform: scale(1.2);
+    }
+    75% {
+      transform: scale(1);
+    }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    h1:hover .period-pulse,
+    h2:hover .period-pulse {
+      animation: period-pulse 1.1s ease-in-out infinite;
+    }
+  }
+
   .barcode {
     background: repeating-linear-gradient(
       90deg,

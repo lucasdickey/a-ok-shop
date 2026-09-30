@@ -8,7 +8,7 @@ export default function NotFound() {
         <h1 className="display-heading mt-6 text-center text-[clamp(52px,12vw,84px)]">
           Not on
           <br />
-          <span className="text-primary">the receipt.</span>
+          <span className="text-primary">the receipt<span className="period-pulse">.</span></span>
         </h1>
         <div className="receipt-line mt-6 border-t border-dashed border-dark">
           <span>Status</span>

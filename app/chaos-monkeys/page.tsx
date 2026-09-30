@@ -39,7 +39,7 @@ export default function ChaosMonkeysPage() {
         <h1 className="display-heading mt-4 text-[clamp(64px,9vw,126px)]">
           Chaos
           <br />
-          <span className="text-primary">monkeys.</span>
+          <span className="text-primary">monkeys<span className="period-pulse">.</span></span>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed">{DESCRIPTION}</p>
       </header>
