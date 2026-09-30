@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -9,6 +10,10 @@ const CHROME_FREE_ROUTES = ["/concepts"];
 
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  // Fade each new page in after navigating, but not the page the visitor lands on.
+  const firstPath = useRef(pathname);
+  const hasNavigated = useRef(false);
+  if (pathname !== firstPath.current) hasNavigated.current = true;
   const isChromeFree = CHROME_FREE_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -29,7 +34,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       </a>
       <div className="receipt-sheet">
         <Navbar />
-        <main id="main" className="flex-1">
+        <main id="main" key={pathname} className={`flex-1 ${hasNavigated.current ? "page-enter" : ""}`}>
           {children}
         </main>
         <Footer />

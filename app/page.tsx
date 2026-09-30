@@ -248,8 +248,10 @@ export default async function Home() {
           <br />
           line items<span className="text-primary">.</span>
         </SectionHeading>
-        <div className="mb-8 flex flex-col items-start justify-between gap-3 border-y-2 border-dashed border-dark py-3.5 sm:flex-row sm:items-center">
-          <nav aria-label="Shop by category" className="flex flex-wrap gap-1.5 sm:gap-2">
+        {/* These leave the homepage for the shop, so they read as arrow links, not filter toggles. */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-2 border-y-2 border-dashed border-dark py-3 sm:flex-row sm:items-center sm:gap-4">
+          <nav aria-label="Browse the full shop" className="flex flex-wrap items-center gap-x-5 gap-y-0">
+            <span className="micro w-full sm:w-auto">Browse the full shop:</span>
             {[
               { href: "/products", label: "All pieces" },
               { href: "/products?category=t-shirts", label: "Tees" },
@@ -259,9 +261,12 @@ export default async function Home() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="inline-flex min-h-[44px] items-center border border-dark px-3 text-xs no-underline hover:bg-dark hover:text-club-paper sm:px-5 sm:text-[13px]"
+                className="group inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold underline decoration-dark/30 decoration-2 underline-offset-[6px] hover:decoration-primary"
               >
                 {link.label}
+                <span aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none">
+                  ↗
+                </span>
               </Link>
             ))}
           </nav>

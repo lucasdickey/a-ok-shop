@@ -99,6 +99,43 @@
     font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
   }
 
+  /* Cards ripple in when the shop switches category. */
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .rise-in {
+    animation: rise-in 350ms ease-out both;
+  }
+
+  /* A short fade-up when moving to another page. */
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .page-enter {
+    animation: page-enter 300ms ease-out both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise-in,
+    .page-enter {
+      animation: none;
+    }
+  }
+
   /* Decorative ✳: a springy half-turn on hover (on the star or its .star-trigger area). */
   .star-spin {
     display: inline-block;
