@@ -21,7 +21,9 @@ export const metadata: Metadata = {
 function groupByDate(monkeys: ChaosMonkey[]): Array<[string, ChaosMonkey[]]> {
   const groups = new Map<string, ChaosMonkey[]>();
   for (const monkey of monkeys) {
-    groups.set(monkey.date, [...(groups.get(monkey.date) ?? []), monkey]);
+    const group = groups.get(monkey.date);
+    if (group) group.push(monkey);
+    else groups.set(monkey.date, [monkey]);
   }
   return Array.from(groups.entries());
 }
@@ -29,12 +31,15 @@ function groupByDate(monkeys: ChaosMonkey[]): Array<[string, ChaosMonkey[]]> {
 export default function ChaosMonkeysPage() {
   const monkeys = getChaosMonkeys();
   const drops = groupByDate(monkeys);
+  const ids = monkeys.map((monkey) => monkey.id).sort();
 
   return (
     <div className="container mx-auto px-8 py-12 md:px-16 lg:px-24 xl:px-32">
       <header className="mb-12 max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8B1E24]">
-          {monkeys.length > 0 ? `${monkeys.length} published · Nº 0001–${monkeys[0].id}` : "Series starting soon"}
+          {ids.length === 0
+            ? "Series starting soon"
+            : `${ids.length} published · Nº ${ids.length === 1 ? ids[0] : `${ids[0]}–${ids[ids.length - 1]}`}`}
         </p>
         <h1 className="mt-2 font-bebas-neue text-6xl leading-none md:text-7xl">Chaos Monkeys</h1>
         <p className="mt-4 text-lg leading-relaxed text-dark-light">{DESCRIPTION}</p>

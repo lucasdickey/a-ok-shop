@@ -140,11 +140,14 @@ export function run(
           child.kill("SIGKILL");
         }, options.timeoutMs)
       : null;
-    child.stdout.on("data", (chunk: Buffer) => {
+    // Decode as UTF-8 streams, so a multi-byte character split across two chunks is never mangled.
+    child.stdout.setEncoding("utf8");
+    child.stderr.setEncoding("utf8");
+    child.stdout.on("data", (chunk: string) => {
       stdout += chunk;
       if (options.echo) process.stdout.write(chunk);
     });
-    child.stderr.on("data", (chunk: Buffer) => {
+    child.stderr.on("data", (chunk: string) => {
       stderr += chunk;
       if (options.echo) process.stderr.write(chunk);
     });

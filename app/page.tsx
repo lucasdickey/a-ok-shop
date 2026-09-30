@@ -86,12 +86,11 @@ export default async function Home() {
     console.error("Error fetching featured products:", error);
   }
 
-  // Get gallery images using the new function. Published Chaos Monkeys join the grid's pool.
-  const chaosMonkeyImages = getChaosMonkeys().map((monkey) => ({
-    name: monkey.title,
-    url: monkey.image,
-    source: "chaos-monkeys",
-  }));
+  // Get gallery images using the new function. The newest Chaos Monkeys join the grid's pool; the grid shows at
+  // most 12 cells, so a bounded pool keeps the page payload flat as the archive grows.
+  const chaosMonkeyImages = getChaosMonkeys()
+    .slice(0, 24)
+    .map((monkey) => ({ name: monkey.title, url: monkey.image, alt: monkey.alt, source: "chaos-monkeys" }));
   const galleryImages = [...chaosMonkeyImages, ...(await getGalleryImages())];
   const hasGalleryImages = galleryImages.length > 0;
   const latestDrop = getLatestDrop();
@@ -319,7 +318,7 @@ export default async function Home() {
             </div>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {latestDrop.map((monkey) => (
-                <Link key={monkey.id} href={`/chaos-monkeys#n${monkey.id}`} className="group block">
+                <Link key={monkey.id} href={`/chaos-monkeys#n${monkey.id}`} className="block">
                   <ChaosMonkeyCard monkey={monkey} />
                 </Link>
               ))}

@@ -228,37 +228,51 @@ async function draft(options: Options): Promise<void> {
   const force = options.flags.has("--force");
   const runDir = runDirFor(date);
   if (fs.existsSync(PAUSE_FILE) && !force) return log("paused; run `chaos resume` to restart the daily drafts");
-  if (fs.existsSync(path.join(runDir, "run.json")) && !force) return log(`drafts for ${date} already exist: ${path.join(runDir, "sheet.png")}`);
+  // A day is done once its contact sheet exists. A run that stopped earlier resumes: its briefs and any
+  // finished art are kept, so a crash never spends the day's Astra usage twice. --force starts over.
+  const hasRun = fs.existsSync(path.join(runDir, "run.json"));
+  if (hasRun && fs.existsSync(path.join(runDir, "sheet.png")) && !force) {
+    return log(`drafts for ${date} already exist: ${path.join(runDir, "sheet.png")}`);
+  }
+  const resume = hasRun && !force;
 
   const release = acquireLock();
   fs.mkdirSync(runDir, { recursive: true });
   setLogFile(path.join(runDir, "log.txt"));
   try {
     await preflight();
-    const published = await publishedOn("main");
-    const topic = await fetchTopic(date);
-    log(`briefing ${count} drafts for ${date}${topic ? `; topical story: ${topic.headline}` : ""}`);
-    const briefs = await writeBriefs({
-      count,
-      cwd: runDir,
-      published: published.map(({ id, title, slogan }) => ({ id, title, slogan })).slice(-80),
-      recentlyDrafted: recentlyDrafted(date),
-      topic,
-    });
-    const record: Run = {
-      date,
-      createdAt: new Date().toISOString(),
-      topic,
-      drafts: briefs.map((brief, i) => ({ n: i + 1, brief, engine: brief.engine, image: null, cutout: null, error: null, seconds: 0, judgment: null })),
-      shipped: [],
-    };
-    saveRun(record);
+    let record: Run;
+    if (resume) {
+      record = loadRun(date);
+      log(`resuming the unfinished ${date} run; keeping its briefs and any finished art`);
+    } else {
+      const published = await publishedOn("main");
+      const topic = await fetchTopic(date);
+      log(`briefing ${count} drafts for ${date}${topic ? `; topical story: ${topic.headline}` : ""}`);
+      const briefs = await writeBriefs({
+        count,
+        cwd: runDir,
+        published: published.map(({ id, title, slogan }) => ({ id, title, slogan })).slice(-80),
+        recentlyDrafted: recentlyDrafted(date),
+        topic,
+      });
+      record = {
+        date,
+        createdAt: new Date().toISOString(),
+        topic,
+        drafts: briefs.map((brief, i) => ({ n: i + 1, brief, engine: brief.engine, image: null, cutout: null, error: null, seconds: 0, judgment: null })),
+        shipped: [],
+      };
+      saveRun(record);
+    }
 
     // Astra illustrates, three at a time. A usage limit stops the rest; those drafts fall back to the badge.
     const refs = REFERENCE_IMAGES.map((ref) => path.join(CHECKOUT, ref));
     let astraDown = false;
-    for (const dir of ["drafts", "cutouts"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
+    for (const dir of ["drafts", "cutouts", "posters"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
     await pool(record.drafts, 3, async (d) => {
+      const art = path.join(runDir, d.brief.engine === "hybrid" ? `cutouts/${d.n}.png` : `posters/${d.n}.png`);
+      if (resume && (d.error !== null || d.engine === "code" || fs.existsSync(art))) return;
       const started = Date.now();
       if (astraDown) {
         d.engine = "code";
@@ -266,10 +280,10 @@ async function draft(options: Options): Promise<void> {
         try {
           const mode = d.brief.engine === "hybrid" ? "cutout" : "poster";
           const out = await illustrate(d.brief, path.join(runDir, "jobs", String(d.n)), refs, mode);
-          const target = mode === "cutout" ? `cutouts/${d.n}.png` : `drafts/${d.n}.png`;
+          // Astra's poster is kept as delivered; the draft is a square crop of it (made below).
+          const target = mode === "cutout" ? `cutouts/${d.n}.png` : `posters/${d.n}.png`;
           fs.copyFileSync(out, path.join(runDir, target));
           if (mode === "cutout") d.cutout = target;
-          else d.image = target;
         } catch (error) {
           if (error instanceof AstraUnavailable) {
             astraDown = true;
@@ -285,11 +299,25 @@ async function draft(options: Options): Promise<void> {
 
     const renderer = await openRenderer({ run: runDir, site: path.join(CHECKOUT, "public") });
     try {
+      // One draft that fails to compose must not cost the whole day, so each is caught on its own.
       for (const d of record.drafts) {
-        if (d.error || d.engine === "astra") continue;
-        const png = await renderer.render(compositionSpec(d, `DRAFT ${d.n}`, date, "png"));
-        d.image = `drafts/${d.n}.png`;
-        fs.writeFileSync(path.join(runDir, d.image), png);
+        if (d.error) continue;
+        try {
+          const spec =
+            d.engine === "astra"
+              ? { kind: "image", size: IMAGE_SIZE, format: "png", image: `/run/posters/${d.n}.png` }
+              : compositionSpec(d, `DRAFT ${d.n}`, date, "png");
+          const png = await renderer.render(spec);
+          d.image = `drafts/${d.n}.png`;
+          fs.writeFileSync(path.join(runDir, d.image), png);
+        } catch (error) {
+          // Losing Chrome is not this draft's fault: stop, and the next `chaos draft` resumes with the art kept.
+          const message = (error as Error).message;
+          if (/^Chrome (is not connected|closed the connection|did not answer|reported)/.test(message)) throw error;
+          d.image = null;
+          d.error = `could not compose: ${message.split("\n")[0].slice(0, 160)}`;
+          log(`draft ${d.n} ${d.brief.title}: ${d.error}`);
+        }
       }
       await judgeAndSheet(record, runDir, renderer);
     } finally {
@@ -344,6 +372,10 @@ async function status(options: Options): Promise<void> {
     const state = shipped.has(d.n) ? `shipped as Nº ${shipped.get(d.n)}` : d.error ? `failed: ${d.error}` : (d.judgment?.note ?? "");
     const tags = [d.engine === "hybrid" ? `hybrid/${d.brief.template}` : d.engine, d.brief.inspiration ? "zingers" : ""].filter(Boolean).join(", ");
     console.log(`  ${d.n}. ${d.brief.title.padEnd(24)} ${score.padStart(5)}  ${tags.padEnd(24)} ${state}`);
+    // The slogan, joke, and alt text publish verbatim, so they are shown for review alongside the image.
+    console.log(`       ${d.brief.slogan}`);
+    console.log(`       joke: ${d.brief.joke}`);
+    console.log(`       alt:  ${d.brief.alt}`);
   }
 }
 
@@ -352,6 +384,7 @@ async function status(options: Options): Promise<void> {
 async function ship(options: Options): Promise<void> {
   const picks = options.positional.map(Number);
   if (!picks.length || picks.some((n) => !Number.isInteger(n) || n < 1)) throw new Error("usage: chaos ship 1 3 5");
+  if (new Set(picks).size !== picks.length) throw new Error("each draft can be named only once");
   const date = flag(options, "--date") ?? latestRunDate();
   const branch = flag(options, "--branch") ?? "main";
   const push = !options.flags.has("--no-push");
@@ -361,6 +394,10 @@ async function ship(options: Options): Promise<void> {
     const d = record.drafts[n - 1];
     if (!d || !d.image || d.error) throw new Error(`draft ${n} of ${date} has no image to ship`);
     if (record.shipped.some((s) => s.draft === n)) throw new Error(`draft ${n} of ${date} already shipped`);
+    const link = d.brief.inspiration?.url;
+    if (link && !/^https:\/\/(www\.)?zingers\.dev\//.test(link)) {
+      throw new Error(`draft ${n} links to ${link}, but the site only accepts zingers.dev links`);
+    }
   }
 
   await syncSite(branch);
@@ -434,6 +471,7 @@ async function unpublish(options: Options): Promise<void> {
   const manifest = readManifest();
   const entry = manifest.find((m) => m.id === id);
   if (!entry) throw new Error(`Nº ${id} is not published on ${branch}`);
+  // Other monkeys keep their "riffs on" provenance; the site hides links to unpublished parents.
   writeManifest(manifest.filter((m) => m.id !== id));
   fs.rmSync(imagePath(id).file, { force: true });
   try {
@@ -447,6 +485,11 @@ async function unpublish(options: Options): Promise<void> {
 
 /* ------------------------------------------------------------------ install */
 
+/** A path as a single-quoted shell word. */
+const shellQuote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
+/** A path as XML text for the launchd plist. */
+const xmlText = (value: string): string => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 async function install(): Promise<void> {
   for (const dir of [STATE_DIR, path.join(STATE_DIR, "bin"), LOGS_DIR, RUNS_DIR]) fs.mkdirSync(dir, { recursive: true });
   await syncSite("main");
@@ -458,14 +501,14 @@ async function install(): Promise<void> {
     `#!/bin/zsh
 # A-OK Chaos Monkeys: runs the tool from the publish clone, synced to origin/main. Written by \`chaos install\`.
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
-export CHAOS_STATE="${STATE_DIR}"
-cd "${SITE_DIR}" || { echo "no publish clone; run chaos install"; exit 1; }
+export CHAOS_STATE=${shellQuote(STATE_DIR)}
+cd ${shellQuote(SITE_DIR)} || { echo "no publish clone; run chaos install"; exit 1; }
 if git fetch --quiet origin main; then
   if [ -z "$(git status --porcelain)" ] && { [ -z "$(git rev-list origin/main..HEAD)" ] || [ -n "$(git branch -r --contains HEAD)" ]; }; then
     git checkout --quiet --detach origin/main
   fi
 fi
-TOOL="${SITE_DIR}/scripts/chaos-monkeys/chaos.ts"
+TOOL=${shellQuote(path.join(SITE_DIR, "scripts", "chaos-monkeys", "chaos.ts"))}
 if [ ! -f "$TOOL" ]; then echo "$(date '+%F %T') chaos-monkeys is not on main yet; nothing to do"; exit 0; fi
 exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
 `,
@@ -480,11 +523,11 @@ exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>${LAUNCHD_LABEL}</string>
+  <string>${xmlText(LAUNCHD_LABEL)}</string>
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
-    <string>${launcher}</string>
+    <string>${xmlText(launcher)}</string>
     <string>draft</string>
   </array>
   <!-- Daily at 9:07. If the Mac is asleep, launchd runs it on wake; if it was off, RunAtLoad catches up at login.
@@ -497,9 +540,9 @@ exec node --disable-warning=ExperimentalWarning "$TOOL" "$@"
   <key>RunAtLoad</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>${path.join(LOGS_DIR, "launchd.out.log")}</string>
+  <string>${xmlText(path.join(LOGS_DIR, "launchd.out.log"))}</string>
   <key>StandardErrorPath</key>
-  <string>${path.join(LOGS_DIR, "launchd.err.log")}</string>
+  <string>${xmlText(path.join(LOGS_DIR, "launchd.err.log"))}</string>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>

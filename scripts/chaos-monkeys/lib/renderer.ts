@@ -64,6 +64,7 @@ export type Renderer = {
 /**
  * Starts the server and Chrome. `roots` maps URL prefixes to directories Chrome may read images from,
  * e.g. { run: "/…/runs/2026-09-29", site: "/…/public" } serves /run/… and /site/….
+ * Every call into Chrome has a timeout and fails if Chrome goes away, so a stuck render can never hang the daily job.
  */
 export async function openRenderer(roots: Record<string, string>): Promise<Renderer> {
   await ensureFonts();
@@ -95,57 +96,106 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
   const chrome = spawn(CHROME, ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "--no-first-run", "about:blank"], {
     stdio: ["ignore", "ignore", "pipe"],
   });
-  // Chrome prints the DevTools address on stderr once it is listening.
-  const browserUrl = await new Promise<string>((resolve, reject) => {
-    let buffer = "";
-    const timer = setTimeout(() => reject(new Error("Chrome did not start")), 30_000);
-    chrome.stderr.on("data", (chunk: Buffer) => {
-      buffer += chunk;
-      const match = buffer.match(/DevTools listening on (ws:\/\/\S+)/);
-      if (match) {
-        clearTimeout(timer);
-        resolve(match[1]);
-      }
-    });
-    chrome.on("error", reject);
-  });
-  const httpBase = browserUrl.replace(/^ws:\/\/([^/]+)\/.*$/, "http://$1");
-  const targets = (await (await fetch(`${httpBase}/json/list`)).json()) as Array<{ type: string; webSocketDebuggerUrl: string }>;
-  const page = targets.find((t) => t.type === "page");
-  if (!page) throw new Error("Chrome opened no page");
-
-  const socket = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise<void>((resolve, reject) => {
-    socket.onopen = () => resolve();
-    socket.onerror = () => reject(new Error("could not connect to Chrome"));
-  });
-  let nextId = 0;
-  const pending = new Map<number, (message: { result?: { result?: { value?: unknown }; exceptionDetails?: unknown } }) => void>();
-  socket.onmessage = (event) => {
-    const message = JSON.parse(String(event.data));
-    pending.get(message.id)?.(message);
-    pending.delete(message.id);
+  let socket: WebSocket | null = null;
+  let closed = false;
+  const close = (): void => {
+    if (closed) return;
+    closed = true;
+    socket?.close();
+    chrome.kill("SIGKILL");
+    server.close();
+    fs.rmSync(profile, { recursive: true, force: true });
   };
-  const call = (method: string, params: object = {}) =>
-    new Promise<{ result?: { result?: { value?: unknown }; exceptionDetails?: unknown } }>((resolve) => {
+
+  type Reply = { result?: { result?: { value?: unknown }; exceptionDetails?: unknown } };
+  const pending = new Map<number, { resolve: (reply: Reply) => void; reject: (error: Error) => void; timer: NodeJS.Timeout }>();
+  let nextId = 0;
+  const call = (method: string, params: object = {}, timeoutMs = 90_000) =>
+    new Promise<Reply>((resolve, reject) => {
+      if (!socket || socket.readyState !== WebSocket.OPEN) return reject(new Error("Chrome is not connected"));
       const id = ++nextId;
-      pending.set(id, resolve);
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        reject(new Error(`Chrome did not answer ${method} within ${Math.round(timeoutMs / 1000)}s`));
+      }, timeoutMs);
+      pending.set(id, { resolve, reject, timer });
       socket.send(JSON.stringify({ id, method, params }));
     });
-  const evaluate = async (expression: string): Promise<unknown> => {
-    const message = await call("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
-    if (message.result?.exceptionDetails) throw new Error(`render failed: ${JSON.stringify(message.result.exceptionDetails).slice(0, 600)}`);
-    return message.result?.result?.value;
+  const evaluate = async (expression: string, timeoutMs = 90_000): Promise<unknown> => {
+    const reply = await call("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true }, timeoutMs);
+    if (reply.result?.exceptionDetails) throw new Error(`render failed: ${JSON.stringify(reply.result.exceptionDetails).slice(0, 600)}`);
+    return reply.result?.result?.value;
   };
 
-  await call("Page.navigate", { url: `http://127.0.0.1:${port}/page.html` });
-  for (let attempt = 0; ; attempt++) {
-    const state = String(await evaluate("JSON.stringify({ ready: window.READY === true, error: window.ERROR ?? null })").catch(() => "{}"));
-    const parsed = JSON.parse(state || "{}") as { ready?: boolean; error?: string | null };
-    if (parsed.error) throw new Error(`render page: ${parsed.error}`);
-    if (parsed.ready) break;
-    if (attempt > 300) throw new Error("render page never became ready");
-    await new Promise((resolve) => setTimeout(resolve, 100));
+  try {
+    // Chrome prints the DevTools address on stderr once it is listening.
+    const browserUrl = await new Promise<string>((resolve, reject) => {
+      let buffer = "";
+      const timer = setTimeout(() => reject(new Error("Chrome did not start")), 30_000);
+      const onData = (chunk: Buffer) => {
+        buffer += chunk;
+        const match = buffer.match(/DevTools listening on (ws:\/\/\S+)/);
+        if (match) {
+          clearTimeout(timer);
+          chrome.stderr.off("data", onData);
+          resolve(match[1]);
+        }
+      };
+      chrome.stderr.on("data", onData);
+      chrome.on("error", reject);
+      chrome.on("exit", () => reject(new Error("Chrome exited during startup")));
+    });
+    const httpBase = browserUrl.replace(/^ws:\/\/([^/]+)\/.*$/, "http://$1");
+    const targets = (await (await fetch(`${httpBase}/json/list`, { signal: AbortSignal.timeout(10_000) })).json()) as Array<{
+      type: string;
+      webSocketDebuggerUrl: string;
+    }>;
+    const page = targets.find((t) => t.type === "page");
+    if (!page) throw new Error("Chrome opened no page");
+
+    const ws = new WebSocket(page.webSocketDebuggerUrl);
+    socket = ws;
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("could not connect to Chrome")), 10_000);
+      ws.onopen = () => {
+        clearTimeout(timer);
+        resolve();
+      };
+      ws.onerror = () => reject(new Error("could not connect to Chrome"));
+    });
+    ws.onmessage = (event) => {
+      const message = JSON.parse(String(event.data)) as Reply & { id?: number; error?: { message?: string } };
+      const waiting = message.id === undefined ? undefined : pending.get(message.id);
+      if (!waiting || message.id === undefined) return;
+      clearTimeout(waiting.timer);
+      pending.delete(message.id);
+      // A protocol-level error (e.g. the page target crashed) is Chrome's failure, not the template's.
+      if (message.error) waiting.reject(new Error(`Chrome reported: ${message.error.message ?? "an error"}`));
+      else waiting.resolve(message);
+    };
+    ws.onclose = () => {
+      for (const waiting of pending.values()) {
+        clearTimeout(waiting.timer);
+        waiting.reject(new Error("Chrome closed the connection"));
+      }
+      pending.clear();
+    };
+
+    await call("Page.navigate", { url: `http://127.0.0.1:${port}/page.html` });
+    // Short probes against a wall-clock deadline: a page that never loads fails in about 30 seconds.
+    const deadline = Date.now() + 30_000;
+    for (;;) {
+      const probe = "JSON.stringify({ ready: window.READY === true, error: window.ERROR ?? null })";
+      const state = String(await evaluate(probe, 5_000).catch(() => "{}"));
+      const parsed = JSON.parse(state || "{}") as { ready?: boolean; error?: string | null };
+      if (parsed.error) throw new Error(`render page: ${parsed.error}`);
+      if (parsed.ready) break;
+      if (Date.now() > deadline) throw new Error("render page never became ready");
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+  } catch (error) {
+    close();
+    throw error;
   }
 
   return {
@@ -154,11 +204,6 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
       if (typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) throw new Error("render returned no image");
       return Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
     },
-    close(): void {
-      socket.close();
-      chrome.kill("SIGKILL");
-      server.close();
-      fs.rmSync(profile, { recursive: true, force: true });
-    },
+    close,
   };
 }

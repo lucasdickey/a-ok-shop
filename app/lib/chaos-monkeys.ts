@@ -63,7 +63,9 @@ function parseEntry(value: unknown, index: number): ChaosMonkey {
   }
   if (entry.inspiration !== undefined) {
     const inspiration = entry.inspiration as Record<string, unknown> | null;
-    if (!inspiration || !isText(inspiration.label, 80) || typeof inspiration.url !== "string" || !/^https:\/\//.test(inspiration.url)) {
+    // Topical monkeys link to their Zingers day; no other host is accepted for this outbound link.
+    const url = inspiration?.url;
+    if (!inspiration || !isText(inspiration.label, 80) || typeof url !== "string" || !/^https:\/\/(www\.)?zingers\.dev\//.test(url)) {
       fail("inspiration");
     }
   }
@@ -71,15 +73,19 @@ function parseEntry(value: unknown, index: number): ChaosMonkey {
   return entry as ChaosMonkey;
 }
 
-const monkeys: ChaosMonkey[] = (manifest as unknown[])
-  .map(parseEntry)
-  .sort((a, b) => b.id.localeCompare(a.id));
-
-if (new Set(monkeys.map((monkey) => monkey.id)).size !== monkeys.length) {
+const parsed = (manifest as unknown[]).map(parseEntry);
+const publishedIds = new Set(parsed.map((monkey) => monkey.id));
+if (publishedIds.size !== parsed.length) {
   throw new Error("app/data/chaos-monkeys.json: series numbers must be unique");
 }
 
-/** Every published Chaos Monkey, newest first. */
+// Newest drop first. Series numbers follow ship order, which can differ from drop dates when an earlier day's
+// drafts are shipped late, so dates lead and numbers only break ties. Links to unpublished parents are dropped.
+const monkeys: ChaosMonkey[] = parsed
+  .map((monkey) => ({ ...monkey, parents: monkey.parents.filter((id) => publishedIds.has(id)) }))
+  .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+
+/** Every published Chaos Monkey, newest drop first. */
 export function getChaosMonkeys(): ChaosMonkey[] {
   return monkeys;
 }

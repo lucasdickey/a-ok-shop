@@ -6,7 +6,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { IMAGE_DIR, LOGS_DIR, MANIFEST_PATH, SITE_DIR, TOOL_DIR, log, run, runOrThrow, type ManifestEntry } from "./config.ts";
+import { IMAGE_DIR, LOGS_DIR, MANIFEST_PATH, SITE_DIR, TOOL_DIR, log, run, runOrThrow, type ManifestEntry, type RunResult } from "./config.ts";
 
 /** The repository this copy of the tool runs from (your checkout, or the publish clone under launchd). */
 export async function repoRoot(): Promise<string> {
@@ -93,11 +93,11 @@ export async function discardChanges(): Promise<void> {
 
 /** Commits exactly `paths` (restoring anything the build regenerated) and pushes to `branch`. Returns the new commit. */
 export async function commitAndPush(paths: string[], message: string, branch: string, push: boolean): Promise<string> {
-  // Tracked files the build rewrote (untracked ones are never added, so they can stay).
-  const changed = (await git("status", "--porcelain"))
-    .split("\n")
-    .filter((line) => line && !line.startsWith("??"))
-    .map((line) => line.slice(3));
+  // Tracked files the build rewrote (untracked ones are never added, so they can stay). -z keeps paths unquoted.
+  const changed = (await git("status", "--porcelain", "-z", "--no-renames"))
+    .split("\0")
+    .filter((entry) => entry && !entry.startsWith("??"))
+    .map((entry) => entry.slice(3));
   const stray = changed.filter((file) => !paths.includes(file) && !file.startsWith(`${IMAGE_DIR}/`));
   if (stray.length) {
     log(`restoring files the build touched: ${stray.join(", ")}`);
@@ -105,14 +105,46 @@ export async function commitAndPush(paths: string[], message: string, branch: st
   }
   await git("add", "--", ...paths);
   await git("commit", "--quiet", "-m", message);
-  const sha = (await git("rev-parse", "HEAD")).trim();
-  if (push) {
-    await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
-    log(`pushed ${sha.slice(0, 8)} to ${branch}`);
-  } else {
+  if (!push) {
+    const sha = (await git("rev-parse", "HEAD")).trim();
     log(`committed ${sha.slice(0, 8)} without pushing (--no-push)`);
+    return sha;
   }
+  const pushed = await run("git", ["-C", SITE_DIR, "push", "--quiet", "origin", `HEAD:refs/heads/${branch}`]);
+  if (pushed.code !== 0) {
+    // Only a rejected non-fast-forward means the branch moved; anything else (auth, network, hooks) is reported as is.
+    // Either way a failure drops the local commit, so the clone stays clean and the ship can simply be rerun.
+    const raced = /non-fast-forward|fetch first|\[rejected\]/i.test(pushed.stderr);
+    if (!raced) {
+      const reason = pushed.stderr.trim().split("\n").slice(-2).join(" ");
+      throw new Error(`push failed, so nothing was published (${reason}). ${await dropLocalCommit(branch)}Fix that and run ship again.`);
+    }
+    log(`${branch} moved during the build; replaying on its new tip…`);
+    let rebased: RunResult | null = null;
+    try {
+      await git("fetch", "--quiet", "origin", branch);
+      rebased = await run("git", ["-C", SITE_DIR, "rebase", "--quiet", `origin/${branch}`]);
+      if (rebased.code !== 0) throw new Error("the new commits conflict with this ship");
+      await verifySite();
+      // The build can rewrite tracked files; the commit already holds everything that ships.
+      await git("checkout", "--quiet", "--", ".");
+      await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
+    } catch (error) {
+      if (rebased && rebased.code !== 0 && (await run("git", ["-C", SITE_DIR, "rebase", "--abort"])).code !== 0) {
+        await run("git", ["-C", SITE_DIR, "rebase", "--quit"]);
+      }
+      throw new Error(`nothing was published: ${(error as Error).message}. ${await dropLocalCommit(branch)}Run ship again.`);
+    }
+  }
+  const sha = (await git("rev-parse", "HEAD")).trim();
+  log(`pushed ${sha.slice(0, 8)} to ${branch}`);
   return sha;
+}
+
+/** Resets the clone to origin/<branch>. Returns a note if even that failed, so the original error stays visible. */
+async function dropLocalCommit(branch: string): Promise<string> {
+  const reset = await run("git", ["-C", SITE_DIR, "reset", "--quiet", "--hard", `origin/${branch}`]);
+  return reset.code === 0 ? "" : `The publish clone could not be reset (${reset.stderr.trim()}); inspect ${SITE_DIR}. `;
 }
 
 /** Waits for Vercel's commit status (via the GitHub CLI) and returns the deployment URL, or null if it can't tell. */

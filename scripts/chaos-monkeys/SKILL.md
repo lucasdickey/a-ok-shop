@@ -11,7 +11,7 @@ Every morning at 9:07 (or at login if the Mac was off), this Mac drafts about si
 
 1. Run `~/.a-ok-chaos/bin/chaos status`. It prints the contact sheet path and each draft's title, engine, score, and state. A `zingers` tag marks the topical draft, which riffs on that day's Zingers story.
 2. Read the contact sheet with the Read tool. If you can send files to the user, send it too.
-3. Summarize in a few lines: the top two or three by score and why, and any flags (TEXT, OFF-MODEL, RULES, JOKE?). Recommend a pick of two or three, usually including the topical one if it scored well. Then ask which to ship.
+3. Summarize in a few lines: the top two or three by score and why, and any flags (TEXT, OFF-MODEL, RULES, JOKE?). The slogan, joke, and alt text that `status` prints are published word for word, so point out anything off in them. Recommend a pick of two or three, usually including the topical one if it scored well. Then ask which to ship.
 
 ## Ship
 

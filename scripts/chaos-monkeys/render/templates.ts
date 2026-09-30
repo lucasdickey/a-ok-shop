@@ -508,7 +508,9 @@ async function image(spec: ImageSpec): Promise<HTMLCanvasElement> {
   const c = makeCanvas(spec.size);
   const ctx = context(c);
   ctx.imageSmoothingQuality = "high";
-  ctx.drawImage(img, 0, 0, spec.size, spec.size);
+  // Cover-crop to a centred square, so a non-square poster is trimmed, never squashed.
+  const side = Math.min(img.naturalWidth, img.naturalHeight);
+  ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, spec.size, spec.size);
   return c;
 }
 
@@ -531,7 +533,7 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
   ctx.fillText(`CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
   ctx.font = "500 22px Mono";
   ctx.fillStyle = C.grey;
-  ctx.fillText("Pick two or three: /chaos-monkeys ship 1 3 5", gap, 126);
+  ctx.fillText("Pick two or three with /chaos-monkeys in Claude Code, or run: chaos ship 1 3 5", gap, 126);
   if (spec.topic) {
     ctx.fillStyle = C.red;
     ctx.fillText(`Topical, from Zingers: ${spec.topic}`.slice(0, 120), gap, 160);
