@@ -110,20 +110,29 @@ export async function commitAndPush(paths: string[], message: string, branch: st
     log(`committed ${sha.slice(0, 8)} without pushing (--no-push)`);
     return sha;
   }
-  try {
-    await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
-  } catch {
-    // The branch moved while this was building. Replay onto its new tip, check again, and push once more;
-    // if that fails, drop the local commit so the clone is clean and the ship can simply be rerun.
+  const pushed = await run("git", ["-C", SITE_DIR, "push", "--quiet", "origin", `HEAD:refs/heads/${branch}`]);
+  if (pushed.code !== 0) {
+    // Only a rejected non-fast-forward means the branch moved; anything else (auth, network, hooks) is reported as is.
+    // Either way a failure drops the local commit, so the clone stays clean and the ship can simply be rerun.
+    const raced = /non-fast-forward|fetch first|\[rejected\]/i.test(pushed.stderr);
+    if (!raced) {
+      await git("reset", "--quiet", "--hard", `origin/${branch}`);
+      const reason = pushed.stderr.trim().split("\n").slice(-2).join(" ");
+      throw new Error(`push failed, so nothing was published (${reason}). Fix that and run ship again.`);
+    }
     log(`${branch} moved during the build; replaying on its new tip…`);
     await git("fetch", "--quiet", "origin", branch);
     const rebased = await run("git", ["-C", SITE_DIR, "rebase", "--quiet", `origin/${branch}`]);
     try {
       if (rebased.code !== 0) throw new Error("the new commits conflict with this ship");
       await verifySite();
+      // The build can rewrite tracked files; the commit already holds everything that ships.
+      await git("checkout", "--quiet", "--", ".");
       await git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
     } catch (error) {
-      if (rebased.code !== 0) await run("git", ["-C", SITE_DIR, "rebase", "--abort"]);
+      if (rebased.code !== 0 && (await run("git", ["-C", SITE_DIR, "rebase", "--abort"])).code !== 0) {
+        await run("git", ["-C", SITE_DIR, "rebase", "--quit"]);
+      }
       await git("reset", "--quiet", "--hard", `origin/${branch}`);
       throw new Error(`nothing was published: ${(error as Error).message}. Run ship again.`);
     }

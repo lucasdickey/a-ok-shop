@@ -97,7 +97,10 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
     stdio: ["ignore", "ignore", "pipe"],
   });
   let socket: WebSocket | null = null;
+  let closed = false;
   const close = (): void => {
+    if (closed) return;
+    closed = true;
     socket?.close();
     chrome.kill("SIGKILL");
     server.close();
@@ -118,8 +121,8 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
       pending.set(id, { resolve, reject, timer });
       socket.send(JSON.stringify({ id, method, params }));
     });
-  const evaluate = async (expression: string): Promise<unknown> => {
-    const reply = await call("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
+  const evaluate = async (expression: string, timeoutMs = 90_000): Promise<unknown> => {
+    const reply = await call("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true }, timeoutMs);
     if (reply.result?.exceptionDetails) throw new Error(`render failed: ${JSON.stringify(reply.result.exceptionDetails).slice(0, 600)}`);
     return reply.result?.result?.value;
   };
@@ -175,12 +178,15 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
     };
 
     await call("Page.navigate", { url: `http://127.0.0.1:${port}/page.html` });
-    for (let attempt = 0; ; attempt++) {
-      const state = String(await evaluate("JSON.stringify({ ready: window.READY === true, error: window.ERROR ?? null })").catch(() => "{}"));
+    // Short probes against a wall-clock deadline: a page that never loads fails in about 30 seconds.
+    const deadline = Date.now() + 30_000;
+    for (;;) {
+      const probe = "JSON.stringify({ ready: window.READY === true, error: window.ERROR ?? null })";
+      const state = String(await evaluate(probe, 5_000).catch(() => "{}"));
       const parsed = JSON.parse(state || "{}") as { ready?: boolean; error?: string | null };
       if (parsed.error) throw new Error(`render page: ${parsed.error}`);
       if (parsed.ready) break;
-      if (attempt > 300) throw new Error("render page never became ready");
+      if (Date.now() > deadline) throw new Error("render page never became ready");
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   } catch (error) {

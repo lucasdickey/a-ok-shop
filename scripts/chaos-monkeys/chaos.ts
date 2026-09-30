@@ -285,15 +285,22 @@ async function draft(options: Options): Promise<void> {
 
     const renderer = await openRenderer({ run: runDir, site: path.join(CHECKOUT, "public") });
     try {
+      // One draft that fails to compose must not cost the whole day, so each is caught on its own.
       for (const d of record.drafts) {
         if (d.error) continue;
-        const spec =
-          d.engine === "astra"
-            ? { kind: "image", size: IMAGE_SIZE, format: "png", image: `/run/posters/${d.n}.png` }
-            : compositionSpec(d, `DRAFT ${d.n}`, date, "png");
-        const png = await renderer.render(spec);
-        d.image = `drafts/${d.n}.png`;
-        fs.writeFileSync(path.join(runDir, d.image), png);
+        try {
+          const spec =
+            d.engine === "astra"
+              ? { kind: "image", size: IMAGE_SIZE, format: "png", image: `/run/posters/${d.n}.png` }
+              : compositionSpec(d, `DRAFT ${d.n}`, date, "png");
+          const png = await renderer.render(spec);
+          d.image = `drafts/${d.n}.png`;
+          fs.writeFileSync(path.join(runDir, d.image), png);
+        } catch (error) {
+          d.image = null;
+          d.error = `could not compose: ${(error as Error).message.split("\n")[0].slice(0, 160)}`;
+          log(`draft ${d.n} ${d.brief.title}: ${d.error}`);
+        }
       }
       await judgeAndSheet(record, runDir, renderer);
     } finally {
@@ -370,6 +377,10 @@ async function ship(options: Options): Promise<void> {
     const d = record.drafts[n - 1];
     if (!d || !d.image || d.error) throw new Error(`draft ${n} of ${date} has no image to ship`);
     if (record.shipped.some((s) => s.draft === n)) throw new Error(`draft ${n} of ${date} already shipped`);
+    const link = d.brief.inspiration?.url;
+    if (link && !/^https:\/\/(www\.)?zingers\.dev\//.test(link)) {
+      throw new Error(`draft ${n} links to ${link}, but the site only accepts zingers.dev links`);
+    }
   }
 
   await syncSite(branch);

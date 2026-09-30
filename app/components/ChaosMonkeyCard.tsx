@@ -56,6 +56,7 @@ export default function ChaosMonkeyCard({ monkey, detailed = false, priority = f
                     rel="noopener noreferrer"
                   >
                     {monkey.inspiration.label}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </>
               )}
