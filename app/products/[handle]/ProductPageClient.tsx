@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import AddToCartButton from '@/app/components/product/AddToCartButton';
+import { track } from '@/app/lib/analytics';
 
 // Client component for size selection
 export function SizeSelector({
@@ -204,6 +205,17 @@ export function ProductDetails({
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    track('product_viewed', {
+      product_id: product.id,
+      handle: product.handle,
+      title: product.title,
+      price,
+    });
+    // Once per product page, not on every price or option change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size);

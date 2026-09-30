@@ -137,6 +137,52 @@ async function handlePaidCheckoutSession(stripeClient: Stripe, sessionId: string
     ensureCustomerReceipt(stripeClient, session)
   );
   await runOnce(`order-alert:${order.sessionId}`, () => sendOwnerOrderAlert(order));
+  await runOnce(`order-analytics:${order.sessionId}`, () =>
+    sendOrderToAnalytics(order, session.metadata?.posthog_distinct_id)
+  );
+}
+
+/**
+ * Record the purchase in PostHog. Sent from here rather than the browser so ad
+ * blockers can't hide it. No names, emails or addresses are sent. Never throws:
+ * an analytics outage must not make Stripe retry and repeat the emails above.
+ */
+async function sendOrderToAnalytics(order: Order, visitorId?: string) {
+  const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+  if (!apiKey) return;
+  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
+
+  try {
+    const response = await fetch(`${host}/i/v0/e/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: apiKey,
+        event: "order_completed",
+        // Orders without a visitor ID (e.g. monthly deals) still count, just unlinked.
+        distinct_id: visitorId || `stripe_checkout:${order.sessionId}`,
+        timestamp: order.createdAt.toISOString(),
+        properties: {
+          order_id: order.sessionId,
+          source: order.source,
+          revenue: order.amountTotal / 100,
+          subtotal: order.amountSubtotal / 100,
+          shipping: order.amountShipping / 100,
+          tax: order.amountTax / 100,
+          currency: "usd",
+          item_count: order.items.reduce((count, item) => count + item.quantity, 0),
+          livemode: order.livemode,
+          ...(!visitorId && { $process_person_profile: false }),
+        },
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) {
+      console.error(`PostHog rejected order ${order.sessionId}: ${response.status}`);
+    }
+  } catch (error) {
+    console.error(`Could not send order ${order.sessionId} to PostHog:`, error);
+  }
 }
 
 function toOrder(session: Stripe.Checkout.Session): Order {

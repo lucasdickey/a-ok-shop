@@ -130,6 +130,11 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json().catch(() => null);
     const items = parseCartItems(body?.items);
+    // The shopper's anonymous PostHog ID, so the paid order links back to their visit.
+    const analyticsId =
+      typeof body?.analyticsId === "string" && /^[\w.:-]{1,200}$/.test(body.analyticsId)
+        ? body.analyticsId
+        : undefined;
 
     if (!items) {
       return NextResponse.json(
@@ -219,6 +224,7 @@ export async function POST(request: NextRequest) {
       customer_creation: "always",
       metadata: {
         source: "a-ok-shop-catalog",
+        ...(analyticsId && { posthog_distinct_id: analyticsId }),
       },
       // Only enable automatic tax if configured in Stripe Dashboard
       ...(automaticTaxEnabled && {

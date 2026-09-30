@@ -5,6 +5,7 @@ import "./globals.css";
 import SiteChrome from "./components/layout/SiteChrome";
 import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
+import PostHogInit from "./components/PostHogInit";
 
 const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ 
@@ -79,6 +80,7 @@ export default function RootLayout({
           <CartDrawer />
         </CartProvider>
         <Analytics />
+        <PostHogInit />
       </body>
     </html>
   );

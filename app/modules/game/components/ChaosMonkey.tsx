@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { track } from "@/app/lib/analytics";
 
 interface GameProps {
   gameStarted?: boolean;
@@ -101,6 +102,7 @@ export default function ChaosMonkey({
 
       const data = await response.json();
       setDiscountCode(data.code);
+      track("discount_code_issued");
     } catch (error) {
       console.error("Error generating discount code:", error);
       setDiscountError(
@@ -825,6 +827,7 @@ export default function ChaosMonkey({
                 setGameWon(true);
                 setShowWinModal(true);
                 if (onGameComplete) onGameComplete(true);
+                track("game_won");
 
                 // Generate discount code when player wins
                 if (!discountCode) {

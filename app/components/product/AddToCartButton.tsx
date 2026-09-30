@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCart, CartItem } from '@/app/components/cart/CartProvider';
+import { track } from '@/app/lib/analytics';
 
 // Checkout accepts at most this many of one item (see app/api/catalog/checkout/route.ts).
 const MAX_QUANTITY = 20;
@@ -72,6 +73,14 @@ export default function AddToCartButton({
     };
     
     addToCart(cartItem);
+    track('added_to_cart', {
+      product_id: product.id,
+      title: product.title,
+      price: product.price,
+      quantity: itemQuantity,
+      size: product.size,
+      color: product.color,
+    });
     
     setTimeout(() => {
       setIsAdding(false);

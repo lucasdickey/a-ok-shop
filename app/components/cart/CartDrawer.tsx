@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MAX_QUANTITY_PER_ITEM, useCart } from './CartProvider';
 import { CLOTHING_SIZES } from '@/app/lib/sizes';
+import { getAnalyticsId, track } from '@/app/lib/analytics';
 
 export default function CartDrawer() {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, updateSize, subtotal } = useCart();
@@ -46,6 +47,12 @@ export default function CartDrawer() {
   const handleCheckout = async () => {
     if (cart.length === 0) return;
 
+    track('checkout_started', {
+      item_count: cart.reduce((count, item) => count + item.quantity, 0),
+      subtotal,
+      monthly_deal: isMonthlyDeals,
+    });
+
     try {
       // Use Stripe checkout for all products
       const apiEndpoint = isMonthlyDeals
@@ -59,7 +66,8 @@ export default function CartDrawer() {
         },
         body: JSON.stringify({
           items: cart,
-          subtotal
+          subtotal,
+          analyticsId: getAnalyticsId(),
         }),
       });
 
