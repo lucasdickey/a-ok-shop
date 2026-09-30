@@ -48,6 +48,8 @@ export default function PrivacyPolicy() {
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li><strong>Payment Processor:</strong> Stripe processes all payments securely</li>
             <li><strong>Shipping Carriers:</strong> We share delivery information with shipping providers</li>
+            <li><strong>Analytics:</strong> PostHog receives page views and site activity, including your IP
+ address, so we can see how the store is used</li>
             <li><strong>AI Agents:</strong> When you shop via ChatGPT or other AI assistants, they facilitate
  your purchase on your behalf</li>
           </ul>

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { track } from '@/app/lib/analytics';
 
 export type CartItem = {
   id: string;
@@ -70,6 +71,10 @@ export default function CartProvider({ children }: { children: ReactNode }) {
   const closeCart = () => setIsOpen(false);
 
   const addToCart = (item: CartItem) => {
+    // Report only what actually lands in the cart; lines are capped at MAX_QUANTITY_PER_ITEM.
+    const existingQuantity = cart.find((cartItem) => cartItem.id === item.id)?.quantity ?? 0;
+    const addedQuantity = Math.min(MAX_QUANTITY_PER_ITEM, existingQuantity + item.quantity) - existingQuantity;
+
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex((cartItem) => cartItem.id === item.id);
       
@@ -89,6 +94,17 @@ export default function CartProvider({ children }: { children: ReactNode }) {
         return [...prevCart, { ...item, quantity: Math.min(MAX_QUANTITY_PER_ITEM, item.quantity) }];
       }
     });
+    if (addedQuantity > 0) {
+      track('product_added_to_cart', {
+        product_id: item.id,
+        variant_id: item.variantId,
+        title: item.title,
+        price: item.price,
+        quantity: addedQuantity,
+        size: item.size,
+        color: item.color,
+      });
+    }
     openCart();
   };
 
