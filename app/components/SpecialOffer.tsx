@@ -175,7 +175,7 @@ export default function SpecialOffer() {
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div
                     onClick={copyToClipboard}
-                    className="cursor-pointer group flex items-center gap-3 bg-dark text-secondary px-6 py-3 rounded border-2 border-dark hover:bg-dark-light transition-all duration-300"
+                    className="ph-no-capture cursor-pointer group flex items-center gap-3 bg-dark text-secondary px-6 py-3 rounded border-2 border-dark hover:bg-dark-light transition-all duration-300"
                   >
                     <code
                       className="text-3xl md:text-4xl font-bold tracking-widest"

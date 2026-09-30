@@ -23,6 +23,15 @@ const nextConfig = {
   },
   experimental: {
   },
+  // PostHog is proxied through /ingest (see app/components/analytics/PostHogInit.tsx).
+  // Its API paths end in a slash, so don't let Next redirect them.
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    return [
+      { source: '/ingest/static/:path*', destination: 'https://us-assets.i.posthog.com/static/:path*' },
+      { source: '/ingest/:path*', destination: 'https://us.i.posthog.com/:path*' },
+    ];
+  },
   async headers() {
     return [
       {
