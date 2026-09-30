@@ -7,8 +7,9 @@ export const metadata = {
 
 export default function ReturnPolicy() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">Return & Refund Policy</h1>
+    <div className="receipt-doc">
+      <p className="micro mb-4">A–OK / Returns / Keep this receipt</p>
+      <h1 className="display-heading">Return & Refund Policy</h1>
 
       <div className="prose prose-lg max-w-none">
         <p className="text-gray-600 mb-6">
@@ -22,7 +23,7 @@ export default function ReturnPolicy() {
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Just-In-Time Manufacturing</h2>
-          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-6">
+          <div className="mb-6 border-2 border-l-8 border-dark border-l-primary bg-club-yellow p-6">
             <p className="text-lg font-semibold mb-2">All Sales Are Final</p>
             <p className="mb-4">
               Because we use <strong>just-in-time manufacturing</strong>, each product is made
@@ -96,7 +97,7 @@ export default function ReturnPolicy() {
           <p className="mb-4">
             Have questions about returns? We&apos;re here to help!
           </p>
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="receipt-slip mb-6 p-6">
             <p className="mb-2">
               <strong>Returns Email:</strong>{' '}
               <a href="mailto:returns@a-ok.shop" className="text-blue-600 hover:underline">
@@ -121,7 +122,7 @@ export default function ReturnPolicy() {
           </div>
         </section>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 border-t-2 border-dashed border-dark pt-8">
           <p className="text-sm text-gray-500">
             This return policy was last updated on November 6, 2025.
           </p>

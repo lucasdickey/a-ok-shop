@@ -7,8 +7,9 @@ export const metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
+    <div className="receipt-doc">
+      <p className="micro mb-4">A–OK / Privacy / Keep this receipt</p>
+      <h1 className="display-heading">Privacy Policy</h1>
 
       <div className="prose prose-lg max-w-none">
         <p className="text-gray-600 mb-6">
@@ -135,7 +136,7 @@ export default function PrivacyPolicy() {
           <p className="mb-4">
             If you have questions about this privacy policy, please contact us:
           </p>
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="receipt-slip mb-6 p-6">
             <p className="mb-2">
               <strong>Email:</strong>{' '}
               <a href="mailto:privacy@a-ok.shop" className="text-blue-600 hover:underline">
@@ -154,7 +155,7 @@ export default function PrivacyPolicy() {
           </div>
         </section>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 border-t-2 border-dashed border-dark pt-8">
           <p className="text-sm text-gray-500">
             This privacy policy was last updated on November 6, 2025.
           </p>
