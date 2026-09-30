@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MAX_QUANTITY_PER_ITEM, useCart } from './CartProvider';
 import { CLOTHING_SIZES } from '@/app/lib/sizes';
+import { track } from '@/app/lib/analytics';
 
 export default function CartDrawer() {
   const { cart, isOpen, closeCart, removeFromCart, updateQuantity, updateSize, subtotal } = useCart();
@@ -96,6 +97,13 @@ export default function CartDrawer() {
   const handleCheckout = async () => {
     if (cart.length === 0) return;
 
+    const flow = isMonthlyDeals ? 'monthly_deals' : 'catalog';
+    track('checkout_started', {
+      item_count: cart.reduce((count, item) => count + item.quantity, 0),
+      subtotal,
+      flow,
+    });
+
     try {
       // Use Stripe checkout for all products
       const apiEndpoint = isMonthlyDeals
@@ -129,6 +137,7 @@ export default function CartDrawer() {
     } catch (error) {
       console.error('Error creating checkout:', error);
       const reason = error instanceof Error ? error.message : '';
+      track('checkout_failed', { reason: reason || 'unknown', flow });
       alert(
         reason && reason !== 'Failed to create checkout session'
           ? `${reason}. Please update your cart and try again.`
