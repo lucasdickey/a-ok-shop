@@ -108,9 +108,9 @@ function ArrowButton({
 }
 
 export default function ConceptsGallery() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(concepts.length - 1);
   const [viewport, setViewport] = useState<Viewport>("desktop");
-  const [filter, setFilter] = useState<Filter>("astra5");
+  const [filter, setFilter] = useState<Filter>("all");
   const [expanded, setExpanded] = useState(false);
   const fullscreenRef = useRef<HTMLDialogElement>(null);
   const expandRef = useRef<HTMLButtonElement>(null);

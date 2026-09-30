@@ -338,4 +338,14 @@ export const concepts: Concept[] = [
     description: "A shoppable photographic diptych with compact campaign type. Named selectors synchronize the photograph, price and purchase target using existing catalog imagery.",
     highlights: ["Stable selected frame and alternate-photo controls", "Product names replace persona labels", "Collection follows the compact campaign", "Actual availability, inspectable art and isolated bag"],
   },
+  {
+    id: "27",
+    title: "Club Receipt",
+    file: "/design-concepts/27-club-receipt.html",
+    harness: "Codex",
+    model: "GPT-6",
+    tags: ["Bold color", "Graphic shapes", "Receipt details"],
+    description: "Hallucination Club meets Receipt Machine: acid-yellow type, an arched green-tee hero, golden field photography, perforated paper, barcodes, and hard offset shadows.",
+    highlights: ["Arched product hero + price ticket", "Filterable receipt-card collection", "Golden hoodie photo + barcode", "Membership receipt, red art wall, cobalt game panel"],
+  },
 ];

@@ -297,8 +297,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Storefront design review
 
-Open `/concepts` to compare all 26 storefront concepts at desktop or mobile width, including fullscreen comparison. The Astra Round 5 filter opens Print Room (24), The Human Edit (25), and Off Model (26). These three use six identical catalog products, isolated preview bags, artwork inspection, and an explicitly labeled existing-sample generator preview. Their bags never create orders. The separate Claude Code round (21–23) retains its real-cart behavior.
+Open `/concepts` to compare all 27 storefront concepts at desktop or mobile width, including fullscreen comparison. Club Receipt (27) opens by default. The Astra Round 5 filter shows Print Room (24), The Human Edit (25), and Off Model (26). These three use six identical catalog products, isolated preview bags, artwork inspection, and an explicitly labeled existing-sample generator preview. Their bags never create orders. The separate Claude Code round (21–23) retains its real-cart behavior.
 
 See [the round-four review](session/0907-codex-gpt6/design-concepts.md) for the recommendation, tradeoffs, verification, and regeneration instructions. Direct previews are also listed at `/design-concepts/`.
 
 See [the Astra round-five review](session/0923-astra-round-five/review.md) for the 20-concept audit, weighted comparison, and verification. Astra’s original draft numbers 21–23 became 24–26 at publication to preserve the already-published Claude Code trio.
+
+### Club Receipt — concept 27
+
+Open `/design-concepts/27-club-receipt.html` for the Hallucination Club × Receipt Machine concept. Acid yellow, red, cobalt, arched photography, receipt perforations, barcodes, and offset shadows. Category filters and the mobile menu work; product links open existing product pages for options and checkout. Display prices are a snapshot of `product-catalog.json`. This standalone concept does not replace the storefront homepage.
+
+## Chaos Monkeys
+
+New A-OK apes, most days. Each morning this Mac drafts about six with Claude and GPT-6-Astra, using the Claude Code and Codex logins already on it: no API keys, no CI. One draft riffs on the day's [Zingers](https://zingers.dev) story. A person picks two or three to publish, and each shipped monkey appears on the homepage ("Latest drop") and at `/chaos-monkeys`. The site reads `app/data/chaos-monkeys.json` and rejects a malformed entry at build time. Setup, commands, and safety notes are in [scripts/chaos-monkeys/README.md](scripts/chaos-monkeys/README.md).
