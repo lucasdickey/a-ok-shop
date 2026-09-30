@@ -37,10 +37,10 @@ export default function Navbar() {
       <div className="flex items-center gap-4 px-4 py-4 sm:px-6 lg:gap-7 lg:px-10 lg:py-5">
         <Link
           href="/"
-          className="font-[Arial,sans-serif] text-[40px] font-bold leading-[0.9] tracking-[-4px] no-underline lg:text-[48px] lg:tracking-[-5px]"
+          className="flex min-h-[44px] items-center font-[Arial,sans-serif] text-[40px] font-bold leading-[0.9] tracking-[-4px] no-underline lg:text-[48px] lg:tracking-[-5px]"
           aria-label="A-OK home"
         >
-          A–OK<sup className="ml-1 align-top text-[13px] tracking-normal">®</sup>
+          A–OK<sup className="ml-1 self-start text-[13px] tracking-normal">®</sup>
         </Link>
         <span className="micro hidden leading-tight xl:block">
           Apes on keys
@@ -56,7 +56,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={isCurrent ? "page" : undefined}
-                className="no-underline decoration-2 underline-offset-[6px] hover:underline aria-[current=page]:underline"
+                className="flex min-h-[44px] items-center no-underline decoration-2 underline-offset-[6px] hover:underline aria-[current=page]:underline"
               >
                 {link.label}
               </Link>

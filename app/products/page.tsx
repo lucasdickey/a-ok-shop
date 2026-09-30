@@ -105,9 +105,9 @@ export default async function ProductsPage({
             <p className="text-lg">No products found matching your criteria.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-3">
             {products.map((product, index) => (
-              <ProductCard key={product.id} product={product} index={index} priority={index < 3} />
+              <ProductCard key={product.id} product={product} index={index} priority={index < 4} />
             ))}
           </div>
         )}

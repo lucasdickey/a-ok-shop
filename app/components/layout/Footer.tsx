@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { FaYoutube, FaSpotify, FaGithub, FaSoundcloud } from 'react-icons/fa';
 
-const linkClass = "no-underline decoration-2 underline-offset-4 hover:underline";
+// Links are 44px tall below desktop so they are easy to tap.
+const linkClass =
+  "inline-flex min-h-[44px] items-center no-underline decoration-2 underline-offset-4 hover:underline lg:min-h-0";
 
 export default function Footer() {
   return (
@@ -11,12 +13,12 @@ export default function Footer() {
       <div className="flex flex-wrap items-center gap-5 pb-8 lg:gap-11">
         <Link
           href="/"
-          className="font-[Arial,sans-serif] text-[88px] font-bold leading-none tracking-[-0.09em] no-underline lg:text-[clamp(70px,10vw,145px)]"
+          className="w-full font-[Arial,sans-serif] text-[88px] font-bold leading-none tracking-[-0.09em] no-underline sm:w-auto lg:text-[clamp(70px,10vw,145px)]"
           aria-label="A-OK home"
         >
           A–OK<span className="align-top text-xl tracking-normal">®</span>
         </Link>
-        <p className="ml-auto font-mono text-[10px] leading-relaxed sm:text-xs lg:ml-0">
+        <p className="font-mono text-[11px] leading-relaxed sm:text-xs">
           APES ON KEYS.
           <br />
           HUMANS IN CLOTHES.
@@ -33,7 +35,7 @@ export default function Footer() {
         </div>
         <div>
           <p className="micro mb-3">Quick links</p>
-          <ul className="space-y-2">
+          <ul className="lg:space-y-2">
             <li>
               <Link href="/" className={linkClass}>
                 Home
@@ -58,7 +60,7 @@ export default function Footer() {
         </div>
         <div>
           <p className="micro mb-3">Contact</p>
-          <ul className="space-y-2">
+          <ul className="lg:space-y-2">
             <li>Email: info @ a-ok.shop</li>
             <li>
               <Link href="https://x.com/apesonkeys" target="_blank" className={linkClass}>
@@ -69,7 +71,7 @@ export default function Footer() {
         </div>
         <div>
           <p className="micro mb-3">Follow us</p>
-          <ul className="space-y-2">
+          <ul className="lg:space-y-2">
             <li>
               <Link
                 href="https://www.youtube.com/@apesonkeys/videos"
@@ -110,9 +112,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="micro flex flex-wrap justify-between gap-4 border-t-2 border-dashed border-dark pt-5 text-[10px]">
+      <div className="micro flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t-2 border-dashed border-dark pt-3 lg:gap-4 lg:pt-5">
         <span>*** KEEP THIS RECEIPT. ***</span>
-        <nav aria-label="Footer navigation" className="order-3 flex w-full gap-5 sm:order-none sm:w-auto">
+        <nav aria-label="Footer navigation" className="order-3 flex w-full gap-6 sm:order-none sm:w-auto">
           <Link href="/returns" className={linkClass}>
             Returns
           </Link>

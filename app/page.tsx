@@ -132,7 +132,7 @@ export default async function Home() {
       {/* Hero */}
       <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[1.07fr_1fr]">
         <div className="px-5 pb-2 pt-8 sm:px-8 lg:px-[4vw] lg:pb-8 lg:pt-12">
-          <p className="micro flex items-center gap-2 text-[9px] sm:text-[11px]">
+          <p className="micro flex items-center gap-2 text-[10px] sm:text-[11px]">
             <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
             The hallucination club / open to all
           </p>
@@ -157,7 +157,7 @@ export default async function Home() {
           <Link href="/products" className="btn btn-primary min-h-[52px] justify-between gap-6 px-5">
             Find your people. Wear the tee. <span aria-hidden="true">↗</span>
           </Link>
-          <div className="micro mt-8 flex justify-between gap-5 text-[8px] sm:text-[9px]">
+          <div className="micro mt-8 flex justify-between gap-5 text-[10px]">
             <span>No login. No secret handshake.</span>
             <span className="hidden sm:inline">Just good clothes.</span>
           </div>
@@ -190,14 +190,14 @@ export default async function Home() {
             APES
             <br />
             ON KEYS
-            <span className="mt-3 font-mono text-[7px] font-normal lg:text-[8px]">EVERYONE’S A MEMBER.</span>
+            <span className="mt-3 font-mono text-[8px] font-normal">EVERYONE’S A MEMBER.</span>
           </div>
           {heroProduct && (
             <Link
               href={`/products/${heroProduct.handle}`}
               className="absolute bottom-8 left-[12%] w-[78%] max-w-[430px] rotate-3 border-2 border-dark bg-club-paper p-4 no-underline shadow-[8px_8px_0_#22221E] lg:bottom-12 lg:left-[16%] lg:w-[76%] lg:p-5"
             >
-              <span className="micro flex justify-between border-b border-dashed border-dark pb-2.5 text-[9px]">
+              <span className="micro flex justify-between border-b border-dashed border-dark pb-2.5 text-[10px]">
                 Your next good decision <span>01 / {String(productsToShow.length).padStart(2, "0")}</span>
               </span>
               <span className="flex items-center justify-between gap-4 py-3.5">
@@ -207,7 +207,7 @@ export default async function Home() {
                 </b>
               </span>
               <span className="flex justify-between border-t border-dashed border-dark pt-2.5">
-                <span className="micro text-[9px]">Choose your options</span>
+                <span className="micro text-[10px]">Choose your options</span>
                 <span aria-hidden="true">↗</span>
               </span>
             </Link>
@@ -217,7 +217,7 @@ export default async function Home() {
 
       {/* Ticker */}
       <div
-        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[8px] uppercase tracking-[0.06em] text-club-paper sm:text-[11px]"
+        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
         aria-label="Brand statement"
       >
         {TICKER.map((line, index) => (
@@ -276,7 +276,7 @@ export default async function Home() {
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-y-2 border-dashed border-dark py-6">
           <span className="micro">Total personality</span>
           <strong className="display-heading text-[27px] md:text-[34px]">Off the charts.</strong>
-          <Link href="/products" className="w-full text-[13px] font-semibold md:w-auto">
+          <Link href="/products" className="inline-flex min-h-[44px] w-full items-center text-[13px] font-semibold md:w-auto">
             See the full collection ↗
           </Link>
         </div>
@@ -285,7 +285,7 @@ export default async function Home() {
       {/* The club */}
       <section id="club" className="mt-10 grid grid-cols-1 border-y-2 border-dark lg:mt-16 lg:grid-cols-2">
         <div className="relative flex flex-col justify-center border-b-2 border-dashed border-dark bg-club-gold px-9 pb-16 pt-7 lg:border-b-0 lg:border-r-2 lg:border-solid lg:px-14 lg:pb-20 lg:pt-10">
-          <p className="micro mb-4 text-[8px] lg:text-[11px]">Field test / outside the simulation</p>
+          <p className="micro mb-4 text-[10px] lg:text-[11px]">Field test / outside the simulation</p>
           {clubImage && (
             <Link
               href={`/products/${clubProduct.handle}`}
@@ -301,8 +301,8 @@ export default async function Home() {
               />
             </Link>
           )}
-          <div className="barcode absolute bottom-[60px] right-4 h-[54px] w-[175px] lg:bottom-[72px] lg:right-5 lg:h-[65px] lg:w-[210px]" aria-hidden="true" />
-          <span className="micro mt-7 text-[8px] lg:text-[9px]">Real human. Excellent taste.</span>
+          <div className="barcode absolute bottom-4 right-16 h-10 w-[120px] lg:bottom-[72px] lg:right-5 lg:h-[65px] lg:w-[210px]" aria-hidden="true" />
+          <span className="micro mt-7 text-[10px]">Real human. Excellent taste.</span>
           <span className="absolute bottom-4 right-6 text-5xl" aria-hidden="true">
             +
           </span>
@@ -342,7 +342,7 @@ export default async function Home() {
             </div>
           </div>
           {clubProduct && (
-            <Link href={`/products/${clubProduct.handle}`} className="text-sm font-semibold">
+            <Link href={`/products/${clubProduct.handle}`} className="inline-flex min-h-[44px] items-center text-sm font-semibold">
               Get this one. Go outside. ↗
             </Link>
           )}
@@ -366,13 +366,19 @@ export default async function Home() {
 
         {latestDrop.length > 0 && (
           <>
-            <p className="micro mb-6">Latest drop · {formatDropDate(latestDrop[0].date)}</p>
-            <div className="mb-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <p className="micro mb-6 flex justify-between gap-4">
+              <span>Latest drop · {formatDropDate(latestDrop[0].date)}</span>
+              <span className="sm:hidden" aria-hidden="true">
+                Swipe →
+              </span>
+            </p>
+            {/* Phones swipe through the drop sideways; wider screens get a grid. */}
+            <div className="-mx-5 mb-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {latestDrop.map((monkey, index) => (
                 <Link
                   key={monkey.id}
                   href={`/chaos-monkeys#n${monkey.id}`}
-                  className={`group block border-2 border-dark bg-club-paper p-3 pb-4 text-dark no-underline shadow-hard-lg transition-transform motion-reduce:transition-none ${
+                  className={`group block w-[80%] shrink-0 snap-center border-2 border-dark sm:w-auto bg-club-paper p-3 pb-4 text-dark no-underline shadow-hard-lg transition-transform motion-reduce:transition-none ${
                     index % 2 === 0 ? "sm:-rotate-2" : "sm:rotate-2"
                   } hover:rotate-0`}
                 >
@@ -386,7 +392,7 @@ export default async function Home() {
         <div className="border-2 border-dark bg-club-paper p-3 text-dark shadow-hard-lg sm:p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <p className="micro">Fig. 04 / The whole archive, shuffling</p>
-            <Link href="/gallery" className="micro">
+            <Link href="/gallery" className="micro inline-flex min-h-[44px] items-center">
               Enter the art archive ↗
             </Link>
           </div>
@@ -488,7 +494,7 @@ export default async function Home() {
           <Image src="/images/a-ok-8bit-retro.png" alt="Pixel-art A-OK ape" width={160} height={160} />
         </div>
         <div className="min-w-[170px] flex-1">
-          <p className="micro text-[8px] lg:text-[11px]">Bonus item / a little detour</p>
+          <p className="micro text-[10px] lg:text-[11px]">Bonus item / a little detour</p>
           <h2 className="display-heading my-2.5 text-[32px] lg:text-[44px]">
             Touch grass.
             <br />

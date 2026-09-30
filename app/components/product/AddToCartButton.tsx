@@ -84,7 +84,7 @@ export default function AddToCartButton({
         <div className="flex min-h-[48px] items-center border-2 border-dark bg-club-slip font-mono">
           <button
             onClick={() => setItemQuantity(prev => Math.max(1, prev - 1))}
-            className="min-h-[44px] px-3.5 py-2 hover:bg-club-yellow"
+            className="min-h-[44px] min-w-[44px] px-3.5 py-2 hover:bg-club-yellow"
             aria-label="Decrease quantity"
           >
             -
@@ -93,7 +93,7 @@ export default function AddToCartButton({
           <button
             onClick={() => setItemQuantity(prev => Math.min(MAX_QUANTITY, prev + 1))}
             disabled={itemQuantity >= MAX_QUANTITY}
-            className="min-h-[44px] px-3.5 py-2 hover:bg-club-yellow disabled:cursor-not-allowed disabled:opacity-40"
+            className="min-h-[44px] min-w-[44px] px-3.5 py-2 hover:bg-club-yellow disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Increase quantity"
           >
             +

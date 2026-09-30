@@ -133,6 +133,7 @@ export function ColorSelector({
     const colorMap: Record<string, string> = {
       black: 'bg-black',
       white: 'bg-white',
+      beige: 'bg-[#D9C7A7]',
       red: 'bg-red-500',
       blue: 'bg-blue-500',
       green: 'bg-green-500',
@@ -158,7 +159,7 @@ export function ColorSelector({
             key={color}
             onClick={() => handleColorClick(color)}
             aria-pressed={selectedColor === color}
-            className={`h-10 w-10 rounded-full border-2 border-dark ${getColorStyle(color)} ${
+            className={`h-11 w-11 rounded-full border-2 border-dark ${getColorStyle(color)} ${
               selectedColor === color
                 ? 'shadow-hard-sm ring-2 ring-dark ring-offset-2 ring-offset-club-paper'
                 : 'hover:-translate-y-0.5'

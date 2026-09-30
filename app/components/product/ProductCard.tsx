@@ -48,7 +48,7 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
         aria-hidden="true"
         className={`relative block overflow-hidden border-b-2 border-dark ${PHOTO_BACKGROUNDS[index % PHOTO_BACKGROUNDS.length]}`}
       >
-        <span className="absolute left-3 top-3 z-[1] border border-dark bg-club-paper px-2 py-1 font-mono text-[10px]">
+        <span className="absolute left-2 top-2 z-[1] border border-dark bg-club-paper px-1.5 py-0.5 font-mono text-[10px] sm:left-3 sm:top-3 sm:px-2 sm:py-1">
           ITEM / {itemNumber}
         </span>
         <div className="relative aspect-[7/8] w-full">
@@ -62,13 +62,13 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
             unoptimized={!imageUrl.startsWith('http')}
           />
         </div>
-        <span className="absolute bottom-3 right-3 border border-dark bg-club-paper px-3 py-2 text-xs shadow-hard-sm">
+        <span className="absolute bottom-3 right-3 hidden border border-dark bg-club-paper px-3 py-2 text-xs shadow-hard-sm sm:block">
           Choose options <span aria-hidden="true">↗</span>
         </span>
       </Link>
-      <div className="flex flex-1 flex-col p-4">
-        <p className="micro text-[9px]">{categoryLabel}</p>
-        <h3 className="mt-2 flex justify-between gap-3 text-[17px] font-bold leading-tight">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <p className="micro">{categoryLabel}</p>
+        <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
           <Link href={`/products/${handle}`} className="no-underline hover:underline">
             {title}
           </Link>
