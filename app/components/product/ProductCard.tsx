@@ -29,8 +29,12 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
   const imageUrl = images.edges[0]?.node.url || '/images/product-placeholder.jpg';
   const imageAlt = images.edges[0]?.node.altText || title;
 
+  // The product's own type decides when it names a garment, so a tee tagged "red hoodie"
+  // (describing the artwork) still reads as a tee. Tags only count when it doesn't.
+  const typeText = productType.toLowerCase();
+  const typeIsGarment = ['hoodie', 'sweatshirt', 'hat', 'cap', 'shirt', 'tee'].some((word) => typeText.includes(word));
   const isType = (type: string) =>
-    productType.toLowerCase().includes(type) || tags.some((tag) => tag.toLowerCase().includes(type));
+    typeText.includes(type) || (!typeIsGarment && tags.some((tag) => tag.toLowerCase().includes(type)));
   const cardType = isType('hoodie') ? 'hoodie' : isType('hat') ? 'hat' : 't-shirt';
 
   const itemNumber = String(index + 1).padStart(2, '0');

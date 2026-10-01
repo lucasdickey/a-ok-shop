@@ -14,8 +14,10 @@ const CATALOG_PATH = path.join(__dirname, '..', 'product-catalog.json');
 
 // Featured products from siteConfig (in order)
 const featuredProductHandles = [
-  'a-ok-monkey-master',
-  'same-vibes-but-more'
+  'hallucination-club-2026-edition',
+  'a-ok-transformer-unit-exploded-view-tee',
+  'a-ok-all-angles-tee',
+  'a-ok-baby-ape-little-operator'
 ];
 
 function main() {

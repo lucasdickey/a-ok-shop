@@ -622,8 +622,7 @@
           "createdAt": "2024-12-09T04:41:33Z",
           "updatedAt": "2025-05-13T21:29:41Z",
           "publishedAt": "2025-04-19T23:52:36Z",
-          "featured": true,
-          "featuredOrder": 2,
+          "featured": false,
           "stripeProductId": "prod_TPh6M4n1E8Q1Rk"
         }
       },
@@ -1023,8 +1022,7 @@
           "createdAt": "2025-04-26T01:00:18Z",
           "updatedAt": "2025-07-30T05:58:44Z",
           "publishedAt": "2025-04-26T01:00:18Z",
-          "featured": true,
-          "featuredOrder": 3,
+          "featured": false,
           "stripeProductId": "prod_TPh6ltx0CMw5HD"
         }
       },
@@ -2831,7 +2829,9 @@
           "seo": {
             "title": "A-OK All Angles Tee | Apes on Keys",
             "description": "The A-OK operator from the front, side and back. A red-hoodie ape graphic tee with three perspectives and no additional certainty."
-          }
+          },
+          "featured": true,
+          "featuredOrder": 3
         }
       },
       {
@@ -3084,7 +3084,9 @@
             "description": "The A-OK ape, taken apart. An exploded-view graphic tee with a red hoodie, transformer core and 18 technical callouts. Understanding sold separately.",
             "socialTitle": "A-OK Transformer Unit \u2014 Exploded View Tee",
             "socialDescription": "Every part accounted for. Understanding sold separately. The Apes on Keys operator, documented down to the optional keychain eyelet."
-          }
+          },
+          "featured": true,
+          "featuredOrder": 2
         }
       },
       {
@@ -3491,7 +3493,9 @@
           "seo": {
             "title": "Little Operator Baby Ape Graphic Tee | A-OK",
             "description": "Small model. Big plans. Meet Little Operator, the A-OK baby ape graphic tee with oversized headphones, a red hoodie, and suspicious amounts of confidence."
-          }
+          },
+          "featured": true,
+          "featuredOrder": 4
         }
       },
       {
@@ -3512,9 +3516,9 @@
               "id": "gid://a-ok/ProductOption/89400000000041",
               "name": "Color",
               "values": [
-                "Oat",
+                "Navy",
                 "Green",
-                "Navy"
+                "Oat"
               ]
             },
             {
@@ -3554,9 +3558,9 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89400000000040",
-                  "url": "/images/products/hallucination-club-2026-edition-0.webp",
-                  "altText": "Oat Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
+                  "id": "gid://a-ok/ProductImage/89400000000042",
+                  "url": "/images/products/hallucination-club-2026-edition-2.webp",
+                  "altText": "Navy Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING, printed in white",
                   "width": 1400,
                   "height": 1048
                 }
@@ -3572,9 +3576,9 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89400000000042",
-                  "url": "/images/products/hallucination-club-2026-edition-2.webp",
-                  "altText": "Navy Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING, printed in white",
+                  "id": "gid://a-ok/ProductImage/89400000000040",
+                  "url": "/images/products/hallucination-club-2026-edition-0.webp",
+                  "altText": "Oat Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
                   "width": 1400,
                   "height": 1048
                 }
@@ -3594,8 +3598,8 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000001",
-                  "title": "Oat / XS",
+                  "id": "gid://a-ok/ProductVariant/47200000000043",
+                  "title": "Navy / XS",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3606,7 +3610,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3617,8 +3621,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000002",
-                  "title": "Oat / S",
+                  "id": "gid://a-ok/ProductVariant/47200000000044",
+                  "title": "Navy / S",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3629,7 +3633,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3640,8 +3644,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000003",
-                  "title": "Oat / M",
+                  "id": "gid://a-ok/ProductVariant/47200000000045",
+                  "title": "Navy / M",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3652,7 +3656,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3663,8 +3667,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000004",
-                  "title": "Oat / L",
+                  "id": "gid://a-ok/ProductVariant/47200000000046",
+                  "title": "Navy / L",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3675,7 +3679,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3686,8 +3690,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000005",
-                  "title": "Oat / XL",
+                  "id": "gid://a-ok/ProductVariant/47200000000047",
+                  "title": "Navy / XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3698,7 +3702,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3709,8 +3713,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000006",
-                  "title": "Oat / 2XL",
+                  "id": "gid://a-ok/ProductVariant/47200000000048",
+                  "title": "Navy / 2XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3721,7 +3725,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Oat"
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3870,8 +3874,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000043",
-                  "title": "Navy / XS",
+                  "id": "gid://a-ok/ProductVariant/47200000000001",
+                  "title": "Oat / XS",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3882,7 +3886,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3893,8 +3897,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000044",
-                  "title": "Navy / S",
+                  "id": "gid://a-ok/ProductVariant/47200000000002",
+                  "title": "Oat / S",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3905,7 +3909,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3916,8 +3920,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000045",
-                  "title": "Navy / M",
+                  "id": "gid://a-ok/ProductVariant/47200000000003",
+                  "title": "Oat / M",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3928,7 +3932,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3939,8 +3943,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000046",
-                  "title": "Navy / L",
+                  "id": "gid://a-ok/ProductVariant/47200000000004",
+                  "title": "Oat / L",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3951,7 +3955,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3962,8 +3966,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000047",
-                  "title": "Navy / XL",
+                  "id": "gid://a-ok/ProductVariant/47200000000005",
+                  "title": "Oat / XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3974,7 +3978,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3985,8 +3989,8 @@
               },
               {
                 "node": {
-                  "id": "gid://a-ok/ProductVariant/47200000000048",
-                  "title": "Navy / 2XL",
+                  "id": "gid://a-ok/ProductVariant/47200000000006",
+                  "title": "Oat / 2XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3997,7 +4001,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Navy"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",

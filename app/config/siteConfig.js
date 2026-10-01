@@ -5,8 +5,10 @@
 export const siteConfig = {
   // Featured products on homepage (product handles)
   featuredProducts: [
-    "a-ok-monkey-master",     // Monkey Master product
-    "same-vibes-but-more"     // Same Vibes, but More product
+  "hallucination-club-2026-edition",
+  "a-ok-transformer-unit-exploded-view-tee",
+  "a-ok-all-angles-tee",
+  "a-ok-baby-ape-little-operator"
   ],
   
   // Site metadata
