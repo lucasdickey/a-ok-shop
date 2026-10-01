@@ -81,7 +81,8 @@ export default function Navbar() {
         <nav
           id="mobile-nav"
           aria-label="Mobile navigation"
-          className="border-t-2 border-dark bg-club-paper px-4 py-3 lg:hidden"
+          // Drops over the page (instead of pushing it down) so nothing below moves.
+          className="absolute inset-x-0 top-full border-y-2 border-dark bg-club-paper px-4 py-3 shadow-[0_6px_0_#22221E] lg:hidden"
         >
           {NAV_LINKS.map((link) => (
             <Link

@@ -34,7 +34,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       </a>
       <div className="receipt-sheet">
         <Navbar />
-        <main id="main" key={pathname} className={`flex-1 ${hasNavigated.current ? "page-enter" : ""}`}>
+        <main id="main" tabIndex={-1} key={pathname} className={`flex-1 outline-none ${hasNavigated.current ? "page-enter" : ""}`}>
           {children}
         </main>
         <Footer />

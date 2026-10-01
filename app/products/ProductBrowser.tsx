@@ -48,11 +48,21 @@ function ShopTitle({ word }: { word: string }) {
     return () => window.clearTimeout(timer);
   }, [word]);
 
+  // The longest title sits invisibly underneath, so the heading keeps the same size
+  // while typing and on every category; nothing below it moves.
+  const longest = CATEGORY_FILTERS.map((item) => item.title)
+    .concat(word)
+    .reduce((a, b) => (b.length > a.length ? b : a));
+
   return (
-    <h1 className="display-heading text-[clamp(52px,5.8vw,88px)]">
+    <h1 className="display-heading grid text-[clamp(52px,5.8vw,88px)]">
       <span className="sr-only">Shop {word}.</span>
-      <span aria-hidden="true">
-        Shop{shown ? ` ${shown}` : ""}
+      <span aria-hidden="true" className="invisible [grid-area:1/1]">
+        Shop {longest}.
+      </span>
+      <span aria-hidden="true" className="[grid-area:1/1]">
+        {/* trimEnd: mid-word ("all ") the period should still hug the last letter. */}
+        Shop{shown.trim() ? ` ${shown.trimEnd()}` : ""}
         <span className="text-primary"><span className="period-pulse">.</span></span>
       </span>
     </h1>

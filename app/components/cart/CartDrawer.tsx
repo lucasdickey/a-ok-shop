@@ -57,7 +57,7 @@ export default function CartDrawer() {
       active && active !== document.body
         ? active
         : document.querySelector<HTMLElement>('[data-cart-toggle]');
-    drawerRef.current?.focus();
+    drawerRef.current?.focus({ preventScroll: true });
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -90,7 +90,7 @@ export default function CartDrawer() {
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
-      previouslyFocused?.focus();
+      previouslyFocused?.focus({ preventScroll: true });
     };
   }, [isOpen]);
 

@@ -42,7 +42,7 @@ export default function GameModal() {
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -72,7 +72,7 @@ export default function GameModal() {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       root.style.overflow = previousOverflow;
-      previouslyFocused?.focus();
+      previouslyFocused?.focus({ preventScroll: true });
     };
   }, [open]);
 
