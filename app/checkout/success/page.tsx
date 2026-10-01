@@ -68,7 +68,7 @@ function CheckoutSuccessContent() {
           <h1 className="display-heading mt-6 text-center text-[clamp(52px,12vw,84px)]">
             Order
             <br />
-            <span className="text-primary">confirmed.</span>
+            <span className="text-primary">confirmed<span className="period-pulse">.</span></span>
           </h1>
           <p className="mt-4 text-center">Thank you for your purchase from A-OK Shop.</p>
 

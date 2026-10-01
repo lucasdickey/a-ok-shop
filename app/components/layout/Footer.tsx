@@ -127,7 +127,18 @@ export default function Footer() {
         </nav>
         <span>
           &copy; {new Date().getFullYear()} A-OK Store ·{" "}
-          <a href="#main" className={linkClass}>
+          <a
+            href="#main"
+            className={linkClass}
+            onClick={(event) => {
+              // Go to the very top (not just to <main>), keep the address clean,
+              // and move keyboard focus to the page content.
+              event.preventDefault();
+              const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+              document.getElementById("main")?.focus({ preventScroll: true });
+            }}
+          >
             Back to top ↑
           </a>
         </span>

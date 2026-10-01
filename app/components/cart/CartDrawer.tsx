@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MAX_QUANTITY_PER_ITEM, useCart } from './CartProvider';
@@ -17,7 +17,10 @@ export default function CartDrawer() {
   // Handle click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+      // The header's cart button toggles the drawer itself.
+      if (target.closest('[data-cart-toggle]')) return;
+      if (drawerRef.current && !drawerRef.current.contains(target)) {
         closeCart();
       }
     };
@@ -36,7 +39,14 @@ export default function CartDrawer() {
   // render, so read it through a ref to run this only when the drawer opens or closes.
   const closeCartRef = useRef(closeCart);
   closeCartRef.current = closeCart;
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  // The drawer opens below the header so the header's cart button stays in reach
+  // as the close control. Measured on open, since the header's height varies.
+  const [top, setTop] = useState(0);
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    const header = document.querySelector('header');
+    setTop(header ? Math.max(0, Math.round(header.getBoundingClientRect().bottom)) : 0);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -46,8 +56,8 @@ export default function CartDrawer() {
     const previouslyFocused =
       active && active !== document.body
         ? active
-        : document.querySelector<HTMLElement>('button[aria-label^="Open cart"]');
-    closeButtonRef.current?.focus();
+        : document.querySelector<HTMLElement>('[data-cart-toggle]');
+    drawerRef.current?.focus({ preventScroll: true });
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -56,13 +66,16 @@ export default function CartDrawer() {
       }
       const drawer = drawerRef.current;
       if (event.key !== 'Tab' || !drawer) return;
-      const focusable = Array.from(
-        drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), select, input')
-      );
+      // Tab cycles through the drawer and the header's cart button, which closes it.
+      const toggle = document.querySelector<HTMLElement>('[data-cart-toggle]');
+      const focusable = [
+        ...(toggle ? [toggle] : []),
+        ...Array.from(drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), select, input')),
+      ];
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      if (!drawer.contains(document.activeElement)) {
+      if (!focusable.includes(document.activeElement as HTMLElement)) {
         event.preventDefault();
         first.focus();
       } else if (event.shiftKey && document.activeElement === first) {
@@ -77,7 +90,7 @@ export default function CartDrawer() {
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
-      previouslyFocused?.focus();
+      previouslyFocused?.focus({ preventScroll: true });
     };
   }, [isOpen]);
 
@@ -146,46 +159,41 @@ export default function CartDrawer() {
     }
   };
 
-  if (!isOpen) return null;
-
+  // The drawer stays in the page so it can slide in and out. When closed it is
+  // hidden (visibility), which also keeps it out of the tab order and screen readers;
+  // on close, hiding waits until the 300ms slide-out has finished.
   return (
-    <div className="fixed inset-0 z-50 bg-club-blue-dark/60">
+    <div
+      style={{ top }}
+      className={`fixed inset-x-0 bottom-0 z-[35] motion-reduce:[transition:none] ${
+        isOpen ? 'visible [transition:visibility_0s]' : 'pointer-events-none invisible [transition:visibility_0s_linear_300ms]'
+      }`}
+    >
+      {/* Only the backdrop fades; the drawer stays solid while it slides. */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-club-blue-dark/60 transition-opacity duration-300 motion-reduce:transition-none ${
+          isOpen ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
       <div
         ref={drawerRef}
+        id="cart-drawer"
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-title"
-        className="fixed right-0 top-0 flex h-full w-full max-w-md flex-col border-l-2 border-dark bg-club-slip p-5 shadow-[-10px_0_0_#22221E] sm:w-[420px] sm:p-6"
+        tabIndex={-1}
+        className={`absolute bottom-0 right-0 top-0 flex w-full outline-none max-w-md flex-col border-l-2 border-dark bg-club-slip p-5 shadow-[-10px_0_0_#22221E] transition-transform duration-300 motion-reduce:transition-none sm:w-[420px] sm:p-6 ${
+          isOpen ? 'translate-x-0 ease-out' : 'translate-x-[calc(100%+12px)] ease-in'
+        }`}
       >
-        <div className="flex items-start justify-between border-b-2 border-dashed border-dark pb-4">
+        <div className="border-b-2 border-dashed border-dark pb-4">
           <div>
             <p className="micro">A–OK / Store receipt</p>
             <h2 id="cart-title" className="display-heading mt-1 text-5xl">
               Your cart
             </h2>
           </div>
-          <button
-            ref={closeButtonRef}
-            onClick={closeCart}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center border-2 border-dark bg-club-paper hover:bg-club-yellow"
-            aria-label="Close cart"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
         </div>
 
         {cart.length === 0 ? (

@@ -134,6 +134,8 @@ export function ColorSelector({
       black: 'bg-black',
       white: 'bg-white',
       beige: 'bg-[#D9C7A7]',
+      natural: 'bg-[#E8DACD]', // Gildan 5000 Natural, per the production notes
+      oat: 'bg-[#EAE2CF]', // sampled from the Hallucination Club oat mockup
       red: 'bg-red-500',
       blue: 'bg-blue-500',
       green: 'bg-green-500',

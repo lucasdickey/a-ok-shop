@@ -163,13 +163,13 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative flex min-h-[575px] min-w-0 items-center justify-center overflow-hidden px-7 pb-[142px] pt-12 lg:px-12 lg:pb-[155px] lg:pt-16">
+        <div className="star-trigger relative flex min-h-[575px] min-w-0 items-center justify-center overflow-hidden px-7 pb-[142px] pt-12 lg:px-12 lg:pb-[155px] lg:pt-16">
           <div
             className="absolute h-[60%] w-[90%] -rotate-[35deg] rounded-[50%] border border-dark"
             aria-hidden="true"
           />
           <span className="absolute left-4 top-6 z-[1] text-[66px] text-primary lg:top-16 lg:text-[84px]" aria-hidden="true">
-            ✳
+            <span className="star-spin">✳</span>
           </span>
           {heroImage && (
             <div className="relative w-full max-w-[510px] -rotate-[4deg] rounded-t-[260px] border-2 border-dark bg-club-paper px-4 pt-4 shadow-[8px_8px_0_#22221E] lg:px-5 lg:pt-5 lg:shadow-hard-lg">
@@ -217,13 +217,14 @@ export default async function Home() {
 
       {/* Ticker */}
       <div
-        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
+        className="star-trigger flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
         aria-label="Brand statement"
       >
         {TICKER.map((line, index) => (
           <span key={line} className={`flex items-center gap-4 ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}>
             {index > 0 && (
-              <b className="text-[17px] sm:text-2xl" aria-hidden="true">
+              // Stars spin one after another when the ticker is hovered.
+              <b className="star-spin text-[17px] sm:text-2xl" style={{ transitionDelay: `${(index - 1) * 90}ms` }} aria-hidden="true">
                 ✳
               </b>
             )}
@@ -245,22 +246,31 @@ export default async function Home() {
         >
           Popular
           <br />
-          line items<span className="text-primary">.</span>
+          line items<span className="text-primary"><span className="period-pulse">.</span></span>
         </SectionHeading>
-        <div className="mb-8 flex flex-col items-start justify-between gap-3 border-y-2 border-dashed border-dark py-3.5 sm:flex-row sm:items-center">
-          <nav aria-label="Shop by category" className="flex flex-wrap gap-1.5 sm:gap-2">
+        {/* These leave the homepage for the shop, so they read as arrow links, not filter toggles. */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-2 border-y-2 border-dashed border-dark py-3 sm:flex-row sm:items-center sm:gap-4">
+          <nav aria-label="Browse the full shop" className="flex flex-wrap items-center gap-x-5 gap-y-0">
+            <span className="micro w-full sm:w-auto">Browse the full shop:</span>
             {[
               { href: "/products", label: "All pieces" },
               { href: "/products?category=t-shirts", label: "Tees" },
               { href: "/products?category=hoodies", label: "Hoodies" },
-              { href: "/products?category=hats", label: "Hats" },
             ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="inline-flex min-h-[44px] items-center border border-dark px-3 text-xs no-underline hover:bg-dark hover:text-club-paper sm:px-5 sm:text-[13px]"
+                className="group inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold no-underline hover:text-primary"
               >
                 {link.label}
+                {/* The arrow's space is always kept, so showing it on hover shifts nothing.
+                    Touch screens (no hover) don't get the arrow at all. */}
+                <span
+                  aria-hidden="true"
+                  className="hidden w-[1em] opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none [@media(hover:hover)]:inline-block"
+                >
+                  ↗
+                </span>
               </Link>
             ))}
           </nav>
@@ -313,7 +323,7 @@ export default async function Home() {
             We’re all
             <br />a little
             <br />
-            <span className="text-primary">misaligned.</span>
+            <span className="text-primary">misaligned<span className="period-pulse">.</span></span>
           </h2>
           <p className="mb-4 max-w-[440px]">
             Somewhere between a happy accident and a very bad idea, you found your people.
