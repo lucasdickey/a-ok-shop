@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     siteName: "a-ok.shop",
     images: [
       {
-        url: "/images/og_image.png",
-        width: 768,
-        height: 512,
-        alt: "A-OK Shop - Apes On Keys",
+        url: "/images/og-club-receipt.png",
+        width: 1200,
+        height: 630,
+        alt: "Good taste. Keep the receipt. The Hallucination Club v1.0 tee in navy with an A-OK receipt ticket, $30.",
       }
     ],
     locale: "en_US",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ꓘO-∀ - Shop A-OK Merch",
     description: "Apes On Keys - Nerd Streetwear (for real)",
-    images: ["/images/og_image.png"],
+    images: ["/images/og-club-receipt.png"],
   },
 };
 
