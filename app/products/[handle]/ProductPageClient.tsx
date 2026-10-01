@@ -84,20 +84,28 @@ export function ColorSelector({
   variants,
   colorAvailability,
   onColorSelect,
+  defaultColor,
+  swatches,
 }: {
   colors: string[];
   variants: any[];
   colorAvailability: Record<string, boolean>;
   onColorSelect: (color: string, variantId: string) => void;
+  /** The color shown in the first photo, so the page opens with matching swatch and photo. */
+  defaultColor?: string;
+  /** Swatch color per color name, measured from the photos. */
+  swatches?: Record<string, string>;
 }) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   // Set a default color when the component mounts
   useEffect(() => {
     if (colors.length > 0 && !selectedColor) {
-      const defaultColor =
-        colors.find((c) => c.toLowerCase() === 'black') || colors[0];
-      handleColorClick(defaultColor);
+      const startColor =
+        (defaultColor && colors.includes(defaultColor) ? defaultColor : undefined) ||
+        colors.find((c) => c.toLowerCase() === 'black') ||
+        colors[0];
+      handleColorClick(startColor);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colors]);
@@ -161,7 +169,8 @@ export function ColorSelector({
             key={color}
             onClick={() => handleColorClick(color)}
             aria-pressed={selectedColor === color}
-            className={`h-11 w-11 rounded-full border-2 border-dark ${getColorStyle(color)} ${
+            style={swatches?.[color] ? { backgroundColor: swatches[color] } : undefined}
+            className={`h-11 w-11 rounded-full border-2 border-dark ${swatches?.[color] ? '' : getColorStyle(color)} ${
               selectedColor === color
                 ? 'shadow-hard-sm ring-2 ring-dark ring-offset-2 ring-offset-club-paper'
                 : 'hover:-translate-y-0.5'
@@ -192,6 +201,7 @@ export function ProductDetails({
   colorOptions,
   colorAvailability,
   selectedImageIndex,
+  onColorChange,
 }: {
   product: any;
   images: any[];
@@ -205,6 +215,8 @@ export function ProductDetails({
   colorOptions?: string[];
   colorAvailability: Record<string, boolean>;
   selectedImageIndex: number;
+  /** Called when a color is chosen, so the gallery can show that color's photo. */
+  onColorChange?: (color: string) => void;
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -215,6 +227,7 @@ export function ProductDetails({
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
+    onColorChange?.(color);
   };
 
   // Pick the variant by color. Size isn't part of the match: clothing is printed on demand in
@@ -256,6 +269,8 @@ export function ProductDetails({
           variants={variants}
           colorAvailability={colorAvailability}
           onColorSelect={handleColorSelect}
+          defaultColor={images[0]?.color}
+          swatches={product.swatches}
         />
       )}
 
@@ -372,6 +387,12 @@ export function ProductPageContent({
 }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  // Show the chosen color's first photo; colors without one leave the photo as it is.
+  const showColor = (color: string) => {
+    const index = images.findIndex((image) => image.color === color);
+    if (index !== -1) setSelectedImageIndex(index);
+  };
+
   return (
     <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-14">
       {/* Product Images */}
@@ -429,6 +450,7 @@ export function ProductPageContent({
         colorOptions={colorOptions}
         colorAvailability={colorAvailability}
         selectedImageIndex={selectedImageIndex}
+        onColorChange={showColor}
       />
     </div>
   );

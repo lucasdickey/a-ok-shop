@@ -15,6 +15,8 @@ export type Product = {
   featuredOrder?: number; // Display order for featured products
   /** Search and social-preview copy for the product page, from the product's copy file. */
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
+  /** Swatch color per Color option value, measured from the product's photos. */
+  swatches?: Record<string, string>;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -43,6 +45,8 @@ export type Product = {
         altText: string | null;
         width: number;
         height: number;
+        /** The garment color this photo shows; artwork-only images have none. */
+        color?: string;
       };
     }>;
   };
@@ -103,6 +107,8 @@ export type SimpleProduct = {
   featured?: boolean;
   featuredOrder?: number;
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
+  /** Swatch color per Color option value, measured from the product's photos. */
+  swatches?: Record<string, string>;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -115,6 +121,7 @@ export type SimpleProduct = {
         id: string;
         url: string;
         altText: string;
+        color?: string;
       };
     }>;
   };
@@ -209,6 +216,7 @@ function loadMappedProducts(): SimpleProduct[] {
     featured: product.featured,
     featuredOrder: product.featuredOrder,
     seo: product.seo,
+    swatches: product.swatches,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,
@@ -221,6 +229,7 @@ function loadMappedProducts(): SimpleProduct[] {
           id: edge.node.id,
           url: edge.node.url,
           altText: edge.node.altText || product.title,
+          color: edge.node.color,
         },
       })),
     },
