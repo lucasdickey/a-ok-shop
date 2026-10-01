@@ -69,7 +69,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000001",
                   "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-black-front.webp",
-                  "altText": "Black A-OK GLITCHED VECTORS TEE tee, front",
+                  "altText": "Black A-OK GLITCHED VECTORS TEE, front",
                   "width": 970,
                   "height": 626,
                   "color": "Black"
@@ -79,7 +79,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000002",
                   "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-black-back.webp",
-                  "altText": "Black A-OK GLITCHED VECTORS TEE tee, back",
+                  "altText": "Black A-OK GLITCHED VECTORS TEE, back",
                   "width": 960,
                   "height": 702,
                   "color": "Black"
@@ -213,7 +213,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000005",
                   "url": "/images/products/a-ok-the-typewriter-beige-front.webp",
-                  "altText": "Beige HALLUCINATED KEYSTROKES TEE tee, front",
+                  "altText": "Beige HALLUCINATED KEYSTROKES TEE, front",
                   "width": 950,
                   "height": 1146,
                   "color": "Beige"
@@ -223,7 +223,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000006",
                   "url": "/images/products/a-ok-the-typewriter-brown-front.webp",
-                  "altText": "Brown HALLUCINATED KEYSTROKES TEE tee, front",
+                  "altText": "Brown HALLUCINATED KEYSTROKES TEE, front",
                   "width": 950,
                   "height": 1146,
                   "color": "Brown"
@@ -638,7 +638,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000007",
                   "url": "/images/products/a-ok-monkey-master-black-front.webp",
-                  "altText": "Black A-OK PUPPET MASTER TEE tee, front",
+                  "altText": "Black A-OK PUPPET MASTER TEE, front",
                   "width": 950,
                   "height": 1146,
                   "color": "Black"
@@ -648,7 +648,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000008",
                   "url": "/images/products/a-ok-monkey-master-black-back.webp",
-                  "altText": "Black A-OK PUPPET MASTER TEE tee, back",
+                  "altText": "Black A-OK PUPPET MASTER TEE, back",
                   "width": 954,
                   "height": 1164,
                   "color": "Black"
@@ -658,7 +658,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000009",
                   "url": "/images/products/a-ok-monkey-master-red-front.webp",
-                  "altText": "Red A-OK PUPPET MASTER TEE tee, front",
+                  "altText": "Red A-OK PUPPET MASTER TEE, front",
                   "width": 964,
                   "height": 1158,
                   "color": "Red"
@@ -668,7 +668,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000010",
                   "url": "/images/products/a-ok-monkey-master-red-back.webp",
-                  "altText": "Red A-OK PUPPET MASTER TEE tee, back",
+                  "altText": "Red A-OK PUPPET MASTER TEE, back",
                   "width": 954,
                   "height": 1164,
                   "color": "Red"
@@ -826,7 +826,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000011",
                   "url": "/images/products/a-ok-octo-ape-white-front.webp",
-                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE tee, front",
+                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE, front",
                   "width": 757,
                   "height": 742,
                   "color": "White"
@@ -836,7 +836,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000012",
                   "url": "/images/products/a-ok-octo-ape-white-back.webp",
-                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE tee, back",
+                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE, back",
                   "width": 998,
                   "height": 1076,
                   "color": "White"
@@ -846,7 +846,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000013",
                   "url": "/images/products/a-ok-octo-ape-red-front.webp",
-                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE tee, front",
+                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE, front",
                   "width": 757,
                   "height": 742,
                   "color": "Red"
@@ -856,7 +856,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000014",
                   "url": "/images/products/a-ok-octo-ape-red-back.webp",
-                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE tee, back",
+                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE, back",
                   "width": 998,
                   "height": 1076,
                   "color": "Red"
@@ -1003,7 +1003,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000015",
                   "url": "/images/products/1984-ape-black-front.webp",
-                  "altText": "Black A-OK 2034 PROPHECY HOODIE hoodie, front",
+                  "altText": "Black A-OK 2034 PROPHECY HOODIE, front",
                   "width": 1044,
                   "height": 1036,
                   "color": "Black"
@@ -1013,7 +1013,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000016",
                   "url": "/images/products/1984-ape-white-front.webp",
-                  "altText": "White A-OK 2034 PROPHECY HOODIE hoodie, front",
+                  "altText": "White A-OK 2034 PROPHECY HOODIE, front",
                   "width": 1044,
                   "height": 1036,
                   "color": "White"
@@ -1179,7 +1179,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000017",
                   "url": "/images/products/same-vibes-but-more-black-front.webp",
-                  "altText": "Black A-OK DAY 2 MONKEY HOODIE hoodie, front",
+                  "altText": "Black A-OK DAY 2 MONKEY HOODIE, front",
                   "width": 500,
                   "height": 478,
                   "color": "Black"
@@ -3137,7 +3137,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000026",
                   "url": "/images/products/a-ok-all-angles-tee-white-front.webp",
-                  "altText": "White A-OK All Angles Tee tee, front",
+                  "altText": "White A-OK All Angles Tee, front",
                   "width": 1122,
                   "height": 1402,
                   "color": "White"
@@ -3147,7 +3147,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000027",
                   "url": "/images/products/a-ok-all-angles-tee-natural-front.webp",
-                  "altText": "Natural A-OK All Angles Tee tee, front",
+                  "altText": "Natural A-OK All Angles Tee, front",
                   "width": 1122,
                   "height": 1402,
                   "color": "Natural"
