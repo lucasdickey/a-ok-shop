@@ -99,6 +99,9 @@ function SectionHeading({
   );
 }
 
+// The product whose photo sits beside "Real human. Excellent taste."
+const CLUB_PRODUCT_HANDLE = "same-vibes-but-more";
+
 const TICKER = ["Confidence: high", "Accuracy: debatable", "Outfit: A–OK", "Keep the interesting mistakes"];
 
 export default async function Home() {
@@ -120,9 +123,11 @@ export default async function Home() {
   const galleryImages = [...chaosMonkeyImages, ...(await getGalleryImages())];
   const latestDrop = getLatestDrop();
 
-  // The hero ticket and the club photo come from the featured products in the catalog.
+  // The hero ticket comes from the first featured product. The club photo stays on the
+  // real-person hoodie shot ("Real human."), whatever is featured.
   const heroProduct = productsToShow[0];
-  const clubProduct = productsToShow[productsToShow.length - 1];
+  const { getProductByHandle } = await import("@/app/lib/catalog");
+  const clubProduct = getProductByHandle(CLUB_PRODUCT_HANDLE) ?? productsToShow[productsToShow.length - 1];
   const imageOf = (product?: SimpleProduct) => product?.images.edges[0]?.node;
   const heroImage = imageOf(heroProduct);
   const clubImage = imageOf(clubProduct);
@@ -278,7 +283,7 @@ export default async function Home() {
             {productsToShow.length} featured line {productsToShow.length === 1 ? "item" : "items"}
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {productsToShow.map((product, index) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}
