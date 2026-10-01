@@ -58,7 +58,7 @@ const stripTypes = (nodeModule as unknown as { stripTypeScriptTypes: Strip }).st
 export type Renderer = {
   /** Calls `render(spec)` in the page and returns the encoded image. */
   render(spec: object): Promise<Buffer>;
-  close(): void;
+  close(): Promise<void>;
 };
 
 /**
@@ -154,11 +154,19 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
       if (typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) throw new Error("render returned no image");
       return Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
     },
-    close(): void {
+    async close(): Promise<void> {
       socket.close();
-      chrome.kill("SIGKILL");
       server.close();
-      fs.rmSync(profile, { recursive: true, force: true });
+      // Chrome keeps writing to its profile while it dies; removing the folder before it exits fails with ENOTEMPTY.
+      const exited = chrome.exitCode !== null || chrome.signalCode !== null ? Promise.resolve() : new Promise((resolve) => chrome.once("exit", resolve));
+      chrome.kill("SIGKILL");
+      await Promise.race([exited, new Promise((resolve) => setTimeout(resolve, 5_000))]);
+      // A leftover temp folder is harmless, so cleanup never fails the run.
+      try {
+        fs.rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+      } catch (error) {
+        log(`could not remove ${profile}: ${(error as Error).message}`);
+      }
     },
   };
 }
