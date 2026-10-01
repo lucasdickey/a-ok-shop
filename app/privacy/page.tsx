@@ -96,6 +96,10 @@ export default function PrivacyPolicy() {
           </p>
           <ul className="list-disc pl-6 mb-4 space-y-2">
             <li>Remember your cart contents</li>
+            <li>
+              Remember which Chaos Monkeys you asked us to print, using a random ID with no personal details.
+              To keep those counts fair, we also store a scrambled form of your IP address, never the address itself.
+            </li>
             <li>Analyze site traffic and usage patterns</li>
             <li>Improve site performance and user experience</li>
           </ul>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
 import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
+import PrintRequestButton from "@/app/components/PrintRequestButton";
 import ProductCard from "@/app/components/product/ProductCard";
 import type { SimpleProduct } from "@/app/lib/catalog";
 import { formatDropDate, getChaosMonkeys, getLatestDrop } from "@/app/lib/chaos-monkeys";
@@ -390,15 +391,18 @@ export default async function Home() {
             {/* Phones swipe through the drop sideways; wider screens get a grid. */}
             <div className="-mx-5 mb-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {latestDrop.map((monkey, index) => (
-                <Link
+                <div
                   key={monkey.id}
-                  href={`/chaos-monkeys#n${monkey.id}`}
-                  className={`group block w-[80%] shrink-0 snap-center border-2 border-dark sm:w-auto bg-club-paper p-3 pb-4 text-dark no-underline shadow-hard-lg transition-transform motion-reduce:transition-none ${
+                  className={`group w-[80%] shrink-0 snap-center border-2 border-dark sm:w-auto bg-club-paper p-3 pb-4 text-dark shadow-hard-lg transition-transform motion-reduce:transition-none ${
                     index % 2 === 0 ? "sm:-rotate-2" : "sm:rotate-2"
                   } hover:rotate-0`}
                 >
-                  <ChaosMonkeyCard monkey={monkey} />
-                </Link>
+                  {/* The button sits outside the link, so pressing it doesn't open the archive. */}
+                  <Link href={`/chaos-monkeys#n${monkey.id}`} className="block text-dark no-underline">
+                    <ChaosMonkeyCard monkey={monkey} />
+                  </Link>
+                  <PrintRequestButton id={monkey.id} title={monkey.title} />
+                </div>
               ))}
             </div>
           </>

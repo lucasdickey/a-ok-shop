@@ -8,6 +8,7 @@ type AnalyticsEvents = {
   game_won: { tokens_collected: number };
   discount_code_issued: Record<string, never>;
   discount_code_failed: { reason: string };
+  print_request_changed: { monkey_id: string; wanted: boolean };
 };
 
 let client: PostHog | null = null;
