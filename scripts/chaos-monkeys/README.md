@@ -6,7 +6,7 @@ The daily drop of new A-OK apes, made on this Mac using the Claude Code and Code
 |---|---|---|
 | Style | The tool | A different style per draft from `STYLES.md` (box logo, varsity, woodcut, tattoo flash, and about twenty more), weighted toward the styles the person has kept |
 | Brief | Claude | `claude -p --restricted`: six briefs in the brand voice (`BRAND.md`), each with its printed words, garment, product copy, and marketing copy, avoiding jokes already published or drafted in the last two weeks and following past feedback |
-| Topical slot | Zingers + Claude | One brief riffs on the day's AI/tech story from [Zingers](https://zingers.dev) (`/api/zingers`), with no company or person names. It is skipped if Zingers is unreachable |
+| Topical slot | Zingers + Claude | Off by default; `chaos draft --zingers` adds one brief that riffs on the day's AI/tech story from [Zingers](https://zingers.dev) (`/api/zingers`), with no company or person names |
 | Illustrate | GPT-6-Astra | `codex exec` with Codex's built-in image tool. Most styles get the finished print artwork on a swatch of the garment colour; the two house styles get a transparent cutout drawn from the badge and hoodie reference art |
 | Compose | Claude's templates | `render/templates.ts` in headless Chrome: **specimen** (giant title behind the ape) and **form** (die-cut sticker, rubber-stamp title) |
 | Judge | Claude | Reads every draft and scores spelling, character, rules, and whether the joke lands at thumbnail size |

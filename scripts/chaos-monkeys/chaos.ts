@@ -2,7 +2,7 @@
  * A-OK Chaos Monkeys: the daily drop, made on this Mac with the Claude and ChatGPT logins it already has.
  * No API keys, no CI. See README.md.
  *
- *   chaos draft [--count 6] [--date RUN] [--force]           brief, illustrate, compose, judge, contact sheet (~10 min)
+ *   chaos draft [--count 6] [--date RUN] [--force] [--zingers]  brief, illustrate, compose, judge, contact sheet (~10 min)
  *   chaos status [--date RUN]                                the latest drafts, their scores, and what shipped
  *   chaos judge [--date RUN]                                 re-score a run's drafts and rebuild its contact sheet
  *   chaos review [--date RUN] --out DIR                      export a run for the feedback page (index.html, drafts.json, img/)
@@ -13,7 +13,8 @@
  *   chaos install | uninstall                                the daily job (9:07 and at login) and the /chaos-monkeys skill
  *
  * RUN is a date (2026-10-01), or a date with a label for an extra batch that leaves the daily run alone
- * (2026-10-01-apparel). Without --date, commands use the latest run.
+ * (2026-10-01-apparel). Without --date, commands use the latest run. --zingers adds a draft that riffs on the day's
+ * Zingers story; it is off by default.
  */
 import fs from "node:fs";
 import os from "node:os";
@@ -299,7 +300,7 @@ async function draft(options: Options): Promise<void> {
   try {
     await preflight();
     const published = await publishedOn("main");
-    const topic = await fetchTopic(date);
+    const topic = options.flags.has("--zingers") ? await fetchTopic(date) : null;
     const feedback = pastFeedback();
     log(`briefing ${count} drafts for ${id}${topic ? `; topical story: ${topic.headline}` : ""}${feedback.lines.length ? `; learning from ${feedback.lines.length} past verdicts` : ""}`);
     const briefs = await writeBriefs({

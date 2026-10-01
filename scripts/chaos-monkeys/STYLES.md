@@ -4,7 +4,27 @@ Each draft is a tee or hoodie graphic in one of the styles below. The tool picks
 
 Homage is part of streetwear, and it is welcome here as homage to a *format*: the box logo, the monogram canvas, the bootleg tee, the varsity arc, the warning label. Never copy another brand's name, wordmark, logo, character, or signature pattern. The words are always A-OK's own, and BRAND.md still governs the character, the palette, and the rules.
 
-Each style is a `## id · Name` heading followed by `engine:` (`astra`, `hybrid specimen`, or `hybrid form`), `text:` (how many short printed strings it allows, beyond the cap and hoodie lettering), an optional `weight:` (relative chance of being picked, default 1), and a description that both models read. Add, remove, or rewrite styles freely.
+Each style is a `## id · Name` heading followed by `engine:` (`astra`, `hybrid specimen`, or `hybrid form`), `text:` (how many short printed strings it allows, beyond the cap and hoodie lettering), an optional `weight:` (relative chance of being picked, default 1; 0 retires a style without deleting it), and a description that both models read. Add, remove, or rewrite styles freely.
+
+Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern.
+
+## icon · Street-art icon
+engine: astra
+text: 1
+weight: 2
+Street-art poster icon: the ape's face alone, posterized into three flat tones of red, black and cream with heavy shadow shapes, inside a simple circle or star, with one bold condensed word beneath. Stark, iconic and calm, the way a wheat-pasted portrait reads from across the street.
+
+## wheatpaste · Wheat-paste poster
+engine: astra
+text: 1
+weight: 2
+A street poster as flat artwork: one big posterized image of the ape doing one thing, with torn-paper edges, creases and halftone printed into the art, two or three inks and at most one word. Confident and raw, with nothing extra in the frame.
+
+## stencil · Spray stencil
+engine: astra
+text: 1
+weight: 2
+A single-layer spray-paint stencil of the ape doing one thing: hard cut edges with stencil bridges, light overspray, one red accent, and at most one stencilled word. Minimal and graphic.
 
 ## box-logo · Box logo
 engine: astra
@@ -59,6 +79,7 @@ Luxury monogram homage: a repeating canvas of an interlocked A-OK monogram, tiny
 ## advisory · Advisory label
 engine: astra
 text: 2
+weight: 0
 The music warning-label idiom turned on AI output: a stark black-and-white rectangle with bold condensed words (for example a top line and a big bottom line, like UNVERIFIED / OUTPUT). The ape appears small beside or peeking over the label. Big, blunt, mostly type.
 
 ## woodcut · Woodcut
@@ -104,7 +125,8 @@ Swiss International Style: a strict grid, the ape simplified into circles and re
 ## pattern · All-over pattern
 engine: astra
 text: 0
-A repeating all-over print: small ape vignettes doing variations on one action, tiled with AI glyphs. No words at all.
+weight: 2
+A repeating all-over print in the spirit of a luxury house's printed silk: small ape vignettes doing variations on one action, evenly spaced and tiled with AI glyphs, tidy and tonal. No words at all.
 
 ## chest-hit · Small chest hit
 engine: astra
@@ -114,6 +136,7 @@ A minimal left-chest graphic: one crisp ape icon doing one thing, with at most o
 ## comic · Comic panel
 engine: astra
 text: 1
+weight: 0
 One panel of a vintage comic book: Ben-Day dots, a dramatic angle, the ape mid-reaction, and one speech or thought balloon with a short line.
 
 ## specimen · Specimen poster
@@ -124,4 +147,5 @@ The house poster: the title in giant condensed type behind the ape and the sloga
 ## form · Official form
 engine: hybrid form
 text: 2
+weight: 0
 The house form: the ape as a die-cut sticker on an official-looking form, the title as a red rubber stamp and the slogan as the footer. Prints the title, the slogan and the form rows.

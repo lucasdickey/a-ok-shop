@@ -11,9 +11,9 @@ A run is a date (`2026-10-01`) or a date with a label (`2026-10-01-apparel`) for
 
 ## Show the latest drafts
 
-1. Run `~/.a-ok-chaos/bin/chaos status`. It prints the contact sheet path and each draft's title, score, style, and state. A `zingers` tag marks the topical draft, which riffs on that day's Zingers story.
+1. Run `~/.a-ok-chaos/bin/chaos status`. It prints the contact sheet path and each draft's title, score, style, and state. A `zingers` tag marks a topical draft, which only exists when the run used `--zingers` (off by default).
 2. Read the contact sheet with the Read tool. If you can send files to the user, send it too.
-3. Summarize in a few lines: the top two or three by score and why, and any flags (TEXT, OFF-MODEL, RULES, JOKE?). Recommend a pick of two or three, usually including the topical one if it scored well. Then ask which to ship, or offer the review page for detailed feedback.
+3. Summarize in a few lines: the top two or three by score and why, and any flags (TEXT, OFF-MODEL, RULES, JOKE?). Recommend a pick of two or three. Then ask which to ship, or offer the review page for detailed feedback.
 
 ## Review page and feedback
 
