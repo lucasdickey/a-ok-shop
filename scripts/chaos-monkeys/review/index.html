@@ -1,0 +1,363 @@
+<title>Chaos Monkeys Review</title>
+<!--
+  The feedback page for a run of Chaos Monkeys drafts. `chaos review --out DIR` copies this file next to the run's
+  drafts.json and img/, and the folder is published as a claude.ai Artifact with the `db` capability. Verdicts and
+  notes are stored in the Artifact's database (collection "feedback", one document per draft; collection "notes",
+  one document per run), and `chaos feedback` imports them into run.json, where the next briefs learn from them.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a contact sheet. Header with the tally and the batch note, then a grid of drafts, each with its verdict. */
+:root {
+  --bg: #efe6d3;
+  --surface: #f8f2e6;
+  --fg: #141213;
+  --muted: #6b6155;
+  --line: #d6c9b0;
+  --red: #c8161d;
+  --red-ink: #ffffff;
+  --keep: #1f6b45;
+  --keep-bg: #dcebdc;
+  --reject-bg: #f6d9d6;
+  --display: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0d0e; --surface: #181617; --fg: #f1e8d6; --muted: #a3988a; --line: #332e2b;
+    --red: #e2393f; --red-ink: #ffffff; --keep: #7fd1a2; --keep-bg: #173527; --reject-bg: #3d1719;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0d0e; --surface: #181617; --fg: #f1e8d6; --muted: #a3988a; --line: #332e2b;
+  --red: #e2393f; --red-ink: #ffffff; --keep: #7fd1a2; --keep-bg: #173527; --reject-bg: #3d1719;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; gap: 28px; }
+
+header { display: grid; gap: 18px; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+h1 { font: 400 clamp(44px, 7vw, 84px)/.9 var(--display); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; max-width: 68ch; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.chip { font: 600 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; border: 1.5px solid var(--fg); background: transparent; color: var(--fg); padding: 9px 12px; border-radius: 999px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.chip:focus-visible, button:focus-visible, textarea:focus-visible, .shot:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+.batch { display: grid; gap: 6px; max-width: 760px; }
+label.small { font: 600 12px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+textarea { width: 100%; font: 14px/1.45 var(--body); color: var(--fg); background: var(--surface); border: 1.5px solid var(--line); border-radius: 6px; padding: 10px 12px; resize: vertical; min-height: 64px; }
+textarea:disabled { opacity: .6; }
+.notice { font: 13px/1.4 var(--mono); padding: 10px 12px; border: 1.5px dashed var(--red); color: var(--fg); border-radius: 6px; max-width: 760px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 22px; align-items: start; }
+.card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; overflow: hidden; display: grid; min-width: 0; transition: border-color .15s; }
+.card[data-verdict="keep"] { border-color: var(--keep); }
+.card[data-verdict="reject"] { border-color: var(--red); }
+.card[data-verdict="reject"] .shot img { filter: grayscale(.85); opacity: .55; }
+.shot { position: relative; display: block; padding: 0; border: 0; background: var(--line); cursor: zoom-in; aspect-ratio: 1; width: 100%; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.num { position: absolute; left: 10px; top: 10px; font: 400 26px/1 var(--display); background: var(--red); color: var(--red-ink); min-width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center; padding: 2px 8px 0; }
+.flag { position: absolute; right: 10px; top: 10px; font: 600 11px/1 var(--mono); letter-spacing: .08em; background: var(--fg); color: var(--bg); padding: 7px 9px; border-radius: 3px; text-transform: uppercase; }
+.body { padding: 14px 16px 16px; display: grid; gap: 10px; min-width: 0; }
+.meta { display: flex; justify-content: space-between; gap: 10px; font: 12px/1.3 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.meta b { color: var(--fg); font-weight: 600; }
+.score { font-variant-numeric: tabular-nums; white-space: nowrap; }
+h2 { font: 400 34px/.95 var(--display); margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.prints { font: 600 13px/1.4 var(--mono); color: var(--red); overflow-wrap: anywhere; }
+.prints.none { color: var(--muted); font-weight: 400; }
+dl { margin: 0; display: grid; gap: 8px; }
+dt { font: 600 11px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+dd { margin: 2px 0 0; font-size: 14px; overflow-wrap: anywhere; }
+.slogan { font-weight: 700; letter-spacing: .02em; }
+.judge { font-size: 13px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 8px; }
+.verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.verdict button { font: 400 22px/1 var(--display); letter-spacing: .04em; padding: 10px 0 8px; border-radius: 6px; border: 1.5px solid var(--fg); background: transparent; color: var(--fg); cursor: pointer; }
+.verdict button[data-v="keep"][aria-pressed="true"] { background: var(--keep); border-color: var(--keep); color: var(--bg); }
+.verdict button[data-v="reject"][aria-pressed="true"] { background: var(--red); border-color: var(--red); color: var(--red-ink); }
+.verdict button:disabled { opacity: .5; cursor: not-allowed; }
+.status { font: 12px/1.2 var(--mono); color: var(--muted); min-height: 1.2em; }
+.status.err { color: var(--red); }
+
+dialog { border: 0; padding: 0; background: transparent; max-width: min(92vw, 900px); }
+dialog::backdrop { background: rgba(10, 9, 9, .82); }
+dialog img { display: block; width: 100%; height: auto; border-radius: 6px; cursor: zoom-out; }
+footer { color: var(--muted); font: 13px/1.5 var(--mono); }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">A-OK · Chaos Monkeys · Review</div>
+    <h1 id="heading">Loading the drafts</h1>
+    <p class="sub" id="sub">Keep or reject each graphic and say why. Your verdicts save as you go, and the next batch learns from them.</p>
+    <div class="bar" role="group" aria-label="Show">
+      <button class="chip" id="f-all" data-filter="all" aria-pressed="true">All <span></span></button>
+      <button class="chip" id="f-open" data-filter="open" aria-pressed="false">To review <span></span></button>
+      <button class="chip" id="f-keep" data-filter="keep" aria-pressed="false">Kept <span></span></button>
+      <button class="chip" id="f-reject" data-filter="reject" aria-pressed="false">Rejected <span></span></button>
+    </div>
+    <div class="batch">
+      <label class="small" for="batch-note">Notes on the whole set</label>
+      <textarea id="batch-note" rows="2" placeholder="More of this, less of that: styles, garments, how much text, which jokes land."></textarea>
+      <div class="status" id="batch-status"></div>
+    </div>
+    <div class="notice" id="notice" hidden></div>
+  </header>
+
+  <main class="grid" id="grid" aria-live="polite"></main>
+
+  <footer id="footer">When you're done, tell Claude in the chat. It imports your verdicts and notes, and the next drafts lean toward what you kept.</footer>
+</div>
+
+<dialog id="zoom"><img alt=""></dialog>
+
+<script>
+(() => {
+  const grid = document.getElementById("grid");
+  const zoom = document.getElementById("zoom");
+  const batchNote = document.getElementById("batch-note");
+  const batchStatus = document.getElementById("batch-status");
+  const notice = document.getElementById("notice");
+  const state = { run: null, drafts: [], feedback: new Map(), filter: "all", db: null, readOnly: false };
+  const cards = new Map();
+  const queues = new Map();
+  const timers = new Map();
+
+  const el = (tag, attrs = {}, ...children) => {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(attrs)) {
+      if (key === "class") node.className = value;
+      else if (key === "text") node.textContent = value;
+      else node.setAttribute(key, value);
+    }
+    for (const child of children) if (child) node.append(child);
+    return node;
+  };
+
+  function showNotice(text) {
+    notice.textContent = text;
+    notice.hidden = !text;
+  }
+
+  /* ---------------------------------------------------------------- render */
+
+  function card(d) {
+    const verdictButtons = ["keep", "reject"].map((v) =>
+      el("button", { type: "button", "data-v": v, "aria-pressed": "false", id: `v-${d.n}-${v}`, text: v === "keep" ? "Keep" : "Reject" }),
+    );
+    const note = el("textarea", { id: `note-${d.n}`, rows: "2", placeholder: "What works, what doesn't, what to try instead" });
+    const status = el("div", { class: "status" });
+    const img = el("img", { src: d.image, alt: `${d.title}, ${d.style}`, loading: "lazy", width: "900", height: "900" });
+    const shot = el("button", { type: "button", class: "shot", "aria-label": `Enlarge draft ${d.n}` }, img, el("span", { class: "num", text: String(d.n) }));
+    if (d.shipped) shot.append(el("span", { class: "flag", text: `Shipped Nº ${d.shipped}` }));
+    else if (d.topical) shot.append(el("span", { class: "flag", text: "Zingers" }));
+    shot.addEventListener("click", () => {
+      zoom.querySelector("img").src = d.image;
+      zoom.querySelector("img").alt = img.alt;
+      if (typeof zoom.showModal === "function") zoom.showModal();
+    });
+
+    const prints = d.printText.length
+      ? el("div", { class: "prints", text: `Prints: ${d.printText.map((t) => `“${t}”`).join("  /  ")}` })
+      : el("div", { class: "prints none", text: "No words on the shirt" });
+
+    const details = el("dl", {},
+      el("div", {}, el("dt", { text: "Slogan" }), el("dd", { class: "slogan", text: d.slogan })),
+      d.productCopy ? el("div", {}, el("dt", { text: "Product copy" }), el("dd", { text: d.productCopy })) : null,
+      d.marketingCopy ? el("div", {}, el("dt", { text: "Marketing" }), el("dd", { text: d.marketingCopy })) : null,
+    );
+
+    const body = el("div", { class: "body" },
+      el("div", { class: "meta" },
+        el("span", {}, el("b", { text: d.style }), document.createTextNode(` · ${d.garment}`)),
+        el("span", { class: "score", text: d.score === null ? "unscored" : `judge ${d.score}/10` }),
+      ),
+      el("h2", { text: d.title }),
+      prints,
+      details,
+      d.judgeNote ? el("div", { class: "judge", text: `Judge: ${d.judgeNote}` }) : null,
+      el("div", { class: "verdict", role: "group", "aria-label": `Verdict for draft ${d.n}` }, ...verdictButtons),
+      el("label", { class: "small", for: `note-${d.n}`, text: "Why" }),
+      note,
+      status,
+    );
+    const root = el("article", { class: "card", id: `draft-${d.n}`, "data-verdict": "" }, shot, body);
+
+    for (const button of verdictButtons) {
+      button.addEventListener("click", () => {
+        const current = state.feedback.get(d.n) ?? { verdict: null, note: "" };
+        const verdict = current.verdict === button.dataset.v ? null : button.dataset.v;
+        setFeedback(d, { verdict, note: note.value.trim() });
+      });
+    }
+    note.addEventListener("input", () => {
+      clearTimeout(timers.get(d.n));
+      timers.set(d.n, setTimeout(() => flushNote(d), 800));
+    });
+    note.addEventListener("blur", () => flushNote(d));
+
+    cards.set(d.n, { root, verdictButtons, note, status });
+    return root;
+  }
+
+  function paint(n) {
+    const c = cards.get(n);
+    if (!c) return;
+    const fb = state.feedback.get(n) ?? { verdict: null, note: "" };
+    c.root.dataset.verdict = fb.verdict ?? "";
+    for (const button of c.verdictButtons) button.setAttribute("aria-pressed", String(button.dataset.v === fb.verdict));
+    if (document.activeElement !== c.note && c.note.value !== fb.note) c.note.value = fb.note;
+  }
+
+  function tally() {
+    const verdicts = state.drafts.map((d) => state.feedback.get(d.n)?.verdict ?? null);
+    const counts = {
+      all: state.drafts.length,
+      open: verdicts.filter((v) => !v).length,
+      keep: verdicts.filter((v) => v === "keep").length,
+      reject: verdicts.filter((v) => v === "reject").length,
+    };
+    for (const [key, count] of Object.entries(counts)) document.querySelector(`#f-${key} span`).textContent = String(count);
+    for (const d of state.drafts) {
+      const v = state.feedback.get(d.n)?.verdict ?? null;
+      const show = state.filter === "all" || (state.filter === "open" ? !v : v === state.filter);
+      cards.get(d.n).root.hidden = !show;
+    }
+  }
+
+  document.querySelectorAll(".chip").forEach((chip) =>
+    chip.addEventListener("click", () => {
+      state.filter = chip.dataset.filter;
+      document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+      tally();
+    }),
+  );
+  zoom.addEventListener("click", () => zoom.close());
+
+  /* ---------------------------------------------------------------- saving */
+
+  function setStatus(target, text, isError = false) {
+    target.textContent = text;
+    target.classList.toggle("err", isError);
+  }
+
+  /** Serializes writes per document: one write at a time, the latest state last. */
+  function write(path, body, statusEl) {
+    if (!state.db || state.readOnly) return;
+    setStatus(statusEl, "Saving…");
+    const previous = queues.get(path) ?? Promise.resolve();
+    const next = previous.then(() => state.db.doc(path).set(body)).then(
+      () => setStatus(statusEl, "Saved"),
+      (error) => {
+        if (error && error.code === "invalid_argument") {
+          state.readOnly = true;
+          lockInputs();
+          showNotice("You can read this page but not save feedback on it.");
+        }
+        setStatus(statusEl, `Couldn't save: ${error && error.message ? error.message : "unknown error"}`, true);
+      },
+    );
+    queues.set(path, next);
+  }
+
+  function setFeedback(d, fb) {
+    state.feedback.set(d.n, fb);
+    paint(d.n);
+    tally();
+    write(`feedback/${state.run}~${d.n}`, { run: state.run, n: d.n, title: d.title, verdict: fb.verdict, note: fb.note, updatedAt: new Date().toISOString() }, cards.get(d.n).status);
+  }
+
+  function flushNote(d) {
+    clearTimeout(timers.get(d.n));
+    const current = state.feedback.get(d.n) ?? { verdict: null, note: "" };
+    const note = cards.get(d.n).note.value.trim();
+    if (note !== current.note) setFeedback(d, { verdict: current.verdict, note });
+  }
+
+  let batchTimer = null;
+  let batchSaved = "";
+  function flushBatch() {
+    clearTimeout(batchTimer);
+    const note = batchNote.value.trim();
+    if (note === batchSaved) return;
+    batchSaved = note;
+    write(`notes/${state.run}`, { run: state.run, note, updatedAt: new Date().toISOString() }, batchStatus);
+  }
+  batchNote.addEventListener("input", () => {
+    clearTimeout(batchTimer);
+    batchTimer = setTimeout(flushBatch, 900);
+  });
+  batchNote.addEventListener("blur", flushBatch);
+
+  function lockInputs() {
+    batchNote.disabled = true;
+    for (const c of cards.values()) {
+      c.note.disabled = true;
+      for (const button of c.verdictButtons) button.disabled = true;
+    }
+  }
+
+  /* ---------------------------------------------------------------- start */
+
+  async function connect() {
+    const db = window.claude && typeof window.claude.use === "function" ? await window.claude.use("db") : null;
+    if (!db) {
+      lockInputs();
+      showNotice("Feedback can't be saved in this view. Open the page on claude.ai while signed in.");
+      return;
+    }
+    state.db = db;
+    db.collection("feedback").where("run", "==", state.run).onSnapshot(
+      (snap) => {
+        for (const doc of snap.docs) {
+          const data = doc.data();
+          if (!data || typeof data.n !== "number") continue;
+          state.feedback.set(data.n, { verdict: data.verdict === "keep" || data.verdict === "reject" ? data.verdict : null, note: String(data.note ?? "") });
+          paint(data.n);
+        }
+        tally();
+      },
+      (error) => showNotice(`Saved feedback couldn't be loaded (${error.code}). Reload the page to try again.`),
+    );
+    db.doc(`notes/${state.run}`).onSnapshot(
+      (snap) => {
+        const note = snap.exists ? String(snap.data().note ?? "") : "";
+        batchSaved = note;
+        if (document.activeElement !== batchNote) batchNote.value = note;
+      },
+      () => {},
+    );
+  }
+
+  async function start() {
+    let data;
+    try {
+      const response = await fetch("drafts.json", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      data = await response.json();
+    } catch (error) {
+      document.getElementById("heading").textContent = "No drafts to review";
+      showNotice(`drafts.json didn't load (${error.message}). Ask Claude to export the run again with chaos review.`);
+      return;
+    }
+    state.run = data.run;
+    state.drafts = data.drafts;
+    const label = data.run.length > 10 ? `${data.label} · ${data.run.slice(11).replace(/-/g, " ")}` : data.label;
+    document.getElementById("heading").textContent = `${label} · ${data.drafts.length} drafts`;
+    document.title = "Chaos Monkeys Review";
+    if (data.topic) document.getElementById("sub").textContent += ` The draft marked Zingers riffs on the day's story: ${data.topic}`;
+    for (const d of data.drafts) grid.append(card(d));
+    tally();
+    connect();
+  }
+
+  start();
+})();
+</script>

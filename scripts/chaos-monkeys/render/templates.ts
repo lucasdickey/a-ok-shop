@@ -3,6 +3,7 @@
  * Served to the page with its types stripped (see lib/renderer.ts), so it uses erasable TypeScript only.
  *
  *   specimen: the title in giant condensed type behind the ape, the slogan in a bar along the bottom.
+ *             (Most styles are drawn whole by Astra; see STYLES.md. These two templates are the house styles.)
  *   form:     the ape as a die-cut sticker on an official form, the title as a rubber stamp.
  *   image:    re-encodes a finished poster at the publishing size.
  *   sheet:    the contact sheet a person picks from.
@@ -513,7 +514,7 @@ async function image(spec: ImageSpec): Promise<HTMLCanvasElement> {
 }
 
 async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
-  const cols = 3;
+  const cols = spec.items.length > 9 ? 5 : 3;
   const tile = 540;
   const gap = 30;
   const caption = 160;
@@ -531,7 +532,7 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
   ctx.fillText(`CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
   ctx.font = "500 22px Mono";
   ctx.fillStyle = C.grey;
-  ctx.fillText("Pick two or three: /chaos-monkeys ship 1 3 5", gap, 126);
+  ctx.fillText("Pick two or three to ship (/chaos-monkeys ship 1 3 5), or review the whole set (/chaos-monkeys review)", gap, 126);
   if (spec.topic) {
     ctx.fillStyle = C.red;
     ctx.fillText(`Topical, from Zingers: ${spec.topic}`.slice(0, 120), gap, 160);

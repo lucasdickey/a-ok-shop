@@ -4,7 +4,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { MODELS, pngInfo, readBrand, run, type Brief } from "./config.ts";
+import { MODELS, pngInfo, readBrand, readStyles, run, type Brief } from "./config.ts";
 
 /** Codex reported a usage or rate limit; the rest of the day's Astra jobs are skipped. */
 export class AstraUnavailable extends Error {}
@@ -34,24 +34,31 @@ ${brand.rules}
 Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
 }
 
-function posterPrompt(brief: Brief): string {
+function printPrompt(brief: Brief): string {
   const brand = readBrand();
-  return `You are illustrating one finished poster for the A-OK "Chaos Monkeys" series.
+  const style = readStyles().find((s) => s.id === brief.style);
+  const words = brief.printText.length
+    ? `Print these words, each spelled exactly and nothing else: ${brief.printText.map((line) => `"${line}"`).join(", ")}.`
+    : "No words in the print at all.";
+  return `You are illustrating one tee or hoodie graphic for A-OK, an AI-culture streetwear label.
 
-The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions.
+The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions or their poster style.
 
 Use your built-in image generation tool. Never use the CLI fallback, scripts/image_gen.py, or any API key. If the built-in tool is unavailable, stop and say so.
 
-Create ONE finished square poster, at least 1024x1024.
-Scene: ${brief.art}
-Title, large and spelled exactly: "${brief.title}"
-Slogan, clear and spelled exactly: "${brief.slogan}"
-The cap reads "A-OK". The hoodie, if its front is visible, reads "APES ON KEYS". No other text unless the scene explicitly asks for a short prop label.
+Create ONE square image, at least 1024x1024: the flat print artwork for a ${brief.garmentColor} ${brief.garment} (${brief.placement} print), ${
+    brief.placement === "all-over"
+      ? `filling the whole square edge to edge as a swatch of the printed fabric`
+      : `centred on a plain flat ${brief.garmentColor} background that stands in for the fabric, with generous margins`
+  }. No garment, mockup, model, hanger, or photograph: just the artwork as it would be screen-printed.
+Style: ${style ? `${style.name}. ${style.description}` : `${brief.style}.`} Commit to it fully.
+The graphic: ${brief.art}
+Text: ${words} The cap reads "A-OK". If the ape wears the hoodie and its front is visible, it reads "APES ON KEYS". No other letters, numbers, or logos.
 
-Character, matching the references closely: ${brand.character}
-Style: ${brand.style}
-Palette: ${brand.palette}
-Keep all text inside the frame with generous margins; the poster must read as a 300 px thumbnail.
+Character, recognisable in this style: ${brand.character}
+House look: ${brand.style}
+Palette for the inks: ${brand.palette}
+It must read from across a room and as a 300 px thumbnail.
 Rules:
 ${brand.rules}
 
@@ -59,14 +66,14 @@ Save the final image in the current directory as out.png (copy it from where the
 }
 
 /** Draws `brief` in `jobDir` and returns the path of out.png. `refs` are absolute paths to reference images. */
-export async function illustrate(brief: Brief, jobDir: string, refs: string[], mode: "cutout" | "poster"): Promise<string> {
+export async function illustrate(brief: Brief, jobDir: string, refs: string[], mode: "cutout" | "print"): Promise<string> {
   fs.mkdirSync(jobDir, { recursive: true });
   const localRefs = refs.map((ref, i) => {
     const target = path.join(jobDir, `ref-${i + 1}${path.extname(ref)}`);
     fs.copyFileSync(ref, target);
     return target;
   });
-  const prompt = mode === "cutout" ? cutoutPrompt(brief) : posterPrompt(brief);
+  const prompt = mode === "cutout" ? cutoutPrompt(brief) : printPrompt(brief);
   fs.writeFileSync(path.join(jobDir, "prompt.txt"), prompt);
 
   const args = [
