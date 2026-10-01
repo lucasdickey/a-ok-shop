@@ -72,5 +72,23 @@
     "engine": "astra",
     "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
     "parents": []
+  },
+  {
+    "id": "0006",
+    "date": "2026-10-01",
+    "title": "LIMITED PREVIEW",
+    "slogan": "BEST MODEL EVER. TAKE OUR WORD.",
+    "joke": "The ape proudly guards a prize-winning masterpiece that nobody is allowed to see, so its first-place ribbon has to be taken entirely on trust.",
+    "alt": "The A-OK ape stands guard behind a red velvet rope beside a sheet-draped object on a pedestal wearing a giant gold first-place rosette, one palm raised to stop the viewer, under the title LIMITED PREVIEW.",
+    "image": "/chaos-monkeys/0006.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "inspiration": {
+      "label": "Zingers, 2026-10-01",
+      "url": "https://zingers.dev/zingers/2026-10-01"
+    }
   }
 ]
