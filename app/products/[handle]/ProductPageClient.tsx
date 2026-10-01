@@ -134,7 +134,7 @@ export function ColorSelector({
       black: 'bg-black',
       white: 'bg-white',
       beige: 'bg-[#D9C7A7]',
-      natural: 'bg-[#EFE6D2]',
+      natural: 'bg-[#E8DACD]', // Gildan 5000 Natural, per the production notes
       red: 'bg-red-500',
       blue: 'bg-blue-500',
       green: 'bg-green-500',
