@@ -13,6 +13,8 @@ export type Product = {
   stripeProductId?: string; // Stripe product ID for this product
   featured?: boolean; // Whether this product is featured on homepage
   featuredOrder?: number; // Display order for featured products
+  /** Search and social-preview copy for the product page, from the product's copy file. */
+  seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -100,6 +102,7 @@ export type SimpleProduct = {
   stripeProductId?: string;
   featured?: boolean;
   featuredOrder?: number;
+  seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -205,6 +208,7 @@ function loadMappedProducts(): SimpleProduct[] {
     stripeProductId: product.stripeProductId,
     featured: product.featured,
     featuredOrder: product.featuredOrder,
+    seo: product.seo,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,

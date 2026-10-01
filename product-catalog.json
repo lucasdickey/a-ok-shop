@@ -2472,12 +2472,18 @@
           "id": "gid://a-ok/Product/8940000000001",
           "handle": "a-ok-all-angles-tee",
           "title": "A-OK All Angles Tee",
-          "description": "Three views. Same questionable judgment. We asked for another perspective. The ape turned sideways. The All Angles Tee gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable. A character study for people who like to look at a problem from every direction before opening another tab. More context. Same ape. A-OK. Three ape views in a single horizontal composition. Red, black and cream artwork with A-OK and Apes on Keys details. Center-front graphic on a classic crewneck T-shirt.",
-          "descriptionHtml": "<p><strong>Three views. Same questionable judgment.</strong></p><p>We asked for another perspective.</p><p>The ape turned sideways.</p><p>The <strong>All Angles Tee</strong> gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable.</p><p>A character study for people who like to look at a problem from every direction before opening another tab.</p><p><strong>More context. Same ape. A-OK.</strong></p><ul><li>Three ape views in a single horizontal composition.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Center-front graphic on a classic crewneck T-shirt.</li></ul>",
+          "description": "Front, side, back. Three views of the A-OK operator in one graphic. Red hoodie, headphones and the confidence to call this a complete assessment.",
+          "descriptionHtml": "<p><strong>Three views. Same questionable judgment.</strong></p><p>We asked for another perspective.</p><p>The ape turned sideways.</p><p>The <strong>All Angles Tee</strong> gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable.</p><p>A character study for people who like to look at a problem from every direction before opening another tab.</p><p><strong>More context. Same ape. A-OK.</strong></p><ul><li>Three ape views in a single horizontal composition.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Center-front graphic on a classic crewneck T-shirt.</li><li>Catalog colorways: White and Natural.</li></ul>",
           "productType": "T-Shirts",
           "vendor": "A-OK Shop",
           "tags": [
-            "T-shirts"
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "ape graphic",
+            "AI satire",
+            "red hoodie",
+            "character turnaround"
           ],
           "options": [
             {
@@ -2821,7 +2827,11 @@
           "availableForSale": true,
           "createdAt": "2026-10-01T03:30:00Z",
           "updatedAt": "2026-10-01T03:30:00Z",
-          "publishedAt": "2026-10-01T03:30:00Z"
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "A-OK All Angles Tee | Apes on Keys",
+            "description": "The A-OK operator from the front, side and back. A red-hoodie ape graphic tee with three perspectives and no additional certainty."
+          }
         }
       },
       {
@@ -2829,12 +2839,23 @@
           "id": "gid://a-ok/Product/8940000000002",
           "handle": "a-ok-transformer-unit-exploded-view-tee",
           "title": "A-OK Transformer Unit \u2014 Exploded View Tee",
-          "description": "Every part accounted for. Understanding sold separately. We opened up the A-OK ape to see how it works. Inside: a transformer core, a heat sink, several circuit boards, and no obvious explanation for the confidence. The Transformer Unit \u2014 Exploded View Tee presents our red-hoodie operator as a meticulously annotated assembly drawing. Cap off. Headphones separated. Face plate detached. The machinery hangs in order beneath the hoodie, each part assigned a number and a reassuringly specific label. There are 18 callouts. None of them is \u201cunderstanding.\u201d Cream technical linework, red accents, and a black poster field give the whole thing the authority of a service manual. The ape looks about as surprised by its internals as we are. Small inputs. Massive outputs. A useful operating principle. Also how one question becomes an afternoon. For anyone who has ever read the documentation and developed several new questions. A-OK. Inspection ongoing. Original A-OK Transformer Ape artwork, presented as a complete vertical exploded-view plate. The Apes on Keys ape in a red hoodie, with cap, headphones, sneakers, and exposed mechanical assemblies. Eighteen numbered component callouts, from the cap shell to the optional keychain eyelet. Transformer core, heat sink, circuit boards, power management, and I/O details rendered in technical-diagram style. Cream lettering and guide lines, red accents, and metallic details against the original black background. Original A-OK masthead, technical border, figure marker, and \u201cTRANSFORMER UNIT V1.0\u201d heading retained. Artwork includes \u201cSMALL INPUTS. MASSIVE OUTPUTS.\u201d and \u201cCURIOSITY COMPOUNDS INTELLIGENCE.\u201d",
-          "descriptionHtml": "<p><strong>Every part accounted for. Understanding sold separately.</strong></p><p>We opened up the A-OK ape to see how it works.</p><p>Inside: a transformer core, a heat sink, several circuit boards, and no obvious explanation for the confidence.</p><p>The <strong>Transformer Unit \u2014 Exploded View Tee</strong> presents our red-hoodie operator as a meticulously annotated assembly drawing. Cap off. Headphones separated. Face plate detached. The machinery hangs in order beneath the hoodie, each part assigned a number and a reassuringly specific label.</p><p>There are 18 callouts. None of them is \u201cunderstanding.\u201d</p><p>Cream technical linework, red accents, and a black poster field give the whole thing the authority of a service manual. The ape looks about as surprised by its internals as we are.</p><p><strong>Small inputs. Massive outputs.</strong> A useful operating principle. Also how one question becomes an afternoon.</p><p>For anyone who has ever read the documentation and developed several new questions.</p><p><strong>A-OK. Inspection ongoing.</strong></p><ul><li>Original A-OK Transformer Ape artwork, presented as a complete vertical exploded-view plate.</li><li>The Apes on Keys ape in a red hoodie, with cap, headphones, sneakers, and exposed mechanical assemblies.</li><li>Eighteen numbered component callouts, from the cap shell to the optional keychain eyelet.</li><li>Transformer core, heat sink, circuit boards, power management, and I/O details rendered in technical-diagram style.</li><li>Cream lettering and guide lines, red accents, and metallic details against the original black background.</li><li>Original A-OK masthead, technical border, figure marker, and \u201cTRANSFORMER UNIT V1.0\u201d heading retained.</li><li>Artwork includes \u201cSMALL INPUTS. MASSIVE OUTPUTS.\u201d and \u201cCURIOSITY COMPOUNDS INTELLIGENCE.\u201d</li></ul>",
+          "description": "The Apes on Keys operator, taken apart for inspection. A red hoodie, an inference core, and 18 numbered explanations for what might be going on in there. A technical diagram with a very human amount of uncertainty.",
+          "descriptionHtml": "<p><strong>Every part accounted for. Understanding sold separately.</strong></p><p>We opened up the A-OK ape to see how it works.</p><p>Inside: a transformer core, a heat sink, several circuit boards, and no obvious explanation for the confidence.</p><p>The <strong>Transformer Unit \u2014 Exploded View Tee</strong> presents our red-hoodie operator as a meticulously annotated assembly drawing. Cap off. Headphones separated. Face plate detached. The machinery hangs in order beneath the hoodie, each part assigned a number and a reassuringly specific label.</p><p>There are 18 callouts. None of them is \u201cunderstanding.\u201d</p><p>Cream technical linework, red accents, and a black poster field give the whole thing the authority of a service manual. The ape looks about as surprised by its internals as we are.</p><p><strong>Small inputs. Massive outputs.</strong> A useful operating principle. Also how one question becomes an afternoon.</p><p>For anyone who has ever read the documentation and developed several new questions.</p><p><strong>A-OK. Inspection ongoing.</strong></p><ul><li>Original A-OK Transformer Ape artwork, presented as a complete vertical exploded-view plate.</li><li>The Apes on Keys ape in a red hoodie, with cap, headphones, sneakers, and exposed mechanical assemblies.</li><li>Eighteen numbered component callouts, from the cap shell to the optional keychain eyelet.</li><li>Transformer core, heat sink, circuit boards, power management, and I/O details rendered in technical-diagram style.</li><li>Cream lettering and guide lines, red accents, and metallic details against the original black background.</li><li>Original A-OK masthead, technical border, figure marker, and \u201cTRANSFORMER UNIT V1.0\u201d heading retained.</li><li>Artwork includes \u201cSMALL INPUTS. MASSIVE OUTPUTS.\u201d and \u201cCURIOSITY COMPOUNDS INTELLIGENCE.\u201d</li></ul><p><em>Transformer Unit V1.0. All parts present. Conclusions pending.</em></p>",
           "productType": "T-Shirts",
           "vendor": "A-OK Shop",
           "tags": [
-            "T-shirts"
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "Transformer Unit",
+            "exploded view",
+            "technical illustration",
+            "schematic tee",
+            "ape graphic",
+            "AI satire",
+            "engineering humor",
+            "red hoodie",
+            "graphic T-shirt"
           ],
           "options": [
             {
@@ -3057,7 +3078,13 @@
           "availableForSale": true,
           "createdAt": "2026-10-01T03:30:00Z",
           "updatedAt": "2026-10-01T03:30:00Z",
-          "publishedAt": "2026-10-01T03:30:00Z"
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "A-OK Transformer Unit Tee | Apes on Keys",
+            "description": "The A-OK ape, taken apart. An exploded-view graphic tee with a red hoodie, transformer core and 18 technical callouts. Understanding sold separately.",
+            "socialTitle": "A-OK Transformer Unit \u2014 Exploded View Tee",
+            "socialDescription": "Every part accounted for. Understanding sold separately. The Apes on Keys operator, documented down to the optional keychain eyelet."
+          }
         }
       },
       {
@@ -3065,12 +3092,13 @@
           "id": "gid://a-ok/Product/8940000000003",
           "handle": "a-ok-baby-ape-little-operator",
           "title": "Baby Ape \u2014 Little Operator",
-          "description": "Small model. Big plans. Headphones on. Backpack packed. Absolutely no idea what the assignment was. Meet Little Operator: the baby ape with an A-OK cap, a chip on his hoodie, and the confidence of a model that has never once checked its sources. He\u2019s dressed for the future. The future has requested adult supervision. Our little Apes on Keys operator shows up in red, black, and cream, with oversized headphones, an oversized grin, and what we\u2019re choosing to call potential. For anyone learning as they go\u2014and looking suspiciously pleased about it. Still training. Already A-OK. Smiling baby ape with an A-OK cap and backpack. Crown-marked headphones and a microchip emblem on the hoodie. Bold red, black, and cream artwork. A little operator from the Apes on Keys universe. Give the little guy a job. Add to cart.",
+          "description": "Small model. Big plans. The A-OK baby ape arrives in a red hoodie, signature cap, and oversized headphones. Backpack full of potential. Confidence well ahead of the training data.",
           "descriptionHtml": "<p><strong>Small model. Big plans.</strong></p><p>Headphones on. Backpack packed. Absolutely no idea what the assignment was.</p><p>Meet Little Operator: the baby ape with an A-OK cap, a chip on his hoodie, and the confidence of a model that has never once checked its sources.</p><p>He\u2019s dressed for the future. The future has requested adult supervision.</p><p>Our little Apes on Keys operator shows up in red, black, and cream, with oversized headphones, an oversized grin, and what we\u2019re choosing to call potential. For anyone learning as they go\u2014and looking suspiciously pleased about it.</p><p>Still training. Already A-OK.</p><ul><li>Smiling baby ape with an A-OK cap and backpack.</li><li>Crown-marked headphones and a microchip emblem on the hoodie.</li><li>Bold red, black, and cream artwork.</li><li>A little operator from the Apes on Keys universe.</li></ul><p>Give the little guy a job. Add to cart.</p>",
           "productType": "T-Shirts",
           "vendor": "A-OK Shop",
           "tags": [
-            "T-shirts"
+            "T-shirts",
+            "Apes on Keys"
           ],
           "options": [
             {
@@ -3459,7 +3487,11 @@
           "availableForSale": true,
           "createdAt": "2026-10-01T03:30:00Z",
           "updatedAt": "2026-10-01T03:30:00Z",
-          "publishedAt": "2026-10-01T03:30:00Z"
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "Little Operator Baby Ape Graphic Tee | A-OK",
+            "description": "Small model. Big plans. Meet Little Operator, the A-OK baby ape graphic tee with oversized headphones, a red hoodie, and suspicious amounts of confidence."
+          }
         }
       },
       {
@@ -3467,20 +3499,22 @@
           "id": "gid://a-ok/Product/8940000000004",
           "handle": "hallucination-club-2026-edition",
           "title": "HALLUCINATION CLUB v1.0 \u2014 2026 Edition",
-          "description": "Same hallucinations. New ideas. A year ago, the models mostly sat in a box and confidently invented citations. Now they browse. They reason. They call tools. They write code. They operate computers. They delegate work to other agents. They remember things. They make plans. They reconsider those plans. And, occasionally, they still make some shit up. Welcome back to the Hallucination Club . The 2026 edition updates the original A-OK graphic for the agentic era: more capabilities, more autonomy, more elaborate receipts\u2014and the same fundamental uncertainty about whether the machine actually knows what it\u2019s talking about. IDEAS ................................ INFINITE PROMPTS ........................ JUST ONE MORE AGENTS .................................. A-OK TOOLS ................................... A-OK CONTEXT ............................ SOMETIMES REALITY CHECKS ..................... OPTIONAL TOTAL: STILL HALLUCINATING Featuring our original Apes on Keys operator, now surrounded by the increasingly complicated machinery required to turn \u201cpredict the next token\u201d into \u201cplease run my company.\u201d Good ideas. Questionable sources. A-OK.",
+          "description": "The models got agents, tools, memory, browsers, reasoning, and computer access. They did not get certainty. An updated Hallucination Club graphic for the agentic era, featuring the A-OK ape and our new Club Receipt treatment. Same hallucinations. New ideas.",
           "descriptionHtml": "<p><strong>Same hallucinations. New ideas.</strong></p><p>A year ago, the models mostly sat in a box and confidently invented citations.</p><p>Now they browse. They reason. They call tools. They write code. They operate computers. They delegate work to other agents. They remember things. They make plans. They reconsider those plans.</p><p>And, occasionally, they still make some shit up.</p><p>Welcome back to the <strong>Hallucination Club</strong>.</p><p>The 2026 edition updates the original A-OK graphic for the agentic era: more capabilities, more autonomy, more elaborate receipts\u2014and the same fundamental uncertainty about whether the machine actually knows what it\u2019s talking about.</p><pre>IDEAS ................................ INFINITE\nPROMPTS ........................ JUST ONE MORE\nAGENTS .................................. A-OK\nTOOLS ................................... A-OK\nCONTEXT ............................ SOMETIMES\nREALITY CHECKS ..................... OPTIONAL\n\nTOTAL: STILL HALLUCINATING</pre><p>Featuring our original Apes on Keys operator, now surrounded by the increasingly complicated machinery required to turn \u201cpredict the next token\u201d into \u201cplease run my company.\u201d</p><p>Good ideas. Questionable sources.</p><p><strong>A-OK.</strong></p>",
           "productType": "T-Shirts",
           "vendor": "A-OK Shop",
           "tags": [
-            "T-shirts"
+            "T-shirts",
+            "Apes on Keys"
           ],
           "options": [
             {
               "id": "gid://a-ok/ProductOption/89400000000041",
               "name": "Color",
               "values": [
-                "Natural",
-                "White"
+                "Oat",
+                "Green",
+                "Navy"
               ]
             },
             {
@@ -3522,7 +3556,7 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89400000000040",
                   "url": "/images/products/hallucination-club-2026-edition-0.webp",
-                  "altText": "Natural Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
+                  "altText": "Oat Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
                   "width": 1400,
                   "height": 1048
                 }
@@ -3531,6 +3565,24 @@
                 "node": {
                   "id": "gid://a-ok/ProductImage/89400000000041",
                   "url": "/images/products/hallucination-club-2026-edition-1.webp",
+                  "altText": "Green Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
+                  "width": 1400,
+                  "height": 1048
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000042",
+                  "url": "/images/products/hallucination-club-2026-edition-2.webp",
+                  "altText": "Navy Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING, printed in white",
+                  "width": 1400,
+                  "height": 1048
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000043",
+                  "url": "/images/products/hallucination-club-2026-edition-3.webp",
                   "altText": "Hallucination Club 2026 Edition artwork: the A-OK ape in cap, headphones and an Apes on Keys hoodie above a receipt-style list ending in a barcode",
                   "width": 1167,
                   "height": 1400
@@ -3543,7 +3595,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000001",
-                  "title": "Natural / XS",
+                  "title": "Oat / XS",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3554,7 +3606,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3566,7 +3618,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000002",
-                  "title": "Natural / S",
+                  "title": "Oat / S",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3577,7 +3629,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3589,7 +3641,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000003",
-                  "title": "Natural / M",
+                  "title": "Oat / M",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3600,7 +3652,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3612,7 +3664,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000004",
-                  "title": "Natural / L",
+                  "title": "Oat / L",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3623,7 +3675,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3635,7 +3687,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000005",
-                  "title": "Natural / XL",
+                  "title": "Oat / XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3646,7 +3698,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3658,7 +3710,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000006",
-                  "title": "Natural / 2XL",
+                  "title": "Oat / 2XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3669,7 +3721,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "Natural"
+                      "value": "Oat"
                     },
                     {
                       "name": "Size",
@@ -3681,7 +3733,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000007",
-                  "title": "White / XS",
+                  "title": "Green / XS",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3692,7 +3744,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
                     },
                     {
                       "name": "Size",
@@ -3704,7 +3756,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000008",
-                  "title": "White / S",
+                  "title": "Green / S",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3715,7 +3767,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
                     },
                     {
                       "name": "Size",
@@ -3727,7 +3779,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000009",
-                  "title": "White / M",
+                  "title": "Green / M",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3738,7 +3790,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
                     },
                     {
                       "name": "Size",
@@ -3750,7 +3802,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000010",
-                  "title": "White / L",
+                  "title": "Green / L",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3761,7 +3813,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
                     },
                     {
                       "name": "Size",
@@ -3773,7 +3825,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000011",
-                  "title": "White / XL",
+                  "title": "Green / XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3784,7 +3836,7 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
                     },
                     {
                       "name": "Size",
@@ -3796,7 +3848,7 @@
               {
                 "node": {
                   "id": "gid://a-ok/ProductVariant/47200000000012",
-                  "title": "White / 2XL",
+                  "title": "Green / 2XL",
                   "sku": "",
                   "price": {
                     "amount": "30.0",
@@ -3807,7 +3859,145 @@
                   "selectedOptions": [
                     {
                       "name": "Color",
-                      "value": "White"
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000043",
+                  "title": "Navy / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000044",
+                  "title": "Navy / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000045",
+                  "title": "Navy / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000046",
+                  "title": "Navy / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000047",
+                  "title": "Navy / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000048",
+                  "title": "Navy / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
                     },
                     {
                       "name": "Size",
@@ -3827,7 +4017,10 @@
           "updatedAt": "2026-10-01T03:30:00Z",
           "publishedAt": "2026-10-01T03:30:00Z",
           "featured": true,
-          "featuredOrder": 1
+          "featuredOrder": 1,
+          "seo": {
+            "description": "The A-OK Hallucination Club tee returns for the agentic AI era. Agents, tools, reasoning, context, reality checks\u2014and occasionally complete nonsense."
+          }
         }
       }
     ]
