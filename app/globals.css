@@ -244,6 +244,17 @@
     @apply mb-2;
   }
 
+  /* Receipt-style copy keeps its columns: the text shrinks to fit the description's
+     width, and scrolls inside its own box on the very narrowest instead of widening the page. */
+  .product-description:has(pre) {
+    container-type: inline-size;
+  }
+
+  .product-description pre {
+    @apply mb-4 overflow-x-auto font-mono leading-snug;
+    font-size: clamp(8px, 3.4cqi, 14px);
+  }
+
   .product-description strong,
   .product-description b {
     @apply font-bold;
