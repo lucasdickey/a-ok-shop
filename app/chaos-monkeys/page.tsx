@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
+import PrintRequestButton from "@/app/components/PrintRequestButton";
 import { formatDropDate, getChaosMonkeys, type ChaosMonkey } from "@/app/lib/chaos-monkeys";
 
 const DESCRIPTION =
@@ -60,7 +61,10 @@ export default function ChaosMonkeysPage() {
           </h2>
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((monkey) => (
-              <ChaosMonkeyCard key={monkey.id} monkey={monkey} detailed priority={dropIndex === 0} />
+              <div key={monkey.id}>
+                <ChaosMonkeyCard monkey={monkey} detailed priority={dropIndex === 0} />
+                <PrintRequestButton id={monkey.id} title={monkey.title} />
+              </div>
             ))}
           </div>
         </section>
