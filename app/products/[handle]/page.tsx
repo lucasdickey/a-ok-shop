@@ -61,6 +61,7 @@ export default async function ProductPage({
     return {
       url: imageUrl,
       alt: node.altText || product.title,
+      color: node.color,
     };
   });
 
