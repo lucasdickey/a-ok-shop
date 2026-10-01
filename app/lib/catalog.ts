@@ -262,40 +262,35 @@ export function getAgentProducts(): SimpleProduct[] {
   return loadMappedProducts();
 }
 
-// Get products by category (using tags and productType)
+// Words that place a product in each shop category.
+const CATEGORY_WORDS: Record<string, string[]> = {
+  hats: ["hat", "cap"],
+  "t-shirts": ["shirt", "tee"],
+  hoodies: ["hoodie", "sweatshirt"],
+};
+
+// Get products by category (using productType, then tags)
 export function getProductsByCategory(category: string): SimpleProduct[] {
-  const allProducts = getAllProducts();
   const normalizedCategory = category.toLowerCase();
+  const words = CATEGORY_WORDS[normalizedCategory] ?? [normalizedCategory];
+  const matches = (value: string) => words.some((word) => value.toLowerCase().includes(word));
 
-  return allProducts.filter((product) => {
-    const normalizedTags = product.tags.map((tag) => tag.toLowerCase());
-    const normalizedProductType = product.productType.toLowerCase();
-
-    // Check if category matches tags or product type
-    if (normalizedCategory === "hats") {
-      return (
-        normalizedTags.some((tag) => tag.includes("hat") || tag.includes("cap")) ||
-        normalizedProductType.includes("hat") ||
-        normalizedProductType.includes("cap")
-      );
-    } else if (normalizedCategory === "t-shirts") {
-      return (
-        normalizedTags.some((tag) => tag.includes("shirt") || tag.includes("tee")) ||
-        normalizedProductType.includes("t-shirt") ||
-        normalizedProductType.includes("tee")
-      );
-    } else if (normalizedCategory === "hoodies") {
-      return (
-        normalizedTags.some((tag) => tag.includes("hoodie") || tag.includes("sweatshirt")) ||
-        normalizedProductType.includes("hoodie") ||
-        normalizedProductType.includes("sweatshirt")
-      );
-    } else {
-      return (
-        normalizedTags.some((tag) => tag.includes(normalizedCategory)) ||
-        normalizedProductType.includes(normalizedCategory)
-      );
+  return getAllProducts().filter((product) => {
+    // The product's own type decides when it names a category, so a tee tagged
+    // "red hoodie" (describing the artwork) stays out of Hoodies.
+    const type = product.productType.toLowerCase();
+    const typeIsHoodie = CATEGORY_WORDS.hoodies.some((word) => type.includes(word));
+    const typeIsKnown =
+      typeIsHoodie ||
+      CATEGORY_WORDS.hats.some((word) => type.includes(word)) ||
+      type.includes("t-shirt") ||
+      type.includes("tee");
+    if (typeIsKnown) {
+      // "Sweatshirts" contains "shirt"; it belongs with hoodies, not tees.
+      if (normalizedCategory === "t-shirts" && typeIsHoodie) return false;
+      return matches(type);
     }
+    return matches(type) || product.tags.some(matches);
   });
 }
 
