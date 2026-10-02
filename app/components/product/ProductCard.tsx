@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { SimpleProduct } from '@/app/lib/catalog';
 import { isClothing } from '@/app/lib/sizes';
+import PixelFade from '@/app/components/PixelFade';
 
 type ProductCardProps = {
   product: SimpleProduct;
@@ -44,7 +45,9 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
     : productType || 'Goods';
 
   return (
-    <article className="group flex h-full min-w-0 flex-col border-2 border-dark bg-club-paper shadow-hard">
+    // No bottom border: the label ends in a torn receipt edge. The hard shadow sits to the right
+    // only, so it doesn't double the teeth into a dark band.
+    <article className="group flex h-full min-w-0 flex-col border-2 border-b-0 border-dark bg-club-paper [filter:drop-shadow(6px_0_0_#22221E)]">
       <Link
         href={`/products/${handle}`}
         // The title link below is the one keyboard and screen reader stop for this card.
@@ -70,8 +73,10 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
           Choose options <span aria-hidden="true">↗</span>
         </span>
       </Link>
-      {/* Brighter receipt-slip paper sets the label apart from the page behind the card. */}
-      <div className="flex flex-1 flex-col bg-club-slip p-3 sm:p-4">
+      {/* Brighter receipt-slip paper with a faint 8-bit halftone sets the label apart from the page. */}
+      {/* The text wears a soft halo in the paper color, so dots never crowd the letters. */}
+      <div className="receipt-tear isolate flex flex-1 flex-col bg-club-slip p-3 [text-shadow:0_0_2px_#FFFBED,0_0_4px_#FFFBED,0_0_6px_#FFFBED] sm:p-4">
+        <PixelFade />
         <p className="micro text-primary">{categoryLabel}</p>
         <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
           <Link href={`/products/${handle}`} className="no-underline hover:underline">

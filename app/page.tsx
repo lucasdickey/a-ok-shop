@@ -226,14 +226,14 @@ export default async function Home() {
 
       {/* Ticker */}
       <div
-        className="star-trigger flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
+        className="flex flex-wrap items-center justify-around gap-x-4 gap-y-2 border-y-2 border-dark bg-primary px-4 py-3.5 font-mono text-[10px] uppercase tracking-[0.06em] sm:text-[11px] text-club-paper"
         aria-label="Brand statement"
       >
         {TICKER.map((line, index) => (
           <span key={line} className={`flex items-center gap-4 ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}>
             {index > 0 && (
-              // Stars spin one after another when the ticker is hovered.
-              <b className="star-spin text-[17px] sm:text-2xl" style={{ transitionDelay: `${(index - 1) * 90}ms` }} aria-hidden="true">
+              // Each star spins only when it's the one under the pointer.
+              <b className="star-spin text-[17px] sm:text-2xl" aria-hidden="true">
                 <Asterisk />
               </b>
             )}
