@@ -3,9 +3,9 @@
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 
-// Dynamically import the ChaosMonkey component with no SSR
-const ChaosMonkey = dynamic(
-  () => import("../../modules/game/components/ChaosMonkey"),
+// Dynamically import the game with no SSR (it draws to a canvas)
+const RunHumanRun = dynamic(
+  () => import("../../modules/game/components/RunHumanRun"),
   { ssr: false }
 );
 
@@ -24,7 +24,7 @@ export default function GamePlayer() {
   }, []);
 
   return (
-    <ChaosMonkey
+    <RunHumanRun
       gameStarted={gameStarted}
       setGameStarted={setGameStarted}
       score={score}

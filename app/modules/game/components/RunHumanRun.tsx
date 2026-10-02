@@ -21,7 +21,7 @@ interface GameProps {
   onGameComplete?: (success: boolean) => void;
 }
 
-export default function ChaosMonkey({
+export default function RunHumanRun({
   gameStarted: externalGameStarted,
   setGameStarted: externalSetGameStarted,
   score: externalScore,
