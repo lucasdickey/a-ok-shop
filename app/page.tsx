@@ -243,12 +243,6 @@ export default async function Home() {
       <section id="shop" className="px-5 pt-10 sm:px-8 lg:px-[4vw] lg:pt-16">
         <SectionHeading
           label="001 / The wearable part"
-          aside={
-            <p className="text-sm md:text-[17px]">
-              One shared joke.
-              <br />A few very good outfits.
-            </p>
-          }
         >
           Popular
           <br />
