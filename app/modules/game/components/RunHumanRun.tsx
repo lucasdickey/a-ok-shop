@@ -25,6 +25,8 @@ const WIDTH = COLS * CELL;
 const HEIGHT = ROWS * CELL;
 // A long pause (a hidden tab, a breakpoint) shouldn't fast-forward the game.
 const MAX_FRAME_MS = 100;
+// How far a finger travels before it counts as a swipe.
+const SWIPE_PX = 24;
 
 // Club Receipt colors (tailwind.config.js `club`).
 const COLOR = {
@@ -222,6 +224,7 @@ export default function RunHumanRun() {
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<GameState | null>(null);
+  const swipeFrom = useRef<Point | null>(null);
 
   const claimReward = useCallback(async () => {
     setReward({ status: "loading", code: "", error: "" });
@@ -249,6 +252,28 @@ export default function RunHumanRun() {
     setHud(hudOf(game));
     setCopied(false);
   }, [target]);
+
+  const steer = (direction: Direction) => {
+    if (gameRef.current) setDirection(gameRef.current, direction);
+  };
+
+  // Swipes steer as soon as the finger has moved far enough, so one long
+  // drag can turn several corners.
+  const onSwipeStart = (event: React.PointerEvent) => {
+    swipeFrom.current = { x: event.clientX, y: event.clientY };
+  };
+  const onSwipeMove = (event: React.PointerEvent) => {
+    const from = swipeFrom.current;
+    if (!from) return;
+    const dx = event.clientX - from.x;
+    const dy = event.clientY - from.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX) return;
+    steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up");
+    swipeFrom.current = { x: event.clientX, y: event.clientY };
+  };
+  const onSwipeEnd = () => {
+    swipeFrom.current = null;
+  };
 
   const start = () => {
     newRound();
@@ -407,7 +432,13 @@ export default function RunHumanRun() {
         </button>
       </div>
 
-      <div className="relative flex min-h-0 w-full max-w-[800px] flex-1 items-center justify-center">
+      <div
+        className="relative flex min-h-0 w-full max-w-[800px] flex-1 touch-none items-center justify-center"
+        onPointerDown={onSwipeStart}
+        onPointerMove={onSwipeMove}
+        onPointerUp={onSwipeEnd}
+        onPointerCancel={onSwipeEnd}
+      >
         <canvas
           ref={canvasRef}
           width={WIDTH}
@@ -418,8 +449,9 @@ export default function RunHumanRun() {
         />
 
         {hud.phase === "ready" && (
-          <p className="micro pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 border-2 border-dark bg-club-yellow px-3 py-1 text-dark shadow-hard-sm">
-            Press an arrow key to run
+          // At the top of the play area: above the board, or over its solid top wall.
+          <p className="micro pointer-events-none absolute left-1/2 top-1 -translate-x-1/2 whitespace-nowrap border-2 border-dark bg-club-yellow px-3 py-1 text-dark shadow-hard-sm">
+            Arrow key or swipe to run
           </p>
         )}
 
@@ -487,6 +519,31 @@ export default function RunHumanRun() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* D-pad for touch screens. pointerdown, not click, so a tap turns at once. */}
+      <div className="hidden shrink-0 grid-cols-3 gap-2 [@media(pointer:coarse)]:grid" aria-label="Direction pad">
+        {(
+          [
+            ["up", "↑", "col-start-2"],
+            ["left", "←", "col-start-1 row-start-2"],
+            ["right", "→", "col-start-3 row-start-2"],
+            ["down", "↓", "col-start-2 row-start-3"],
+          ] as const
+        ).map(([direction, arrow, place]) => (
+          <button
+            key={direction}
+            type="button"
+            aria-label={`Move ${direction}`}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              steer(direction);
+            }}
+            className={`${place} flex h-14 w-14 touch-none select-none items-center justify-center border-2 border-dark bg-club-yellow text-2xl font-bold text-dark shadow-hard-sm active:translate-x-0.5 active:translate-y-0.5 active:shadow-none`}
+          >
+            {arrow}
+          </button>
+        ))}
       </div>
     </div>
   );
