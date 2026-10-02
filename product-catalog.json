@@ -1098,7 +1098,9 @@
             "Red": "#ae0c22",
             "Black": "#232020",
             "White": "#efefef"
-          }
+          },
+          "featured": true,
+          "featuredOrder": 8
         }
       },
       {
@@ -1239,12 +1241,13 @@
           "createdAt": "2025-04-26T01:00:18Z",
           "updatedAt": "2025-07-30T05:58:44Z",
           "publishedAt": "2025-04-26T01:00:18Z",
-          "featured": false,
+          "featured": true,
           "stripeProductId": "prod_TPh6ltx0CMw5HD",
           "swatches": {
             "Beige": "#c4b2a4",
             "Black": "#232020"
-          }
+          },
+          "featuredOrder": 5
         }
       },
       {
@@ -1769,7 +1772,9 @@
             "White": "#efefef",
             "Gray": "#9c9c9e",
             "Navy": "#17263c"
-          }
+          },
+          "featured": true,
+          "featuredOrder": 7
         }
       },
       {
@@ -2979,7 +2984,9 @@
           "swatches": {
             "Dark Chocolate": "#372612",
             "Black": "#232020"
-          }
+          },
+          "featured": true,
+          "featuredOrder": 6
         }
       },
       {

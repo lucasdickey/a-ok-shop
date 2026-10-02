@@ -52,8 +52,8 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
         aria-hidden="true"
         className={`relative block overflow-hidden border-b-2 border-dark ${PHOTO_BACKGROUNDS[index % PHOTO_BACKGROUNDS.length]}`}
       >
-        <span className="absolute left-2 top-2 z-[1] border border-dark bg-club-paper px-1.5 py-0.5 font-mono text-[10px] sm:left-3 sm:top-3 sm:px-2 sm:py-1">
-          ITEM / {itemNumber}
+        <span className="absolute left-2 top-2 z-[1] border border-dark bg-club-paper px-1.5 py-0.5 font-mono text-[10px] font-normal sm:left-3 sm:top-3 sm:px-2 sm:py-1">
+          ITEM / <b className="font-bold">{itemNumber}</b>
         </span>
         <div className="relative aspect-[7/8] w-full">
           <Image
@@ -70,8 +70,9 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
           Choose options <span aria-hidden="true">↗</span>
         </span>
       </Link>
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <p className="micro">{categoryLabel}</p>
+      {/* Brighter receipt-slip paper sets the label apart from the page behind the card. */}
+      <div className="flex flex-1 flex-col bg-club-slip p-3 sm:p-4">
+        <p className="micro text-primary">{categoryLabel}</p>
         <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
           <Link href={`/products/${handle}`} className="no-underline hover:underline">
             {title}
