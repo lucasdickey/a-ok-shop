@@ -70,8 +70,8 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
           Choose options <span aria-hidden="true">↗</span>
         </span>
       </Link>
-      {/* Brighter receipt-slip paper sets the label apart from the page behind the card. */}
-      <div className="flex flex-1 flex-col bg-club-slip p-3 sm:p-4">
+      {/* Brighter receipt-slip paper with a faint 8-bit fade sets the label apart from the page. */}
+      <div className="pixel-fade flex flex-1 flex-col bg-club-slip p-3 sm:p-4">
         <p className="micro text-primary">{categoryLabel}</p>
         <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
           <Link href={`/products/${handle}`} className="no-underline hover:underline">

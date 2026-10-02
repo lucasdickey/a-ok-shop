@@ -155,6 +155,29 @@
     }
   }
 
+  /* An 8-bit dithered fade: a checkerboard of 3px ink pixels (10% ink, half covered, so
+     about 5% overall) that steps in from the top left to the bottom right. */
+  .pixel-fade {
+    position: relative;
+    isolation: isolate;
+  }
+  .pixel-fade::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: conic-gradient(
+      rgb(34 34 30 / 0.1) 25%,
+      transparent 0 50%,
+      rgb(34 34 30 / 0.1) 0 75%,
+      transparent 0
+    );
+    background-size: 6px 6px;
+    -webkit-mask-image: linear-gradient(135deg, transparent 0 25%, rgb(0 0 0 / 0.33) 25% 50%, rgb(0 0 0 / 0.66) 50% 75%, #000 75%);
+    mask-image: linear-gradient(135deg, transparent 0 25%, rgb(0 0 0 / 0.33) 25% 50%, rgb(0 0 0 / 0.66) 50% 75%, #000 75%);
+  }
+
   /* The red period: a small heartbeat while its heading is hovered. */
   .period-pulse {
     display: inline-block;
