@@ -4,9 +4,10 @@ import { useId } from "react";
 
 /*
  * A faint 8-bit halftone behind a box: tiny 1.5px dots on a 2px grid whose number grows
- * steadily from none at the top left to every grid spot at the bottom right, where they
- * nearly merge. The dots are placed by ordered dithering: a 4×4 pattern decides which
- * spots fill in first, so each step of the fade adds dots evenly instead of making them darker.
+ * steadily from none (the top-left third is clear) to every grid spot at the bottom right,
+ * where they nearly merge. The dots are placed by ordered dithering: a 4×4 pattern decides
+ * which spots fill in first, so each step of the fade adds dots evenly instead of making
+ * them darker.
  *
  * Place it as the first child of a `relative isolate` box; it sits behind the content
  * and never takes clicks.
@@ -30,8 +31,9 @@ export default function PixelFade() {
       .filter(([value]) => value === level)
       .map(([, r, c]) => [r, c])[0];
     // Where along the top-left → bottom-right diagonal this level's dots start appearing.
-    // The first tenth stays clear, so the top-left corner is clean paper.
-    const start = 0.1 + (0.9 * (level + 0.5)) / LEVELS;
+    // The first third stays clear, so the dots gather in the bottom-right corner, away
+    // from the text that usually sits top left.
+    const start = 0.33 + (0.67 * (level + 0.5)) / LEVELS;
     return { level, row, col, start };
   });
 

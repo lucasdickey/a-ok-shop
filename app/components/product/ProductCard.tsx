@@ -72,7 +72,8 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
         </span>
       </Link>
       {/* Brighter receipt-slip paper with a faint 8-bit halftone sets the label apart from the page. */}
-      <div className="relative isolate flex flex-1 flex-col bg-club-slip p-3 sm:p-4">
+      {/* The text wears a soft halo in the paper color, so dots never crowd the letters. */}
+      <div className="relative isolate flex flex-1 flex-col bg-club-slip p-3 [text-shadow:0_0_2px_#FFFBED,0_0_4px_#FFFBED,0_0_6px_#FFFBED] sm:p-4">
         <PixelFade />
         <p className="micro text-primary">{categoryLabel}</p>
         <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
