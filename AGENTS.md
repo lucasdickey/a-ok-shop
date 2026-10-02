@@ -42,7 +42,7 @@ The A-OK Shop features:
 ## Game Integration
 
 - Run, Human, Run! lives at `/game` (`app/modules/game/components/RunHumanRun.tsx`); "Chaos Monkeys" is only the daily graphics line, not the game
-- Win condition: Collect 3 UBI Credits
+- Win condition: collect 10 UBI credits (3 on a local dev server on port 3xxx); game rules live in `app/modules/game/engine.ts`
 - Reward: Discount code overlay with 25% off coupon
 - Discount codes auto-generated via `/api/discount` endpoint
 

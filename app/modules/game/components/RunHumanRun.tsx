@@ -1,1194 +1,493 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { track } from "@/app/lib/analytics";
+import {
+  COLS,
+  PLAYER_STEP_MS,
+  POWER_WARNING_MS,
+  ROWS,
+  START_LIVES,
+  apeStepMs,
+  createGame,
+  isWall,
+  setDirection,
+  update,
+  type Direction,
+  type GameState,
+  type Phase,
+  type Point,
+} from "../engine";
 
-interface GameProps {
-  gameStarted?: boolean;
-  setGameStarted?: (value: boolean) => void;
-  score?: number;
-  setScore?: (value: number | ((prev: number) => number)) => void;
-  lives?: number;
-  setLives?: (value: number) => void;
-  gameOver?: boolean;
-  setGameOver?: (value: boolean) => void;
-  gameWon?: boolean;
-  setGameWon?: (value: boolean) => void;
-  discountCode?: string;
-  setDiscountCode?: (value: string) => void;
-  tokensCollected?: number;
-  setTokensCollected?: (value: number | ((prev: number) => number)) => void;
-  onGameComplete?: (success: boolean) => void;
+const CELL = 32;
+const WIDTH = COLS * CELL;
+const HEIGHT = ROWS * CELL;
+// A long pause (a hidden tab, a breakpoint) shouldn't fast-forward the game.
+const MAX_FRAME_MS = 100;
+
+// Club Receipt colors (tailwind.config.js `club`).
+const COLOR = {
+  field: "#3155D9",
+  wall: "#F4EB4A",
+  ink: "#22221E",
+  paper: "#F7F3DF",
+  gold: "#F8BD2B",
+  red: "#C52224",
+  grass: "#2E9E4F",
+};
+
+const KEY_DIRECTIONS: Record<string, Direction> = {
+  ArrowUp: "up",
+  KeyW: "up",
+  ArrowDown: "down",
+  KeyS: "down",
+  ArrowLeft: "left",
+  KeyA: "left",
+  ArrowRight: "right",
+  KeyD: "right",
+};
+
+/** 3 credits on a local dev server (to test the reward quickly), 10 everywhere else. */
+function creditsToWin(): number {
+  const { hostname, port } = window.location;
+  return hostname === "localhost" && port.startsWith("3") ? 3 : 10;
 }
 
-export default function RunHumanRun({
-  gameStarted: externalGameStarted,
-  setGameStarted: externalSetGameStarted,
-  score: externalScore,
-  setScore: externalSetScore,
-  lives: externalLives,
-  setLives: externalSetLives,
-  gameOver: externalGameOver,
-  setGameOver: externalSetGameOver,
-  gameWon: externalGameWon,
-  setGameWon: externalSetGameWon,
-  discountCode: externalDiscountCode,
-  setDiscountCode: externalSetDiscountCode,
-  tokensCollected: externalTokensCollected,
-  setTokensCollected: externalSetTokensCollected,
-  onGameComplete,
-}: GameProps = {}) {
-  // Use external state if provided, otherwise use internal state
-  const [internalGameStarted, internalSetGameStarted] = useState(false);
-  const [internalScore, internalSetScore] = useState(0);
-  const [internalLives, internalSetLives] = useState(3);
-  const [internalGameOver, internalSetGameOver] = useState(false);
-  const [internalGameWon, internalSetGameWon] = useState(false);
-  const [internalDiscountCode, internalSetDiscountCode] = useState("");
-  const [internalTokensCollected, internalSetTokensCollected] = useState(0);
-  const [copiedFeedback, setCopiedFeedback] = useState(false);
-  const [showWinModal, setShowWinModal] = useState(false);
+type Hud = { credits: number; lives: number; powerSeconds: number; phase: Phase };
+const hudOf = (game: GameState): Hud => ({
+  credits: game.creditsCollected,
+  lives: game.lives,
+  powerSeconds: Math.ceil(game.powerMs / 1000),
+  phase: game.phase,
+});
+const sameHud = (a: Hud, b: Hud) =>
+  a.credits === b.credits && a.lives === b.lives && a.powerSeconds === b.powerSeconds && a.phase === b.phase;
 
-  // Use the provided state handlers or fallback to internal ones
-  const gameStarted =
-    externalGameStarted !== undefined
-      ? externalGameStarted
-      : internalGameStarted;
-  const setGameStarted = externalSetGameStarted || internalSetGameStarted;
-  const score = externalScore !== undefined ? externalScore : internalScore;
-  const setScore = externalSetScore || internalSetScore;
-  const lives = externalLives !== undefined ? externalLives : internalLives;
-  const setLives = externalSetLives || internalSetLives;
-  const gameOver =
-    externalGameOver !== undefined ? externalGameOver : internalGameOver;
-  const setGameOver = externalSetGameOver || internalSetGameOver;
-  const gameWon =
-    externalGameWon !== undefined ? externalGameWon : internalGameWon;
-  const setGameWon = externalSetGameWon || internalSetGameWon;
-  const discountCode =
-    externalDiscountCode !== undefined
-      ? externalDiscountCode
-      : internalDiscountCode;
-  const setDiscountCode = externalSetDiscountCode || internalSetDiscountCode;
-  const tokensCollected =
-    externalTokensCollected !== undefined
-      ? externalTokensCollected
-      : internalTokensCollected;
-  const setTokensCollected =
-    externalSetTokensCollected || internalSetTokensCollected;
+/** Where to draw something that moves one cell per step, partway through its next step. */
+function drawPosition(pos: Point, prev: Point, progress: number): Point {
+  // Coming out of the tunnel: jump instead of sliding across the whole board.
+  if (Math.abs(pos.x - prev.x) > 1) return pos;
+  const t = Math.min(1, Math.max(0, progress));
+  return { x: prev.x + (pos.x - prev.x) * t, y: prev.y + (pos.y - prev.y) * t };
+}
 
-  // Refs for tracking values that need to be accessed in event listeners
+/** The maze never changes, so draw it once. */
+function drawMaze(): HTMLCanvasElement {
+  const maze = document.createElement("canvas");
+  maze.width = WIDTH;
+  maze.height = HEIGHT;
+  const ctx = maze.getContext("2d");
+  if (!ctx) return maze;
+  ctx.fillStyle = COLOR.field;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = COLOR.wall;
+  ctx.strokeStyle = COLOR.ink;
+  ctx.lineWidth = 2;
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      if (!isWall(x, y)) continue;
+      const left = x * CELL;
+      const top = y * CELL;
+      ctx.fillRect(left, top, CELL, CELL);
+      // Ink only the edges that face the floor, so walls read as one shape.
+      ctx.beginPath();
+      if (y > 0 && !isWall(x, y - 1)) ctx.moveTo(left, top + 1), ctx.lineTo(left + CELL, top + 1);
+      if (y < ROWS - 1 && !isWall(x, y + 1)) ctx.moveTo(left, top + CELL - 1), ctx.lineTo(left + CELL, top + CELL - 1);
+      if (x > 0 && !isWall(x - 1, y)) ctx.moveTo(left + 1, top), ctx.lineTo(left + 1, top + CELL);
+      if (x < COLS - 1 && !isWall(x + 1, y)) ctx.moveTo(left + CELL - 1, top), ctx.lineTo(left + CELL - 1, top + CELL);
+      ctx.stroke();
+    }
+  }
+  return maze;
+}
+
+function drawCredit(ctx: CanvasRenderingContext2D, cell: Point) {
+  const cx = cell.x * CELL + CELL / 2;
+  const cy = cell.y * CELL + CELL / 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+  ctx.fillStyle = COLOR.gold;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = COLOR.ink;
+  ctx.stroke();
+  ctx.fillStyle = COLOR.ink;
+  ctx.font = "bold 11px ui-monospace, monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("U", cx, cy + 1);
+}
+
+/** A Touch Grass pellet: a tuft of three blades that sways. */
+function drawPellet(ctx: CanvasRenderingContext2D, cell: Point, now: number) {
+  const cx = cell.x * CELL + CELL / 2;
+  const base = cell.y * CELL + CELL - 7;
+  const sway = Math.sin(now / 250) * 2;
+  ctx.fillStyle = COLOR.grass;
+  ctx.strokeStyle = COLOR.ink;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  for (const [offset, height] of [
+    [-6, 14],
+    [0, 19],
+    [6, 14],
+  ]) {
+    ctx.beginPath();
+    ctx.moveTo(cx + offset - 4, base);
+    ctx.lineTo(cx + offset + sway, base - height);
+    ctx.lineTo(cx + offset + 4, base);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+}
+
+function drawPlayer(ctx: CanvasRenderingContext2D, game: GameState, now: number) {
+  const { player } = game;
+  // Blink while protected after a respawn.
+  if (game.invulnerableMs > 0 && Math.floor(now / 120) % 2 === 0) return;
+  const at = drawPosition(player.pos, player.prev, player.stepMs / PLAYER_STEP_MS);
+  const cx = at.x * CELL + CELL / 2;
+  const cy = at.y * CELL + CELL / 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+  ctx.fillStyle = COLOR.paper;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = COLOR.ink;
+  ctx.stroke();
+  // Eyes look where the human is heading.
+  const look = { x: player.dir.x * 2, y: player.dir.y * 2 };
+  ctx.fillStyle = COLOR.ink;
+  ctx.beginPath();
+  ctx.arc(cx - 4 + look.x, cy - 3 + look.y, 2, 0, Math.PI * 2);
+  ctx.arc(cx + 4 + look.x, cy - 3 + look.y, 2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx + look.x, cy + 3 + look.y, 4, 0, Math.PI);
+  ctx.stroke();
+}
+
+function drawApes(ctx: CanvasRenderingContext2D, game: GameState, now: number) {
+  // In the last seconds of Touch Grass, frightened apes flash back to red as a warning.
+  const warning = game.powerMs > 0 && game.powerMs < POWER_WARNING_MS && Math.floor(now / 200) % 2 === 0;
+  for (const ape of game.apes) {
+    if (ape.respawnMs > 0) continue;
+    const at = drawPosition(ape.pos, ape.prev, ape.stepMs / apeStepMs(game, ape));
+    const left = at.x * CELL + 4;
+    const top = at.y * CELL + 4;
+    const size = CELL - 8;
+    const scared = ape.frightened && !warning;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = COLOR.ink;
+    ctx.fillStyle = scared ? COLOR.paper : COLOR.red;
+    // Ears, then head.
+    ctx.fillRect(left - 4, top + 6, 5, 8);
+    ctx.strokeRect(left - 4, top + 6, 5, 8);
+    ctx.fillRect(left + size - 1, top + 6, 5, 8);
+    ctx.strokeRect(left + size - 1, top + 6, 5, 8);
+    ctx.fillRect(left, top, size, size);
+    ctx.strokeRect(left, top, size, size);
+    // Muzzle, eyes and pupils (looking where the ape is heading).
+    ctx.fillStyle = scared ? COLOR.field : COLOR.paper;
+    ctx.fillRect(left + 5, top + 13, size - 10, 8);
+    ctx.fillRect(left + 4, top + 5, 6, 6);
+    ctx.fillRect(left + size - 10, top + 5, 6, 6);
+    ctx.fillStyle = COLOR.ink;
+    const px = Math.max(0, ape.dir.x) * 2 + (ape.dir.x === 0 ? 1 : 0);
+    const py = Math.max(0, ape.dir.y) * 2 + (ape.dir.y === 0 ? 1 : 0);
+    ctx.fillRect(left + 5 + px, top + 6 + py, 3, 3);
+    ctx.fillRect(left + size - 9 + px, top + 6 + py, 3, 3);
+  }
+}
+
+function draw(ctx: CanvasRenderingContext2D, maze: HTMLCanvasElement, game: GameState, now: number) {
+  ctx.drawImage(maze, 0, 0);
+  for (const credit of game.credits) drawCredit(ctx, credit);
+  for (const pellet of game.pellets) drawPellet(ctx, pellet, now);
+  drawApes(ctx, game, now);
+  drawPlayer(ctx, game, now);
+}
+
+type Reward = { status: "idle" | "loading" | "ready" | "error"; code: string; error: string };
+const NO_REWARD: Reward = { status: "idle", code: "", error: "" };
+
+/** Run, Human, Run!: collect UBI credits, dodge the agents, win 25% off. */
+export default function RunHumanRun() {
+  const [target] = useState(creditsToWin);
+  const [playing, setPlaying] = useState(false);
+  const [hud, setHud] = useState<Hud>({ credits: 0, lives: START_LIVES, powerSeconds: 0, phase: "ready" });
+  const [reward, setReward] = useState<Reward>(NO_REWARD);
+  const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const livesRef = useRef(3);
-  const tokensCollectedRef = useRef(0);
-  const [discountError, setDiscountError] = useState<string | null>(null);
-  const [isClaimingDiscount, setIsClaimingDiscount] = useState(false);
+  const gameRef = useRef<GameState | null>(null);
 
-  // Generate discount code when player wins
-  const generateDiscountCode = useCallback(async () => {
+  const claimReward = useCallback(async () => {
+    setReward({ status: "loading", code: "", error: "" });
     try {
-      setIsClaimingDiscount(true);
       const response = await fetch("/api/discount", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
-
-      if (!response.ok) {
-        const { error } = await response.json().catch(() => ({ error: undefined }));
-        throw new Error(typeof error === "string" ? error : "Failed to generate discount code. Please try again.");
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || typeof data.code !== "string") {
+        throw new Error(typeof data.error === "string" ? data.error : "Couldn't print your code. Try again.");
       }
-
-      const data = await response.json();
-      setDiscountCode(data.code);
+      setReward({ status: "ready", code: data.code, error: "" });
       track("discount_code_issued", {});
     } catch (error) {
-      console.error("Error generating discount code:", error);
-      const reason = error instanceof Error ? error.message : "Failed to generate discount code. Please try again.";
+      const reason = error instanceof Error ? error.message : "Couldn't print your code. Try again.";
       track("discount_code_failed", { reason });
-      setDiscountError(reason);
-    } finally {
-      setIsClaimingDiscount(false);
+      setReward({ status: "error", code: "", error: reason });
     }
-  }, [setDiscountCode]);
+  }, []);
 
+  const newRound = useCallback(() => {
+    const game = createGame(target);
+    gameRef.current = game;
+    setHud(hudOf(game));
+    setCopied(false);
+  }, [target]);
+
+  const start = () => {
+    newRound();
+    setPlaying(true);
+  };
+
+  // The game loop: runs while the board is on screen.
   useEffect(() => {
-    if (!gameStarted) return;
-
+    if (!playing) return;
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    // Draw at the screen's pixel density so the board stays sharp.
+    const scale = window.devicePixelRatio || 1;
+    canvas.width = WIDTH * scale;
+    canvas.height = HEIGHT * scale;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    const maze = drawMaze();
 
-    // Game constants
-    const GRID_SIZE = 20;
-    const GRID_WIDTH = Math.floor(canvas.width / GRID_SIZE);
-    const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
-    const PLAYER_SPEED = 6; // Player moves every 6 frames (lower = faster)
-    const APE_SPEED = 10; // Apes move every 10 frames (lower = faster)
-    // Set tokens needed to win based on environment - 3 for localhost:3*, 25 for production
-    const TOKENS_TO_WIN =
-      typeof window !== "undefined" &&
-      window.location.hostname === "localhost" &&
-      window.location.port.startsWith("3")
-        ? 3
-        : 25;
-    let frameCounter = 0;
-
-    // Game state
-    let player = {
-      x: Math.floor(GRID_WIDTH / 2),
-      y: Math.floor(GRID_HEIGHT / 2),
-      trail: [] as Array<{ x: number; y: number }>,
-      tailLength: 5,
-      direction: { x: 0, y: 0 },
-    };
-    let tokens: Array<{ x: number; y: number }> = [];
-    let powerUps: Array<{ x: number; y: number; active: boolean }> = [];
-    let apes: Array<{
-      x: number;
-      y: number;
-      direction: { x: number; y: number };
-    }> = [];
-    let powerMode = false;
-    let powerModeTimer = 0;
-    let gameLoopId: number;
-    let apeIntervalId: number | undefined;
-
-    // Maze layout (1 = wall, 0 = path)
-    const maze: number[][] = Array(GRID_HEIGHT)
-      .fill(0)
-      .map(() => Array(GRID_WIDTH).fill(0));
-
-    // Create simple maze with walls
-    for (let y = 0; y < GRID_HEIGHT; y++) {
-      for (let x = 0; x < GRID_WIDTH; x++) {
-        // Border walls
-        if (
-          x === 0 ||
-          y === 0 ||
-          x === GRID_WIDTH - 1 ||
-          y === GRID_HEIGHT - 1
-        ) {
-          maze[y][x] = 1;
+    let frame = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const game = gameRef.current;
+      if (game) {
+        // A frame's timestamp can be slightly earlier than the effect's start, so never go negative.
+        const events = update(game, Math.min(MAX_FRAME_MS, Math.max(0, now - last)));
+        if (events.includes("won")) {
+          track("game_won", { tokens_collected: game.creditsCollected });
+          claimReward();
         }
-        // Some internal walls - make sure we don't exceed array bounds
-        else if (
-          (x === 10 && y < 15 && y > 5) ||
-          (y === 10 && x < 15 && x > 5 && x !== 10) ||
-          (x === 30 && y > 5 && y < Math.min(35, GRID_HEIGHT - 1)) ||
-          (y === 30 && x > 5 && x < Math.min(35, GRID_WIDTH - 1) && x !== 30)
-        ) {
-          // Make sure we're within bounds
-          if (y < GRID_HEIGHT && x < GRID_WIDTH) {
-            maze[y][x] = 1;
-          }
-        }
+        draw(ctx, maze, game, now);
+        const next = hudOf(game);
+        setHud((current) => (sameHud(current, next) ? current : next));
       }
-    }
+      last = now;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
 
-    // Initialize game
-    const initGame = () => {
-      try {
-        console.log("Initializing game - player position reset");
-        // Place player
-        player = {
-          x: Math.floor(GRID_WIDTH / 2),
-          y: Math.floor(GRID_HEIGHT / 2),
-          trail: [],
-          tailLength: 5,
-          direction: { x: 0, y: 0 }, // Ensure this is always defined
-        };
-
-        // Place tokens
-        tokens = [];
-        for (let i = 0; i < 10; i++) {
-          placeToken();
-        }
-
-        // Place power-ups
-        powerUps = [];
-        for (let i = 0; i < 3; i++) {
-          placePowerUp();
-        }
-
-        // Place apes
-        apes = [];
-        for (let i = 0; i < 4; i++) {
-          spawnApeInCorner();
-        }
-
-        powerMode = false;
-        powerModeTimer = 0;
-        setTokensCollected(0);
-        tokensCollectedRef.current = 0;
-        setScore(0);
-      } catch (error) {
-        console.error("Error in initGame:", error);
+    const onKeyDown = (event: KeyboardEvent) => {
+      const game = gameRef.current;
+      if (!game) return;
+      const direction = KEY_DIRECTIONS[event.code];
+      if (direction) {
+        event.preventDefault(); // keep arrows from scrolling the page
+        setDirection(game, direction);
+        return;
+      }
+      const ended = game.phase === "won" || game.phase === "lost";
+      if (ended && event.code === "Space" && !(event.target instanceof HTMLButtonElement)) {
+        event.preventDefault();
+        newRound();
       }
     };
+    window.addEventListener("keydown", onKeyDown);
 
-    // Place a token at a random empty position - copied directly from original
-    const placeToken = () => {
-      try {
-        let x: number, y: number;
-        let attempts = 0;
-        const maxAttempts = 100; // Prevent infinite loops
+    // Keep the page behind the board from scrolling.
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-        do {
-          x = Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1;
-          y = Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1;
-          attempts++;
-
-          if (attempts > maxAttempts) {
-            console.warn("Max attempts reached when placing token");
-            return; // Prevent infinite loop
-          }
-        } while (
-          y < 0 ||
-          y >= GRID_HEIGHT ||
-          x < 0 ||
-          x >= GRID_WIDTH || // Check bounds
-          maze[y][x] === 1 ||
-          tokens.some((t) => t && t.x === x && t.y === y) ||
-          powerUps.some((p) => p && p.x === x && p.y === y) ||
-          (player && player.x === x && player.y === y) ||
-          apes.some((a) => a && a.x === x && a.y === y)
-        );
-
-        tokens.push({ x, y });
-      } catch (error) {
-        console.error("Error in placeToken:", error);
-      }
-    };
-
-    // Place a power-up at a random empty position
-    const placePowerUp = () => {
-      try {
-        let x: number, y: number;
-        let attempts = 0;
-        const maxAttempts = 100; // Prevent infinite loops
-
-        do {
-          x = Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1;
-          y = Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1;
-          attempts++;
-
-          if (attempts > maxAttempts) {
-            console.warn("Max attempts reached when placing power-up");
-            return; // Prevent infinite loop
-          }
-        } while (
-          y < 0 ||
-          y >= GRID_HEIGHT ||
-          x < 0 ||
-          x >= GRID_WIDTH || // Check bounds
-          maze[y][x] === 1 ||
-          tokens.some((t) => t && t.x === x && t.y === y) ||
-          powerUps.some((p) => p && p.x === x && p.y === y) ||
-          (player && player.x === x && player.y === y) ||
-          apes.some((a) => a && a.x === x && a.y === y)
-        );
-
-        powerUps.push({ x, y, active: true });
-      } catch (error) {
-        console.error("Error in placePowerUp:", error);
-      }
-    };
-
-    // Spawn new apes from existing ones or from corners if no apes exist
-    const spawnNewApes = (count: number) => {
-      try {
-        for (let j = 0; j < count; j++) {
-          if (apes && apes.length > 0) {
-            // Choose a random existing ape to spawn from
-            const parentApe = apes[Math.floor(Math.random() * apes.length)];
-            if (!parentApe) {
-              spawnApeInCorner();
-              continue;
-            }
-
-            // Try to find a valid position near the parent ape
-            const possibleDirections = [
-              { x: -1, y: 0 },
-              { x: 1, y: 0 },
-              { x: 0, y: -1 },
-              { x: 0, y: 1 },
-              { x: -1, y: -1 },
-              { x: 1, y: 1 },
-              { x: -1, y: 1 },
-              { x: 1, y: -1 },
-            ];
-
-            // Shuffle directions for randomness
-            for (let i = possibleDirections.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [possibleDirections[i], possibleDirections[j]] = [
-                possibleDirections[j],
-                possibleDirections[i],
-              ];
-            }
-
-            // Try each direction until we find a valid spawn point
-            let spawned = false;
-            for (const dir of possibleDirections) {
-              const newX = parentApe.x + dir.x;
-              const newY = parentApe.y + dir.y;
-
-              // Check if position is valid (not a wall, not occupied)
-              if (
-                newX > 0 &&
-                newX < GRID_WIDTH - 1 &&
-                newY > 0 &&
-                newY < GRID_HEIGHT - 1 &&
-                maze[newY] &&
-                maze[newY][newX] === 0 &&
-                !apes.some((a) => a && a.x === newX && a.y === newY) &&
-                !(player && player.x === newX && player.y === newY)
-              ) {
-                apes.push({
-                  x: newX,
-                  y: newY,
-                  direction: { x: 0, y: 0 },
-                });
-                spawned = true;
-                break;
-              }
-            }
-
-            // If we couldn't spawn near an existing ape, use the old corner method
-            if (!spawned) {
-              spawnApeInCorner();
-            }
-          } else {
-            // No existing apes, spawn in corner
-            spawnApeInCorner();
-          }
-        }
-      } catch (error) {
-        console.error("Error in spawnNewApes:", error);
-      }
-    };
-
-    // Helper function to spawn an ape in a corner
-    const spawnApeInCorner = () => {
-      try {
-        const positions = [
-          { x: 2, y: 2 },
-          { x: GRID_WIDTH - 3, y: 2 },
-          { x: 2, y: GRID_HEIGHT - 3 },
-          { x: GRID_WIDTH - 3, y: GRID_HEIGHT - 3 },
-        ];
-        const pos = positions[Math.floor(Math.random() * positions.length)];
-        apes.push({
-          x: pos.x,
-          y: pos.y,
-          direction: { x: 0, y: 0 },
-        });
-      } catch (error) {
-        console.error("Error in spawnApeInCorner:", error);
-      }
-    };
-
-    // Move apes toward player with improved pursuit AI
-    const moveApes = () => {
-      try {
-        if (!apes || !player) return;
-
-        for (let i = 0; i < apes.length; i++) {
-          const ape = apes[i];
-          if (!ape || typeof ape.x !== "number" || typeof ape.y !== "number") {
-            continue; // Skip invalid apes
-          }
-
-          // Check if ape is in a corner or against a wall
-          // Make sure we're not accessing out of bounds maze cells
-          const leftBlocked =
-            ape.x <= 0 || !maze[ape.y] || maze[ape.y][ape.x - 1] === 1;
-          const rightBlocked =
-            ape.x >= GRID_WIDTH - 1 ||
-            !maze[ape.y] ||
-            maze[ape.y][ape.x + 1] === 1;
-          const upBlocked =
-            ape.y <= 0 || !maze[ape.y - 1] || maze[ape.y - 1][ape.x] === 1;
-          const downBlocked =
-            ape.y >= GRID_HEIGHT - 1 ||
-            !maze[ape.y + 1] ||
-            maze[ape.y + 1][ape.x] === 1;
-
-          // Count how many directions are blocked
-          const blockedCount = [
-            leftBlocked,
-            rightBlocked,
-            upBlocked,
-            downBlocked,
-          ].filter((blocked) => blocked).length;
-          const isStuck = blockedCount >= 2;
-
-          // In power mode, apes try to run away from player
-          // Otherwise, they aggressively pursue the player
-          const targetX = powerMode
-            ? ape.x < player.x
-              ? ape.x - 1
-              : ape.x + 1
-            : player.x;
-          const targetY = powerMode
-            ? ape.y < player.y
-              ? ape.y - 1
-              : ape.y + 1
-            : player.y;
-
-          // Determine possible directions
-          const possibleMoves = [];
-
-          if (!leftBlocked) possibleMoves.push({ x: -1, y: 0 });
-          if (!rightBlocked) possibleMoves.push({ x: 1, y: 0 });
-          if (!upBlocked) possibleMoves.push({ x: 0, y: -1 });
-          if (!downBlocked) possibleMoves.push({ x: 0, y: 1 });
-
-          if (possibleMoves.length > 0) {
-            // Only use randomness if the ape is stuck or very occasionally (10% chance)
-            const useRandomMove = isStuck || Math.random() < 0.1;
-
-            if (!useRandomMove) {
-              // Find the move that gets closest to the player (or away in power mode)
-              let bestMove = possibleMoves[0];
-              let bestDistance = Number.POSITIVE_INFINITY;
-
-              possibleMoves.forEach((move) => {
-                const newX = ape.x + move.x;
-                const newY = ape.y + move.y;
-
-                // Calculate Manhattan distance to target
-                const distance = powerMode
-                  ? -1 * (Math.abs(newX - targetX) + Math.abs(newY - targetY)) // Negative for fleeing
-                  : Math.abs(newX - targetX) + Math.abs(newY - targetY); // Positive for chasing
-
-                if (distance < bestDistance) {
-                  bestDistance = distance;
-                  bestMove = move;
-                }
-              });
-
-              ape.direction = bestMove;
-            } else {
-              // Random move to help escape corners
-              ape.direction =
-                possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-            }
-          } else if (
-            !ape.direction ||
-            typeof ape.direction.x !== "number" ||
-            typeof ape.direction.y !== "number"
-          ) {
-            // If no moves are possible and direction is invalid, set a default
-            ape.direction = { x: 0, y: 0 };
-          }
-
-          // Update ape position
-          ape.x += ape.direction.x;
-          ape.y += ape.direction.y;
-
-          // Ensure ape stays within bounds
-          ape.x = Math.max(0, Math.min(GRID_WIDTH - 1, ape.x));
-          ape.y = Math.max(0, Math.min(GRID_HEIGHT - 1, ape.y));
-
-          // Check if ape has collided with the player's head
-          if (ape.x === player.x && ape.y === player.y) {
-            if (powerMode) {
-              // Player eats ape when powered up
-              const capturedApeIndex = i;
-              apes.splice(capturedApeIndex, 1);
-              setScore((prevScore) => prevScore + 10);
-
-              // Remove two additional random apes if available
-              if (apes.length >= 2) {
-                const indicesToRemove: number[] = [];
-                while (
-                  indicesToRemove.length < 2 &&
-                  indicesToRemove.length < apes.length
-                ) {
-                  const randomIndex = Math.floor(Math.random() * apes.length);
-                  if (!indicesToRemove.includes(randomIndex)) {
-                    indicesToRemove.push(randomIndex);
-                  }
-                }
-
-                indicesToRemove.sort((a, b) => b - a);
-
-                indicesToRemove.forEach((index) => {
-                  apes.splice(index, 1);
-                  setScore((prevScore) => prevScore + 5);
-                });
-              }
-
-              // Respawn apes after a delay
-              setTimeout(() => {
-                const apesToRespawn = Math.min(3, 4 - apes.length);
-                spawnNewApes(apesToRespawn);
-              }, 3000);
-              return;
-            } else {
-              // Ape catches player
-              livesRef.current = Math.max(0, livesRef.current - 1);
-              setLives(livesRef.current);
-              if (livesRef.current === 0) {
-                setGameOver(true);
-                if (onGameComplete) onGameComplete(false);
-              } else {
-                player.x = Math.floor(GRID_WIDTH / 2);
-                player.y = Math.floor(GRID_HEIGHT / 2);
-                player.trail = [];
-                player.direction = { x: 0, y: 0 };
-              }
-              return;
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error in moveApes:", error);
-      }
-    };
-
-    // Draw function
-    const draw = () => {
-      try {
-        if (!ctx || !canvas) return;
-
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw maze
-        ctx.fillStyle = "#0000AA";
-        for (let y = 0; y < GRID_HEIGHT; y++) {
-          for (let x = 0; x < GRID_WIDTH; x++) {
-            if (maze[y] && maze[y][x] === 1) {
-              ctx.fillRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
-            }
-          }
-        }
-
-        // Draw tokens
-        ctx.fillStyle = "#FFFF00";
-        if (tokens) {
-          tokens.forEach((token) => {
-            if (!token) return;
-
-            // Draw token as a square with a hole in the middle (like a coin)
-            ctx.fillRect(
-              token.x * GRID_SIZE + GRID_SIZE / 4,
-              token.y * GRID_SIZE + GRID_SIZE / 4,
-              GRID_SIZE / 2,
-              GRID_SIZE / 2
-            );
-            ctx.fillStyle = "#000";
-            ctx.fillRect(
-              token.x * GRID_SIZE + (GRID_SIZE * 3) / 8,
-              token.y * GRID_SIZE + (GRID_SIZE * 3) / 8,
-              GRID_SIZE / 4,
-              GRID_SIZE / 4
-            );
-            ctx.fillStyle = "#FFFF00";
-          });
-        }
-
-        // Draw power-ups
-        ctx.fillStyle = "#00FFFF";
-        if (powerUps) {
-          powerUps.forEach((powerUp) => {
-            if (!powerUp || !powerUp.active) return;
-
-            ctx.beginPath();
-            ctx.arc(
-              powerUp.x * GRID_SIZE + GRID_SIZE / 2,
-              powerUp.y * GRID_SIZE + GRID_SIZE / 2,
-              GRID_SIZE / 3,
-              0,
-              Math.PI * 2
-            );
-            ctx.fill();
-          });
-        }
-
-        // Draw player trail
-        if (player && player.trail) {
-          ctx.fillStyle = "#00FF00";
-          player.trail.forEach((pos, i) => {
-            if (!pos) return;
-
-            const size = GRID_SIZE * (0.5 + (i / player.trail.length) * 0.5);
-            ctx.fillRect(
-              pos.x * GRID_SIZE + (GRID_SIZE - size) / 2,
-              pos.y * GRID_SIZE + (GRID_SIZE - size) / 2,
-              size,
-              size
-            );
-          });
-        }
-
-        // Draw player
-        if (player) {
-          // Draw yellow face
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 2,
-            player.y * GRID_SIZE + GRID_SIZE / 2,
-            GRID_SIZE / 2,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = "#FFD600";
-          ctx.fill();
-          ctx.closePath();
-
-          // Draw eyes
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 3,
-            player.y * GRID_SIZE + GRID_SIZE / 2.5,
-            GRID_SIZE / 10,
-            0,
-            Math.PI * 2
-          );
-          ctx.arc(
-            player.x * GRID_SIZE + (GRID_SIZE * 2) / 3,
-            player.y * GRID_SIZE + GRID_SIZE / 2.5,
-            GRID_SIZE / 10,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = "#222";
-          ctx.fill();
-          ctx.closePath();
-
-          // Draw smile
-          ctx.beginPath();
-          ctx.arc(
-            player.x * GRID_SIZE + GRID_SIZE / 2,
-            player.y * GRID_SIZE + (GRID_SIZE * 2) / 3,
-            GRID_SIZE / 5,
-            0,
-            Math.PI
-          );
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = "#222";
-          ctx.stroke();
-          ctx.closePath();
-        }
-
-        // Draw apes
-        if (apes) {
-          apes.forEach((ape) => {
-            if (!ape) return;
-
-            const baseX = ape.x * GRID_SIZE;
-            const baseY = ape.y * GRID_SIZE;
-
-            // Ape body
-            ctx.fillStyle = powerMode ? "#0000FF" : "#8B4513";
-            ctx.fillRect(baseX, baseY, GRID_SIZE, GRID_SIZE);
-
-            // Ape ears
-            ctx.fillRect(
-              baseX - GRID_SIZE / 6,
-              baseY + GRID_SIZE / 6,
-              GRID_SIZE / 6,
-              GRID_SIZE / 3
-            );
-            ctx.fillRect(
-              baseX + GRID_SIZE,
-              baseY + GRID_SIZE / 6,
-              GRID_SIZE / 6,
-              GRID_SIZE / 3
-            );
-
-            // Ape face
-            ctx.fillStyle = powerMode ? "#0000AA" : "#A0522D";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 4,
-              baseY + GRID_SIZE / 2,
-              GRID_SIZE / 2,
-              GRID_SIZE / 3
-            );
-
-            // Ape eyes
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 4,
-              baseY + GRID_SIZE / 4,
-              GRID_SIZE / 6,
-              GRID_SIZE / 6
-            );
-            ctx.fillRect(
-              baseX + (GRID_SIZE * 3) / 5,
-              baseY + GRID_SIZE / 4,
-              GRID_SIZE / 6,
-              GRID_SIZE / 6
-            );
-
-            // Ape mouth
-            ctx.fillStyle = "#000";
-            ctx.fillRect(
-              baseX + GRID_SIZE / 3,
-              baseY + (GRID_SIZE * 2) / 3,
-              GRID_SIZE / 3,
-              GRID_SIZE / 6
-            );
-          });
-        }
-
-        // Draw score and lives
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "20px monospace";
-        ctx.textAlign = "left";
-        ctx.fillText(
-          `UBI CREDITS: ${tokensCollectedRef.current}/${TOKENS_TO_WIN}`,
-          10,
-          30
-        );
-
-        // Draw lives
-        ctx.fillText(`LIVES: ${livesRef.current}`, canvas.width - 150, 30);
-
-        // Draw power mode timer
-        if (powerMode) {
-          ctx.fillStyle = "#00FFFF";
-          ctx.fillText(
-            `POWER: ${Math.ceil(powerModeTimer / 30)}`,
-            canvas.width / 2 - 80,
-            30
-          );
-        }
-      } catch (error) {
-        console.error("Error in draw:", error);
-      }
-    };
-
-    // Check collisions - copied directly from original working code
-    const checkCollisions = () => {
-      try {
-        // Ensure player and player.direction are defined
-        if (!player || !player.direction) {
-          console.error("Player or player direction is undefined");
-          return;
-        }
-
-        // Check wall collisions
-        const nextX = player.x + (player.direction.x || 0);
-        const nextY = player.y + (player.direction.y || 0);
-
-        // Make sure we're not accessing out of bounds maze cells
-        if (
-          nextY < 0 ||
-          nextY >= maze.length ||
-          nextX < 0 ||
-          nextX >= maze[0].length
-        ) {
-          player.direction = { x: 0, y: 0 };
-          return;
-        }
-
-        // Make sure maze[nextY] exists before accessing maze[nextY][nextX]
-        if (maze[nextY] && maze[nextY][nextX] === 1) {
-          // Hit a wall, stop moving
-          player.direction = { x: 0, y: 0 };
-          return;
-        }
-
-        // Update player position - directly copied from original
-        player.x = nextX;
-        player.y = nextY;
-
-        // Add current position to trail
-        player.trail.push({ x: player.x, y: player.y });
-
-        // Trim trail to tail length
-        while (player.trail.length > player.tailLength) {
-          player.trail.shift();
-        }
-
-        // Check token collisions - copied EXACTLY from the original working code
-        if (tokens) {
-          for (let i = tokens.length - 1; i >= 0; i--) {
-            const token = tokens[i];
-            if (token && token.x === player.x && token.y === player.y) {
-              // Token collection logic copied directly from original working code
-              tokens.splice(i, 1);
-              player.tailLength += 1;
-              tokensCollectedRef.current += 1;
-              const newTokens = tokensCollectedRef.current;
-              setTokensCollected(newTokens);
-              setScore((prevScore) => prevScore + 1);
-
-              // Check win condition
-              if (newTokens >= TOKENS_TO_WIN) {
-                track("game_won", { tokens_collected: newTokens });
-                setGameWon(true);
-                setShowWinModal(true);
-                if (onGameComplete) onGameComplete(true);
-
-                // Generate discount code when player wins
-                if (!discountCode) {
-                  generateDiscountCode();
-                }
-                // Exit immediately after collecting token that meets win condition
-                return;
-              }
-
-              // Place a new token
-              placeToken();
-
-              // Original code doesn't spawn apes on token collection
-              // so we shouldn't either - this was an added feature
-
-              // Break out of loop (important - only collect one token per frame)
-              break;
-            }
-          }
-        }
-
-        // Check power-up collisions
-        if (powerUps) {
-          for (let i = powerUps.length - 1; i >= 0; i--) {
-            const powerUp = powerUps[i];
-            if (
-              powerUp &&
-              powerUp.x === player.x &&
-              powerUp.y === player.y &&
-              powerUp.active
-            ) {
-              powerUps.splice(i, 1);
-              powerMode = true;
-              powerModeTimer = 300; // 10 seconds at 30fps
-              setScore((prevScore) => prevScore + 5);
-              placePowerUp();
-            }
-          }
-        }
-
-        // Update power mode timer
-        if (powerMode) {
-          powerModeTimer--;
-          if (powerModeTimer <= 0) {
-            powerMode = false;
-          }
-        }
-      } catch (error) {
-        console.error("Error in checkCollisions:", error);
-      }
-    };
-
-    // Handle keyboard input
-    const handleKeyDown = (e: KeyboardEvent) => {
-      try {
-        if ((gameOver || gameWon) && e.code === "Space") {
-          setGameOver(false);
-          setGameWon(false);
-          setShowWinModal(false);
-          setScore(0);
-          livesRef.current = 3;
-          setLives(3);
-          initGame();
-          if (gameLoopId) {
-            cancelAnimationFrame(gameLoopId);
-          }
-          gameLoopId = requestAnimationFrame(gameLoop);
-          return;
-        }
-
-        if (!player || !player.direction) {
-          player = {
-            ...player,
-            direction: { x: 0, y: 0 },
-          };
-        }
-
-        switch (e.code) {
-          case "ArrowLeft":
-            if (player.direction.x === 0) {
-              // Prevent 180-degree turns
-              player.direction = { x: -1, y: 0 };
-            }
-            break;
-          case "ArrowRight":
-            if (player.direction.x === 0) {
-              player.direction = { x: 1, y: 0 };
-            }
-            break;
-          case "ArrowUp":
-            if (player.direction.y === 0) {
-              player.direction = { x: 0, y: -1 };
-            }
-            break;
-          case "ArrowDown":
-            if (player.direction.y === 0) {
-              player.direction = { x: 0, y: 1 };
-            }
-            break;
-        }
-      } catch (error) {
-        console.error("Error in handleKeyDown:", error);
-      }
-    };
-
-    // Game loop - copied directly from original working code
-    const gameLoop = () => {
-      try {
-        // Normal game over
-        if (gameOver) {
-          // Draw game over screen with overlay
-          if (!ctx || !canvas) return;
-          // Semi-transparent black overlay
-          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // GAME OVER text
-          ctx.fillStyle = "#FF3333";
-          ctx.font = "bold 64px monospace";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 80);
-
-          // Button-like prompt
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(
-            canvas.width / 2 - 180,
-            canvas.height / 2 + 40,
-            360,
-            60,
-            20
-          );
-          ctx.fillStyle = "#222";
-          ctx.globalAlpha = 0.95;
-          ctx.fill();
-          ctx.globalAlpha = 1.0;
-          ctx.lineWidth = 4;
-          ctx.strokeStyle = "#FF3333";
-          ctx.stroke();
-          ctx.closePath();
-          ctx.restore();
-
-          ctx.fillStyle = "#FF3333";
-          ctx.font = "bold 28px monospace";
-          ctx.fillText(
-            "PRESS SPACE TO RESTART",
-            canvas.width / 2,
-            canvas.height / 2 + 70
-          );
-
-          return;
-        }
-
-        // Increment frame counter
-        frameCounter++;
-
-        // Only move apes on certain frames based on APE_SPEED
-        if (frameCounter % APE_SPEED === 0) {
-          moveApes();
-        }
-
-        // Only move player on certain frames based on PLAYER_SPEED
-        if (frameCounter % PLAYER_SPEED === 0) {
-          checkCollisions();
-        }
-
-        draw();
-        gameLoopId = requestAnimationFrame(gameLoop);
-      } catch (error) {
-        console.error("Error in game loop:", error);
-        // Continue the game - do NOT reset anything!
-        gameLoopId = requestAnimationFrame(gameLoop);
-      }
-    };
-
-    // --- Ape spawn interval ---
-    apeIntervalId = window.setInterval(() => {
-      if (apes.length < 8) {
-        spawnNewApes(1);
-      }
-    }, 10000);
-
-    // Initialize game
-    initGame();
-
-    // Start game loop
-    gameLoopId = requestAnimationFrame(gameLoop);
-
-    // Add event listeners
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      cancelAnimationFrame(gameLoopId);
-      if (apeIntervalId) clearInterval(apeIntervalId);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
     };
-  }, [gameStarted, discountCode, generateDiscountCode, onGameComplete]);
+  }, [playing, claimReward, newRound]);
 
-  // Keep refs in sync with state for display
-  useEffect(() => {
-    tokensCollectedRef.current = tokensCollected;
-    livesRef.current = lives;
-  }, [tokensCollected, lives]);
-
-  // Prevent body scroll when game modal is active
-  useEffect(() => {
-    if (gameStarted) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    // Cleanup on unmount
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [gameStarted]);
-
-  // Copy discount code to clipboard
-  const copyToClipboard = async () => {
-    if (!discountCode) return;
-
+  const copyCode = async () => {
     try {
-      await navigator.clipboard.writeText(discountCode);
-      setCopiedFeedback(true);
-      setTimeout(() => setCopiedFeedback(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy discount code:", err);
+      await navigator.clipboard.writeText(reward.code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy discount code:", error);
     }
   };
 
-  // Restart game function
-  const restartGame = () => {
-    setGameOver(false);
-    setGameWon(false);
-    setShowWinModal(false);
-    setScore(0);
-    setLives(3);
-    tokensCollectedRef.current = 0;
-    livesRef.current = 3;
-  };
+  if (!playing) {
+    return (
+      <div className="border-2 border-dark bg-club-blue p-5 text-club-paper shadow-hard sm:p-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+          <div className="w-[96px] shrink-0 -rotate-6 border-2 border-dark shadow-hard sm:w-[150px]">
+            <Image src="/images/a-ok-8bit-retro.png" alt="Pixel-art A-OK ape" width={160} height={160} />
+          </div>
+          <div>
+            <p className="micro">Bonus item / a little detour</p>
+            <h2 className="display-heading my-3 text-[44px] sm:text-[64px]">
+              Touch grass.
+              <br />
+              Or dodge agents.
+            </h2>
+            <p className="text-sm">The apes are on the keys. Grab the credits before they grab you.</p>
+          </div>
+        </div>
+
+        <div className="receipt-slip mt-8 text-dark">
+          <p className="micro border-b border-dashed border-dark pb-3 text-center">How to play</p>
+          <p className="receipt-line">
+            <span>Move</span>
+            <span className="text-right">Arrow keys, WASD or swipe</span>
+          </p>
+          <p className="receipt-line">
+            <span>Collect</span>
+            <span className="text-right">{target} UBI credits</span>
+          </p>
+          <p className="receipt-line">
+            <span>Touch grass</span>
+            <span className="text-right">Agents turn tail. Catch them.</span>
+          </p>
+          <p className="receipt-line">
+            <span>Lives</span>
+            <span>{START_LIVES}</span>
+          </p>
+          <p className="mt-4 flex justify-between border-t-2 border-dashed border-dark pt-3 font-bold">
+            <span>Prize</span>
+            <span>25% off</span>
+          </p>
+        </div>
+
+        <button type="button" onClick={start} className="btn btn-secondary mt-10 min-h-[52px] w-full justify-between sm:w-auto">
+          Start running <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    );
+  }
+
+  const ended = hud.phase === "won" || hud.phase === "lost";
 
   return (
-    <>
-      {/* Game Start Screen */}
-      {!gameStarted && (
-        <div className="flex flex-col items-center justify-center w-full max-w-[800px] mx-auto relative">
-          <div
-            className="flex flex-col items-center justify-center p-5 sm:p-8 w-full min-h-[600px] relative overflow-hidden"
-            style={{
-              backgroundImage: "url('/game/a-ok-8bit-retro.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            {/* Overlay for readability */}
-            <div className="absolute inset-0 bg-black bg-opacity-60 z-0" />
-            <div className="relative z-10 flex flex-col items-center">
-              <h2 className="text-4xl sm:text-5xl mb-10 sm:mb-24 text-center font-bold text-white drop-shadow-lg">
-                RUN, HUMAN, RUN!
-              </h2>
-              <div className="mb-8 text-center text-white drop-shadow-lg font-bold">
-                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                  Use arrow keys to move
+    <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-club-blue-dark/95 p-3 sm:p-6">
+      {/* The ticker: credits, lives and Touch Grass time. */}
+      <div className="micro flex w-full max-w-[800px] items-center gap-4 border-2 border-dark bg-club-red px-3 py-1 text-club-paper sm:gap-6">
+        <span>
+          UBI credits <b className="text-base">{String(hud.credits).padStart(2, "0")}/{target}</b>
+        </span>
+        <span aria-label={`${hud.lives} lives left`}>
+          Lives{" "}
+          <b className="text-base tracking-widest" aria-hidden="true">
+            {"●".repeat(hud.lives)}
+            {"○".repeat(Math.max(0, START_LIVES - hud.lives))}
+          </b>
+        </span>
+        {hud.powerSeconds > 0 && (
+          <span className="text-club-yellow">
+            {/* Lowercase s: the uppercase micro font makes "7S" read as 75. */}
+            Touch grass <b className="text-base normal-case">{hud.powerSeconds}s</b>
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => setPlaying(false)}
+          className="ml-auto min-h-[36px] border-2 border-dark bg-club-paper px-3 font-semibold text-dark shadow-hard-sm"
+        >
+          Quit
+        </button>
+      </div>
+
+      <div className="relative flex min-h-0 w-full max-w-[800px] flex-1 items-center justify-center">
+        <canvas
+          ref={canvasRef}
+          width={WIDTH}
+          height={HEIGHT}
+          className="block h-auto max-h-full w-auto max-w-full border-2 border-dark shadow-hard"
+          role="img"
+          aria-label={`Run, Human, Run! game board. ${hud.credits} of ${target} credits, ${hud.lives} lives left.`}
+        />
+
+        {hud.phase === "ready" && (
+          <p className="micro pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 border-2 border-dark bg-club-yellow px-3 py-1 text-dark shadow-hard-sm">
+            Press an arrow key to run
+          </p>
+        )}
+
+        {ended && (
+          <div className="absolute inset-0 flex items-center justify-center overflow-auto bg-club-blue-dark/60 p-4">
+            <div className="receipt-slip w-full max-w-sm text-dark" role="dialog" aria-modal="false" aria-labelledby="run-result">
+              <p className="micro border-b border-dashed border-dark pb-3 text-center">A–OK® · UBI credit receipt</p>
+              <h3 id="run-result" className="display-heading mt-4 text-5xl">
+                {hud.phase === "won" ? "You got out." : "Caught."}
+              </h3>
+              <p className="receipt-line">
+                <span>UBI credits</span>
+                <span>
+                  {hud.credits}/{target}
+                </span>
+              </p>
+              <p className="receipt-line">
+                <span>Lives left</span>
+                <span>{hud.lives}</span>
+              </p>
+
+              {hud.phase === "won" ? (
+                <>
+                  <p className="mt-4 flex items-baseline justify-between border-t-2 border-dashed border-dark pt-3 font-bold">
+                    <span>Total</span>
+                    <span className="display-heading text-3xl text-primary">25% off</span>
+                  </p>
+                  {reward.status === "ready" && (
+                    <div className="mt-4">
+                      <div className="barcode h-10 w-full" aria-hidden="true" />
+                      {/* ph-no-capture keeps the code out of PostHog's automatic click capture. */}
+                      <code className="ph-no-capture mt-2 block text-center font-mono text-lg tracking-widest">
+                        {reward.code}
+                      </code>
+                      <button type="button" onClick={copyCode} className="btn btn-primary mt-4 w-full justify-between">
+                        {copied ? "Copied" : "Copy code"} <span aria-hidden="true">⧉</span>
+                      </button>
+                    </div>
+                  )}
+                  {reward.status === "loading" && <p className="micro mt-4 text-center">Printing your code…</p>}
+                  {reward.status === "error" && (
+                    <div className="mt-4">
+                      <p className="text-sm text-primary" role="alert">
+                        {reward.error}
+                      </p>
+                      <button type="button" onClick={claimReward} className="btn btn-primary mt-3 w-full justify-between">
+                        Try again <span aria-hidden="true">↻</span>
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p
+                  className="display-heading pointer-events-none absolute right-4 top-10 rotate-12 border-4 border-primary px-3 py-1 text-4xl text-primary"
+                  aria-hidden="true"
+                >
+                  Void
                 </p>
-                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                  Collect 3 UBI Credits to win—and win a 25% off discount code
-                </p>
-                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                  Blue power-ups let you eat apes!
-                </p>
-                <p className="mb-4 inline-block px-4 py-2 rounded bg-black bg-opacity-50">
-                  Avoid apes unless you have power-up
-                </p>
-              </div>
-              <button
-                onClick={() => setGameStarted(true)}
-                className="px-8 py-4 mt-8 sm:mt-16 bg-green-500 text-white font-bold rounded shadow-lg"
-              >
-                START GAME
+              )}
+
+              <button type="button" onClick={newRound} className="btn btn-outline mt-3 w-full justify-between">
+                {hud.phase === "won" ? "Play again" : "Run it back"} <span aria-hidden="true">↺</span>
               </button>
+              <p className="micro mt-3 text-center">or press space</p>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Game Modal */}
-      {gameStarted && (
-        <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-40">
-          <div className="relative flex items-center justify-center w-full h-full">
-            {/* Close button */}
-            <button
-              onClick={() => setGameStarted(false)}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl font-bold z-50 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
-              title="Close Game"
-            >
-              ×
-            </button>
-
-            <canvas
-              ref={canvasRef}
-              width={800}
-              height={600}
-              className="border border-gray-800 bg-black"
-              style={{
-                maxWidth: "min(100vw - 2rem, 800px)",
-                maxHeight: "min(100vh - 2rem, 600px)",
-                width: "auto",
-                height: "auto",
-              }}
-              tabIndex={0}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Win Modal */}
-      {showWinModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
-          <div className="bg-gray-900 border-2 border-green-500 rounded-lg p-8 text-center max-w-md mx-4">
-            <h2 className="text-4xl font-bold text-green-400 mb-6">YOU WIN!</h2>
-
-            {discountCode ? (
-              <div className="mb-6">
-                <p className="text-white text-lg mb-4">Your 25% OFF code:</p>
-                <div className="bg-gray-800 border border-gray-600 rounded p-3 mb-4">
-                  {/* ph-no-capture keeps the code out of PostHog's automatic click capture. */}
-                  <code className="ph-no-capture text-yellow-400 text-xl font-mono">
-                    {discountCode}
-                  </code>
-                </div>
-                <button
-                  onClick={copyToClipboard}
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded transition-colors"
-                >
-                  {copiedFeedback ? "COPIED!" : "COPY CODE"}
-                </button>
-              </div>
-            ) : (
-              <div className="mb-6">
-                <p className="text-white text-lg">
-                  GENERATING DISCOUNT CODE...
-                </p>
-              </div>
-            )}
-
-            <button
-              onClick={restartGame}
-              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded transition-colors"
-            >
-              PLAY AGAIN
-            </button>
-
-            <p className="text-gray-400 text-sm mt-4">
-              or press SPACE to restart
-            </p>
-          </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 }
