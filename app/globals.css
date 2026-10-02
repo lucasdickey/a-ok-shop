@@ -137,8 +137,8 @@
   }
 
   /* Decorative ✳: a springy half-turn on hover (on the star or its .star-trigger area). */
-  /* A square 1em box with the glyph centered, so it turns around the glyph's own middle
-     and lands where it started (a full-line-height box made it hop upward). */
+  /* A square 1em box holding the vector ✳ (components/Asterisk.tsx), so it turns around
+     its own middle and lands where it started (a full-line-height box made it hop upward). */
   .star-spin {
     display: inline-flex;
     align-items: center;

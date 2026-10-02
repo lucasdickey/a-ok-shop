@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { track } from "@/app/lib/analytics";
+import Asterisk from "@/app/components/Asterisk";
 
 /*
  * "Print this" on a Chaos Monkey: customers ask for a monkey to become a tee, GitHub-star style.
@@ -99,7 +100,7 @@ export default function PrintRequestButton({ id, title }: { id: string; title: s
           }`}
         >
           <span aria-hidden="true" className={`star-spin text-lg leading-none ${wanted ? "text-club-yellow" : "text-primary"}`}>
-            ✳
+            <Asterisk />
           </span>
           {wanted ? "Asked to print" : "Print this"}
         </button>

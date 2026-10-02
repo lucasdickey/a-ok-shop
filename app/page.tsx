@@ -3,6 +3,7 @@ import Image from "next/image";
 import ImageGrid from "@/app/components/ImageGrid";
 import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
 import PrintRequestButton from "@/app/components/PrintRequestButton";
+import Asterisk from "@/app/components/Asterisk";
 import ProductCard from "@/app/components/product/ProductCard";
 import type { SimpleProduct } from "@/app/lib/catalog";
 import { formatDropDate, getChaosMonkeys, getLatestDrop } from "@/app/lib/chaos-monkeys";
@@ -175,7 +176,9 @@ export default async function Home() {
             aria-hidden="true"
           />
           <span className="absolute left-4 top-6 z-[1] text-[66px] text-primary lg:top-16 lg:text-[84px]" aria-hidden="true">
-            <span className="star-spin">✳</span>
+            <span className="star-spin">
+              <Asterisk />
+            </span>
           </span>
           {heroImage && (
             <div className="relative w-full max-w-[510px] -rotate-[4deg] rounded-t-[260px] border-2 border-dark bg-club-paper px-4 pt-4 shadow-[8px_8px_0_#22221E] lg:px-5 lg:pt-5 lg:shadow-hard-lg">
@@ -231,7 +234,7 @@ export default async function Home() {
             {index > 0 && (
               // Stars spin one after another when the ticker is hovered.
               <b className="star-spin text-[17px] sm:text-2xl" style={{ transitionDelay: `${(index - 1) * 90}ms` }} aria-hidden="true">
-                ✳
+                <Asterisk />
               </b>
             )}
             {line}
