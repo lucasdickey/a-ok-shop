@@ -155,8 +155,8 @@
     }
   }
 
-  /* An 8-bit dithered fade: a checkerboard of 3px ink pixels (10% ink, half covered, so
-     about 5% overall) that steps in from the top left to the bottom right. */
+  /* An 8-bit fade: a checkerboard of 3px ink pixels (10% ink, half covered, so about 5%
+     overall) that fades in smoothly from the top left to the bottom right. */
   .pixel-fade {
     position: relative;
     isolation: isolate;
@@ -174,8 +174,8 @@
       transparent 0
     );
     background-size: 6px 6px;
-    -webkit-mask-image: linear-gradient(135deg, transparent 0 25%, rgb(0 0 0 / 0.33) 25% 50%, rgb(0 0 0 / 0.66) 50% 75%, #000 75%);
-    mask-image: linear-gradient(135deg, transparent 0 25%, rgb(0 0 0 / 0.33) 25% 50%, rgb(0 0 0 / 0.66) 50% 75%, #000 75%);
+    -webkit-mask-image: linear-gradient(135deg, transparent, #000);
+    mask-image: linear-gradient(135deg, transparent, #000);
   }
 
   /* The red period: a small heartbeat while its heading is hovered. */
