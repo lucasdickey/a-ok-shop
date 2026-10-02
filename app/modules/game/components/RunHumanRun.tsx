@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { track } from "@/app/lib/analytics";
+import { DebugRecorder, frameStep, type InputSource } from "../debug";
+import DebugPanel, { type DebugStats } from "./DebugPanel";
 import {
   COLS,
   PLAYER_STEP_MS,
@@ -23,8 +25,6 @@ import {
 const CELL = 32;
 const WIDTH = COLS * CELL;
 const HEIGHT = ROWS * CELL;
-// A long pause (a hidden tab, a breakpoint) shouldn't fast-forward the game.
-const MAX_FRAME_MS = 100;
 // How far a finger travels before it counts as a swipe.
 const SWIPE_PX = 24;
 
@@ -55,6 +55,9 @@ function creditsToWin(): number {
   const { hostname, port } = window.location;
   return hostname === "localhost" && port.startsWith("3") ? 3 : 10;
 }
+
+/** ?debug=1 records rounds for replay and shows timing numbers. */
+const isDebug = () => new URLSearchParams(window.location.search).get("debug") === "1";
 
 type Hud = { credits: number; lives: number; powerSeconds: number; phase: Phase };
 const hudOf = (game: GameState): Hud => ({
@@ -225,6 +228,8 @@ export default function RunHumanRun() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<GameState | null>(null);
   const swipeFrom = useRef<Point | null>(null);
+  const [recorder] = useState(() => (isDebug() ? new DebugRecorder() : null));
+  const recentFrames = useRef<number[]>([]); // raw frame lengths, newest last (debug only)
 
   const claimReward = useCallback(async () => {
     setReward({ status: "loading", code: "", error: "" });
@@ -247,15 +252,62 @@ export default function RunHumanRun() {
   }, []);
 
   const newRound = useCallback(() => {
-    const game = createGame(target);
+    const game = createGame(target, recorder ? recorder.startRound(target) : Math.random);
     gameRef.current = game;
     setHud(hudOf(game));
     setCopied(false);
-  }, [target]);
+  }, [target, recorder]);
 
-  const steer = (direction: Direction) => {
-    if (gameRef.current) setDirection(gameRef.current, direction);
-  };
+  const steer = useCallback(
+    (direction: Direction, source: InputSource) => {
+      const game = gameRef.current;
+      if (!game) return;
+      recorder?.input(direction, source);
+      setDirection(game, direction);
+    },
+    [recorder]
+  );
+
+  const markMoment = useCallback(() => {
+    if (recorder && gameRef.current) recorder.mark(gameRef.current);
+  }, [recorder]);
+
+  const readStats = useCallback((): DebugStats => {
+    const frames = recentFrames.current;
+    const lastSecond: number[] = [];
+    for (let i = frames.length - 1, total = 0; i >= 0 && total < 1000; i--) {
+      lastSecond.push(frames[i]);
+      total += frames[i];
+    }
+    const game = gameRef.current;
+    const ape = game?.apes.find((a) => a.respawnMs === 0);
+    const round = recorder?.rounds[recorder.rounds.length - 1];
+    return {
+      fps: lastSecond.length,
+      frameMs: frames[frames.length - 1] ?? 0,
+      worstMs: lastSecond.length > 0 ? Math.max(...lastSecond) : 0,
+      playerStepMs: PLAYER_STEP_MS,
+      apeStepMs: game && ape ? apeStepMs(game, ape) : null,
+      frames: round?.frameMs.length ?? 0,
+      inputs: round?.inputs.length ?? 0,
+      marks: recorder?.rounds.reduce((sum, r) => sum + r.marks.length, 0) ?? 0,
+      rounds: recorder?.rounds.length ?? 0,
+    };
+  }, [recorder]);
+
+  const downloadLog = useCallback(
+    (notes: string) => {
+      if (!recorder) return;
+      const log = recorder.toLog(notes, canvasRef.current);
+      const url = URL.createObjectURL(new Blob([JSON.stringify(log)], { type: "application/json" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `run-human-run-debug-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    },
+    [recorder]
+  );
 
   // Swipes steer as soon as the finger has moved far enough, so one long
   // drag can turn several corners.
@@ -268,7 +320,7 @@ export default function RunHumanRun() {
     const dx = event.clientX - from.x;
     const dy = event.clientY - from.y;
     if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_PX) return;
-    steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up");
+    steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : dy > 0 ? "down" : "up", "swipe");
     swipeFrom.current = { x: event.clientX, y: event.clientY };
   };
   const onSwipeEnd = () => {
@@ -299,8 +351,13 @@ export default function RunHumanRun() {
     const tick = (now: number) => {
       const game = gameRef.current;
       if (game) {
-        // A frame's timestamp can be slightly earlier than the effect's start, so never go negative.
-        const events = update(game, Math.min(MAX_FRAME_MS, Math.max(0, now - last)));
+        const raw = now - last;
+        const events = update(game, frameStep(raw));
+        if (recorder) {
+          recorder.frame(raw, events, game);
+          recentFrames.current.push(raw);
+          if (recentFrames.current.length > 240) recentFrames.current.shift();
+        }
         if (events.includes("won")) {
           track("game_won", { tokens_collected: game.creditsCollected });
           claimReward();
@@ -317,10 +374,16 @@ export default function RunHumanRun() {
     const onKeyDown = (event: KeyboardEvent) => {
       const game = gameRef.current;
       if (!game) return;
+      // Typing debug notes shouldn't steer (WASD) or mark.
+      if (event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement) return;
       const direction = KEY_DIRECTIONS[event.code];
       if (direction) {
         event.preventDefault(); // keep arrows from scrolling the page
-        setDirection(game, direction);
+        steer(direction, "key");
+        return;
+      }
+      if (recorder && event.code === "KeyB") {
+        markMoment();
         return;
       }
       const ended = game.phase === "won" || game.phase === "lost";
@@ -340,7 +403,7 @@ export default function RunHumanRun() {
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [playing, claimReward, newRound]);
+  }, [playing, claimReward, newRound, steer, markMoment, recorder]);
 
   const copyCode = async () => {
     try {
@@ -351,6 +414,8 @@ export default function RunHumanRun() {
       console.error("Failed to copy discount code:", error);
     }
   };
+
+  const debugPanel = recorder && <DebugPanel read={readStats} onMark={markMoment} onDownload={downloadLog} />;
 
   if (!playing) {
     return (
@@ -397,6 +462,7 @@ export default function RunHumanRun() {
         <button type="button" onClick={start} className="btn btn-secondary mt-10 min-h-[52px] w-full justify-between sm:w-auto">
           Start running <span aria-hidden="true">↗</span>
         </button>
+        {debugPanel}
       </div>
     );
   }
@@ -425,7 +491,10 @@ export default function RunHumanRun() {
         )}
         <button
           type="button"
-          onClick={() => setPlaying(false)}
+          onClick={() => {
+            recorder?.quit();
+            setPlaying(false);
+          }}
           className="ml-auto min-h-[36px] border-2 border-dark bg-club-paper px-3 font-semibold text-dark shadow-hard-sm"
         >
           Quit
@@ -537,7 +606,7 @@ export default function RunHumanRun() {
             aria-label={`Move ${direction}`}
             onPointerDown={(event) => {
               event.preventDefault();
-              steer(direction);
+              steer(direction, "pad");
             }}
             className={`${place} flex h-14 w-14 touch-none select-none items-center justify-center border-2 border-dark bg-club-yellow text-2xl font-bold text-dark shadow-hard-sm active:translate-x-0.5 active:translate-y-0.5 active:shadow-none`}
           >
@@ -545,6 +614,7 @@ export default function RunHumanRun() {
           </button>
         ))}
       </div>
+      {debugPanel}
     </div>
   );
 }
