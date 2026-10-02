@@ -57,7 +57,8 @@ export type DebugRound = {
   frameMs: number[];
   /** `frame` is how many updates had run when the input arrived; replay applies it before update `frame`. */
   inputs: { frame: number; dir: Direction; source: InputSource }[];
-  marks: { frame: number; snapshot: Snapshot }[];
+  /** The round pauses at each mark until its note is saved; paused time isn't in `frameMs`. */
+  marks: { frame: number; snapshot: Snapshot; note: string }[];
   events: { frame: number; event: GameEvent }[];
   result: Phase | "quit";
 };
@@ -136,9 +137,16 @@ export class DebugRecorder {
     current.result = game.phase;
   }
 
-  mark(game: GameState) {
+  /** Records a mark and returns how many marks there are in all (for the "Mark #n" label). */
+  mark(game: GameState): number {
     const current = this.current;
-    if (current) current.marks.push({ frame: current.frameMs.length, snapshot: snapshot(game) });
+    if (current) current.marks.push({ frame: current.frameMs.length, snapshot: snapshot(game), note: "" });
+    return this.rounds.reduce((sum, round) => sum + round.marks.length, 0);
+  }
+
+  noteLastMark(note: string) {
+    const last = this.current?.marks.at(-1);
+    if (last) last.note = note.trim();
   }
 
   quit() {

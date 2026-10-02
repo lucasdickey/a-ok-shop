@@ -46,7 +46,8 @@ export default function GameModal() {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpen(false);
+        // Something inside (like the game's debug note box) already used this Escape.
+        if (!event.defaultPrevented) setOpen(false);
         return;
       }
       const panel = panelRef.current;

@@ -80,7 +80,7 @@ export default function DebugPanel({ read, onMark, onDownload }: DebugPanelProps
           <textarea
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
-            placeholder="Notes: what felt off at each mark"
+            placeholder="General notes (each mark asks for its own)"
             rows={3}
             className="mt-2 w-full border border-dark bg-club-slip p-1 normal-case"
           />

@@ -224,6 +224,9 @@ export default function RunHumanRun() {
   const swipeFrom = useRef<Point | null>(null);
   const [recorder] = useState(() => (isDebug() ? new DebugRecorder() : null));
   const recentFrames = useRef<number[]>([]); // raw frame lengths, newest last (debug only)
+  const pausedRef = useRef(false); // debug only: frozen while a mark's note is written
+  const [markPrompt, setMarkPrompt] = useState<number | null>(null);
+  const [noteDraft, setNoteDraft] = useState("");
 
   const claimReward = useCallback(async () => {
     setReward({ status: "loading", code: "", error: "" });
@@ -248,6 +251,8 @@ export default function RunHumanRun() {
   const newRound = useCallback(() => {
     const game = createGame(target, recorder ? recorder.startRound(target) : Math.random);
     gameRef.current = game;
+    pausedRef.current = false;
+    setMarkPrompt(null);
     setHud(hudOf(game));
     setCopied(false);
   }, [target, recorder]);
@@ -255,16 +260,27 @@ export default function RunHumanRun() {
   const steer = useCallback(
     (direction: Direction, source: InputSource) => {
       const game = gameRef.current;
-      if (!game) return;
+      if (!game || pausedRef.current) return;
       recorder?.input(direction, source);
       setDirection(game, direction);
     },
     [recorder]
   );
 
+  // Marking pauses the round until the note is saved, so the moment can be described while it's on screen.
   const markMoment = useCallback(() => {
-    if (recorder && gameRef.current) recorder.mark(gameRef.current);
+    const game = gameRef.current;
+    if (!recorder || !game || pausedRef.current) return;
+    pausedRef.current = true;
+    setNoteDraft("");
+    setMarkPrompt(recorder.mark(game));
   }, [recorder]);
+
+  const resumeFromMark = (note: string) => {
+    recorder?.noteLastMark(note);
+    pausedRef.current = false;
+    setMarkPrompt(null);
+  };
 
   const readStats = useCallback((): DebugStats => {
     const frames = recentFrames.current;
@@ -344,7 +360,10 @@ export default function RunHumanRun() {
     let last = performance.now();
     const tick = (now: number) => {
       const game = gameRef.current;
-      if (game) {
+      if (game && pausedRef.current) {
+        // Frozen for a debug note: draw, but don't advance or record.
+        draw(ctx, maze, game, now);
+      } else if (game) {
         const raw = now - last;
         const events = update(game, frameStep(raw));
         if (recorder) {
@@ -377,6 +396,7 @@ export default function RunHumanRun() {
         return;
       }
       if (recorder && event.code === "KeyB") {
+        event.preventDefault(); // so the b doesn't land in the note box
         markMoment();
         return;
       }
@@ -487,6 +507,8 @@ export default function RunHumanRun() {
           type="button"
           onClick={() => {
             recorder?.quit();
+            pausedRef.current = false;
+            setMarkPrompt(null);
             setPlaying(false);
           }}
           className="ml-auto min-h-[36px] border-2 border-dark bg-club-paper px-3 font-semibold text-dark shadow-hard-sm"
@@ -516,6 +538,41 @@ export default function RunHumanRun() {
           <p className="micro pointer-events-none absolute left-1/2 top-1 -translate-x-1/2 whitespace-nowrap border-2 border-dark bg-club-yellow px-3 py-1 text-dark shadow-hard-sm">
             Arrow key or swipe to run
           </p>
+        )}
+
+        {markPrompt !== null && (
+          <form
+            className="absolute inset-0 z-10 flex items-center justify-center bg-club-blue-dark/50 p-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              resumeFromMark(noteDraft);
+            }}
+          >
+            <div className="receipt-slip w-full max-w-sm text-dark">
+              <p className="micro border-b border-dashed border-dark pb-2 text-center">Paused · Mark #{markPrompt}</p>
+              <label htmlFor="mark-note" className="mt-3 block text-sm font-semibold">
+                What felt off?
+              </label>
+              <input
+                id="mark-note"
+                autoFocus
+                value={noteDraft}
+                onChange={(event) => setNoteDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key !== "Escape") return;
+                  // Resume. preventDefault tells the game modal (which closes on Escape) to stay open.
+                  event.preventDefault();
+                  resumeFromMark(noteDraft);
+                }}
+                placeholder="e.g. pressed up at the corner, didn't turn"
+                className="mt-2 w-full border-2 border-dark bg-club-slip px-2 py-2 text-sm"
+              />
+              <button type="submit" className="btn btn-primary mt-3 w-full justify-between">
+                Save and resume <span aria-hidden="true">↵</span>
+              </button>
+              <p className="micro mt-2 text-center">Enter saves · Esc resumes</p>
+            </div>
+          </form>
         )}
 
         {ended && (
