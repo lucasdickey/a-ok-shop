@@ -7,17 +7,18 @@ export type Phase = "ready" | "playing" | "won" | "lost";
 export type GameEvent = "credit" | "power" | "ape-eaten" | "life-lost" | "won" | "lost";
 type Personality = "chaser" | "ambusher" | "wanderer";
 
+// Movers sit on `pos` and are partway (stepMs) into the step toward pos + dir,
+// so what's drawn is where they really are, never a cell behind.
 export type Player = {
   pos: Point;
-  prev: Point; // where the last step started, for smooth drawing
   dir: Point;
-  wanted: Point | null; // buffered turn, taken as soon as the maze allows it
+  wanted: Point | null; // buffered turn, taken at the next junction that allows it
+  wantedMs: number; // how long the buffered turn has left before it's dropped
   stepMs: number;
 };
 
 export type Ape = {
   pos: Point;
-  prev: Point;
   dir: Point;
   personality: Personality;
   frightened: boolean;
@@ -67,6 +68,14 @@ export const COLS = MAZE[0].length;
 export const ROWS = MAZE.length;
 
 export const PLAYER_STEP_MS = 125;
+// Caught (or an ape eaten) when the two are this close, in cells, measured where they're drawn.
+const CONTACT_CELLS = 0.75;
+// Long frames run as slices this long, so nothing moves far enough between contact checks to slip past.
+const MAX_SLICE_MS = 20;
+// A turn pressed just after passing a junction still takes it (the human snaps back to the junction).
+const TURN_GRACE_MS = 50;
+// A turn pressed before a junction waits this long for one, then is dropped so it can't fire somewhere unexpected.
+const TURN_BUFFER_MS = 400;
 const APE_STEP_MS = 230;
 const APE_STEP_MIN_MS = 150;
 const APE_SPEEDUP_PER_CREDIT_MS = 8;
@@ -144,7 +153,6 @@ function farthestHome(state: GameState, skip: Point[] = []): Point {
 function newApe(state: GameState, home: Point): Ape {
   return {
     pos: { ...home },
-    prev: { ...home },
     dir: STILL,
     personality: PERSONALITIES[state.apes.length % PERSONALITIES.length],
     frightened: false,
@@ -185,7 +193,7 @@ function placePellet(state: GameState) {
 export function createGame(creditsToWin: number, random: () => number = Math.random): GameState {
   const state: GameState = {
     phase: "ready",
-    player: { pos: { ...PLAYER_START }, prev: { ...PLAYER_START }, dir: STILL, wanted: null, stepMs: 0 },
+    player: { pos: { ...PLAYER_START }, dir: STILL, wanted: null, wantedMs: 0, stepMs: 0 },
     apes: [],
     credits: [],
     pellets: [],
@@ -205,14 +213,35 @@ export function createGame(creditsToWin: number, random: () => number = Math.ran
   return state;
 }
 
+const isReverse = (a: Point, b: Point) => !isStill(a) && a.x === -b.x && a.y === -b.y;
+
+/** Turns a mover around mid-step, so it heads back from exactly where it is. */
+function turnAround(mover: { pos: Point; dir: Point; stepMs: number }, stepMs: number) {
+  mover.pos = step(mover.pos, mover.dir);
+  mover.dir = { x: -mover.dir.x, y: -mover.dir.y };
+  mover.stepMs = Math.max(0, stepMs - mover.stepMs);
+}
+
 /** Arrow key, swipe or D-pad press. The first one starts the round. */
 export function setDirection(state: GameState, direction: Direction) {
   if (state.phase === "ready") state.phase = "playing";
   if (state.phase !== "playing") return;
   const player = state.player;
-  player.wanted = DIRECTIONS[direction];
-  // A standing human moves on the next update instead of waiting out a step.
-  if (isStill(player.dir)) player.stepMs = PLAYER_STEP_MS;
+  const want = DIRECTIONS[direction];
+  player.wanted = null;
+  if (same(want, player.dir)) return;
+
+  const moving = canMove(player.pos, player.dir);
+  if (moving && isReverse(want, player.dir)) {
+    turnAround(player, PLAYER_STEP_MS);
+  } else if (canMove(player.pos, want) && (!moving || player.stepMs <= TURN_GRACE_MS)) {
+    // Standing still, or only just past a junction: turn now.
+    player.dir = want;
+    player.stepMs = 0;
+  } else {
+    player.wanted = want;
+    player.wantedMs = TURN_BUFFER_MS;
+  }
 }
 
 export function apeStepMs(state: GameState, ape: Ape): number {
@@ -230,9 +259,9 @@ function loseLife(state: GameState, events: GameEvent[]) {
   }
   const player = state.player;
   player.pos = { ...PLAYER_START };
-  player.prev = { ...PLAYER_START };
   player.dir = STILL;
   player.wanted = null;
+  player.stepMs = 0;
   state.invulnerableMs = INVULNERABLE_MS;
   // Apes go back to the corners, farthest first.
   const used: Point[] = [];
@@ -240,16 +269,40 @@ function loseLife(state: GameState, events: GameEvent[]) {
     const home = farthestHome(state, used);
     used.push(home);
     ape.pos = { ...home };
-    ape.prev = { ...home };
     ape.dir = STILL;
     ape.stepMs = 0;
   }
 }
 
-/** Checked after every single move, so a human and an ape can never pass through each other. */
+/** Where a mover is right now, in cells: on its cell, partway toward the next. Drawing uses this too. */
+export function moverPosition(pos: Point, dir: Point, progress: number): Point {
+  const t = Math.min(1, Math.max(0, progress));
+  return { x: pos.x + dir.x * t, y: pos.y + dir.y * t };
+}
+
+export function playerPosition(state: GameState): Point {
+  const { pos, dir, stepMs } = state.player;
+  return moverPosition(pos, dir, stepMs / PLAYER_STEP_MS);
+}
+
+export function apePosition(state: GameState, ape: Ape): Point {
+  return moverPosition(ape.pos, ape.dir, ape.stepMs / apeStepMs(state, ape));
+}
+
+/** Distance in cells between two movers, the short way through the tunnel. */
+function gap(a: Point, b: Point): number {
+  const dx = Math.abs(a.x - b.x);
+  return Math.min(dx, COLS - dx) + Math.abs(a.y - b.y);
+}
+
+/**
+ * Checked every slice against where things are drawn, so a turn-around never
+ * counts you on a cell you were backing away from, and nobody passes through.
+ */
 function resolveContact(state: GameState, events: GameEvent[]) {
+  const human = playerPosition(state);
   for (const ape of state.apes) {
-    if (ape.respawnMs > 0 || !same(ape.pos, state.player.pos)) continue;
+    if (ape.respawnMs > 0 || gap(human, apePosition(state, ape)) >= CONTACT_CELLS) continue;
     if (ape.frightened) {
       ape.frightened = false;
       ape.respawnMs = APE_RESPAWN_MS;
@@ -261,15 +314,15 @@ function resolveContact(state: GameState, events: GameEvent[]) {
   }
 }
 
+/** The human reaches the next cell, picks up what's there, and takes a buffered turn if it fits. */
 function movePlayer(state: GameState, events: GameEvent[]) {
   const player = state.player;
-  player.prev = player.pos;
+  if (!canMove(player.pos, player.dir)) return;
+  player.pos = step(player.pos, player.dir);
   if (player.wanted && canMove(player.pos, player.wanted)) {
     player.dir = player.wanted;
     player.wanted = null;
   }
-  if (!canMove(player.pos, player.dir)) return;
-  player.pos = step(player.pos, player.dir);
 
   const creditIndex = state.credits.findIndex((c) => same(c, player.pos));
   if (creditIndex !== -1) {
@@ -298,11 +351,10 @@ function movePlayer(state: GameState, events: GameEvent[]) {
     for (const ape of state.apes) {
       if (ape.respawnMs > 0) continue;
       ape.frightened = true;
-      ape.dir = { x: -ape.dir.x, y: -ape.dir.y }; // the tell: every ape turns around
+      // The tell: every ape turns around.
+      if (canMove(ape.pos, ape.dir)) turnAround(ape, apeStepMs(state, ape));
     }
   }
-
-  resolveContact(state, events);
 }
 
 function apeTarget(state: GameState, ape: Ape): Point {
@@ -317,8 +369,9 @@ function apeTarget(state: GameState, ape: Ape): Point {
   return pos;
 }
 
-function moveApe(state: GameState, ape: Ape, playerDist: Int16Array, events: GameEvent[]) {
-  ape.prev = ape.pos;
+/** The ape reaches the next cell, then picks where to head from there. */
+function moveApe(state: GameState, ape: Ape, playerDist: Int16Array) {
+  if (canMove(ape.pos, ape.dir)) ape.pos = step(ape.pos, ape.dir);
   const reverse = { x: -ape.dir.x, y: -ape.dir.y };
   let options = ALL_DIRS.filter((d) => canMove(ape.pos, d) && !same(d, reverse));
   if (options.length === 0) options = ALL_DIRS.filter((d) => canMove(ape.pos, d));
@@ -349,15 +402,21 @@ function moveApe(state: GameState, ape: Ape, playerDist: Int16Array, events: Gam
   }
 
   ape.dir = choice;
-  ape.pos = step(ape.pos, choice);
-  resolveContact(state, events);
 }
 
 /** Advances the game by `elapsedMs` and returns what happened. */
 export function update(state: GameState, elapsedMs: number): GameEvent[] {
   const events: GameEvent[] = [];
-  if (state.phase !== "playing") return events;
+  let remaining = elapsedMs;
+  while (remaining > 0 && state.phase === "playing") {
+    const slice = Math.min(MAX_SLICE_MS, remaining);
+    remaining -= slice;
+    tick(state, slice, events);
+  }
+  return events;
+}
 
+function tick(state: GameState, elapsedMs: number, events: GameEvent[]) {
   state.invulnerableMs = Math.max(0, state.invulnerableMs - elapsedMs);
   if (state.powerMs > 0) {
     state.powerMs = Math.max(0, state.powerMs - elapsedMs);
@@ -370,37 +429,49 @@ export function update(state: GameState, elapsedMs: number): GameEvent[] {
   }
 
   const player = state.player;
-  player.stepMs += elapsedMs;
-  while (player.stepMs >= PLAYER_STEP_MS && state.phase === "playing") {
-    player.stepMs -= PLAYER_STEP_MS;
-    const livesBefore = state.lives;
-    movePlayer(state, events);
-    if (state.lives !== livesBefore) player.stepMs = 0;
+  if (player.wanted) {
+    player.wantedMs -= elapsedMs;
+    if (player.wantedMs <= 0) player.wanted = null;
   }
+  if (canMove(player.pos, player.dir)) {
+    player.stepMs += elapsedMs;
+    while (player.stepMs >= PLAYER_STEP_MS && state.phase === "playing") {
+      player.stepMs -= PLAYER_STEP_MS;
+      movePlayer(state, events);
+      if (!canMove(player.pos, player.dir)) {
+        player.stepMs = 0; // up against a wall: stand still
+        break;
+      }
+    }
+  } else {
+    player.stepMs = 0;
+  }
+  if (state.phase !== "playing") return;
 
-  const livesBeforeApes = state.lives;
   for (const ape of state.apes) {
-    // Stop once the round ends or a caught human resets the board.
-    if (state.phase !== "playing" || state.lives !== livesBeforeApes) break;
     if (ape.respawnMs > 0) {
       ape.respawnMs = Math.max(0, ape.respawnMs - elapsedMs);
       if (ape.respawnMs === 0) {
         const home = farthestHome(state);
         ape.pos = { ...home };
-        ape.prev = { ...home };
         ape.dir = STILL;
         ape.stepMs = 0;
       }
       continue;
     }
+    if (!canMove(ape.pos, ape.dir)) {
+      // Standing (just placed, or facing a wall): pick a way to go right away.
+      ape.stepMs = 0;
+      moveApe(state, ape, distancesFrom(player.pos));
+      continue;
+    }
     ape.stepMs += elapsedMs;
     const interval = apeStepMs(state, ape);
-    while (ape.stepMs >= interval && state.phase === "playing") {
+    while (ape.stepMs >= interval) {
       ape.stepMs -= interval;
-      moveApe(state, ape, distancesFrom(player.pos), events);
-      if (state.lives !== livesBeforeApes) break;
+      moveApe(state, ape, distancesFrom(player.pos));
     }
   }
 
-  return events;
+  resolveContact(state, events);
 }

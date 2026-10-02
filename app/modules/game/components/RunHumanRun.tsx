@@ -11,9 +11,11 @@ import {
   POWER_WARNING_MS,
   ROWS,
   START_LIVES,
+  apePosition,
   apeStepMs,
   createGame,
   isWall,
+  playerPosition,
   setDirection,
   update,
   type Direction,
@@ -68,14 +70,6 @@ const hudOf = (game: GameState): Hud => ({
 });
 const sameHud = (a: Hud, b: Hud) =>
   a.credits === b.credits && a.lives === b.lives && a.powerSeconds === b.powerSeconds && a.phase === b.phase;
-
-/** Where to draw something that moves one cell per step, partway through its next step. */
-function drawPosition(pos: Point, prev: Point, progress: number): Point {
-  // Coming out of the tunnel: jump instead of sliding across the whole board.
-  if (Math.abs(pos.x - prev.x) > 1) return pos;
-  const t = Math.min(1, Math.max(0, progress));
-  return { x: prev.x + (pos.x - prev.x) * t, y: prev.y + (pos.y - prev.y) * t };
-}
 
 /** The maze never changes, so draw it once. */
 function drawMaze(): HTMLCanvasElement {
@@ -152,7 +146,7 @@ function drawPlayer(ctx: CanvasRenderingContext2D, game: GameState, now: number)
   const { player } = game;
   // Blink while protected after a respawn.
   if (game.invulnerableMs > 0 && Math.floor(now / 120) % 2 === 0) return;
-  const at = drawPosition(player.pos, player.prev, player.stepMs / PLAYER_STEP_MS);
+  const at = playerPosition(game);
   const cx = at.x * CELL + CELL / 2;
   const cy = at.y * CELL + CELL / 2;
   ctx.beginPath();
@@ -179,7 +173,7 @@ function drawApes(ctx: CanvasRenderingContext2D, game: GameState, now: number) {
   const warning = game.powerMs > 0 && game.powerMs < POWER_WARNING_MS && Math.floor(now / 200) % 2 === 0;
   for (const ape of game.apes) {
     if (ape.respawnMs > 0) continue;
-    const at = drawPosition(ape.pos, ape.prev, ape.stepMs / apeStepMs(game, ape));
+    const at = apePosition(game, ape);
     const left = at.x * CELL + 4;
     const top = at.y * CELL + 4;
     const size = CELL - 8;

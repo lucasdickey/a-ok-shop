@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type DebugStats = {
   fps: number;
@@ -25,6 +25,17 @@ export default function DebugPanel({ read, onMark, onDownload }: DebugPanelProps
   const [stats, setStats] = useState<DebugStats>(read);
   const [notes, setNotes] = useState("");
   const [open, setOpen] = useState(true);
+  const [justMarked, setJustMarked] = useState(false);
+  const seenMarks = useRef(stats.marks);
+
+  // Confirm each new mark, whether it came from B or the button.
+  useEffect(() => {
+    if (stats.marks <= seenMarks.current) return;
+    seenMarks.current = stats.marks;
+    setJustMarked(true);
+    const id = window.setTimeout(() => setJustMarked(false), 1500);
+    return () => window.clearTimeout(id);
+  }, [stats.marks]);
 
   // Four refreshes a second is plenty for reading numbers, and keeps React out of the frame loop.
   useEffect(() => {
@@ -59,8 +70,12 @@ export default function DebugPanel({ read, onMark, onDownload }: DebugPanelProps
             <dt>Marks</dt>
             <dd className="text-right">{stats.marks}</dd>
           </dl>
-          <button type="button" onClick={onMark} className="mt-2 w-full border-2 border-dark bg-club-yellow py-1 font-bold">
-            Mark this moment (B)
+          <button
+            type="button"
+            onClick={onMark}
+            className={`mt-2 w-full border-2 border-dark py-1 font-bold ${justMarked ? "bg-dark text-club-yellow" : "bg-club-yellow"}`}
+          >
+            {justMarked ? `Marked #${stats.marks} ✓` : "Mark this moment (B)"}
           </button>
           <textarea
             value={notes}
