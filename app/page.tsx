@@ -163,7 +163,7 @@ export default async function Home() {
           <Link href="/products" className="btn btn-primary min-h-[52px] justify-between gap-6 px-5">
             Find your people. Wear the tee. <span aria-hidden="true">↗</span>
           </Link>
-          <div className="micro mt-8 flex justify-between gap-5 text-[10px]">
+          <div className="micro mt-8 flex flex-wrap gap-x-[0.6em] text-[10px]">
             <span>No login. No secret handshake.</span>
             <span className="hidden sm:inline">Just good clothes.</span>
           </div>
