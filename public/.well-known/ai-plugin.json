@@ -9,10 +9,10 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://www.a-ok.shop/.well-known/openapi.json",
+    "url": "https://a-ok.ai/.well-known/openapi.json",
     "is_user_authenticated": false
   },
-  "logo_url": "https://www.a-ok.shop/a-ok-dot-shop-static.svg",
+  "logo_url": "https://a-ok.ai/a-ok-dot-shop-static.svg",
   "contact_email": "info@a-ok.shop",
-  "legal_info_url": "https://www.apesonkeys.com"
+  "legal_info_url": "https://a-ok.ai/terms"
 }

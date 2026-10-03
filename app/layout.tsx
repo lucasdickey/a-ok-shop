@@ -7,6 +7,7 @@ import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
 import GameModal from "./components/game/GameModal";
 import WebMcpTools from "./components/WebMcpTools";
+import { SITE_URL } from "./lib/site";
 import PostHogInit from "./components/analytics/PostHogInit";
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ꓘO-∀ - Shop A-OK Merch",
     description: "Apes On Keys - Nerd Streetwear (for real)",
-    url: "https://www.a-ok.shop/",
+    url: `${SITE_URL}/`,
     siteName: "a-ok.shop",
     images: [
       {

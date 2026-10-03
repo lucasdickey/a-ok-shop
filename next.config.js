@@ -30,6 +30,8 @@ const nextConfig = {
     return [
       { source: '/ingest/static/:path*', destination: 'https://us-assets.i.posthog.com/static/:path*' },
       { source: '/ingest/:path*', destination: 'https://us.i.posthog.com/:path*' },
+      // Markdown versions of product pages for AI agents (app/md/products/[handle]/route.ts).
+      { source: '/products/:handle([^/]+)\\.md', destination: '/md/products/:handle' },
     ];
   },
   async headers() {
