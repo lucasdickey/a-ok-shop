@@ -4,7 +4,7 @@
  * Add Featured Metadata Script
  *
  * Adds featured and featuredOrder fields to products in product-catalog.json
- * based on the featuredProducts array from siteConfig
+ * based on the featuredProducts array below
  */
 
 const fs = require('fs');
@@ -12,7 +12,7 @@ const path = require('path');
 
 const CATALOG_PATH = path.join(__dirname, '..', 'product-catalog.json');
 
-// Featured products from siteConfig (in order)
+// Featured products (in order)
 const featuredProductHandles = [
   'hallucination-club-2026-edition',
   'a-ok-transformer-unit-exploded-view-tee',
