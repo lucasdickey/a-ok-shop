@@ -73,6 +73,26 @@ async function toggle(id: string) {
   }
 }
 
+/**
+ * Sets this visitor's request for one monkey through the same store as the buttons, so any
+ * button on the page updates too. Used by the in-page agent tools (WebMcpTools).
+ */
+export async function setPrintRequest(id: string, want: boolean) {
+  await load();
+  if (!state.available) return { ok: false as const, error: "Print requests are switched off right now." };
+  if (state.mine.has(id) !== want) await toggle(id);
+  const wanted = state.mine.has(id);
+  if (wanted !== want) return { ok: false as const, error: state.note[id] || "Couldn't save that. Try again later." };
+  // Counts under 5 are hidden from customers, and from agents too.
+  return { ok: true as const, wanted, count: state.counts[id] ?? null };
+}
+
+/** Which monkeys this visitor has asked for, and the counts customers can see. */
+export async function getPrintRequests() {
+  await load();
+  return { available: state.available === true, mine: Array.from(state.mine), counts: state.counts };
+}
+
 export default function PrintRequestButton({ id, title }: { id: string; title: string }) {
   const current = useSyncExternalStore(subscribe, () => state, () => state);
   useEffect(() => {
