@@ -33,10 +33,11 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-dark bg-club-yellow">
-      <div className="flex items-center gap-4 px-4 py-4 sm:px-6 lg:gap-5 lg:px-8 lg:py-5 xl:gap-7 xl:px-10">
+      {/* Under 360px wide, the logo and gaps shrink a little so the row still fits on one line. */}
+      <div className="flex items-center gap-4 px-4 py-4 max-[359px]:gap-2 max-[359px]:px-3 sm:px-6 lg:gap-5 lg:px-8 lg:py-5 xl:gap-7 xl:px-10">
         <Link
           href="/"
-          className="flex min-h-[44px] items-center font-[Arial,sans-serif] text-[40px] font-bold leading-[0.9] tracking-[-4px] no-underline lg:text-[48px] lg:tracking-[-5px]"
+          className="flex min-h-[44px] items-center whitespace-nowrap font-[Arial,sans-serif] text-[40px] font-bold leading-[0.9] tracking-[-4px] no-underline max-[359px]:text-[34px] max-[359px]:tracking-[-3px] lg:text-[48px] lg:tracking-[-5px]"
           aria-label="A-OK home"
         >
           A–OK<sup className="ml-1 self-start text-[13px] tracking-normal">®</sup>
@@ -67,7 +68,7 @@ export default function Navbar() {
           <CartButton />
           <button
             type="button"
-            className="min-h-[44px] px-2 text-sm font-semibold lg:hidden"
+            className="min-h-[44px] whitespace-nowrap px-2 text-sm font-semibold lg:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             onClick={() => setMenuOpen((open) => !open)}
