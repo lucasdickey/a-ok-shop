@@ -162,7 +162,12 @@ export default async function Home() {
             The extremely well-dressed.
           </p>
           <Link href="/products" className="btn btn-primary min-h-[52px] justify-between gap-6 px-5">
-            Find your people. Wear the tee. <span aria-hidden="true">↗</span>
+            {/* On the narrowest phones this breaks between the two sentences, never inside one. */}
+            <span>
+              <span className="whitespace-nowrap">Find your people.</span>{" "}
+              <span className="whitespace-nowrap">Wear the tee.</span>
+            </span>
+            <span aria-hidden="true">↗</span>
           </Link>
           <div className="micro mt-8 flex flex-wrap gap-x-[0.6em] text-[10px]">
             <span>No login. No secret handshake.</span>
@@ -204,14 +209,15 @@ export default async function Home() {
           {heroProduct && (
             <Link
               href={`/products/${heroProduct.handle}`}
-              className="absolute bottom-8 left-[12%] w-[78%] max-w-[430px] rotate-3 border-2 border-dark bg-club-paper p-4 no-underline shadow-[8px_8px_0_#22221E] lg:bottom-12 lg:left-[16%] lg:w-[76%] lg:p-5"
+              className="absolute bottom-8 left-[8%] w-[84%] max-w-[430px] rotate-3 border-2 border-dark bg-club-paper p-4 no-underline shadow-[8px_8px_0_#22221E] sm:left-[12%] sm:w-[78%] lg:bottom-12 lg:left-[16%] lg:w-[76%] lg:p-5"
             >
-              <span className="micro flex justify-between border-b border-dashed border-dark pb-2.5 text-[10px]">
-                Your next good decision <span>01 / {String(productsToShow.length).padStart(2, "0")}</span>
+              <span className="micro flex justify-between gap-3 border-b border-dashed border-dark pb-2.5 text-[10px]">
+                Your next good decision{" "}
+                <span className="whitespace-nowrap">01 / {String(productsToShow.length).padStart(2, "0")}</span>
               </span>
               <span className="flex items-center justify-between gap-4 py-3.5">
-                <strong className="display-heading text-[30px] lg:text-[36px]">{heroProduct.title}</strong>
-                <b className="text-[26px] lg:text-[32px]">
+                <strong className="display-heading text-[26px] sm:text-[30px] lg:text-[36px]">{heroProduct.title}</strong>
+                <b className="shrink-0 text-[26px] lg:text-[32px]">
                   ${parseFloat(heroProduct.priceRange.minVariantPrice.amount).toFixed(0)}
                 </b>
               </span>
@@ -230,13 +236,16 @@ export default async function Home() {
         aria-label="Brand statement"
       >
         {TICKER.map((line, index) => (
-          <span key={line} className={`flex items-center gap-4 ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}>
-            {index > 0 && (
-              // Each star spins only when it's the one under the pointer.
-              <b className="star-spin text-[17px] sm:text-2xl" aria-hidden="true">
-                <Asterisk />
-              </b>
-            )}
+          <span
+            key={line}
+            className={`flex items-center gap-4 whitespace-nowrap ${index === TICKER.length - 1 ? "hidden sm:flex" : ""}`}
+          >
+            {/* Below desktop the lines wrap onto more rows, so every line gets its own star and no
+                row starts with a leftover one. On desktop they fit one row, so the first star goes.
+                Each star spins only when it's the one under the pointer. */}
+            <b className={`star-spin text-[17px] sm:text-2xl ${index === 0 ? "lg:hidden" : ""}`} aria-hidden="true">
+              <Asterisk />
+            </b>
             {line}
           </span>
         ))}
@@ -509,9 +518,11 @@ export default async function Home() {
         <div className="w-[75px] shrink-0 -rotate-6 border-2 border-dark shadow-hard lg:w-[130px]">
           <Image src="/images/a-ok-8bit-retro.png" alt="Pixel-art A-OK ape" width={160} height={160} />
         </div>
-        <div className="min-w-[170px] flex-1">
+        {/* The heading's lines never break, so when they don't fit beside the picture,
+            the whole text block moves below it instead. */}
+        <div className="flex-1">
           <p className="micro text-[10px] lg:text-[11px]">Bonus item / a little detour</p>
-          <h2 className="display-heading my-2.5 text-[32px] lg:text-[44px]">
+          <h2 className="display-heading my-2.5 whitespace-nowrap text-[32px] lg:text-[44px]">
             Touch grass.
             <br />
             Or dodge agents.

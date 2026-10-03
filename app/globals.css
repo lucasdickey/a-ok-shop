@@ -9,6 +9,8 @@
 
   body {
     @apply bg-club-blue text-dark antialiased;
+    /* Don't leave a single word alone on the last line of a paragraph. */
+    text-wrap: pretty;
   }
 
   :focus-visible {
@@ -59,6 +61,8 @@
     font: 11px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
     letter-spacing: 0.045em;
     text-transform: uppercase;
+    /* When a label wraps, split it into even lines instead of leaving one word behind. */
+    text-wrap: balance;
   }
 
   /* The paper sheet that holds every page, sitting on the blue background. */
@@ -78,6 +82,7 @@
     line-height: 0.88;
     letter-spacing: -0.025em;
     text-transform: uppercase;
+    text-wrap: balance;
   }
 
   /* A till receipt slip with a torn bottom edge. */
