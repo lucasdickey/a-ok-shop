@@ -6,6 +6,7 @@ import SiteChrome from "./components/layout/SiteChrome";
 import CartProvider from "./components/cart/CartProvider";
 import CartDrawer from "./components/cart/CartDrawer";
 import GameModal from "./components/game/GameModal";
+import WebMcpTools from "./components/WebMcpTools";
 import PostHogInit from "./components/analytics/PostHogInit";
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -52,6 +53,13 @@ export const metadata: Metadata = {
   },
 };
 
+// Chrome and Edge run WebMCP for visitors only on sites in their Origin Trials. Set this to the
+// trial token(s), comma-separated, to turn it on (see .env.example).
+const WEBMCP_TRIAL_TOKENS = (process.env.NEXT_PUBLIC_WEBMCP_ORIGIN_TRIAL_TOKENS ?? "")
+  .split(",")
+  .map((token) => token.trim())
+  .filter(Boolean);
+
 export default function RootLayout({
   children,
 }: {
@@ -63,12 +71,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        {WEBMCP_TRIAL_TOKENS.map((token) => (
+          <meta key={token} httpEquiv="origin-trial" content={token} />
+        ))}
       </head>
       <body className={`${spaceGrotesk.className} ${spaceGrotesk.variable} ${barlowCondensed.variable}`}>
         <CartProvider>
           <SiteChrome>{children}</SiteChrome>
           <CartDrawer />
           <GameModal />
+          <WebMcpTools />
         </CartProvider>
         <PostHogInit />
         <Analytics />
