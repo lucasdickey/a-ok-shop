@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getAllProducts } from "@/app/lib/catalog";
 import { getCorsHeaders } from "@/app/lib/cors";
+import { absoluteUrl } from "@/app/lib/site";
 
 type CatalogProduct = ReturnType<typeof getAllProducts>[number];
 
@@ -12,16 +13,7 @@ function normaliseImageUrl(url: string | null | undefined) {
     return null;
   }
 
-  if (url.startsWith("http")) {
-    return url;
-  }
-
-  const baseUrl =
-    process.env.SITE_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "http://localhost:3000";
-
-  return `${baseUrl}${url}`;
+  return absoluteUrl(url);
 }
 
 function mapVariant(product: CatalogProduct, variant: VariantNode) {

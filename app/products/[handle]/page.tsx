@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildProductJsonLd, productMarkdownUrl } from "@/app/lib/agent-docs";
 import { getProductByHandle } from "@/app/lib/catalog";
 import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: { params: { handle: string } 
   return {
     title,
     description,
+    alternates: { types: { "text/markdown": productMarkdownUrl(product.handle) } },
     openGraph: {
       title: product.seo?.socialTitle ?? title,
       description: product.seo?.socialDescription ?? description,
@@ -319,6 +321,11 @@ export default async function ProductPage({
 
   return (
     <div className="px-5 pb-14 pt-8 sm:px-8 lg:px-[4vw] lg:pt-12">
+      <script
+        type="application/ld+json"
+        // Escape "<" so catalog text can never close the script tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductJsonLd(product)).replace(/</g, "\\u003c") }}
+      />
       <ProductPageContent
         product={product}
         images={images}

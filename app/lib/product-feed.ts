@@ -6,6 +6,7 @@
  */
 
 import { getAllProducts } from './catalog';
+import { SITE_URL } from './site';
 
 export interface ProductFeedItem {
   // Required: Basic Product Data
@@ -49,7 +50,7 @@ export interface ProductFeedItem {
  */
 export async function generateProductFeed(): Promise<ProductFeedItem[]> {
   const products = getAllProducts();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.a-ok.shop';
+  const baseUrl = SITE_URL;
 
   const feed: ProductFeedItem[] = [];
 

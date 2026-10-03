@@ -4,23 +4,23 @@
     "id": "a-ok-shop",
     "name": "A-OK Shop",
     "description": "AI-inspired streetwear and merchandise from Apes on Keys",
-    "url": "https://www.apesonkeys.com",
+    "url": "https://a-ok.ai",
     "support_email": "info@a-ok.shop"
   },
   "endpoints": {
     "catalog": {
-      "url": "https://www.a-ok.shop/api/acp/catalog",
+      "url": "https://a-ok.ai/api/acp/catalog",
       "method": "GET",
       "description": "Retrieve full product catalog with variants, pricing, and images"
     },
     "checkout": {
-      "url": "https://www.a-ok.shop/api/acp/checkout",
+      "url": "https://a-ok.ai/api/acp/checkout",
       "method": "POST",
       "description": "Create a Stripe Checkout Session for product purchase",
       "requires": ["cart.items"]
     },
     "delegate_payment": {
-      "url": "https://www.a-ok.shop/api/acp/delegate-payment",
+      "url": "https://a-ok.ai/api/acp/delegate-payment",
       "method": "POST",
       "description": "Create a Stripe Payment Intent for delegated payment",
       "requires": ["amount"]
@@ -44,5 +44,5 @@
     "countries": ["US", "CA"],
     "calculated_at_checkout": true
   },
-  "documentation": "https://www.a-ok.shop/.well-known/openapi.json"
+  "documentation": "https://a-ok.ai/.well-known/openapi.json"
 }

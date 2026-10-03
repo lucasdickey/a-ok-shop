@@ -1,4 +1,5 @@
 import catalogData from "../../product-catalog.json";
+import { absoluteUrl } from "./site";
 
 // Types reflecting the static product catalog JSON bundled with the app
 export type Product = {
@@ -393,9 +394,7 @@ export function createCheckoutLineItems(cartItems: Array<{
 
     // Fallback to price_data for products not yet synced to Stripe
     const imageUrl = product.images.edges[0]?.node.url || "";
-    const fullImageUrl = imageUrl.startsWith("http")
-      ? imageUrl
-      : `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001"}${imageUrl}`;
+    const fullImageUrl = imageUrl ? absoluteUrl(imageUrl) : "";
 
     return {
       price_data: {
