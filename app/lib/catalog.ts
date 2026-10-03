@@ -319,21 +319,6 @@ export function getProductByHandle(handle: string): SimpleProduct | null {
   return loadMappedProducts().find((product) => product.handle === handle) || null;
 }
 
-// Get product categories (unique product types and tags)
-export function getCategories(): string[] {
-  const products = loadProducts();
-  const categoriesSet = new Set<string>();
-
-  products.forEach((product) => {
-    if (product.productType) {
-      categoriesSet.add(product.productType);
-    }
-    product.tags.forEach((tag) => categoriesSet.add(tag));
-  });
-
-  return Array.from(categoriesSet).sort();
-}
-
 // Get featured products (sorted by featuredOrder)
 export function getFeaturedProducts(): SimpleProduct[] {
   const allProducts = getAllProducts();
@@ -344,68 +329,4 @@ export function getFeaturedProducts(): SimpleProduct[] {
       const orderB = b.featuredOrder ?? 999;
       return orderA - orderB;
     });
-}
-
-// For Stripe checkout - convert product handle to line items
-// Supports both Stripe price IDs (preferred) and price_data (fallback)
-export function createCheckoutLineItems(cartItems: Array<{
-  variantId: string;
-  quantity: number;
-  handle?: string;
-}>): Array<{
-  price?: string;
-  price_data?: {
-    currency: string;
-    product_data: {
-      name: string;
-      images?: string[];
-    };
-    unit_amount: number;
-  };
-  quantity: number;
-}> {
-  const products = loadProducts();
-
-  return cartItems.map((item) => {
-    // Find the product and variant
-    const product = products.find((p) =>
-      p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
-    );
-
-    if (!product) {
-      throw new Error(`Product not found for variant ${item.variantId}`);
-    }
-
-    const variant = product.variants.edges.find((v) =>
-      isSameId(v.node.id, item.variantId)
-    )?.node;
-
-    if (!variant) {
-      throw new Error(`Variant not found: ${item.variantId}`);
-    }
-
-    // Use Stripe price ID if available (preferred)
-    if (variant.stripePriceId) {
-      return {
-        price: variant.stripePriceId,
-        quantity: item.quantity,
-      };
-    }
-
-    // Fallback to price_data for products not yet synced to Stripe
-    const imageUrl = product.images.edges[0]?.node.url || "";
-    const fullImageUrl = imageUrl ? absoluteUrl(imageUrl) : "";
-
-    return {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: `${product.title} - ${variant.title}`,
-          images: fullImageUrl.startsWith("http") ? [fullImageUrl] : [],
-        },
-        unit_amount: Math.round(parseFloat(variant.price.amount) * 100),
-      },
-      quantity: item.quantity,
-    };
-  });
 }

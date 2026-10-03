@@ -93,7 +93,7 @@ export async function generateProductFeed(): Promise<ProductFeedItem[]> {
       return_policy: `${baseUrl}/returns`,
       return_window: 0, // All sales final due to just-in-time manufacturing
       enable_search: true,
-      enable_checkout: true,
+      enable_checkout: false, // Shoppers buy on the product page; there is no in-chat checkout.
       item_group_id: product.id, // Group variants under their product id
     });
   }
@@ -106,44 +106,4 @@ export async function generateProductFeed(): Promise<ProductFeedItem[]> {
  */
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim();
-}
-
-/**
- * Validate product feed item against OpenAI schema
- */
-export function validateFeedItem(item: ProductFeedItem): { valid: boolean; errors: string[] } {
-  const errors: string[] = [];
-
-  // Required fields validation
-  if (!item.id) errors.push('Missing required field: id');
-  if (!item.title || item.title.length > 150) errors.push('Invalid title (max 150 chars)');
-  if (!item.description || item.description.length > 5000) errors.push('Invalid description (max 5000 chars)');
-  if (!item.link) errors.push('Missing required field: link');
-  if (!item.image_link) errors.push('Missing required field: image_link');
-  if (!item.price) errors.push('Missing required field: price');
-  if (!['in_stock', 'out_of_stock', 'preorder'].includes(item.availability)) {
-    errors.push('Invalid availability value');
-  }
-
-  // Merchant info validation
-  if (!item.brand) errors.push('Missing required field: brand');
-  if (!item.seller_name || item.seller_name.length > 70) errors.push('Invalid seller_name (max 70 chars)');
-  if (!item.seller_url) errors.push('Missing required field: seller_url');
-  if (!item.seller_privacy_policy) errors.push('Missing required field: seller_privacy_policy');
-  if (!item.seller_tos) errors.push('Missing required field: seller_tos');
-
-  // Return policy validation
-  if (!item.return_policy) errors.push('Missing required field: return_policy');
-  if (typeof item.return_window !== 'number' || item.return_window < 0) {
-    errors.push('Invalid return_window (must be non-negative number)');
-  }
-
-  // Control flags validation
-  if (typeof item.enable_search !== 'boolean') errors.push('Invalid enable_search (must be boolean)');
-  if (typeof item.enable_checkout !== 'boolean') errors.push('Invalid enable_checkout (must be boolean)');
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
 }
