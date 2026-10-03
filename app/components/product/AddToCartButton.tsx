@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCart, CartItem } from '@/app/components/cart/CartProvider';
 
-// Checkout accepts at most this many of one item (see app/api/catalog/checkout/route.ts).
+// Checkout accepts at most this many of one item (see app/lib/store-checkout.ts).
 const MAX_QUANTITY = 20;
 
 type AddToCartButtonProps = {

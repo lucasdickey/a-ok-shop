@@ -180,6 +180,7 @@ ${images.map((image) => `![${label(image.altText || product.title)}](${image.url
 
 - On the web page: pick a color${sizes.length > 0 ? " and size" : ""}, add it to the cart, then check out with Stripe.
 - In a WebMCP browser: \`add_to_cart\` with \`${toolExample}\`, then \`begin_checkout\`.
+- Through the [ACP checkout](${SITE_URL}/.well-known/openapi.json): POST ${SITE_URL}/api/acp/checkout with \`{"cart":{"items":[{"variantId":"<a variant ID below>"${sizes.length > 0 ? ',"size":"<shopper\'s size>"' : ""},"quantity":1}]}}\`, then send the shopper to the returned \`checkout_session.url\`.
 
 ## Variants
 
