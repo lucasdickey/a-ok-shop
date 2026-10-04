@@ -4,6 +4,8 @@
  */
 
 const DEFAULT_ALLOWED_ORIGINS = [
+  "https://a-ok.ai",
+  "https://www.a-ok.ai",
   "https://a-ok.shop",
   "https://www.a-ok.shop",
 ];
