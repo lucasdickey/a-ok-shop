@@ -64,6 +64,7 @@ export default async function ProductPage({
       url: imageUrl,
       alt: node.altText || product.title,
       color: node.color,
+      presentation: node.presentation,
     };
   });
 
@@ -327,6 +328,7 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductJsonLd(product)).replace(/</g, "\\u003c") }}
       />
       <ProductPageContent
+        key={product.id}
         product={product}
         images={images}
         variants={variants}
