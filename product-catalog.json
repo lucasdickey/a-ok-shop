@@ -3084,7 +3084,7 @@
           "handle": "a-ok-all-angles-tee",
           "title": "A-OK All Angles Tee",
           "description": "Front, side, back. Three views of the A-OK operator in one graphic. Red hoodie, headphones and the confidence to call this a complete assessment.",
-          "descriptionHtml": "<p><strong>Three views. Same questionable judgment.</strong></p><p>We asked for another perspective.</p><p>The ape turned sideways.</p><p>The <strong>All Angles Tee</strong> gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable.</p><p>A character study for people who like to look at a problem from every direction before opening another tab.</p><p><strong>More context. Same ape. A-OK.</strong></p><ul><li>Three ape views in a single horizontal composition.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Center-front graphic on a classic crewneck T-shirt.</li><li>Catalog colorways: White and Natural.</li></ul>",
+          "descriptionHtml": "<p><strong>Three views. Same questionable judgment.</strong></p><p>We asked for another perspective.</p><p>The ape turned sideways.</p><p>The <strong>All Angles Tee</strong> gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable.</p><p>A character study for people who like to look at a problem from every direction before opening another tab.</p><p><strong>More context. Same ape. A-OK.</strong></p><ul><li>Three ape views in a single horizontal composition.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Center-front graphic on a classic crewneck T-shirt.</li><li>Catalog colorways: White, Natural and Yellow.</li></ul>",
           "productType": "T-Shirts",
           "vendor": "A-OK Shop",
           "tags": [
@@ -3102,7 +3102,8 @@
               "name": "Color",
               "values": [
                 "White",
-                "Natural"
+                "Natural",
+                "Yellow"
               ]
             },
             {
@@ -3140,6 +3141,27 @@
           },
           "images": {
             "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000028",
+                  "url": "/images/products/a-ok-all-angles-tee-yellow-front.webp",
+                  "altText": "Yellow A-OK All Angles Tee — chest artwork close-up",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow",
+                  "presentation": "chest-detail"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000029",
+                  "url": "/images/products/a-ok-all-angles-tee-yellow-front.webp",
+                  "altText": "Yellow A-OK All Angles Tee — full front view",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
               {
                 "node": {
                   "id": "gid://a-ok/ProductImage/89500000000026",
@@ -3448,6 +3470,144 @@
                     }
                   ]
                 }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000059",
+                  "title": "Yellow / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000060",
+                  "title": "Yellow / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000061",
+                  "title": "Yellow / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000062",
+                  "title": "Yellow / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000063",
+                  "title": "Yellow / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000064",
+                  "title": "Yellow / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -3457,7 +3617,7 @@
           "onlineStoreUrl": "",
           "availableForSale": true,
           "createdAt": "2026-10-01T03:30:00Z",
-          "updatedAt": "2026-10-01T03:30:00Z",
+          "updatedAt": "2026-10-04T19:21:13Z",
           "publishedAt": "2026-10-01T03:30:00Z",
           "seo": {
             "title": "A-OK All Angles Tee | Apes on Keys",
@@ -3467,7 +3627,8 @@
           "featuredOrder": 3,
           "swatches": {
             "White": "#efede9",
-            "Natural": "#e8ddce"
+            "Natural": "#e8ddce",
+            "Yellow": "#F4CC32"
           }
         }
       },
