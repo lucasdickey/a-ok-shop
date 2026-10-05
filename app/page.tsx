@@ -137,8 +137,8 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[1.07fr_1fr]">
-        <div className="px-5 pb-2 pt-8 sm:px-8 lg:px-[4vw] lg:pb-8 lg:pt-12">
+      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[0.82fr_1fr]">
+        <div className="px-5 pb-2 pt-8 sm:px-8 lg:pb-8 lg:pl-[4vw] lg:pr-[2vw] lg:pt-12">
           <p className="micro flex items-center gap-2 text-[10px] sm:text-[11px]">
             <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
             The hallucination club / open to all
@@ -290,7 +290,7 @@ export default async function Home() {
             {productsToShow.length} featured line {productsToShow.length === 1 ? "item" : "items"}
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-14">
           {productsToShow.map((product, index) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}
