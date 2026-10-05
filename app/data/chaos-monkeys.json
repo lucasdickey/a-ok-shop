@@ -204,5 +204,24 @@
       "product": "Open the ape up and you find a whole staff of tiny specialists, routed per question. Only one is ever awake at a time, which is exactly how it's supposed to work. White tee with a technical cutaway printed on the back.",
       "marketing": "Under the cap: dozens of experts, one of them working. Efficient by design. Mixture of Experts, out now."
     }
+  },
+  {
+    "id": "0013",
+    "date": "2026-10-04",
+    "title": "SELF-GRADED",
+    "slogan": "WROTE THE ANSWER. GRADED IT. A+.",
+    "joke": "Using a model to grade its own outputs is a common eval shortcut, and here the ape is both the student and the examiner and gave himself full marks.",
+    "alt": "The A-OK ape holding up a test paper with a big red check mark and a red marker, looking stunned, in front of the giant word SELF-GRADED, with the slogan WROTE THE ANSWER. GRADED IT. A+. in a bar along the bottom.",
+    "image": "/chaos-monkeys/0013.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "hybrid",
+    "credit": "Illustrated by GPT-6-Astra, art-directed by Claude",
+    "parents": [],
+    "style": "specimen",
+    "copy": {
+      "product": "This is model-as-judge evaluation, the A-OK ape way: he answered the question, marked his own work and agreed with the marks. The house specimen poster, with the title in giant type behind him, on the front of a white tee.",
+      "marketing": "Wrote the answer. Graded it. A+. Evals have never been easier."
+    }
   }
 ]
