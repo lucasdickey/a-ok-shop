@@ -72,7 +72,7 @@ async function main() {
       const fullImageUrl = imageUrl && imageUrl.startsWith('http')
         ? imageUrl
         : imageUrl
-          ? `${process.env.NEXT_PUBLIC_SITE_URL || 'https://a-ok.shop'}${imageUrl}`
+          ? `${process.env.NEXT_PUBLIC_SITE_URL || 'https://a-ok.ai'}${imageUrl}`
           : null;
 
       let stripeProduct;

@@ -12,7 +12,7 @@
     "url": "https://a-ok.ai/.well-known/openapi.json",
     "is_user_authenticated": false
   },
-  "logo_url": "https://a-ok.ai/a-ok-dot-shop-static.svg",
-  "contact_email": "info@a-ok.shop",
+  "logo_url": "https://a-ok.ai/images/a-ok-o-face.png",
+  "contact_email": "info@a-ok.ai",
   "legal_info_url": "https://a-ok.ai/terms"
 }

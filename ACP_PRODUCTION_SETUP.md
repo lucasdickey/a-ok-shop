@@ -14,7 +14,7 @@ The ACP implementation uses Stripe webhooks to track payment lifecycle events.
 
 1. In Stripe Dashboard, go to **Developers** → **Webhooks**
 2. Click **Add endpoint**
-3. Set endpoint URL: `https://a-ok.shop/api/acp/webhook`
+3. Set endpoint URL: `https://a-ok.ai/api/acp/webhook`
 4. Select events to listen to:
    - `checkout.session.completed`
    - `checkout.session.expired`
@@ -73,7 +73,7 @@ After adding environment variables:
 ### 1. Test Catalog Endpoint
 
 ```bash
-curl https://a-ok.shop/api/acp/catalog
+curl https://a-ok.ai/api/acp/catalog
 ```
 
 Expected: JSON response with `"protocol": "acp-draft-2024-12"`
@@ -81,7 +81,7 @@ Expected: JSON response with `"protocol": "acp-draft-2024-12"`
 ### 2. Test Checkout Creation
 
 ```bash
-curl -X POST https://a-ok.shop/api/acp/checkout \
+curl -X POST https://a-ok.ai/api/acp/checkout \
   -H "Content-Type: application/json" \
   -H "Origin: https://your-agent-domain.com" \
   -d '{
@@ -99,7 +99,7 @@ Expected: JSON response with Stripe checkout URL
 ### 3. Test CORS
 
 ```bash
-curl -i -H "Origin: https://unauthorized-site.com" https://a-ok.shop/api/acp/catalog
+curl -i -H "Origin: https://unauthorized-site.com" https://a-ok.ai/api/acp/catalog
 ```
 
 Expected: Should NOT see `access-control-allow-origin: https://unauthorized-site.com`
@@ -158,7 +158,7 @@ Consider adding:
 - For development, ensure `NODE_ENV=development` is NOT set in production
 
 ### Webhook failures
-- Verify webhook URL is correct: `https://a-ok.shop/api/acp/webhook`
+- Verify webhook URL is correct: `https://a-ok.ai/api/acp/webhook`
 - Check `STRIPE_WEBHOOK_SECRET` matches Stripe dashboard
 - Review webhook logs in Stripe Dashboard for error details
 

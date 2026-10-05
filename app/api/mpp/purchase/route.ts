@@ -130,7 +130,7 @@ async function handlePaymentChallenge(
       id: paymentId,
       amount: amount.toString(), // link-cli expects amount as string
       currency: 'usd',
-      description: `Purchase ${items.length} item(s) from a-ok.shop`,
+      description: `Purchase ${items.length} item(s) from a-ok.ai`,
       items,
       agentId,
       timestamp: Date.now().toString(), // link-cli expects timestamp as string
@@ -152,7 +152,7 @@ async function handlePaymentChallenge(
       request: base64urlRequest,
       amount,
       currency: 'USD',
-      description: `Purchase ${items.length} item(s) from a-ok.shop`,
+      description: `Purchase ${items.length} item(s) from a-ok.ai`,
       paymentMethods: {
         stripe: {
           method: 'stripe',
@@ -164,7 +164,7 @@ async function handlePaymentChallenge(
     console.log('[MPP] Payment challenge created:', paymentId, 'networkId:', networkId);
 
     // Build WWW-Authenticate header per MPP spec with realm and base64url request
-    const wwwAuthenticateHeader = `Payment realm="a-ok.shop", id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`;
+    const wwwAuthenticateHeader = `Payment realm="a-ok.ai", id="${paymentId}", method="stripe", intent="charge", request="${base64urlRequest}"`;
 
     // Return 402 with proper MPP headers
     return NextResponse.json(challenge, {

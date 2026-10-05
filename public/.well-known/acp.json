@@ -5,7 +5,7 @@
     "name": "A-OK Shop",
     "description": "AI-inspired streetwear and merchandise from Apes on Keys",
     "url": "https://a-ok.ai",
-    "support_email": "info@a-ok.shop"
+    "support_email": "info@a-ok.ai"
   },
   "endpoints": {
     "catalog": {

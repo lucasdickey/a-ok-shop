@@ -306,7 +306,7 @@ async function sendOwnerOrderAlert(order: Order) {
       "Idempotency-Key": `order-alert-${order.sessionId}`,
     },
     body: JSON.stringify({
-      from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+      from: process.env.ORDER_EMAIL_FROM || "A-OK <orders@a-ok.ai>",
       to: to.split(",").map((address) => address.trim()).filter(Boolean),
       reply_to: order.customerEmail || undefined,
       subject,
@@ -329,7 +329,7 @@ function formatAmount(cents?: number | null) {
 function formatOrderItems(items: any[] = []) {
   return items.map((item: any) => {
     const metadata = item.price?.product?.metadata || item.metadata || {};
-    const description = item.description || item.title || item.handle || item.name || "A-OK Shop item";
+    const description = item.description || item.title || item.handle || item.name || "A-OK item";
     const quantity = item.quantity || 1;
     let itemStr = `${description} x${quantity}`;
 
@@ -396,7 +396,7 @@ async function sendConfirmationEmail(orderData: any) {
     // Determine the store name based on source
     const storeName = orderData.source === "monthly-deals"
       ? "A-OK Monthly Deal"
-      : "A-OK Shop";
+      : "A-OK";
     const subject = `Your ${storeName} Order Confirmation`;
 
     console.log("=== CONFIRMATION EMAIL ===");
@@ -434,7 +434,7 @@ async function sendConfirmationEmail(orderData: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+        from: process.env.ORDER_EMAIL_FROM || "A-OK <orders@a-ok.ai>",
         to: orderData.customerEmail,
         subject,
         html: generateOrderEmailHTML(orderData, storeName),

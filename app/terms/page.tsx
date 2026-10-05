@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Terms of Service | A-OK Shop',
-  description: 'Terms of service for A-OK Shop'
+  title: 'Terms of Service | A-OK',
+  description: 'Terms of service for A-OK'
 };
 
 export default function TermsOfService() {
@@ -17,14 +17,14 @@ export default function TermsOfService() {
         </p>
 
         <p className="mb-6">
-          Welcome to A-OK Shop! By accessing or using our website and services, you agree to be
+          Welcome to A-OK! By accessing or using our website and services, you agree to be
           bound by these Terms of Service. Please read them carefully.
         </p>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
           <p className="mb-4">
-            By purchasing from A-OK Shop, whether through our website, mobile app, or via AI-powered
+            By purchasing from A-OK, whether through our website, mobile app, or via AI-powered
             assistants like ChatGPT, you agree to these terms and conditions. If you do not agree,
             please do not use our services.
           </p>
@@ -33,7 +33,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">2. Products and Services</h2>
           <p className="mb-4">
-            A-OK Shop sells AI-inspired streetwear and merchandise. We strive to display our products
+            A-OK sells AI-inspired streetwear and merchandise. We strive to display our products
             as accurately as possible, but we cannot guarantee that colors, designs, or specifications
             will be exactly as shown on your device.
           </p>
@@ -108,7 +108,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">7. Intellectual Property</h2>
           <p className="mb-4">
-            All content on A-OK Shop, including designs, logos, text, and images, is the property
+            All content on A-OK, including designs, logos, text, and images, is the property
             of Apes on Keys or its licensors and is protected by copyright and trademark laws.
           </p>
           <p className="mb-4">
@@ -146,7 +146,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">10. Limitation of Liability</h2>
           <p className="mb-4">
-            To the fullest extent permitted by law, A-OK Shop and Apes on Keys shall not be liable
+            To the fullest extent permitted by law, A-OK and Apes on Keys shall not be liable
             for any indirect, incidental, special, consequential, or punitive damages, including loss
             of profits, data, or goodwill, arising from your use of our services.
           </p>
@@ -159,7 +159,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">11. Indemnification</h2>
           <p className="mb-4">
-            You agree to indemnify and hold harmless A-OK Shop, its affiliates, and its employees
+            You agree to indemnify and hold harmless A-OK, its affiliates, and its employees
             from any claims, damages, liabilities, and expenses arising from your use of our services
             or violation of these terms.
           </p>
@@ -199,14 +199,14 @@ export default function TermsOfService() {
           <div className="receipt-slip mb-6 p-6">
             <p className="mb-2">
               <strong>Email:</strong>{' '}
-              <a href="mailto:info@a-ok.shop" className="text-blue-600 hover:underline">
-                info@a-ok.shop
+              <a href="mailto:info@a-ok.ai" className="text-blue-600 hover:underline">
+                info@a-ok.ai
               </a>
             </p>
             <p className="mb-2">
               <strong>Website:</strong>{' '}
-              <a href="https://www.a-ok.shop" className="text-blue-600 hover:underline">
-                www.a-ok.shop
+              <a href="https://a-ok.ai" className="text-blue-600 hover:underline">
+                a-ok.ai
               </a>
             </p>
             <p className="mb-2">
@@ -223,7 +223,7 @@ export default function TermsOfService() {
             These terms of service were last updated on November 6, 2025.
           </p>
           <p className="text-sm text-gray-500 mt-2">
-            By using A-OK Shop, you acknowledge that you have read, understood, and agree to be bound
+            By using A-OK, you acknowledge that you have read, understood, and agree to be bound
             by these Terms of Service.
           </p>
         </div>
