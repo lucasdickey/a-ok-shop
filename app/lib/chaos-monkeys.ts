@@ -31,6 +31,10 @@ export type ChaosMonkey = {
   parents: string[];
   /** The story a topical monkey riffs on, e.g. that day's Zingers strip. */
   inspiration?: { label: string; url: string };
+  /** The style from the tool's STYLES.md, e.g. "varsity". */
+  style?: string;
+  /** Copy for a product page and a launch post: the words that don't need to be on the shirt. */
+  copy?: { product: string; marketing: string };
 };
 
 const ENGINES: readonly ChaosMonkeyEngine[] = ["hybrid", "astra", "code"];
@@ -66,6 +70,12 @@ function parseEntry(value: unknown, index: number): ChaosMonkey {
     if (!inspiration || !isText(inspiration.label, 80) || typeof inspiration.url !== "string" || !/^https:\/\//.test(inspiration.url)) {
       fail("inspiration");
     }
+  }
+
+  if (entry.style !== undefined && (typeof entry.style !== "string" || !/^[a-z0-9-]{1,40}$/.test(entry.style))) fail("style");
+  if (entry.copy !== undefined) {
+    const copy = entry.copy as Record<string, unknown> | null;
+    if (!copy || !isText(copy.product, 600) || !isText(copy.marketing, 280)) fail("copy");
   }
 
   return entry as ChaosMonkey;

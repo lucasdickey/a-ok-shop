@@ -8,7 +8,7 @@ graph TD
         A --> F[saveImageLocally.ts]
         
         B[fetchShopifyMedia.ts] -->|Fetches product<br>images & descriptions| G[Shopify GraphQL API]
-        C[listGridImages.ts] -->|Fetches existing<br>gallery images| H[a-ok.shop/api/gallery]
+        C[listGridImages.ts] -->|Fetches existing<br>gallery images| H[a-ok.ai/api/gallery]
         
         D[craftPrompt.ts] -->|Creates AI prompt<br>from media + brand rules| I[OpenAI DALL-E 3 Prompt]
         I -->|Input for<br>image generation| E[generateImage.ts]
@@ -50,7 +50,7 @@ This diagram illustrates how the self-replicating art system works in conjunctio
 
 1. **Data Collection Phase**:
    - System fetches existing visual content from Shopify products
-   - System fetches existing gallery images from a-ok.shop/api/gallery
+   - System fetches existing gallery images from a-ok.ai/api/gallery
    
 2. **Generation Phase**:
    - Crafts AI prompts combining brand rules and existing imagery descriptions

@@ -16,8 +16,31 @@ export async function repoRoot(): Promise<string> {
 
 const git = (...args: string[]) => runOrThrow("git", ["-C", SITE_DIR, ...args]);
 
+/**
+ * Makes sure the clone commits as a real identity. Without user.email, git guesses one from the hostname, GitHub
+ * links the commit to no account, and Vercel refuses to deploy it. Copies the identity from the checkout the tool
+ * runs from when the clone has none.
+ */
+async function ensureIdentity(): Promise<void> {
+  const local = await run("git", ["-C", SITE_DIR, "config", "--get", "user.email"]);
+  if (local.code === 0 && local.stdout.trim()) return;
+  const name = (await run("git", ["-C", TOOL_DIR, "config", "--get", "user.name"])).stdout.trim();
+  const email = (await run("git", ["-C", TOOL_DIR, "config", "--get", "user.email"])).stdout.trim();
+  if (!name || !email) {
+    throw new Error(`the publish clone has no commit identity; run: git -C ${SITE_DIR} config user.name "…" && git -C ${SITE_DIR} config user.email "…"`);
+  }
+  await git("config", "user.name", name);
+  await git("config", "user.email", email);
+  log(`publish clone will commit as ${name} <${email}>`);
+}
+
 /** Creates the publish clone if needed and moves it to origin/<branch>, refusing to discard any work. */
 export async function syncSite(branch: string): Promise<void> {
+  await syncClone(branch);
+  await ensureIdentity();
+}
+
+async function syncClone(branch: string): Promise<void> {
   if (!fs.existsSync(path.join(SITE_DIR, ".git"))) {
     const origin = (await runOrThrow("git", ["-C", TOOL_DIR, "remote", "get-url", "origin"])).trim();
     fs.mkdirSync(path.dirname(SITE_DIR), { recursive: true });

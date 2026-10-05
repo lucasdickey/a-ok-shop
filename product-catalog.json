@@ -51,7 +51,8 @@
                   "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-0.png",
                   "altText": null,
                   "width": 970,
-                  "height": 626
+                  "height": 626,
+                  "color": "Red"
                 }
               },
               {
@@ -60,7 +61,28 @@
                   "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-1.png",
                   "altText": null,
                   "width": 960,
-                  "height": 702
+                  "height": 702,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000001",
+                  "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-black-front.webp",
+                  "altText": "Black A-OK GLITCHED VECTORS TEE, front",
+                  "width": 970,
+                  "height": 626,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000002",
+                  "url": "/images/products/a-ok-glitch-art-face-mask-t-shirt-black-back.webp",
+                  "altText": "Black A-OK GLITCHED VECTORS TEE, back",
+                  "width": 960,
+                  "height": 702,
+                  "color": "Black"
                 }
               }
             ]
@@ -125,124 +147,11 @@
           "createdAt": "2024-12-08T03:15:06Z",
           "updatedAt": "2025-05-10T22:54:26Z",
           "publishedAt": "2025-04-19T23:52:34Z",
-          "stripeProductId": "prod_TPh6uGobhFHfKb"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8755984367835",
-          "handle": "a-ok-basic-ape",
-          "title": "A-OK - Basic Ape",
-          "description": "The original A-OK Ape. The logo may evolve, but this ape was the beginning of the Symbiocene era. This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling. This shirt is available in black, white (with black ape), red, and grey (as shown here).",
-          "descriptionHtml": "<p><meta charset=\"utf-8\">The original A-OK Ape.</p>\n<p><meta charset=\"utf-8\">The logo may evolve, but this ape was the beginning of the Symbiocene era.</p>\n<p>This minimalist t-shirt features a clean, iconic design of a smiling ape wearing headphones and a baseball cap on the front, rendered in crisp white against the shirt. The playful mascot combines DJ culture with a friendly primate aesthetic. On the back, a subtle retro-gaming inspired 'A-OK' pixel text adds a nostalgic touch, completing the design's blend of music and digital culture. The overall look achieves a perfect balance between fun and sophisticated streetwear styling.</p>\n<p>This shirt is available in black, white (with black ape), red, and grey (as shown here).</p>",
-          "productType": "T-Shirts",
-          "vendor": "My Store",
-          "tags": [],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11057800151259",
-              "name": "Color",
-              "values": [
-                "Gray",
-                "Black"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43554496839899",
-                  "url": "/images/products/a-ok-basic-ape-0.png",
-                  "altText": null,
-                  "width": 950,
-                  "height": 1164
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43554496872667",
-                  "url": "/images/products/a-ok-basic-ape-1.png",
-                  "altText": null,
-                  "width": 956,
-                  "height": 1160
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46334618566875",
-                  "title": "Gray",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Gray"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSri8KcMygrnU2DAHKlMe16"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46334618632411",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSri8KcMygrnU2DIO6fYyAk"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-basic-ape",
-          "availableForSale": true,
-          "createdAt": "2024-12-08T20:56:16Z",
-          "updatedAt": "2025-08-25T05:55:56Z",
-          "publishedAt": "2025-04-19T23:52:34Z",
-          "stripeProductId": "prod_TPh6Rcfm8HF86v"
+          "stripeProductId": "prod_TPh6uGobhFHfKb",
+          "swatches": {
+            "Red": "#d30227",
+            "Black": "#262626"
+          }
         }
       },
       {
@@ -296,7 +205,28 @@
                   "url": "/images/products/a-ok-the-typewriter-0.png",
                   "altText": null,
                   "width": 950,
-                  "height": 1146
+                  "height": 1146,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000005",
+                  "url": "/images/products/a-ok-the-typewriter-beige-front.webp",
+                  "altText": "Beige HALLUCINATED KEYSTROKES TEE, front",
+                  "width": 950,
+                  "height": 1146,
+                  "color": "Beige"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000006",
+                  "url": "/images/products/a-ok-the-typewriter-brown-front.webp",
+                  "altText": "Brown HALLUCINATED KEYSTROKES TEE, front",
+                  "width": 950,
+                  "height": 1146,
+                  "color": "Brown"
                 }
               }
             ]
@@ -373,7 +303,12 @@
           "createdAt": "2024-12-09T03:48:16Z",
           "updatedAt": "2025-05-10T22:53:26Z",
           "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh68gR6Xj33XS"
+          "stripeProductId": "prod_TPh68gR6Xj33XS",
+          "swatches": {
+            "Black": "#272727",
+            "Beige": "#cab9ab",
+            "Brown": "#372612"
+          }
         }
       },
       {
@@ -426,7 +361,8 @@
                   "url": "/images/products/a-ok-this-ape-is-not-okay-0.png",
                   "altText": null,
                   "width": 964,
-                  "height": 1158
+                  "height": 1158,
+                  "color": "Red"
                 }
               },
               {
@@ -435,7 +371,28 @@
                   "url": "/images/products/a-ok-this-ape-is-not-okay-1.png",
                   "altText": null,
                   "width": 954,
-                  "height": 1164
+                  "height": 1164,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000003",
+                  "url": "/images/products/a-ok-this-ape-is-not-okay-black-front.webp",
+                  "altText": "Black A-OK - This Ape Is Not Okay tee, front",
+                  "width": 964,
+                  "height": 1158,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000004",
+                  "url": "/images/products/a-ok-this-ape-is-not-okay-black-back.webp",
+                  "altText": "Black A-OK - This Ape Is Not Okay tee, back",
+                  "width": 954,
+                  "height": 1164,
+                  "color": "Black"
                 }
               }
             ]
@@ -492,439 +449,11 @@
           "createdAt": "2024-12-09T03:51:35Z",
           "updatedAt": "2025-05-10T22:53:16Z",
           "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh6I0j9miFGDh"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8756066648283",
-          "handle": "a-ok-hype-weight-overload",
-          "title": "A-OK SIGNAL IN THE NOISE TEE",
-          "description": "One voice. Infinite agents. Always aligned. Centered in a tight, circular chorus of chaos, the A-OK lead ape shouts forward\u2014louder than the echo chamber, clearer than the static. This minimal black tee punches hard with a sharp, badge-style emblem: one expressive primate, surrounded by his cloned crew, each locked into the same frequency. Whether you see it as a broadcast, a call to action, or just the opening line of a very strange podcast, this shirt speaks volumes\u2014without shouting. It\u2019s clean, bold, and ready for real-time inference. Lightweight black cotton with a sharp red/white/black print Central circular art featuring our A-OK icon in full audio-command mode Stylized symmetry\u2014think retro propaganda meets hip-hop cover art Ideal for DJs, devs, and anyone trying to rise above the noise floor Makes a statement, even when you\u2019re just loading your next prompt The signal is clear. The voice is ours. Stay loud. Stay weird. Stay A-OK.",
-          "descriptionHtml": "<p class=\"p1\"><strong><i>One voice. Infinite agents. Always aligned.</i></strong></p>\n<p class=\"p1\">Centered in a tight, circular chorus of chaos, the A-OK lead ape shouts forward\u2014louder than the echo chamber, clearer than the static. This minimal black tee punches hard with a sharp, badge-style emblem: one expressive primate, surrounded by his cloned crew, each locked into the same frequency.</p>\n<p class=\"p1\">Whether you see it as a broadcast, a call to action, or just the opening line of a very strange podcast, this shirt speaks volumes\u2014without shouting. It\u2019s clean, bold, and ready for real-time inference.</p>\n<ul>\n<li>\n<p class=\"p1\">Lightweight black cotton with a sharp red/white/black print</p>\n</li>\n<li>\n<p class=\"p1\">Central circular art featuring our A-OK icon in full audio-command mode</p>\n</li>\n<li>\n<p class=\"p1\">Stylized symmetry\u2014think retro propaganda meets hip-hop cover art</p>\n</li>\n<li>\n<p class=\"p1\">Ideal for DJs, devs, and anyone trying to rise above the noise floor</p>\n</li>\n<li>\n<p class=\"p1\">Makes a statement, even when you\u2019re just loading your next prompt</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The signal is clear. The voice is ours.</b></p>\n<p class=\"p1\">Stay loud. Stay weird. Stay A-OK.</p>",
-          "productType": "T-Shirts",
-          "vendor": "My Store",
-          "tags": [
-            "T-Shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210481205467",
-              "name": "Color",
-              "values": [
-                "Black",
-                "Red"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43555141517531",
-                  "url": "/images/products/a-ok-hype-weight-overload-0.png",
-                  "altText": null,
-                  "width": 972,
-                  "height": 1218
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43555141550299",
-                  "url": "/images/products/a-ok-we-got-the-keys-1.png",
-                  "altText": null,
-                  "width": 960,
-                  "height": 1196
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776423088347",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriAKcMygrnU2DS2NN1Kmk"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776423121115",
-                  "title": "Red",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Red"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriAKcMygrnU2D0iJEgddV"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-hype-weight-overload",
-          "availableForSale": true,
-          "createdAt": "2024-12-09T03:54:19Z",
-          "updatedAt": "2025-05-10T22:53:06Z",
-          "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh6hBmB30vnT3"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8756066844891",
-          "handle": "a-ok-we-got-the-keys",
-          "title": "A-OK GOT THE KEYS TEE",
-          "description": "Drop the beat. Ship the prompt. Unlock the hype cycle. Inside a fluorescent-lit war room, the beat is dropping and the bandwidth is buzzing. This A-OK banger of a tee features a squad of headphone-wearing agents (read: apes) locked into production\u2014while one lone visionary stands triumphant, key in hand, shouting the gospel: \u201cI GOT THE KEYS.\u201d A nod to Suno, Udio, and every other text-to-track startup dreaming in WAV files and VC money, this shirt captures that beautiful moment when music, models, and manic pitch decks collide. Whether you\u2019re engineering sonic hallucinations or just vibing through the next sprint review, this tee\u2019s got the drip for it. Printed on black cotton: classic fit, synthwave energy White rectangular scene featuring apes in red fits around a shared production rig \u201cI GOT THE KEYS\u201d typography echoing across the back like AI-generated bars Subtle visual nods to DAWs, team standups, and runway burn For founders, beat makers, and anyone who\u2019s pitched \u201cSpotify for prompts\u201d unironically The future of music isn\u2019t analog. It\u2019s primate-coded. And yes, we got the keys.",
-          "descriptionHtml": "<p class=\"p1\"><strong><i>Drop the beat. Ship the prompt. Unlock the hype cycle.</i></strong></p>\n<p class=\"p1\">Inside a fluorescent-lit war room, the beat is dropping and the bandwidth is buzzing. This A-OK banger of a tee features a squad of headphone-wearing agents (read: apes) locked into production\u2014while one lone visionary stands triumphant, key in hand, shouting the gospel: <i>\u201cI GOT THE KEYS.\u201d</i></p>\n<p class=\"p1\">A nod to Suno, Udio, and every other text-to-track startup dreaming in WAV files and VC money, this shirt captures that beautiful moment when music, models, and manic pitch decks collide. Whether you\u2019re engineering sonic hallucinations or just vibing through the next sprint review, this tee\u2019s got the drip for it.</p>\n<ul>\n<li>\n<p class=\"p1\">Printed on black cotton: classic fit, synthwave energy</p>\n</li>\n<li>\n<p class=\"p1\">White rectangular scene featuring apes in red fits around a shared production rig</p>\n</li>\n<li>\n<p class=\"p1\">\u201cI GOT THE KEYS\u201d typography echoing across the back like AI-generated bars</p>\n</li>\n<li>\n<p class=\"p1\">Subtle visual nods to DAWs, team standups, and runway burn</p>\n</li>\n<li>\n<p class=\"p1\">For founders, beat makers, and anyone who\u2019s pitched \u201cSpotify for prompts\u201d unironically</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The future of music isn\u2019t analog. It\u2019s primate-coded.</b></p>\n<p class=\"p1\">And yes, we <i>got</i> the keys.</p>",
-          "productType": "T-Shirts",
-          "vendor": "My Store",
-          "tags": [
-            "T-Shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210481139931",
-              "name": "Color",
-              "values": [
-                "Black",
-                "Red",
-                "White"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43555143483611",
-                  "url": "/images/products/a-ok-we-got-the-keys-0.png",
-                  "altText": null,
-                  "width": 952,
-                  "height": 1168
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43555141550299",
-                  "url": "/images/products/a-ok-we-got-the-keys-1.png",
-                  "altText": null,
-                  "width": 960,
-                  "height": 1196
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422957275",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriAKcMygrnU2DRXBGEXuQ"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422990043",
-                  "title": "Red",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Red"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriBKcMygrnU2DrrrzO0HE"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776423022811",
-                  "title": "White",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "White"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriBKcMygrnU2Dm053wzLZ"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-we-got-the-keys",
-          "availableForSale": true,
-          "createdAt": "2024-12-09T03:56:10Z",
-          "updatedAt": "2025-05-10T22:52:51Z",
-          "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh6f1d2JhPsUe"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8756067107035",
-          "handle": "a-ok-nextjs-is-nice-space-ape",
-          "title": "A-OK // NEXT.JS IS NICE SPACE APE TEE",
-          "description": "Your first framework. Your first fit. Your first monkey in space. This is where it all began: an interstellar simian rocking shades, headphones, and a full Next.js UI cockpit like it\u2019s just another Tuesday in dev heaven. Encased in a clean white interface grid and floating among rockets, gears, and unshipped features, this tech-core tee is a love letter to early drops, late nights, and the moment when you finally figured out dynamic routing. Centered below, the pixel-style A-OK badge quietly flexes legacy status\u2014because while stacks change, street-level drip is eternal. Monochrome palette = minimal effort, maximal clarity UI-themed visuals nod to dashboard design, system overload, and infinite npm installs For devs, dreamers, and anyone who ever said \u201cthis side project will totally launch\u201d Mid-weight cotton that\u2019s clean enough for the office and dope enough for launch day Still weird. Still wired. Still A-OK. The OG tee that launched a thousand commits. Frameworks evolve. Icons endure.",
-          "descriptionHtml": "<p class=\"p1\"><strong><i>Your first framework. Your first fit. Your first monkey in space.</i></strong></p>\n<p class=\"p1\">This is where it all began: an interstellar simian rocking shades, headphones, and a full Next.js UI cockpit like it\u2019s just another Tuesday in dev heaven. Encased in a clean white interface grid and floating among rockets, gears, and unshipped features, this tech-core tee is a love letter to early drops, late nights, and the moment when you finally figured out dynamic routing.</p>\n<p class=\"p1\">Centered below, the pixel-style A-OK badge quietly flexes legacy status\u2014because while stacks change, street-level drip is eternal.</p>\n<ul>\n<li>\n<p class=\"p1\">Monochrome palette = minimal effort, maximal clarity</p>\n</li>\n<li>\n<p class=\"p1\">UI-themed visuals nod to dashboard design, system overload, and infinite npm installs</p>\n</li>\n<li>\n<p class=\"p1\">For devs, dreamers, and anyone who ever said \u201cthis side project will totally launch\u201d</p>\n</li>\n<li>\n<p class=\"p1\">Mid-weight cotton that\u2019s clean enough for the office and dope enough for launch day</p>\n</li>\n<li>\n<p class=\"p1\">Still weird. Still wired. Still A-OK.</p>\n</li>\n</ul>\n<p class=\"p4\"><b>The OG tee that launched a thousand commits.</b></p>\n<p class=\"p1\">Frameworks evolve. Icons endure.</p>",
-          "productType": "T-Shirts",
-          "vendor": "My Store",
-          "tags": [
-            "T-Shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210481041627",
-              "name": "Color",
-              "values": [
-                "Black",
-                "Beige",
-                "White",
-                "Red",
-                "Brown"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/43555145547995",
-                  "url": "/images/products/a-ok-nextjs-is-nice-space-ape-0.png",
-                  "altText": null,
-                  "width": 954,
-                  "height": 1160
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422727899",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriBKcMygrnU2DSZR1MP8c"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422760667",
-                  "title": "Beige",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Beige"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriBKcMygrnU2D2J66o4UC"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422793435",
-                  "title": "White",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "White"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriCKcMygrnU2DQt5NWwSS"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422826203",
-                  "title": "Red",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Red"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriCKcMygrnU2D6WuznxjJ"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776422858971",
-                  "title": "Brown",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Brown"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriCKcMygrnU2DLdA46ttD"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-nextjs-is-nice-space-ape",
-          "availableForSale": true,
-          "createdAt": "2024-12-09T03:58:39Z",
-          "updatedAt": "2025-05-29T19:54:31Z",
-          "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh6ehdmEi8hjm"
+          "stripeProductId": "prod_TPh6I0j9miFGDh",
+          "swatches": {
+            "Red": "#d30227",
+            "Black": "#262626"
+          }
         }
       },
       {
@@ -976,7 +505,8 @@
                   "url": "/images/products/a-ok-12mm-monkeys-0.png",
                   "altText": null,
                   "width": 948,
-                  "height": 1154
+                  "height": 1154,
+                  "color": "Gray"
                 }
               }
             ]
@@ -1013,7 +543,10 @@
           "createdAt": "2024-12-09T04:28:25Z",
           "updatedAt": "2025-05-10T22:52:16Z",
           "publishedAt": "2025-04-19T23:52:35Z",
-          "stripeProductId": "prod_TPh6XeXm0yM3pi"
+          "stripeProductId": "prod_TPh6XeXm0yM3pi",
+          "swatches": {
+            "Gray": "#3d3d3f"
+          }
         }
       },
       {
@@ -1067,7 +600,8 @@
                   "url": "/images/products/a-ok-monkey-master-0.png",
                   "altText": null,
                   "width": 505,
-                  "height": 617
+                  "height": 617,
+                  "color": "White"
                 }
               },
               {
@@ -1076,7 +610,8 @@
                   "url": "/images/products/a-ok-monkey-master-1.png",
                   "altText": null,
                   "width": 954,
-                  "height": 1154
+                  "height": 1154,
+                  "color": "White"
                 }
               },
               {
@@ -1085,7 +620,8 @@
                   "url": "/images/products/a-ok-monkey-master-2.png",
                   "altText": null,
                   "width": 589,
-                  "height": 591
+                  "height": 591,
+                  "color": "White"
                 }
               },
               {
@@ -1094,7 +630,48 @@
                   "url": "/images/products/a-ok-monkey-master-3.png",
                   "altText": null,
                   "width": 960,
-                  "height": 1164
+                  "height": 1164,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000007",
+                  "url": "/images/products/a-ok-monkey-master-black-front.webp",
+                  "altText": "Black A-OK PUPPET MASTER TEE, front",
+                  "width": 950,
+                  "height": 1146,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000008",
+                  "url": "/images/products/a-ok-monkey-master-black-back.webp",
+                  "altText": "Black A-OK PUPPET MASTER TEE, back",
+                  "width": 954,
+                  "height": 1164,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000009",
+                  "url": "/images/products/a-ok-monkey-master-red-front.webp",
+                  "altText": "Red A-OK PUPPET MASTER TEE, front",
+                  "width": 964,
+                  "height": 1158,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000010",
+                  "url": "/images/products/a-ok-monkey-master-red-back.webp",
+                  "altText": "Red A-OK PUPPET MASTER TEE, back",
+                  "width": 954,
+                  "height": 1164,
+                  "color": "Red"
                 }
               }
             ]
@@ -1171,9 +748,13 @@
           "createdAt": "2024-12-09T04:41:33Z",
           "updatedAt": "2025-05-13T21:29:41Z",
           "publishedAt": "2025-04-19T23:52:36Z",
-          "featured": true,
-          "featuredOrder": 1,
-          "stripeProductId": "prod_TPh6M4n1E8Q1Rk"
+          "featured": false,
+          "stripeProductId": "prod_TPh6M4n1E8Q1Rk",
+          "swatches": {
+            "White": "#efefef",
+            "Black": "#262626",
+            "Red": "#d30227"
+          }
         }
       },
       {
@@ -1227,7 +808,8 @@
                   "url": "/images/products/a-ok-octo-ape-0.png",
                   "altText": "Octo Ape",
                   "width": 757,
-                  "height": 742
+                  "height": 742,
+                  "color": "Black"
                 }
               },
               {
@@ -1236,7 +818,48 @@
                   "url": "/images/products/a-ok-octo-ape-1.png",
                   "altText": null,
                   "width": 998,
-                  "height": 1076
+                  "height": 1076,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000011",
+                  "url": "/images/products/a-ok-octo-ape-white-front.webp",
+                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE, front",
+                  "width": 757,
+                  "height": 742,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000012",
+                  "url": "/images/products/a-ok-octo-ape-white-back.webp",
+                  "altText": "White A-OK MULTI-MODAL OCTO MAYHEM TEE, back",
+                  "width": 998,
+                  "height": 1076,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000013",
+                  "url": "/images/products/a-ok-octo-ape-red-front.webp",
+                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE, front",
+                  "width": 757,
+                  "height": 742,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000014",
+                  "url": "/images/products/a-ok-octo-ape-red-back.webp",
+                  "altText": "Red A-OK MULTI-MODAL OCTO MAYHEM TEE, back",
+                  "width": 998,
+                  "height": 1076,
+                  "color": "Red"
                 }
               }
             ]
@@ -1313,7 +936,12 @@
           "createdAt": "2024-12-13T20:45:03Z",
           "updatedAt": "2025-05-10T22:51:51Z",
           "publishedAt": "2025-04-19T23:52:36Z",
-          "stripeProductId": "prod_TPh6eaI4BSjsBQ"
+          "stripeProductId": "prod_TPh6eaI4BSjsBQ",
+          "swatches": {
+            "Black": "#262626",
+            "White": "#efefef",
+            "Red": "#d30227"
+          }
         }
       },
       {
@@ -1367,7 +995,28 @@
                   "url": "/images/products/1984-ape-0.png",
                   "altText": null,
                   "width": 1044,
-                  "height": 1036
+                  "height": 1036,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000015",
+                  "url": "/images/products/1984-ape-black-front.webp",
+                  "altText": "Black A-OK 2034 PROPHECY HOODIE, front",
+                  "width": 1044,
+                  "height": 1036,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000016",
+                  "url": "/images/products/1984-ape-white-front.webp",
+                  "altText": "White A-OK 2034 PROPHECY HOODIE, front",
+                  "width": 1044,
+                  "height": 1036,
+                  "color": "White"
                 }
               }
             ]
@@ -1444,134 +1093,14 @@
           "createdAt": "2024-12-31T22:00:36Z",
           "updatedAt": "2025-09-02T20:19:12Z",
           "publishedAt": "2025-04-19T23:52:36Z",
-          "stripeProductId": "prod_TPh6ZlbhdYLpoI"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8871268352219",
-          "handle": "ape-logo-embroidered",
-          "title": "Ape Logo (Embroidered)",
-          "description": "That face. Those headphones. That hat. You're twins. It's recursive. Nice.",
-          "descriptionHtml": "<p>That face. Those headphones. That hat. You're twins. It's recursive. Nice.</p>",
-          "productType": "Hats",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "Hats"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11196362227931",
-              "name": "Title",
-              "values": [
-                "Default Title"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "75.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "75.0",
-              "currencyCode": "USD"
-            }
+          "stripeProductId": "prod_TPh6ZlbhdYLpoI",
+          "swatches": {
+            "Red": "#ae0c22",
+            "Black": "#232020",
+            "White": "#efefef"
           },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45573779292379",
-                  "url": "/images/products/ape-logo-embroidered-0.jpg",
-                  "altText": null,
-                  "width": 3072,
-                  "height": 4080
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45573778702555",
-                  "url": "/images/products/ape-logo-embroidered-1.jpg",
-                  "altText": null,
-                  "width": 3072,
-                  "height": 4080
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45462227452123",
-                  "url": "/images/products/ape-logo-embroidered-2.jpg",
-                  "altText": null,
-                  "width": 542,
-                  "height": 600
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45417430548699",
-                  "url": "/images/products/ape-logo-embroidered-3.png",
-                  "altText": null,
-                  "width": 307,
-                  "height": 270
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45462210805979",
-                  "url": "/images/products/ape-logo-embroidered-4.jpg",
-                  "altText": null,
-                  "width": 270,
-                  "height": 600
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46735214346459",
-                  "title": "Default Title",
-                  "sku": "",
-                  "price": {
-                    "amount": "75.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Title",
-                      "value": "Default Title"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriFKcMygrnU2DvmbA4dZj"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/ape-logo-embroidered",
-          "availableForSale": true,
-          "createdAt": "2025-04-26T00:56:46Z",
-          "updatedAt": "2025-05-14T19:27:37Z",
-          "publishedAt": "2025-04-26T00:56:46Z",
           "featured": true,
-          "featuredOrder": 2,
-          "stripeProductId": "prod_TPh6ToxrhGbjcp"
+          "featuredOrder": 8
         }
       },
       {
@@ -1591,8 +1120,8 @@
               "id": "gid://a-ok/ProductOption/11199647514843",
               "name": "Color",
               "values": [
-                "Black",
-                "Beige"
+                "Beige",
+                "Black"
               ]
             }
           ],
@@ -1624,7 +1153,8 @@
                   "url": "/images/products/same-vibes-but-more-0.png",
                   "altText": null,
                   "width": 1452,
-                  "height": 2048
+                  "height": 2048,
+                  "color": "Beige"
                 }
               },
               {
@@ -1633,7 +1163,8 @@
                   "url": "/images/products/same-vibes-but-more-1.png",
                   "altText": null,
                   "width": 500,
-                  "height": 478
+                  "height": 478,
+                  "color": "Beige"
                 }
               },
               {
@@ -1642,7 +1173,18 @@
                   "url": "/images/products/same-vibes-but-more-2.jpg",
                   "altText": null,
                   "width": 720,
-                  "height": 480
+                  "height": 480,
+                  "color": "Beige"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000017",
+                  "url": "/images/products/same-vibes-but-more-black-front.webp",
+                  "altText": "Black A-OK DAY 2 MONKEY HOODIE, front",
+                  "width": 500,
+                  "height": 478,
+                  "color": "Black"
                 }
               }
             ]
@@ -1700,587 +1242,12 @@
           "updatedAt": "2025-07-30T05:58:44Z",
           "publishedAt": "2025-04-26T01:00:18Z",
           "featured": true,
-          "featuredOrder": 3,
-          "stripeProductId": "prod_TPh6ltx0CMw5HD"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8876290375899",
-          "handle": "make-america-go-a-ok",
-          "title": "Make America Go A-OK",
-          "description": "Step aside, MAGA. The future belongs to the models\u2014and the monkeys. This bold, high-contrast tee features the E/ACC Monkey delivering a passionate address to the synthetic nation, rallying AI agents and apes alike under a new banner: MAS-OK. This isn\u2019t just a spoof\u2014it\u2019s a statement. In a world where hallucinated facts are cited with confidence and the lines between politics, parody, and prompt engineering blur, this shirt stands as a testament to the chaotic promise of infinite compute. Heavyweight cotton, built for reality or simulation Classic fit with just enough stretch to accommodate existential crises Features the A-OK mascot rallying a crowd of deepfaked believers Slogan: \u201cMake America Go MAS-OK\u201d \u2013 because we\u2019ve already gone too far to turn back Screen-printed with AI-precision and monkey-approved ink",
-          "descriptionHtml": "<p class=\"p1\">Step aside, MAGA. The future belongs to the models\u2014and the monkeys. This bold, high-contrast tee features the E/ACC Monkey delivering a passionate address to the synthetic nation, rallying AI agents and apes alike under a new banner: <span class=\"s1\"><b>MAS-OK</b></span>.</p>\n<p class=\"p1\">This isn\u2019t just a spoof\u2014it\u2019s a statement. In a world where hallucinated facts are cited with confidence and the lines between politics, parody, and prompt engineering blur, this shirt stands as a testament to the chaotic promise of infinite compute.</p>\n<ul>\n<li>\n<p class=\"p1\">Heavyweight cotton, built for reality or simulation</p>\n</li>\n<li>\n<p class=\"p1\">Classic fit with just enough stretch to accommodate existential crises</p>\n</li>\n<li>\n<p class=\"p1\">Features the A-OK mascot rallying a crowd of deepfaked believers</p>\n</li>\n<li>\n<p class=\"p1\">Slogan: \u201cMake America Go MAS-OK\u201d \u2013 because we\u2019ve already gone too far to turn back</p>\n</li>\n<li>\n<p class=\"p1\">Screen-printed with AI-precision and monkey-approved ink</p>\n</li>\n</ul>\n<p>\u00a0</p>",
-          "productType": "T-Shirts",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "T-shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11202991685851",
-              "name": "Size",
-              "values": [
-                "2XL",
-                "2XS",
-                "XL",
-                "L",
-                "M",
-                "S"
-              ]
-            },
-            {
-              "id": "gid://a-ok/ProductOption/11210480517339",
-              "name": "Color",
-              "values": [
-                "Black",
-                "White",
-                "Beige"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
+          "stripeProductId": "prod_TPh6ltx0CMw5HD",
+          "swatches": {
+            "Beige": "#c4b2a4",
+            "Black": "#232020"
           },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45502240063707",
-                  "url": "/images/products/make-america-go-a-ok-0.png",
-                  "altText": null,
-                  "width": 1104,
-                  "height": 1088
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45502240096475",
-                  "url": "/images/products/make-america-go-a-ok-1.png",
-                  "altText": null,
-                  "width": 1096,
-                  "height": 1082
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46755886661851",
-                  "title": "2XL / Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriGKcMygrnU2Dfjt2OQ9G"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420368603",
-                  "title": "2XL / White",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "White"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriHKcMygrnU2DjOVp1x2I"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420401371",
-                  "title": "2XL / Beige",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Beige"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriHKcMygrnU2DNfgDhXPw"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46755886694619",
-                  "title": "2XS / Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XS"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriHKcMygrnU2D9EAsGoyp"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420434139",
-                  "title": "2XS / White",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XS"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "White"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriHKcMygrnU2DEvC5sWFw"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420466907",
-                  "title": "2XS / Beige",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "2XS"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Beige"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriIKcMygrnU2DmK9vmSjY"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46755886727387",
-                  "title": "XL / Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriIKcMygrnU2D0THVtjWv"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420499675",
-                  "title": "XL / White",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "White"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriIKcMygrnU2DSP5hrQ7x"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420532443",
-                  "title": "XL / Beige",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "XL"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Beige"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriIKcMygrnU2DsWOHxUHe"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46755886760155",
-                  "title": "L / Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Size",
-                      "value": "L"
-                    },
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriIKcMygrnU2Dx65X9biB"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/make-america-go-a-ok",
-          "availableForSale": true,
-          "createdAt": "2025-05-04T21:44:48Z",
-          "updatedAt": "2025-05-10T22:50:43Z",
-          "publishedAt": "2025-05-04T21:44:47Z",
-          "stripeProductId": "prod_TPh6Cwlc91zwkU"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8876349554907",
-          "handle": "a-ok-microdose-monkey-tee",
-          "title": "A-OK MICRODOSE MONKEY TEE",
-          "description": "Straight from the labs of an unnamed AI startup run out of a SoMa basement comes the Microdose Monkey\u2014your favorite R&D consultant turned consciousness-expanding fashion icon. Draped in a fitted A-OK cap, donning blackout shades, and puffing on what is definitely for research purposes only, this simian\u2019s on a mission to debug reality one synapse at a time. Whether he\u2019s tuning transformer weights or tuning out investor calls, he\u2019s doing it with chill precision and a side of synthetic enlightenment. Premium cotton: optimized for peak cognition and couch sessions Classic fit with extra room for inflated egos or inflated valuations Features the A-OK mascot microdosing his way through the latent space Iconic red-and-black colorway\u2014equal parts caution tape and venture-backed swagger Printed with high-fidelity ink, low-fidelity memory of training data",
-          "descriptionHtml": "<p class=\"p1\">Straight from the labs of an unnamed AI startup run out of a SoMa basement comes the Microdose Monkey\u2014your favorite R&amp;D consultant turned consciousness-expanding fashion icon. Draped in a fitted A-OK cap, donning blackout shades, and puffing on what is <i>definitely</i> for research purposes only, this simian\u2019s on a mission to debug reality one synapse at a time.</p>\n<p class=\"p1\">Whether he\u2019s tuning transformer weights or tuning out investor calls, he\u2019s doing it with chill precision and a side of synthetic enlightenment.</p>\n<ul>\n<li>\n<p class=\"p1\">Premium cotton: optimized for peak cognition and couch sessions</p>\n</li>\n<li>\n<p class=\"p1\">Classic fit with extra room for inflated egos or inflated valuations</p>\n</li>\n<li>\n<p class=\"p1\">Features the A-OK mascot microdosing his way through the latent space</p>\n</li>\n<li>\n<p class=\"p1\">Iconic red-and-black colorway\u2014equal parts caution tape and venture-backed swagger</p>\n</li>\n<li>\n<p class=\"p1\">Printed with high-fidelity ink, low-fidelity memory of training data</p>\n</li>\n</ul>",
-          "productType": "T-Shirts",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "T-shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210480484571",
-              "name": "Color",
-              "values": [
-                "Black",
-                "Beige",
-                "Red"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "50.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45503311806683",
-                  "url": "/images/products/a-ok-microdose-monkey-tee-0.png",
-                  "altText": null,
-                  "width": 1048,
-                  "height": 1074
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45503304663259",
-                  "url": "/images/products/a-ok-microdose-monkey-tee-1.png",
-                  "altText": null,
-                  "width": 1086,
-                  "height": 1086
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45503304630491",
-                  "url": "/images/products/a-ok-microdose-monkey-tee-2.png",
-                  "altText": null,
-                  "width": 1082,
-                  "height": 1068
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420270299",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriJKcMygrnU2Du6MyyOnv"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420303067",
-                  "title": "Beige",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Beige"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriJKcMygrnU2DECDUlZp8"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420335835",
-                  "title": "Red",
-                  "sku": "",
-                  "price": {
-                    "amount": "50.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Red"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriJKcMygrnU2DbfzMz2xo"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-microdose-monkey-tee",
-          "availableForSale": true,
-          "createdAt": "2025-05-04T23:52:53Z",
-          "updatedAt": "2025-05-10T22:50:13Z",
-          "publishedAt": "2025-05-04T23:52:53Z",
-          "stripeProductId": "prod_TPh6amjuGOvbfM"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8876355846363",
-          "handle": "a-ok-neural-zoo-tee",
-          "title": "A-OK NEURAL ZOO TEE",
-          "description": "Some say every large language model is just math. Others say it\u2019s a haunted house of vibes, simulated confidence, and conflicting personalities trapped in a trillion-node group chat. We say: welcome to the Neural Zoo. This pattern-packed design features an army of A-OK avatars\u2014each node in a noisy net of synthetic souls. Some hallucinate with confidence. Some microdose with swagger. Others just want to talk about prompt engineering at Burning Man. Together, they form the swirling chorus of generative chaos we\u2019ve all agreed to call \u201cprogress.\u201d Midweight tee for max comfort during multi-modal meltdowns Repeating all-over print of your favorite inferential apes Inspired by neural networks, vibe shifts, and the guy at OpenAI who won\u2019t stop quoting GPT-3 Subtle circuit pattern in the background\u2014because your thoughts are already in the graph Ideal for LLM prompt whisperers, runaway agents, and rogue embeddings One shirt. Infinite personalities. Because somewhere inside the latent space\u2026 it\u2019s all A-OK.",
-          "descriptionHtml": "<p class=\"p1\">Some say every large language model is just math. Others say it\u2019s a haunted house of vibes, simulated confidence, and conflicting personalities trapped in a trillion-node group chat. We say: welcome to the Neural Zoo.</p>\n<p class=\"p1\">This pattern-packed design features an army of A-OK avatars\u2014each node in a noisy net of synthetic souls. Some hallucinate with confidence. Some microdose with swagger. Others just want to talk about prompt engineering at Burning Man. Together, they form the swirling chorus of generative chaos we\u2019ve all agreed to call \u201cprogress.\u201d</p>\n<ul>\n<li>\n<p class=\"p1\">Midweight tee for max comfort during multi-modal meltdowns</p>\n</li>\n<li>\n<p class=\"p1\">Repeating all-over print of your favorite inferential apes</p>\n</li>\n<li>\n<p class=\"p1\">Inspired by neural networks, vibe shifts, and the guy at OpenAI who won\u2019t stop quoting GPT-3</p>\n</li>\n<li>\n<p class=\"p1\">Subtle circuit pattern in the background\u2014because your thoughts are already in the graph</p>\n</li>\n<li>\n<p class=\"p1\">Ideal for LLM prompt whisperers, runaway agents, and rogue embeddings</p>\n</li>\n</ul>\n<p class=\"p1\">One shirt. Infinite personalities. Because somewhere inside the latent space\u2026 it\u2019s all A-OK.</p>",
-          "productType": "T-Shirts",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "T-shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210480451803",
-              "name": "Color",
-              "values": [
-                "Black"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "60.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "60.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45503403589851",
-                  "url": "/images/products/a-ok-neural-zoo-tee-0.png",
-                  "altText": null,
-                  "width": 1052,
-                  "height": 1070
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45503403393243",
-                  "url": "/images/products/a-ok-neural-zoo-tee-1.png",
-                  "altText": null,
-                  "width": 1298,
-                  "height": 784
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420237531",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "60.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriKKcMygrnU2DOyyAwECQ"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-ok-neural-zoo-tee",
-          "availableForSale": true,
-          "createdAt": "2025-05-05T00:07:05Z",
-          "updatedAt": "2025-05-10T22:49:56Z",
-          "publishedAt": "2025-05-05T00:07:05Z",
-          "stripeProductId": "prod_TPh6R2RsoTDnH9"
+          "featuredOrder": 5
         }
       },
       {
@@ -2332,7 +1299,8 @@
                   "url": "/images/products/a-ok-recursive-monk-tee-0.png",
                   "altText": null,
                   "width": 1138,
-                  "height": 1078
+                  "height": 1078,
+                  "color": "Black"
                 }
               },
               {
@@ -2378,114 +1346,10 @@
           "createdAt": "2025-05-05T01:16:41Z",
           "updatedAt": "2025-10-24T05:53:01Z",
           "publishedAt": "2025-05-05T01:16:41Z",
-          "stripeProductId": "prod_TPh6gKwAV4lUqM"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8876394610907",
-          "handle": "a-okool-as-a-cucumber-tee",
-          "title": "A-OKOOL AS A CUCUMBER TEE",
-          "description": "Infinite Swag. Zero Latency. By Apes on Keys (A-OK) Behold the apex of neural fashion: the A-OK icon fully loaded in inference mode, chilling in precision-tailored streetwear, eyes masked by shades that have never once reflected doubt. This fit doesn\u2019t just say \u201cI train on billions of parameters.\u201d It says, \u201cI did it with style.\u201d From runway to runway prompt, this look bridges the uncanny valley with swagger. Vision models may replicate symmetry and lighting, but they\u2019ll never replicate this much patience, cool, and computational gravitas in one package. Clean-cut AI-core aesthetic with real-world comfort Varsity red bomber, joggers, hi-tops\u2014classic hype silhouette with silicon soul Skater vibes, circa '12 and not Dogtown days Rock-solid pose: one hand in pocket, the other holding back the singularity For LLM whisperers, GPU-rich influencers, and anyone who reads arXiv for the drama Flawless symmetry. Infinite training. Unshakable drip. Cool isn\u2019t just a vibe. It\u2019s a pre-trained state.",
-          "descriptionHtml": "<p class=\"p1\"><strong><i>Infinite Swag. Zero Latency. By Apes on Keys (A-OK)</i></strong></p>\n<p class=\"p1\">Behold the apex of neural fashion: the A-OK icon fully loaded in inference mode, chilling in precision-tailored streetwear, eyes masked by shades that have never once reflected doubt. This fit doesn\u2019t just say \u201cI train on billions of parameters.\u201d It says, \u201cI did it with style.\u201d</p>\n<p class=\"p1\">From runway to runway prompt, this look bridges the uncanny valley with swagger. Vision models may replicate symmetry and lighting, but they\u2019ll never replicate this much patience, cool, and computational gravitas in one package.</p>\n<ul>\n<li>\n<p class=\"p1\">Clean-cut AI-core aesthetic with real-world comfort</p>\n</li>\n<li>\n<p class=\"p1\">Varsity red bomber, joggers, hi-tops\u2014classic hype silhouette with silicon soul</p>\n</li>\n<li>\n<p class=\"p1\">Skater vibes, circa '12 and not Dogtown days</p>\n</li>\n<li>\n<p class=\"p1\">Rock-solid pose: one hand in pocket, the other holding back the singularity</p>\n</li>\n<li>\n<p class=\"p1\">For LLM whisperers, GPU-rich influencers, and anyone who reads arXiv for the drama</p>\n</li>\n</ul>\n<p class=\"p4\"><b>Flawless symmetry. Infinite training. Unshakable drip.</b></p>\n<p class=\"p1\">Cool isn\u2019t just a vibe. It\u2019s a pre-trained state.</p>",
-          "productType": "Hoodies",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "Hoodies"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11210480419035",
-              "name": "Color",
-              "values": [
-                "Black"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "75.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "75.0",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45504059572443",
-                  "url": "/images/products/a-okool-as-a-cucumber-tee-0.png",
-                  "altText": null,
-                  "width": 1110,
-                  "height": 1078
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45504059539675",
-                  "url": "/images/products/a-okool-as-a-cucumber-tee-1.png",
-                  "altText": null,
-                  "width": 411,
-                  "height": 600
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/45504105971931",
-                  "url": "/images/products/a-okool-as-a-cucumber-tee-2.png",
-                  "altText": null,
-                  "width": 198,
-                  "height": 253
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/46776420204763",
-                  "title": "Black",
-                  "sku": "",
-                  "price": {
-                    "amount": "75.0",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": false,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriLKcMygrnU2DxOmtywiv"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/a-okool-as-a-cucumber-tee",
-          "availableForSale": false,
-          "createdAt": "2025-05-05T01:29:13Z",
-          "updatedAt": "2025-05-10T22:49:20Z",
-          "publishedAt": "2025-05-05T01:29:13Z",
-          "stripeProductId": "prod_TPh6jLSkhhaVCG"
+          "stripeProductId": "prod_TPh6gKwAV4lUqM",
+          "swatches": {
+            "Black": "#231d1d"
+          }
         }
       },
       {
@@ -2539,7 +1403,8 @@
                   "url": "/images/products/a-ok-march-of-the-agents-tee-0.png",
                   "altText": null,
                   "width": 1074,
-                  "height": 1076
+                  "height": 1076,
+                  "color": "Red"
                 }
               },
               {
@@ -2557,7 +1422,8 @@
                   "url": "/images/products/a-ok-march-of-the-agents-tee-2.png",
                   "altText": null,
                   "width": 1096,
-                  "height": 1082
+                  "height": 1082,
+                  "color": "Blue"
                 }
               },
               {
@@ -2566,7 +1432,8 @@
                   "url": "/images/products/a-ok-march-of-the-agents-tee-3.png",
                   "altText": null,
                   "width": 1094,
-                  "height": 1084
+                  "height": 1084,
+                  "color": "White"
                 }
               }
             ]
@@ -2643,7 +1510,12 @@
           "createdAt": "2025-05-05T16:07:10Z",
           "updatedAt": "2025-05-10T22:48:22Z",
           "publishedAt": "2025-05-05T16:07:10Z",
-          "stripeProductId": "prod_TPh6gnPDgrEy1c"
+          "stripeProductId": "prod_TPh6gnPDgrEy1c",
+          "swatches": {
+            "Red": "#961a38",
+            "White": "#efefef",
+            "Blue": "#3c4b75"
+          }
         }
       },
       {
@@ -2698,7 +1570,8 @@
                   "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-0.png",
                   "altText": null,
                   "width": 759,
-                  "height": 745
+                  "height": 745,
+                  "color": "Beige"
                 }
               },
               {
@@ -2716,7 +1589,8 @@
                   "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-2.png",
                   "altText": null,
                   "width": 769,
-                  "height": 755
+                  "height": 755,
+                  "color": "Beige"
                 }
               },
               {
@@ -2734,7 +1608,68 @@
                   "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-4.png",
                   "altText": null,
                   "width": 505,
-                  "height": 686
+                  "height": 686,
+                  "color": "Beige"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000018",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-white-front.webp",
+                  "altText": "White APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, front",
+                  "width": 759,
+                  "height": 745,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000019",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-white-back.webp",
+                  "altText": "White APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, back",
+                  "width": 769,
+                  "height": 755,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000020",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-gray-front.webp",
+                  "altText": "Gray APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, front",
+                  "width": 759,
+                  "height": 745,
+                  "color": "Gray"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000021",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-gray-back.webp",
+                  "altText": "Gray APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, back",
+                  "width": 769,
+                  "height": 755,
+                  "color": "Gray"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000022",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-navy-front.webp",
+                  "altText": "Navy APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, front",
+                  "width": 759,
+                  "height": 745,
+                  "color": "Navy"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000023",
+                  "url": "/images/products/ape-ocalypse-drip-dress-for-the-unknown-navy-back.webp",
+                  "altText": "Navy APE-OCALYPSE DRIP \u2014 DRESS FOR THE UNKNOWN hoodie, back",
+                  "width": 769,
+                  "height": 755,
+                  "color": "Navy"
                 }
               }
             ]
@@ -2831,7 +1766,15 @@
           "createdAt": "2025-05-15T17:08:44Z",
           "updatedAt": "2025-05-23T12:43:20Z",
           "publishedAt": "2025-05-15T17:08:44Z",
-          "stripeProductId": "prod_TPh6N8EHkrD8nx"
+          "stripeProductId": "prod_TPh6N8EHkrD8nx",
+          "swatches": {
+            "Beige": "#c4b2a4",
+            "White": "#efefef",
+            "Gray": "#9c9c9e",
+            "Navy": "#17263c"
+          },
+          "featured": true,
+          "featuredOrder": 7
         }
       },
       {
@@ -2886,7 +1829,8 @@
                   "url": "/images/products/mixture-of-apes-finetuned-personalities-tee-0.png",
                   "altText": null,
                   "width": 1254,
-                  "height": 1034
+                  "height": 1034,
+                  "color": "Yellow"
                 }
               },
               {
@@ -2895,7 +1839,8 @@
                   "url": "/images/products/mixture-of-apes-finetuned-personalities-tee-1.png",
                   "altText": null,
                   "width": 1266,
-                  "height": 1130
+                  "height": 1130,
+                  "color": "Red"
                 }
               },
               {
@@ -2904,7 +1849,8 @@
                   "url": "/images/products/mixture-of-apes-finetuned-personalities-tee-2.png",
                   "altText": null,
                   "width": 1292,
-                  "height": 996
+                  "height": 996,
+                  "color": "Gray"
                 }
               },
               {
@@ -2913,7 +1859,8 @@
                   "url": "/images/products/mixture-of-apes-finetuned-personalities-tee-3.png",
                   "altText": null,
                   "width": 1292,
-                  "height": 1002
+                  "height": 1002,
+                  "color": "Green"
                 }
               },
               {
@@ -3019,14 +1966,20 @@
           "createdAt": "2025-05-15T17:27:03Z",
           "updatedAt": "2025-05-15T19:51:46Z",
           "publishedAt": "2025-05-15T17:27:03Z",
-          "stripeProductId": "prod_TPh6J2wOzgyHXV"
+          "stripeProductId": "prod_TPh6J2wOzgyHXV",
+          "swatches": {
+            "Yellow": "#ded882",
+            "Gray": "#737478",
+            "Red": "#ab1234",
+            "Green": "#90a294"
+          }
         }
       },
       {
         "node": {
           "id": "gid://a-ok/Product/8920351637723",
           "handle": "hallucination-club-inference-error-edition",
-          "title": "HALLUCINATION CLUB \u2014 Inference Error Edition",
+          "title": "HALLUCINATION CLUB v0.0 \u2014 Inference Error Edition",
           "description": "You prompt.It answers.You double-check.It hallucinates. Welcome to the Hallucination Club: where apes wear headphones, models drift off-script, and the only thing more unpredictable than token generation is your own confidence score. This tee features a stunned A-OK ape mid-inference\u2014frozen in the precise moment it realizes: \u201cOh no. That wasn\u2019t in the training data.\u201d Draped in a hoodie, lips parted in latent surprise, the A-OK ape captures the universal expression of every developer, researcher, and chatbot user who\u2019s ever watched a model spin a confident fiction with perfect syntax and zero factual grounding\u2014with near infinite \"citations\". Perfect for: Prompt engineers in denial Founders who pushed to prod too early Agents caught in the act Humans caught believing them Error-prone. Token-hungry.Unreasonably confident.Certified A-OK.",
           "descriptionHtml": "<p data-end=\"493\" data-start=\"429\">You prompt.<br data-end=\"443\" data-start=\"440\">It answers.<br data-end=\"457\" data-start=\"454\">You double-check.<br data-end=\"477\" data-start=\"474\">It hallucinates.</p>\n<p data-end=\"672\" data-start=\"495\"><strong>Welcome to the Hallucination Club</strong>: where apes wear headphones, models drift off-script, and the only thing more unpredictable than token generation is your own confidence score.</p>\n<p data-end=\"819\" data-start=\"674\">This tee features a stunned A-OK ape mid-inference\u2014frozen in the precise moment it realizes:\u00a0\u201cOh no. That wasn\u2019t in the training data.\u201d</p>\n<p data-end=\"1068\" data-start=\"821\">Draped in a hoodie, lips parted in latent surprise, the A-OK ape captures the universal expression of every developer, researcher, and chatbot user who\u2019s ever watched a model spin a confident fiction with perfect syntax and zero factual grounding\u2014with near infinite \"citations\".<strong data-end=\"1088\" data-start=\"1070\"></strong></p>\n<p data-end=\"1462\" data-start=\"1444\"><strong data-end=\"1460\" data-start=\"1444\">Perfect for:</strong></p>\n<ul data-end=\"1593\" data-start=\"1463\">\n<li data-end=\"1493\" data-start=\"1463\">\n<p data-end=\"1493\" data-start=\"1465\">Prompt engineers in denial</p>\n</li>\n<li data-end=\"1535\" data-start=\"1494\">\n<p data-end=\"1535\" data-start=\"1496\">Founders who pushed to prod too early</p>\n</li>\n<li data-end=\"1562\" data-start=\"1536\">\n<p data-end=\"1562\" data-start=\"1538\">Agents caught in the act</p>\n</li>\n<li data-end=\"1593\" data-start=\"1563\">\n<p data-end=\"1593\" data-start=\"1565\">Humans caught believing them</p>\n</li>\n</ul>\n<p data-end=\"1665\" data-start=\"1595\"><em>Error-prone. Token-hungry.</em><br data-end=\"1624\" data-start=\"1621\"><em>Unreasonably confident.</em><br data-end=\"1650\" data-start=\"1647\"><em>Certified A-OK.</em></p>",
           "productType": "T-Shirts",
@@ -3085,7 +2038,8 @@
                   "url": "/images/products/hallucination-club-inference-error-edition-0.png",
                   "altText": null,
                   "width": 1130,
-                  "height": 846
+                  "height": 846,
+                  "color": "Green"
                 }
               },
               {
@@ -3094,7 +2048,8 @@
                   "url": "/images/products/hallucination-club-inference-error-edition-1.png",
                   "altText": null,
                   "width": 1142,
-                  "height": 882
+                  "height": 882,
+                  "color": "Red"
                 }
               },
               {
@@ -3103,7 +2058,18 @@
                   "url": "/images/products/hallucination-club-inference-error-edition-2.png",
                   "altText": null,
                   "width": 1280,
-                  "height": 1150
+                  "height": 1150,
+                  "color": "Purple"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000024",
+                  "url": "/images/products/hallucination-club-inference-error-edition-white-front.webp",
+                  "altText": "White HALLUCINATION CLUB v0.0 \u2014 Inference Error Edition tee, front",
+                  "width": 1130,
+                  "height": 846,
+                  "color": "White"
                 }
               },
               {
@@ -3388,6 +2354,266 @@
                   ],
                   "stripePriceId": "price_1SSriQKcMygrnU2D6r7k9GGp"
                 }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000049",
+                  "title": "Purple / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Purple"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000050",
+                  "title": "Purple / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Purple"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000051",
+                  "title": "Purple / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Purple"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000052",
+                  "title": "Purple / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Purple"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000053",
+                  "title": "Purple / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Purple"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000054",
+                  "title": "White / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000055",
+                  "title": "White / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000056",
+                  "title": "White / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000057",
+                  "title": "White / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000058",
+                  "title": "White / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": {
+                    "amount": "50.0",
+                    "currencyCode": "USD"
+                  },
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
               }
             ]
           },
@@ -3399,216 +2625,13 @@
           "createdAt": "2025-06-14T21:41:37Z",
           "updatedAt": "2025-08-09T04:31:07Z",
           "publishedAt": "2025-06-14T21:41:38Z",
-          "stripeProductId": "prod_TPh6vMtIYZ6TCc"
-        }
-      },
-      {
-        "node": {
-          "id": "gid://a-ok/Product/8931317743835",
-          "handle": "business-logic-crew-neck-sweatshirt",
-          "title": "\u201cBusiness Logic\u201d Crew Neck Sweatshirt",
-          "description": "Not every agent wears cargo shorts. Some execute protocol in pinstripes. This bold tri-tone tee features our executive-functioning ape in full inferential swagger\u2014headphones tuned to the latent space, tie locked in recursion, and red lenses filtering out human error in real-time. Designed for the street-savvy strategist, the semantic shuffler, or anyone debugging capitalism in style. Wear it to the next board meeting or your next model alignment trial. High-contrast red/black/bone palette Front graphic: Simian CEO with vector-grade insight Back tag: A-OK in encoded serif font (because branding is just prompt tuning) Printed on heavyweight cotton\u2014no fine-tuning required \ud83e\udd8d A-OK: Where business casual meets base-layer intelligence.",
-          "descriptionHtml": "<p class=\"p1\">Not every agent wears cargo shorts. Some execute protocol in pinstripes.</p>\n<p class=\"p1\">This bold tri-tone tee features our executive-functioning ape in full inferential swagger\u2014headphones tuned to the latent space, tie locked in recursion, and red lenses filtering out human error in real-time.</p>\n<p class=\"p1\">Designed for the street-savvy strategist, the semantic shuffler, or anyone debugging capitalism in style. Wear it to the next board meeting or your next model alignment trial.</p>\n<ul>\n<li>\n<p class=\"p1\">High-contrast red/black/bone palette</p>\n</li>\n<li>\n<p class=\"p1\">Front graphic: Simian CEO with vector-grade insight</p>\n</li>\n<li>\n<p class=\"p1\">Back tag: A-OK in encoded serif font (because branding is just prompt tuning)</p>\n</li>\n<li>\n<p class=\"p1\">Printed on heavyweight cotton\u2014no fine-tuning required</p>\n</li>\n</ul>\n<p class=\"p4\"><span class=\"s2\">\ud83e\udd8d </span><b>A-OK: Where business casual meets base-layer intelligence.</b></p>",
-          "productType": "T-Shirts",
-          "vendor": "A-OK Shop",
-          "tags": [
-            "T-shirts"
-          ],
-          "options": [
-            {
-              "id": "gid://a-ok/ProductOption/11269103747291",
-              "name": "Color",
-              "values": [
-                "Black"
-              ]
-            },
-            {
-              "id": "gid://a-ok/ProductOption/11269103780059",
-              "name": "Size",
-              "values": [
-                "L",
-                "XL",
-                "M",
-                "S",
-                "XS"
-              ]
-            }
-          ],
-          "priceRange": {
-            "minVariantPrice": {
-              "amount": "53.14",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "53.14",
-              "currencyCode": "USD"
-            }
-          },
-          "compareAtPriceRange": {
-            "minVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-              "amount": "0.0",
-              "currencyCode": "USD"
-            }
-          },
-          "images": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/46171683684571",
-                  "url": "/images/products/business-logic-crew-neck-sweatshirt-0.png",
-                  "altText": null,
-                  "width": 1134,
-                  "height": 918
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/46171688108251",
-                  "url": "/images/products/business-logic-crew-neck-sweatshirt-1.png",
-                  "altText": null,
-                  "width": 767,
-                  "height": 1112
-                }
-              }
-            ]
-          },
-          "variants": {
-            "edges": [
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/47102065639643",
-                  "title": "Black / L",
-                  "sku": null,
-                  "price": {
-                    "amount": "53.14",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    },
-                    {
-                      "name": "Size",
-                      "value": "L"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriRKcMygrnU2D46Jcu1RI"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/47102065672411",
-                  "title": "Black / XL",
-                  "sku": null,
-                  "price": {
-                    "amount": "53.14",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    },
-                    {
-                      "name": "Size",
-                      "value": "XL"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriRKcMygrnU2DDiw9fyTW"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/47102065705179",
-                  "title": "Black / M",
-                  "sku": null,
-                  "price": {
-                    "amount": "53.14",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    },
-                    {
-                      "name": "Size",
-                      "value": "M"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriRKcMygrnU2DEeuB2UzH"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/47102065737947",
-                  "title": "Black / S",
-                  "sku": null,
-                  "price": {
-                    "amount": "53.14",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    },
-                    {
-                      "name": "Size",
-                      "value": "S"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriRKcMygrnU2DOUGLyM2J"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductVariant/47102065770715",
-                  "title": "Black / XS",
-                  "sku": null,
-                  "price": {
-                    "amount": "53.14",
-                    "currencyCode": "USD"
-                  },
-                  "compareAtPrice": null,
-                  "availableForSale": true,
-                  "selectedOptions": [
-                    {
-                      "name": "Color",
-                      "value": "Black"
-                    },
-                    {
-                      "name": "Size",
-                      "value": "XS"
-                    }
-                  ],
-                  "stripePriceId": "price_1SSriRKcMygrnU2D2ALrTiNq"
-                }
-              }
-            ]
-          },
-          "collections": {
-            "edges": []
-          },
-          "onlineStoreUrl": "https://checkout.a-ok.shop/products/business-logic-crew-neck-sweatshirt",
-          "availableForSale": true,
-          "createdAt": "2025-07-01T17:39:58Z",
-          "updatedAt": "2025-07-15T13:01:24Z",
-          "publishedAt": "2025-07-01T17:39:59Z",
-          "stripeProductId": "prod_TPh6N7cKRDWzOV"
+          "stripeProductId": "prod_TPh6vMtIYZ6TCc",
+          "swatches": {
+            "Green": "#019e5c",
+            "Red": "#cd0325",
+            "Purple": "#85556b",
+            "White": "#efefef"
+          }
         }
       },
       {
@@ -3639,8 +2662,8 @@
               "id": "gid://a-ok/ProductOption/aok-america-color",
               "name": "Color",
               "values": [
-                "Black",
-                "Dark Chocolate"
+                "Dark Chocolate",
+                "Black"
               ]
             }
           ],
@@ -3672,7 +2695,18 @@
                   "url": "/images/products/a-ok-for-america-biz-rendered.png",
                   "altText": "A-OK For America - Business rendered ape executive on dark hoodie",
                   "width": 1210,
-                  "height": 1386
+                  "height": 1386,
+                  "color": "Dark Chocolate"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000025",
+                  "url": "/images/products/a-ok-for-america-black-front.webp",
+                  "altText": "Black A-OK For America hoodie, front",
+                  "width": 1210,
+                  "height": 1386,
+                  "color": "Black"
                 }
               },
               {
@@ -3946,7 +2980,13 @@
           "createdAt": "2025-11-13T04:49:57.056Z",
           "updatedAt": "2025-11-13T04:49:57.056Z",
           "publishedAt": "2025-11-13T04:49:57.056Z",
-          "stripeProductId": "prod_TPhl09IH2VamxE"
+          "stripeProductId": "prod_TPhl09IH2VamxE",
+          "swatches": {
+            "Dark Chocolate": "#372612",
+            "Black": "#232020"
+          },
+          "featured": true,
+          "featuredOrder": 6
         }
       },
       {
@@ -4036,6 +3076,1776 @@
           "createdAt": "2026-07-25T00:00:00Z",
           "updatedAt": "2026-07-25T00:00:00Z",
           "publishedAt": "2026-07-25T00:00:00Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000001",
+          "handle": "a-ok-all-angles-tee",
+          "title": "A-OK All Angles Tee",
+          "description": "Front, side, back. Three views of the A-OK operator in one graphic. Red hoodie, headphones and the confidence to call this a complete assessment.",
+          "descriptionHtml": "<p><strong>Three views. Same questionable judgment.</strong></p><p>We asked for another perspective.</p><p>The ape turned sideways.</p><p>The <strong>All Angles Tee</strong> gives our Apes on Keys operator the full turnaround: front, side and back. Red hoodie. Headphones on. Every angle documented. The thought process remains unavailable.</p><p>A character study for people who like to look at a problem from every direction before opening another tab.</p><p><strong>More context. Same ape. A-OK.</strong></p><ul><li>Three ape views in a single horizontal composition.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Center-front graphic on a classic crewneck T-shirt.</li><li>Catalog colorways: White, Natural and Yellow.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "ape graphic",
+            "AI satire",
+            "red hoodie",
+            "character turnaround"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000011",
+              "name": "Color",
+              "values": [
+                "White",
+                "Natural",
+                "Yellow"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000012",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000028",
+                  "url": "/images/products/a-ok-all-angles-tee-yellow-front.webp",
+                  "altText": "Yellow A-OK All Angles Tee — chest artwork close-up",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow",
+                  "presentation": "chest-detail"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000029",
+                  "url": "/images/products/a-ok-all-angles-tee-yellow-front.webp",
+                  "altText": "Yellow A-OK All Angles Tee — full front view",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000026",
+                  "url": "/images/products/a-ok-all-angles-tee-white-front.webp",
+                  "altText": "White A-OK All Angles Tee, front",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000027",
+                  "url": "/images/products/a-ok-all-angles-tee-natural-front.webp",
+                  "altText": "Natural A-OK All Angles Tee, front",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Natural"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000010",
+                  "url": "/images/products/a-ok-all-angles-tee-0.webp",
+                  "altText": "Front, side and back views of the A-OK ape wearing a red hoodie, cap, headphones and sneakers.",
+                  "width": 1400,
+                  "height": 933
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000031",
+                  "title": "White / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000032",
+                  "title": "White / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000033",
+                  "title": "White / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000034",
+                  "title": "White / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000035",
+                  "title": "White / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000036",
+                  "title": "White / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000037",
+                  "title": "Natural / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000038",
+                  "title": "Natural / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000039",
+                  "title": "Natural / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000040",
+                  "title": "Natural / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000041",
+                  "title": "Natural / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000042",
+                  "title": "Natural / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000059",
+                  "title": "Yellow / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000060",
+                  "title": "Yellow / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000061",
+                  "title": "Yellow / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000062",
+                  "title": "Yellow / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000063",
+                  "title": "Yellow / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000064",
+                  "title": "Yellow / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-01T03:30:00Z",
+          "updatedAt": "2026-10-04T19:21:13Z",
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "A-OK All Angles Tee | Apes on Keys",
+            "description": "The A-OK operator from the front, side and back. A red-hoodie ape graphic tee with three perspectives and no additional certainty."
+          },
+          "featured": true,
+          "featuredOrder": 3,
+          "swatches": {
+            "White": "#efede9",
+            "Natural": "#e8ddce",
+            "Yellow": "#F4CC32"
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000002",
+          "handle": "a-ok-transformer-unit-exploded-view-tee",
+          "title": "A-OK Transformer Unit \u2014 Exploded View Tee",
+          "description": "The Apes on Keys operator, taken apart for inspection. A red hoodie, an inference core, and 18 numbered explanations for what might be going on in there. A technical diagram with a very human amount of uncertainty.",
+          "descriptionHtml": "<p><strong>Every part accounted for. Understanding sold separately.</strong></p><p>We opened up the A-OK ape to see how it works.</p><p>Inside: a transformer core, a heat sink, several circuit boards, and no obvious explanation for the confidence.</p><p>The <strong>Transformer Unit \u2014 Exploded View Tee</strong> presents our red-hoodie operator as a meticulously annotated assembly drawing. Cap off. Headphones separated. Face plate detached. The machinery hangs in order beneath the hoodie, each part assigned a number and a reassuringly specific label.</p><p>There are 18 callouts. None of them is \u201cunderstanding.\u201d</p><p>Cream technical linework, red accents, and a black poster field give the whole thing the authority of a service manual. The ape looks about as surprised by its internals as we are.</p><p><strong>Small inputs. Massive outputs.</strong> A useful operating principle. Also how one question becomes an afternoon.</p><p>For anyone who has ever read the documentation and developed several new questions.</p><p><strong>A-OK. Inspection ongoing.</strong></p><ul><li>Original A-OK Transformer Ape artwork, presented as a complete vertical exploded-view plate.</li><li>The Apes on Keys ape in a red hoodie, with cap, headphones, sneakers, and exposed mechanical assemblies.</li><li>Eighteen numbered component callouts, from the cap shell to the optional keychain eyelet.</li><li>Transformer core, heat sink, circuit boards, power management, and I/O details rendered in technical-diagram style.</li><li>Cream lettering and guide lines, red accents, and metallic details against the original black background.</li><li>Original A-OK masthead, technical border, figure marker, and \u201cTRANSFORMER UNIT V1.0\u201d heading retained.</li><li>Artwork includes \u201cSMALL INPUTS. MASSIVE OUTPUTS.\u201d and \u201cCURIOSITY COMPOUNDS INTELLIGENCE.\u201d</li></ul><p><em>Transformer Unit V1.0. All parts present. Conclusions pending.</em></p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "Transformer Unit",
+            "exploded view",
+            "technical illustration",
+            "schematic tee",
+            "ape graphic",
+            "AI satire",
+            "engineering humor",
+            "red hoodie",
+            "graphic T-shirt"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000021",
+              "name": "Color",
+              "values": [
+                "Black"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000022",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000020",
+                  "url": "/images/products/a-ok-transformer-unit-exploded-view-tee-0.webp",
+                  "altText": "Black A-OK T-shirt with an exploded-view diagram of a red-hoodie ape, surrounded by cream component labels and mechanical parts.",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000021",
+                  "url": "/images/products/a-ok-transformer-unit-exploded-view-tee-1.webp",
+                  "altText": "Person wearing the black Transformer Unit tee.",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000022",
+                  "url": "/images/products/a-ok-transformer-unit-exploded-view-tee-2.webp",
+                  "altText": "A-OK Transformer Unit technical poster showing a red-hoodie ape separated into 18 labeled assemblies, from its cap to a keychain eyelet.",
+                  "width": 1000,
+                  "height": 1500
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000025",
+                  "title": "Black / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000026",
+                  "title": "Black / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000027",
+                  "title": "Black / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000028",
+                  "title": "Black / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000029",
+                  "title": "Black / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000030",
+                  "title": "Black / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-01T03:30:00Z",
+          "updatedAt": "2026-10-01T03:30:00Z",
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "A-OK Transformer Unit Tee | Apes on Keys",
+            "description": "The A-OK ape, taken apart. An exploded-view graphic tee with a red hoodie, transformer core and 18 technical callouts. Understanding sold separately.",
+            "socialTitle": "A-OK Transformer Unit \u2014 Exploded View Tee",
+            "socialDescription": "Every part accounted for. Understanding sold separately. The Apes on Keys operator, documented down to the optional keychain eyelet."
+          },
+          "featured": true,
+          "featuredOrder": 2,
+          "swatches": {
+            "Black": "#262626"
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000003",
+          "handle": "a-ok-baby-ape-little-operator",
+          "title": "Baby Ape \u2014 Little Operator",
+          "description": "Small model. Big plans. The A-OK baby ape arrives in a red hoodie, signature cap, and oversized headphones. Backpack full of potential. Confidence well ahead of the training data.",
+          "descriptionHtml": "<p><strong>Small model. Big plans.</strong></p><p>Headphones on. Backpack packed. Absolutely no idea what the assignment was.</p><p>Meet Little Operator: the baby ape with an A-OK cap, a chip on his hoodie, and the confidence of a model that has never once checked its sources.</p><p>He\u2019s dressed for the future. The future has requested adult supervision.</p><p>Our little Apes on Keys operator shows up in red, black, and cream, with oversized headphones, an oversized grin, and what we\u2019re choosing to call potential. For anyone learning as they go\u2014and looking suspiciously pleased about it.</p><p>Still training. Already A-OK.</p><ul><li>Smiling baby ape with an A-OK cap and backpack.</li><li>Crown-marked headphones and a microchip emblem on the hoodie.</li><li>Bold red, black, and cream artwork.</li><li>A little operator from the Apes on Keys universe.</li></ul><p>Give the little guy a job. Add to cart.</p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "Apes on Keys"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000031",
+              "name": "Color",
+              "values": [
+                "White",
+                "Natural"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000032",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000030",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-0.webp",
+                  "altText": "White T-shirt with a centered red, black, and cream baby ape graphic wearing an A-OK cap, headphones, a hoodie with a microchip emblem, and a backpack.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000031",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-1.webp",
+                  "altText": "Off-white T-shirt with a centered red, black, and cream baby ape graphic wearing an A-OK cap, headphones, a hoodie with a microchip emblem, and a backpack.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "Natural"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000032",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-2.webp",
+                  "altText": "Person wearing the white Little Operator tee in a studio.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000033",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-3.webp",
+                  "altText": "Person wearing the natural Little Operator tee in a studio.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "Natural"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000034",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-4.webp",
+                  "altText": "Person wearing the white Little Operator tee outdoors.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000035",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-5.webp",
+                  "altText": "Person wearing the natural Little Operator tee outdoors.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "Natural"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000013",
+                  "title": "White / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000014",
+                  "title": "White / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000015",
+                  "title": "White / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000016",
+                  "title": "White / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000017",
+                  "title": "White / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000018",
+                  "title": "White / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000019",
+                  "title": "Natural / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000020",
+                  "title": "Natural / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000021",
+                  "title": "Natural / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000022",
+                  "title": "Natural / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000023",
+                  "title": "Natural / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000024",
+                  "title": "Natural / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Natural"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-01T03:30:00Z",
+          "updatedAt": "2026-10-01T03:30:00Z",
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "seo": {
+            "title": "Little Operator Baby Ape Graphic Tee | A-OK",
+            "description": "Small model. Big plans. Meet Little Operator, the A-OK baby ape graphic tee with oversized headphones, a red hoodie, and suspicious amounts of confidence."
+          },
+          "featured": true,
+          "featuredOrder": 4,
+          "swatches": {
+            "White": "#efede9",
+            "Natural": "#e8ddce"
+          }
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000004",
+          "handle": "hallucination-club-2026-edition",
+          "title": "HALLUCINATION CLUB v1.0 \u2014 2026 Edition",
+          "description": "The models got agents, tools, memory, browsers, reasoning, and computer access. They did not get certainty. An updated Hallucination Club graphic for the agentic era, featuring the A-OK ape and our new Club Receipt treatment. Same hallucinations. New ideas.",
+          "descriptionHtml": "<p><strong>Same hallucinations. New ideas.</strong></p><p>A year ago, the models mostly sat in a box and confidently invented citations.</p><p>Now they browse. They reason. They call tools. They write code. They operate computers. They delegate work to other agents. They remember things. They make plans. They reconsider those plans.</p><p>And, occasionally, they still make some shit up.</p><p>Welcome back to the <strong>Hallucination Club</strong>.</p><p>The 2026 edition updates the original A-OK graphic for the agentic era: more capabilities, more autonomy, more elaborate receipts\u2014and the same fundamental uncertainty about whether the machine actually knows what it\u2019s talking about.</p><pre>IDEAS ................................ INFINITE\nPROMPTS ........................ JUST ONE MORE\nAGENTS .................................. A-OK\nTOOLS ................................... A-OK\nCONTEXT ............................ SOMETIMES\nREALITY CHECKS ..................... OPTIONAL\n\nTOTAL: STILL HALLUCINATING</pre><p>Featuring our original Apes on Keys operator, now surrounded by the increasingly complicated machinery required to turn \u201cpredict the next token\u201d into \u201cplease run my company.\u201d</p><p>Good ideas. Questionable sources.</p><p><strong>A-OK.</strong></p>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "Apes on Keys"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000041",
+              "name": "Color",
+              "values": [
+                "Navy",
+                "Green",
+                "Oat"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000042",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000042",
+                  "url": "/images/products/hallucination-club-2026-edition-2.webp",
+                  "altText": "Navy Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING, printed in white",
+                  "width": 1400,
+                  "height": 1048,
+                  "color": "Navy"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000041",
+                  "url": "/images/products/hallucination-club-2026-edition-1.webp",
+                  "altText": "Green Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
+                  "width": 1400,
+                  "height": 1048,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000040",
+                  "url": "/images/products/hallucination-club-2026-edition-0.webp",
+                  "altText": "Oat Hallucination Club 2026 Edition tee with the A-OK ape in a hoodie above a Club Receipt that totals STILL HALLUCINATING",
+                  "width": 1400,
+                  "height": 1048,
+                  "color": "Oat"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000043",
+                  "url": "/images/products/hallucination-club-2026-edition-3.webp",
+                  "altText": "Hallucination Club 2026 Edition artwork: the A-OK ape in cap, headphones and an Apes on Keys hoodie above a receipt-style list ending in a barcode",
+                  "width": 1167,
+                  "height": 1400
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000043",
+                  "title": "Navy / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000044",
+                  "title": "Navy / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000045",
+                  "title": "Navy / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000046",
+                  "title": "Navy / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000047",
+                  "title": "Navy / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000048",
+                  "title": "Navy / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000007",
+                  "title": "Green / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000008",
+                  "title": "Green / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000009",
+                  "title": "Green / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000010",
+                  "title": "Green / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000011",
+                  "title": "Green / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000012",
+                  "title": "Green / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000001",
+                  "title": "Oat / XS",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000002",
+                  "title": "Oat / S",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000003",
+                  "title": "Oat / M",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000004",
+                  "title": "Oat / L",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000005",
+                  "title": "Oat / XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000006",
+                  "title": "Oat / 2XL",
+                  "sku": "",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Oat"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-01T03:30:00Z",
+          "updatedAt": "2026-10-01T03:30:00Z",
+          "publishedAt": "2026-10-01T03:30:00Z",
+          "featured": true,
+          "featuredOrder": 1,
+          "seo": {
+            "description": "The A-OK Hallucination Club tee returns for the agentic AI era. Agents, tools, reasoning, context, reality checks\u2014and occasionally complete nonsense."
+          },
+          "swatches": {
+            "Navy": "#17263c",
+            "Green": "#01a460",
+            "Oat": "#e4dac9"
+          }
         }
       }
     ]

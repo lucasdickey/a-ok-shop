@@ -28,7 +28,7 @@ type CartContextType = {
   subtotal: number;
 };
 
-// Checkout rejects more than this per line (see app/api/catalog/checkout/route.ts).
+// Checkout rejects more than this per line (see app/lib/store-checkout.ts).
 export const MAX_QUANTITY_PER_ITEM = 20;
 
 const CartContext = createContext<CartContextType | undefined>(undefined);

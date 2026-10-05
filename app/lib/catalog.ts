@@ -1,4 +1,5 @@
 import catalogData from "../../product-catalog.json";
+import { absoluteUrl } from "./site";
 
 // Types reflecting the static product catalog JSON bundled with the app
 export type Product = {
@@ -13,6 +14,10 @@ export type Product = {
   stripeProductId?: string; // Stripe product ID for this product
   featured?: boolean; // Whether this product is featured on homepage
   featuredOrder?: number; // Display order for featured products
+  /** Search and social-preview copy for the product page, from the product's copy file. */
+  seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
+  /** Swatch color per Color option value, measured from the product's photos. */
+  swatches?: Record<string, string>;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -41,6 +46,10 @@ export type Product = {
         altText: string | null;
         width: number;
         height: number;
+        /** The garment color this photo shows; artwork-only images have none. */
+        color?: string;
+        /** Present the chest print close up while retaining the full garment asset. */
+        presentation?: "chest-detail";
       };
     }>;
   };
@@ -100,6 +109,9 @@ export type SimpleProduct = {
   stripeProductId?: string;
   featured?: boolean;
   featuredOrder?: number;
+  seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
+  /** Swatch color per Color option value, measured from the product's photos. */
+  swatches?: Record<string, string>;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -112,6 +124,8 @@ export type SimpleProduct = {
         id: string;
         url: string;
         altText: string;
+        color?: string;
+        presentation?: "chest-detail";
       };
     }>;
   };
@@ -205,6 +219,8 @@ function loadMappedProducts(): SimpleProduct[] {
     stripeProductId: product.stripeProductId,
     featured: product.featured,
     featuredOrder: product.featuredOrder,
+    seo: product.seo,
+    swatches: product.swatches,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,
@@ -217,6 +233,8 @@ function loadMappedProducts(): SimpleProduct[] {
           id: edge.node.id,
           url: edge.node.url,
           altText: edge.node.altText || product.title,
+          color: edge.node.color,
+          presentation: edge.node.presentation,
         },
       })),
     },
@@ -262,40 +280,35 @@ export function getAgentProducts(): SimpleProduct[] {
   return loadMappedProducts();
 }
 
-// Get products by category (using tags and productType)
+// Words that place a product in each shop category.
+const CATEGORY_WORDS: Record<string, string[]> = {
+  hats: ["hat", "cap"],
+  "t-shirts": ["shirt", "tee"],
+  hoodies: ["hoodie", "sweatshirt"],
+};
+
+// Get products by category (using productType, then tags)
 export function getProductsByCategory(category: string): SimpleProduct[] {
-  const allProducts = getAllProducts();
   const normalizedCategory = category.toLowerCase();
+  const words = CATEGORY_WORDS[normalizedCategory] ?? [normalizedCategory];
+  const matches = (value: string) => words.some((word) => value.toLowerCase().includes(word));
 
-  return allProducts.filter((product) => {
-    const normalizedTags = product.tags.map((tag) => tag.toLowerCase());
-    const normalizedProductType = product.productType.toLowerCase();
-
-    // Check if category matches tags or product type
-    if (normalizedCategory === "hats") {
-      return (
-        normalizedTags.some((tag) => tag.includes("hat") || tag.includes("cap")) ||
-        normalizedProductType.includes("hat") ||
-        normalizedProductType.includes("cap")
-      );
-    } else if (normalizedCategory === "t-shirts") {
-      return (
-        normalizedTags.some((tag) => tag.includes("shirt") || tag.includes("tee")) ||
-        normalizedProductType.includes("t-shirt") ||
-        normalizedProductType.includes("tee")
-      );
-    } else if (normalizedCategory === "hoodies") {
-      return (
-        normalizedTags.some((tag) => tag.includes("hoodie") || tag.includes("sweatshirt")) ||
-        normalizedProductType.includes("hoodie") ||
-        normalizedProductType.includes("sweatshirt")
-      );
-    } else {
-      return (
-        normalizedTags.some((tag) => tag.includes(normalizedCategory)) ||
-        normalizedProductType.includes(normalizedCategory)
-      );
+  return getAllProducts().filter((product) => {
+    // The product's own type decides when it names a category, so a tee tagged
+    // "red hoodie" (describing the artwork) stays out of Hoodies.
+    const type = product.productType.toLowerCase();
+    const typeIsHoodie = CATEGORY_WORDS.hoodies.some((word) => type.includes(word));
+    const typeIsKnown =
+      typeIsHoodie ||
+      CATEGORY_WORDS.hats.some((word) => type.includes(word)) ||
+      type.includes("t-shirt") ||
+      type.includes("tee");
+    if (typeIsKnown) {
+      // "Sweatshirts" contains "shirt"; it belongs with hoodies, not tees.
+      if (normalizedCategory === "t-shirts" && typeIsHoodie) return false;
+      return matches(type);
     }
+    return matches(type) || product.tags.some(matches);
   });
 }
 
@@ -310,21 +323,6 @@ export function getProductByHandle(handle: string): SimpleProduct | null {
   return loadMappedProducts().find((product) => product.handle === handle) || null;
 }
 
-// Get product categories (unique product types and tags)
-export function getCategories(): string[] {
-  const products = loadProducts();
-  const categoriesSet = new Set<string>();
-
-  products.forEach((product) => {
-    if (product.productType) {
-      categoriesSet.add(product.productType);
-    }
-    product.tags.forEach((tag) => categoriesSet.add(tag));
-  });
-
-  return Array.from(categoriesSet).sort();
-}
-
 // Get featured products (sorted by featuredOrder)
 export function getFeaturedProducts(): SimpleProduct[] {
   const allProducts = getAllProducts();
@@ -335,70 +333,4 @@ export function getFeaturedProducts(): SimpleProduct[] {
       const orderB = b.featuredOrder ?? 999;
       return orderA - orderB;
     });
-}
-
-// For Stripe checkout - convert product handle to line items
-// Supports both Stripe price IDs (preferred) and price_data (fallback)
-export function createCheckoutLineItems(cartItems: Array<{
-  variantId: string;
-  quantity: number;
-  handle?: string;
-}>): Array<{
-  price?: string;
-  price_data?: {
-    currency: string;
-    product_data: {
-      name: string;
-      images?: string[];
-    };
-    unit_amount: number;
-  };
-  quantity: number;
-}> {
-  const products = loadProducts();
-
-  return cartItems.map((item) => {
-    // Find the product and variant
-    const product = products.find((p) =>
-      p.variants.edges.some((v) => isSameId(v.node.id, item.variantId))
-    );
-
-    if (!product) {
-      throw new Error(`Product not found for variant ${item.variantId}`);
-    }
-
-    const variant = product.variants.edges.find((v) =>
-      isSameId(v.node.id, item.variantId)
-    )?.node;
-
-    if (!variant) {
-      throw new Error(`Variant not found: ${item.variantId}`);
-    }
-
-    // Use Stripe price ID if available (preferred)
-    if (variant.stripePriceId) {
-      return {
-        price: variant.stripePriceId,
-        quantity: item.quantity,
-      };
-    }
-
-    // Fallback to price_data for products not yet synced to Stripe
-    const imageUrl = product.images.edges[0]?.node.url || "";
-    const fullImageUrl = imageUrl.startsWith("http")
-      ? imageUrl
-      : `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001"}${imageUrl}`;
-
-    return {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: `${product.title} - ${variant.title}`,
-          images: fullImageUrl.startsWith("http") ? [fullImageUrl] : [],
-        },
-        unit_amount: Math.round(parseFloat(variant.price.amount) * 100),
-      },
-      quantity: item.quantity,
-    };
-  });
 }

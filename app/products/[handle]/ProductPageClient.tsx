@@ -4,6 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import AddToCartButton from '@/app/components/product/AddToCartButton';
 
+type ProductImage = {
+  url: string;
+  alt: string;
+  color?: string;
+  presentation?: 'chest-detail';
+};
+
 // Client component for size selection
 export function SizeSelector({
   sizes,
@@ -56,14 +63,14 @@ export function SizeSelector({
 
   return (
     <div className="mt-6">
-      <label htmlFor="size-select" className="block text-sm font-medium mb-2">
-        Size
+      <label htmlFor="size-select" className="micro mb-2 block">
+        Size / XS–2XL
       </label>
       <select
         id="size-select"
         value={selectedSize}
         onChange={handleSizeChange}
-        className="w-full p-2 border border-secondary rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+        className="min-h-[48px] w-full rounded-none border-2 border-dark bg-club-slip px-3 font-mono text-sm shadow-hard-sm"
       >
         <option value="" disabled>
           Select a size
@@ -81,58 +88,25 @@ export function SizeSelector({
 // Client component for color selection
 export function ColorSelector({
   colors,
-  variants,
-  colorAvailability,
   onColorSelect,
+  selectedColor,
+  swatches,
 }: {
   colors: string[];
-  variants: any[];
-  colorAvailability: Record<string, boolean>;
-  onColorSelect: (color: string, variantId: string) => void;
+  onColorSelect: (color: string) => void;
+  selectedColor: string | null;
+  /** Swatch color per color name, measured from the photos. */
+  swatches?: Record<string, string>;
 }) {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-
-  // Set a default color when the component mounts
-  useEffect(() => {
-    if (colors.length > 0 && !selectedColor) {
-      const defaultColor =
-        colors.find((c) => c.toLowerCase() === 'black') || colors[0];
-      handleColorClick(defaultColor);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [colors]);
-
-  const handleColorClick = (color: string) => {
-    setSelectedColor(color);
-
-    // Find the variant ID for this color
-    let variantId = '';
-
-    // First try to find a variant with matching color
-    const variant = variants.find((v) =>
-      v.selectedOptions?.some(
-        (option: { name: string; value: string }) =>
-          option.name.toLowerCase() === 'color' &&
-          option.value.toLowerCase() === color.toLowerCase()
-      )
-    );
-
-    if (variant) {
-      variantId = variant.id;
-    } else {
-      // If no specific variant found, use the default variant
-      variantId = variants[0]?.id || '';
-    }
-
-    onColorSelect(color, variantId);
-  };
-
   // Function to determine the background color for the button
   const getColorStyle = (color: string) => {
     // Map color names to CSS colors
     const colorMap: Record<string, string> = {
       black: 'bg-black',
       white: 'bg-white',
+      beige: 'bg-[#D9C7A7]',
+      natural: 'bg-[#E8DACD]', // Gildan 5000 Natural, per the production notes
+      oat: 'bg-[#EAE2CF]', // sampled from the Hallucination Club oat mockup
       red: 'bg-red-500',
       blue: 'bg-blue-500',
       green: 'bg-green-500',
@@ -151,16 +125,19 @@ export function ColorSelector({
 
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium mb-2">Color</h3>
+      <h3 className="micro mb-2 font-normal">Color</h3>
       <div className="flex flex-wrap gap-2">
         {colors.map((color) => (
           <button
+            type="button"
             key={color}
-            onClick={() => handleColorClick(color)}
-            className={`w-8 h-8 rounded-full border ${getColorStyle(color)} ${
+            onClick={() => onColorSelect(color)}
+            aria-pressed={selectedColor === color}
+            style={swatches?.[color] ? { backgroundColor: swatches[color] } : undefined}
+            className={`h-11 w-11 rounded-full border-2 border-dark ${swatches?.[color] ? '' : getColorStyle(color)} ${
               selectedColor === color
-                ? 'ring-2 ring-primary ring-offset-2'
-                : 'hover:ring-1 hover:ring-gray-300'
+                ? 'shadow-hard-sm ring-2 ring-dark ring-offset-2 ring-offset-club-paper'
+                : 'hover:-translate-y-0.5'
             }`}
             title={color}
             aria-label={`Select ${color} color`}
@@ -168,7 +145,7 @@ export function ColorSelector({
         ))}
       </div>
       {selectedColor && (
-        <p className="mt-2 text-sm text-gray-600">Selected: {selectedColor}</p>
+        <p className="micro mt-2">Selected: {selectedColor}</p>
       )}
     </div>
   );
@@ -188,9 +165,11 @@ export function ProductDetails({
   colorOptions,
   colorAvailability,
   selectedImageIndex,
+  selectedColor,
+  onColorChange,
 }: {
   product: any;
-  images: any[];
+  images: ProductImage[];
   variants: any[];
   price: number;
   isClothingItem: boolean;
@@ -201,16 +180,14 @@ export function ProductDetails({
   colorOptions?: string[];
   colorAvailability: Record<string, boolean>;
   selectedImageIndex: number;
+  selectedColor: string | null;
+  /** Called when a color is chosen, so the gallery can show that color's photo. */
+  onColorChange: (color: string) => void;
 }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size);
-  };
-
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
   };
 
   // Pick the variant by color. Size isn't part of the match: clothing is printed on demand in
@@ -234,22 +211,29 @@ export function ProductDetails({
   const cartLineId = [selectedVariantId || product.id, selectedSize, selectedColor]
     .filter(Boolean)
     .join(':');
+  // Keep the cart's garment photo tied to its color, even while viewing artwork.
+  const cartImage =
+    images.find((image) => image.color === selectedColor && !image.presentation) ||
+    images.find((image) => image.color === selectedColor) ||
+    images[selectedImageIndex];
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold">{product.title}</h1>
+    <div className="min-w-0">
+      <p className="micro">A–OK / Line item</p>
+      <h1 className="display-heading mt-4 text-[clamp(48px,6vw,84px)]">{product.title}</h1>
 
-      <div className="mt-4">
-        <p className="text-2xl font-medium text-primary">${price.toFixed(2)}</p>
+      <div className="mt-6 flex items-baseline justify-between gap-4 border-y-2 border-dashed border-dark py-4">
+        <span className="micro">Price, before the good decisions</span>
+        <p className="text-3xl font-bold">${price.toFixed(2)}</p>
       </div>
 
       {/* Color selector for products with color options */}
       {hasColorOptions && colorOptions && (
         <ColorSelector
           colors={colorOptions}
-          variants={variants}
-          colorAvailability={colorAvailability}
-          onColorSelect={handleColorSelect}
+          onColorSelect={onColorChange}
+          selectedColor={selectedColor}
+          swatches={product.swatches}
         />
       )}
 
@@ -265,12 +249,12 @@ export function ProductDetails({
       {/* Variant selector for non-clothing items with multiple variants */}
       {!isClothingItem && !hasColorOptions && variants.length > 1 && (
         <div className="mt-6">
-          <h3 className="text-sm font-medium">Variants</h3>
+          <h3 className="micro font-normal">Variants</h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {variants.map((variant) => (
               <button
                 key={variant.id}
-                className="rounded-md border border-secondary px-3 py-1 text-sm hover:bg-secondary-light"
+                className="border-2 border-dark px-3 py-1 text-sm hover:bg-club-yellow"
               >
                 {variant.title}
               </button>
@@ -289,8 +273,7 @@ export function ProductDetails({
               (selectedSize ? ` - ${selectedSize}` : '') +
               (selectedColor ? ` - ${selectedColor}` : ''),
             price: price,
-            image:
-              images[selectedImageIndex]?.url || '/product-placeholder.jpg',
+            image: cartImage?.url || '/product-placeholder.jpg',
             variantId: selectedVariantId,
             size: selectedSize || undefined,
             color: selectedColor || undefined,
@@ -301,8 +284,10 @@ export function ProductDetails({
         />
       </div>
 
-      <div className="mt-8 prose prose-sm max-w-none prose-headings:font-medium prose-ul:list-disc prose-ul:pl-5 prose-li:mt-2 prose-p:mb-4">
-        <h3 className="text-lg font-medium">Description</h3>
+      <div className="receipt-slip mt-10">
+        <h3 className="micro mb-4 border-b border-dashed border-dark pb-3 text-center font-normal">
+          Description / the fine print
+        </h3>
         <div
           dangerouslySetInnerHTML={{
             __html:
@@ -318,13 +303,13 @@ export function ProductDetails({
       </div>
 
       {product.tags.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium">Tags</h3>
+        <div className="mt-10">
+          <h3 className="micro font-normal">Tags</h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {product.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="rounded-full bg-secondary px-3 py-1 text-xs"
+                className="border border-dark bg-club-yellow px-2.5 py-1 font-mono text-[11px] uppercase"
               >
                 {tag}
               </span>
@@ -351,7 +336,7 @@ export function ProductPageContent({
   colorAvailability,
 }: {
   product: any;
-  images: any[];
+  images: ProductImage[];
   variants: any[];
   price: number;
   isClothingItem: boolean;
@@ -362,43 +347,84 @@ export function ProductPageContent({
   colorOptions?: string[];
   colorAvailability: Record<string, boolean>;
 }) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const firstPhotoColor = images[0]?.color;
+  const initialColor =
+    (firstPhotoColor && colorOptions?.includes(firstPhotoColor) ? firstPhotoColor : undefined) ||
+    colorOptions?.find((color) => color.toLowerCase() === 'black') ||
+    colorOptions?.[0] ||
+    null;
+  const [selectedColor, setSelectedColor] = useState<string | null>(initialColor);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(() => {
+    const index = images.findIndex((image) => image.color === initialColor);
+    return index === -1 ? 0 : index;
+  });
+  const selectedImage = images[selectedImageIndex];
+
+  // Show the chosen color's first photo; colors without one leave the photo as it is.
+  const showColor = (color: string) => {
+    setSelectedColor(color);
+    const index = images.findIndex((image) => image.color === color);
+    if (index !== -1) setSelectedImageIndex(index);
+  };
+
+  const showImage = (index: number) => {
+    setSelectedImageIndex(index);
+    const color = images[index]?.color;
+    if (color && colorOptions?.includes(color)) setSelectedColor(color);
+  };
+
+  const imageClassName = (image?: ProductImage) => {
+    if (image?.presentation === 'chest-detail') {
+      return 'object-cover object-[50%_30%] origin-[50%_10%] scale-[2]';
+    }
+    // The matching full-shirt view retains every edge of the garment.
+    const hasDetailView = images.some(
+      (other) => other.url === image?.url && other.presentation === 'chest-detail'
+    );
+    return hasDetailView ? 'object-contain' : 'object-cover';
+  };
 
   return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-14">
       {/* Product Images */}
-      <div className="space-y-4">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-secondary-light">
+      <div className="min-w-0 space-y-5">
+        <div className="relative aspect-square overflow-hidden border-2 border-dark bg-club-yellow shadow-hard-lg">
           <Image
-            src={images[selectedImageIndex]?.url || '/product-placeholder.jpg'}
-            alt={images[selectedImageIndex]?.alt || product.title}
+            src={selectedImage?.url || '/product-placeholder.jpg'}
+            alt={selectedImage?.alt || product.title}
             fill
-            className="object-cover"
+            className={imageClassName(selectedImage)}
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized={!images[selectedImageIndex]?.url?.startsWith('http')}
+            unoptimized={!selectedImage?.url?.startsWith('http')}
           />
         </div>
+        <p className="micro" aria-live="polite">
+          {selectedImage?.alt || product.title}
+        </p>
 
         {images.length > 1 && (
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {images.map((image, index) => (
-              <div
+              <button
+                type="button"
                 key={index}
-                className={`relative aspect-square overflow-hidden rounded-lg bg-secondary-light cursor-pointer ${
-                  selectedImageIndex === index ? 'ring-2 ring-primary' : ''
+                aria-label={`Show ${image.alt || `photo ${index + 1} of ${images.length}`}`}
+                aria-pressed={selectedImageIndex === index}
+                className={`relative aspect-square overflow-hidden border-2 border-dark bg-club-sky ${
+                  selectedImageIndex === index ? 'shadow-hard-red' : 'hover:shadow-hard-sm'
                 }`}
-                onClick={() => setSelectedImageIndex(index)}
+                onClick={() => showImage(index)}
               >
                 <Image
                   src={image.url}
                   alt={image.alt}
                   fill
-                  className="object-cover"
+                  className={imageClassName(image)}
                   sizes="(max-width: 768px) 25vw, (max-width: 1200px) 20vw, 10vw"
                   unoptimized={!image.url?.startsWith('http')}
                 />
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -418,6 +444,8 @@ export function ProductPageContent({
         colorOptions={colorOptions}
         colorAvailability={colorAvailability}
         selectedImageIndex={selectedImageIndex}
+        selectedColor={selectedColor}
+        onColorChange={showColor}
       />
     </div>
   );

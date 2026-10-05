@@ -72,5 +72,137 @@
     "engine": "astra",
     "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
     "parents": []
+  },
+  {
+    "id": "0006",
+    "date": "2026-10-01",
+    "title": "LIMITED PREVIEW",
+    "slogan": "BEST MODEL EVER. TAKE OUR WORD.",
+    "joke": "The ape proudly guards a prize-winning masterpiece that nobody is allowed to see, so its first-place ribbon has to be taken entirely on trust.",
+    "alt": "The A-OK ape stands guard behind a red velvet rope beside a sheet-draped object on a pedestal wearing a giant gold first-place rosette, one palm raised to stop the viewer, under the title LIMITED PREVIEW.",
+    "image": "/chaos-monkeys/0006.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "inspiration": {
+      "label": "Zingers, 2026-10-01",
+      "url": "https://zingers.dev/zingers/2026-10-01"
+    }
+  },
+  {
+    "id": "0007",
+    "date": "2026-10-01",
+    "title": "LATENT SPACE",
+    "slogan": "768 DIMENSIONS. ZERO TRAIL MAPS.",
+    "joke": "Embedding space is treated as a national park whose trail signs point in hundreds of directions at once, because it has hundreds of dimensions.",
+    "alt": "A round national-park souvenir badge with the A-OK ape as a park ranger beside a trail signpost bristling with dozens of arrows pointing every way, under a sunburst, with LATENT SPACE arched on top and NATIONAL PARK below.",
+    "image": "/chaos-monkeys/0007.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "souvenir",
+    "copy": {
+      "product": "Welcome to the park where similar things live close together and every direction is a direction. Ranger Ape is happy to point you the right way, in all of them at once. Heather grey tee with the park badge printed large across the back.",
+      "marketing": "Plan your visit to Latent Space National Park. Everything is nearby. Nothing is anywhere you can draw."
+    }
+  },
+  {
+    "id": "0008",
+    "date": "2026-10-01",
+    "title": "RATE LIMITED",
+    "slogan": "TOO MANY REQUESTS. TAKE A LAP.",
+    "joke": "The HTTP 429 'too many requests' error becomes a varsity jersey number, and the mascot is literally made to take a lap until the rate limit resets.",
+    "alt": "A letterman-style chest graphic with RATE LIMITED arched in slab serif over a huge outlined 429, and the A-OK ape as a fuzzy chenille patch jogging a lap with a stopwatch.",
+    "image": "/chaos-monkeys/0008.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "varsity",
+    "copy": {
+      "product": "429 is the number every eager client learns to fear: too many requests, come back later. Our mascot has been sent to run laps until the window resets. Red crewneck with an arched varsity title, a giant numeral and a chenille-style ape patch on the front.",
+      "marketing": "Number 429 on the roster. Benched for asking too much. Back in sixty seconds."
+    }
+  },
+  {
+    "id": "0009",
+    "date": "2026-10-01",
+    "title": "CHECKPOINT",
+    "slogan": "SAVE OFTEN. LEARN EVENTUALLY.",
+    "joke": "A model training checkpoint is drawn as a video-game checkpoint flag, reached with almost no health left.",
+    "alt": "An 8-bit pixel scene of the A-OK ape sprite touching a checkpoint flag, panting, with a single heart left in his health bar and CHECKPOINT in pixel letters above.",
+    "image": "/chaos-monkeys/0009.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "pixel",
+    "copy": {
+      "product": "Training runs and platform games agree on one thing: always save before the hard part. The ape just hit the flag with one heart left and a long level ahead. Navy tee with a chunky 8-bit scene printed on the front.",
+      "marketing": "Progress saved. Wisdom still loading. A tee for anyone who has restarted from epoch 3 more than once."
+    }
+  },
+  {
+    "id": "0010",
+    "date": "2026-10-01",
+    "title": "SANDBOXED",
+    "slogan": "SAFE. CONTAINED. MILDLY CONCERNED.",
+    "joke": "An AI agent run in a sandbox is drawn as the ape trapped inside the box logo itself, palms pressed to the walls.",
+    "alt": "A big red streetwear box logo reading SANDBOX in white italic letters, with the A-OK ape trapped inside it, palms pressed against the box edges like glass, mouth in a stunned O.",
+    "image": "/chaos-monkeys/0010.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "box-logo",
+    "copy": {
+      "product": "Every responsible agent runs in a sandbox. Ours runs in the logo. He has full permissions inside the box and none outside it, and he has noticed. Heather grey hoodie, big red box logo on the front.",
+      "marketing": "The safest place for an agent is inside the box. He's taking it well. Box logo hoodie, now available."
+    }
+  },
+  {
+    "id": "0011",
+    "date": "2026-10-01",
+    "title": "DATA LABELER",
+    "slogan": "TAG IT. BOX IT. NEXT.",
+    "joke": "The ape is a data labeler drawing bounding boxes around everything, until the labelers start labeling each other.",
+    "alt": "An all-over repeating pattern of tiny A-OK apes drawing red dashed bounding boxes around a cat, a teacup, a cloud, a shoe and each other, scattered with cursor and checkmark glyphs, with no words.",
+    "image": "/chaos-monkeys/0011.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "pattern",
+    "copy": {
+      "product": "Behind every model is someone drawing boxes around things for eight hours. Here it's an ape: boxing a cat, a teacup, a cloud, and eventually another ape boxing him back. Bone crewneck with an all-over repeat print.",
+      "marketing": "Ten thousand bounding boxes and counting. An all-over print for the people who taught the models what a cat is."
+    }
+  },
+  {
+    "id": "0012",
+    "date": "2026-10-01",
+    "title": "MIXTURE OF EXPERTS",
+    "slogan": "MANY EXPERTS. ONE ON SHIFT.",
+    "joke": "In a mixture-of-experts model only a few experts activate per token, so the cutaway of the ape's head shows a room of tiny sleeping apes and one awake.",
+    "alt": "A clean appliance-manual cutaway of the A-OK ape's head revealing a grid of tiny apes asleep at desks with one highlighted in red working, with numbered callouts, dashed arrows and the label FIG. 1.",
+    "image": "/chaos-monkeys/0012.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "manual",
+    "copy": {
+      "product": "Open the ape up and you find a whole staff of tiny specialists, routed per question. Only one is ever awake at a time, which is exactly how it's supposed to work. White tee with a technical cutaway printed on the back.",
+      "marketing": "Under the cap: dozens of experts, one of them working. Efficient by design. Mixture of Experts, out now."
+    }
   }
 ]

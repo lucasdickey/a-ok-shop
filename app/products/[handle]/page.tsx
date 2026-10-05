@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { buildProductJsonLd, productMarkdownUrl } from "@/app/lib/agent-docs";
 import { getProductByHandle } from "@/app/lib/catalog";
 import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
@@ -6,6 +8,30 @@ import { ProductPageContent } from "./ProductPageClient";
 export const dynamic = "force-dynamic";
 
 // DO NOT PUT IN HARDCODED VALUES IN HERE -- EVERYTHING SHOULD BE DYNAMICALLY GENERATED FROM THE CATALOG
+
+// Page title, search description and social preview, from the product's copy when it has some.
+export async function generateMetadata({ params }: { params: { handle: string } }): Promise<Metadata> {
+  const product = getProductByHandle(params.handle);
+  if (!product) return {};
+  const title = product.seo?.title ?? `${product.title} | A-OK`;
+  const description = product.seo?.description ?? product.description.slice(0, 160);
+  const image = product.images.edges[0]?.node;
+  return {
+    title,
+    description,
+    alternates: { types: { "text/markdown": productMarkdownUrl(product.handle) } },
+    openGraph: {
+      title: product.seo?.socialTitle ?? title,
+      description: product.seo?.socialDescription ?? description,
+      images: image ? [{ url: image.url, alt: image.altText ?? product.title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.seo?.socialTitle ?? title,
+      description: product.seo?.socialDescription ?? description,
+    },
+  };
+}
 
 // Server component
 export default async function ProductPage({
@@ -37,6 +63,8 @@ export default async function ProductPage({
     return {
       url: imageUrl,
       alt: node.altText || product.title,
+      color: node.color,
+      presentation: node.presentation,
     };
   });
 
@@ -293,8 +321,14 @@ export default async function ProductPage({
   console.log("Color options:", colorValues);
 
   return (
-    <div className="container py-8">
+    <div className="px-5 pb-14 pt-8 sm:px-8 lg:px-[4vw] lg:pt-12">
+      <script
+        type="application/ld+json"
+        // Escape "<" so catalog text can never close the script tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductJsonLd(product)).replace(/</g, "\\u003c") }}
+      />
       <ProductPageContent
+        key={product.id}
         product={product}
         images={images}
         variants={variants}

@@ -38,7 +38,7 @@
       "post": {
         "operationId": "createCheckout",
         "summary": "Create checkout session",
-        "description": "Create a Stripe Checkout Session for purchasing products. Returns a hosted checkout URL that can be used to complete the purchase. Supports multiple items, custom success/cancel URLs, and automatic tax calculation.",
+        "description": "Create a Stripe Checkout Session for purchasing products. Returns a hosted checkout URL that can be used to complete the purchase. Supports multiple items and custom success/cancel URLs. Items are priced from the catalog; shipping to the US and Canada is added at checkout (free over $50), and the shopper enters shipping and payment on the hosted page.",
         "requestBody": {
           "required": true,
           "content": {
@@ -270,7 +270,19 @@
                     "quantity": {
                       "type": "integer",
                       "minimum": 1,
+                      "maximum": 20,
                       "example": 2
+                    },
+                    "size": {
+                      "type": "string",
+                      "enum": ["XS", "S", "M", "L", "XL", "2XL"],
+                      "description": "Required for tees and hoodies, which are printed to order in any of these sizes. Ask the shopper rather than guessing.",
+                      "example": "L"
+                    },
+                    "color": {
+                      "type": "string",
+                      "description": "The color the shopper picked, as listed in the variant's Color option. Used to pick the right variant.",
+                      "example": "Navy"
                     }
                   }
                 }

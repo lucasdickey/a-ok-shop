@@ -1,34 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
-import { createCheckoutLineItems } from "@/app/lib/catalog";
 import { getCorsHeaders } from "@/app/lib/cors";
+import { createStoreCheckoutSession, parseCartItems, type CartItemInput } from "@/app/lib/store-checkout";
+import { getStripeClient } from "@/app/lib/stripe-client";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-
-const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey, {
-      apiVersion: "2025-09-30.clover",
-    })
-  : null;
-
-type CheckoutItem = {
-  variantId: string;
-  quantity: number;
-};
+// Agent checkout (ACP): the same Stripe checkout as the store's cart, so agent orders
+// are priced from the catalog, carry size and color, and pay the same shipping.
 
 type CheckoutRequest = {
-  cart: {
-    items: CheckoutItem[];
-  };
+  items: CartItemInput[];
   success_url?: string;
   cancel_url?: string;
   metadata?: Record<string, string>;
-  customer?: {
-    email?: string;
-  };
-  locale?: string;
-  shipping_address_collection?: string[];
+  customer_email?: string;
+  locale?: Stripe.Checkout.SessionCreateParams.Locale;
 };
 
 function normaliseMetadata(value: unknown) {
@@ -52,6 +38,11 @@ function normaliseMetadata(value: unknown) {
   return metadata;
 }
 
+/** Return addresses must be full web addresses; anything else is ignored. */
+function webAddress(value: unknown) {
+  return typeof value === "string" && /^https?:\/\//.test(value) ? value : undefined;
+}
+
 function resolveBaseUrl(request: NextRequest) {
   const forwardedProto = request.headers.get("x-forwarded-proto");
   const host = request.headers.get("host") || "localhost:3000";
@@ -72,61 +63,39 @@ function parseRequest(payload: unknown): CheckoutRequest {
     throw new Error("Request body must be a JSON object");
   }
 
-  const data = payload as Partial<CheckoutRequest> & {
-    successUrl?: string;
-    cancelUrl?: string;
-    shippingAddressCollection?: string[];
+  const data = payload as Record<string, unknown> & {
+    cart?: { items?: unknown };
+    customer?: { email?: unknown };
   };
 
-  if (!data.cart || !Array.isArray(data.cart.items)) {
-    throw new Error("`cart.items` is required and must be an array");
+  const items = parseCartItems(data.cart?.items);
+  if (!items) {
+    throw new Error(
+      "`cart.items` must be a non-empty array of { variantId, quantity (1-20), size, color }; tees and hoodies need a size"
+    );
   }
 
-  const normalisedItems = data.cart.items.map((item) => {
-    if (!item || typeof item !== "object") {
-      throw new Error("Each cart item must be an object");
-    }
-
-    if (!item.variantId || typeof item.variantId !== "string") {
-      throw new Error("Each cart item requires a `variantId`");
-    }
-
-    if (
-      typeof item.quantity !== "number" ||
-      !Number.isInteger(item.quantity) ||
-      item.quantity <= 0
-    ) {
-      throw new Error("Each cart item requires a positive integer quantity");
-    }
-
-    return {
-      variantId: item.variantId,
-      quantity: item.quantity,
-    };
-  });
-
-  if (normalisedItems.length === 0) {
-    throw new Error("Cart must contain at least one item");
-  }
-
+  const email = data.customer?.email;
   return {
-    cart: { items: normalisedItems },
-    success_url: data.success_url ?? data.successUrl,
-    cancel_url: data.cancel_url ?? data.cancelUrl,
+    items,
+    success_url: webAddress(data.success_url ?? data.successUrl),
+    cancel_url: webAddress(data.cancel_url ?? data.cancelUrl),
     metadata: normaliseMetadata(data.metadata),
-    customer: data.customer,
-    locale: data.locale,
-    shipping_address_collection:
-      data.shipping_address_collection ?? data.shippingAddressCollection,
+    customer_email: typeof email === "string" && email ? email : undefined,
+    locale: typeof data.locale === "string" ? (data.locale as CheckoutRequest["locale"]) : undefined,
   };
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  const headers = getCorsHeaders(origin);
+
+  const stripe = getStripeClient();
   if (!stripe) {
     console.error("STRIPE_SECRET_KEY is not configured");
     return NextResponse.json(
       { error: "Stripe is not configured" },
-      { status: 500 }
+      { status: 500, headers }
     );
   }
 
@@ -139,66 +108,32 @@ export async function POST(request: NextRequest) {
     console.error("Invalid ACP checkout payload", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Invalid JSON payload" },
-      { status: 400 }
-    );
-  }
-
-  let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[];
-
-  try {
-    lineItems = createCheckoutLineItems(
-      payload.cart.items
-    ) as Stripe.Checkout.SessionCreateParams.LineItem[];
-  } catch (error) {
-    console.error("Invalid line items for ACP checkout", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Invalid cart items" },
-      { status: 400 }
+      { status: 400, headers }
     );
   }
 
   try {
-    const baseUrl = resolveBaseUrl(request);
-
-    const successUrl =
-      payload.success_url ||
-      `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = payload.cancel_url || `${baseUrl}/products`;
-
-    const shippingCountries =
-      payload.shipping_address_collection &&
-      payload.shipping_address_collection.length > 0
-        ? payload.shipping_address_collection
-        : ["US", "CA"];
-
-    const idempotencyKey = request.headers.get("idempotency-key") || undefined;
-    const origin = request.headers.get("origin") || "unknown";
-
-    const session = await stripe.checkout.sessions.create(
-      {
-        mode: "payment",
-        payment_method_types: ["card"],
-        automatic_tax: { enabled: true },
-        allow_promotion_codes: true,
-        line_items: lineItems,
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-        locale: payload.locale as Stripe.Checkout.SessionCreateParams.Locale | undefined,
-        customer_email: payload.customer?.email,
-        shipping_address_collection: {
-          allowed_countries: shippingCountries as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
-        },
-        metadata: {
-          ...payload.metadata,
-          protocol: "acp-draft-2024-12",
-          source: "acp-api",
-          endpoint: "checkout",
-          origin: origin,
-        },
+    const result = await createStoreCheckoutSession(stripe, payload.items, {
+      baseUrl: resolveBaseUrl(request),
+      successUrl: payload.success_url,
+      cancelUrl: payload.cancel_url,
+      customerEmail: payload.customer_email,
+      locale: payload.locale,
+      metadata: {
+        ...payload.metadata,
+        protocol: "acp-draft-2024-12",
+        source: "acp-api",
+        endpoint: "checkout",
+        origin: origin || "unknown",
       },
-      idempotencyKey ? { idempotencyKey } : undefined
-    );
+      idempotencyKey: request.headers.get("idempotency-key") || undefined,
+    });
 
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: 400, headers });
+    }
+
+    const { session } = result;
     return NextResponse.json(
       {
         protocol: "acp-draft-2024-12",
@@ -209,9 +144,7 @@ export async function POST(request: NextRequest) {
           expires_at: session.expires_at,
         },
       },
-      {
-        headers: getCorsHeaders(origin),
-      }
+      { headers }
     );
   } catch (error) {
     // Log error type and message without sensitive details
@@ -220,7 +153,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { error: "Failed to create checkout session" },
-      { status: 500 }
+      { status: 500, headers }
     );
   }
 }

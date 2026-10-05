@@ -2,9 +2,9 @@
   "protocol": "acp-draft-2024-12",
   "merchant": {
     "id": "a-ok-shop",
-    "name": "A-OK",
+    "name": "A-OK Shop",
     "description": "AI-inspired streetwear and merchandise from Apes on Keys",
-    "url": "https://www.apesonkeys.com",
+    "url": "https://a-ok.ai",
     "support_email": "info@a-ok.ai"
   },
   "endpoints": {

@@ -32,17 +32,37 @@ export type Template = "specimen" | "form";
 export type Colorway = "cream" | "red" | "ink";
 export type FormBlock = { heading: string; rows: Array<{ label: string; value: string }> };
 
+export const GARMENTS = ["tee", "hoodie", "crewneck"] as const;
+export const GARMENT_COLORS = ["black", "bone", "red", "white", "heather grey", "navy"] as const;
+export const PLACEMENTS = ["front", "back", "left chest", "all-over"] as const;
+export type Garment = (typeof GARMENTS)[number];
+export type GarmentColor = (typeof GARMENT_COLORS)[number];
+export type Placement = (typeof PLACEMENTS)[number];
+
 export type Brief = {
+  /** The design's name: what the archive and a product page call it. Not necessarily printed. */
   title: string;
+  /** The line that sells it. Printed only when it is also in `printText`. */
   slogan: string;
   /** One sentence explaining the joke, shown in the archive. */
   joke: string;
   alt: string;
-  /** hybrid: Astra draws a transparent cutout that a template composes. astra: Astra draws the finished poster. */
+  /** hybrid: Astra draws a transparent cutout that a template composes. astra: Astra draws the finished print. */
   engine: "hybrid" | "astra";
   template: Template | null;
   colorway: Colorway;
-  /** hybrid: what the ape is doing, drawn alone. astra: the whole poster scene. */
+  /** A style id from STYLES.md. */
+  style: string;
+  garment: Garment;
+  garmentColor: GarmentColor;
+  placement: Placement;
+  /** Every word that appears in the print, spelled exactly, beyond the cap and hoodie lettering. May be empty. */
+  printText: string[];
+  /** Product-page copy: the words that don't need to be on the shirt. */
+  productCopy: string;
+  /** One launch line for social or email. */
+  marketingCopy: string;
+  /** hybrid: what the ape is doing, drawn alone. astra: the whole print. */
   art: string;
   form: FormBlock | null;
   /** Series numbers of published monkeys this one riffs on. */
@@ -78,15 +98,23 @@ export type Draft = {
   error: string | null;
   seconds: number;
   judgment: Judgment | null;
+  /** What the person who picks thought of it, imported with `chaos feedback`. */
+  feedback?: Feedback | null;
 };
 
+export type Feedback = { verdict: "keep" | "reject" | null; note: string; at: string };
+
 export type Run = {
+  /** The run's folder name: the date, optionally with a label, e.g. 2026-10-01-apparel. */
+  id?: string;
   date: string;
   createdAt: string;
   /** The Zingers story behind the topical draft, if there was one. */
   topic?: Topic | null;
   drafts: Draft[];
   shipped: Array<{ draft: number; id: string; sha: string | null }>;
+  /** Feedback on the batch as a whole. */
+  feedbackNote?: string;
 };
 
 /** Mirrors ChaosMonkey in app/lib/chaos-monkeys.ts; the site build validates every entry. */
@@ -104,6 +132,8 @@ export type ManifestEntry = {
   credit: string;
   parents: string[];
   inspiration?: Inspiration;
+  style?: string;
+  copy?: { product: string; marketing: string };
 };
 
 export function today(): string {
@@ -195,6 +225,48 @@ export function readBrand(): Record<"character" | "style" | "palette" | "voice" 
     if (!sections[key]) throw new Error(`BRAND.md is missing the "## ${key}" section`);
   }
   return sections as Record<"character" | "style" | "palette" | "voice" | "rules", string>;
+}
+
+export type Style = {
+  id: string;
+  name: string;
+  /** hybrid styles name the house template that composes them. */
+  engine: "astra" | "hybrid";
+  template: Template | null;
+  /** How many printed strings the style allows, beyond the cap and hoodie lettering. */
+  text: number;
+  /** Relative chance of being picked before feedback adjusts it. */
+  weight: number;
+  description: string;
+};
+
+/** Reads STYLES.md: one `## id · Name` section per style, with `engine:`, `text:` and optional `weight:` lines. */
+export function readStyles(): Style[] {
+  const text = fs.readFileSync(path.join(TOOL_DIR, "STYLES.md"), "utf8");
+  return text
+    .split(/^## /m)
+    .slice(1)
+    .map((block) => {
+      const [heading, ...body] = block.split("\n");
+      const [id, name] = heading.split("·").map((part) => part.trim());
+      const field = (key: string) => body.find((line) => line.startsWith(`${key}:`))?.slice(key.length + 1).trim();
+      const engine = field("engine") ?? "astra";
+      const description = body
+        .filter((line) => !/^(engine|text|weight):/.test(line))
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (!id || !name || !description) throw new Error(`STYLES.md: incomplete style "${heading.trim()}"`);
+      return {
+        id,
+        name,
+        engine: engine.startsWith("hybrid") ? ("hybrid" as const) : ("astra" as const),
+        template: engine === "hybrid form" ? ("form" as const) : engine.startsWith("hybrid") ? ("specimen" as const) : null,
+        text: Math.max(0, Math.min(3, Number(field("text") ?? 1) || 0)),
+        weight: Math.max(0, Number(field("weight") ?? 1) || 0),
+        description,
+      };
+    });
 }
 
 /** Width, height, and whether a PNG has an alpha channel, read from its header. */
