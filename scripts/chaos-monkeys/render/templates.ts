@@ -42,7 +42,8 @@ type SheetItem = {
   flags: string[];
   topical: boolean;
 };
-type SheetSpec = { kind: "sheet"; date: string; topic: string | null; items: SheetItem[] };
+/** `heading` and `hint` replace the drafts sheet's title and instructions, e.g. for a merch sheet. */
+type SheetSpec = { kind: "sheet"; date: string; topic: string | null; items: SheetItem[]; heading?: string; hint?: string };
 type KeyedSpec = { kind: "keyed"; image: string };
 /** All sizes in pixels at 300 DPI: the canvas is the print area, the art is `artWidth` wide, `top` below its top edge. */
 type PrintFileSpec = { kind: "printfile"; image: string; width: number; height: number; artWidth: number; top: number };
@@ -639,10 +640,10 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
 
   ctx.fillStyle = C.ink;
   ctx.font = "72px Bebas";
-  ctx.fillText(`CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
+  ctx.fillText(spec.heading ?? `CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
   ctx.font = "500 22px Mono";
   ctx.fillStyle = C.grey;
-  ctx.fillText("Pick two or three to ship (/chaos-monkeys ship 1 3 5), or review the whole set (/chaos-monkeys review)", gap, 126);
+  ctx.fillText(spec.hint ?? "Pick two or three to ship (/chaos-monkeys ship 1 3 5), or review the whole set (/chaos-monkeys review)", gap, 126);
   if (spec.topic) {
     ctx.fillStyle = C.red;
     ctx.fillText(`Topical, from Zingers: ${spec.topic}`.slice(0, 120), gap, 160);

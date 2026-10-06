@@ -844,7 +844,14 @@ async function printMerch(options: Options): Promise<void> {
           topical: false,
         })),
       );
-      fs.writeFileSync(path.join(dir, "sheet.png"), await renderer.render({ kind: "sheet", date: `${merch.title} · MERCH`, topic: null, items }));
+      fs.writeFileSync(path.join(dir, "sheet.png"), await renderer.render({
+          kind: "sheet",
+          date: merch.title,
+          heading: `CHAOS MONKEYS · MERCH · ${merch.title}`,
+          hint: `${merch.products.map((p) => `${p.copy?.title ?? p.garment}, ${p.inches} in wide at ${p.dpi} DPI`).join(" · ")} · sell with: chaos sell ${merch.id}`,
+          topic: null,
+          items,
+        }));
       const ready = merch.products.every((p) => p.copy && p.mockups.every((m) => m.web));
       const weak = merch.products.flatMap((p) => p.mockups.filter((m) => m.score !== null && m.score < 7).map((m) => `${p.garment} ${m.color}`));
       log(`${merch.id}: ${merch.products.map((p) => `${p.copy?.title ?? p.garment} (${p.inches} in, ${p.dpi} DPI)`).join(", ")}`);
