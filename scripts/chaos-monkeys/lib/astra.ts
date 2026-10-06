@@ -11,13 +11,15 @@ export class AstraUnavailable extends Error {}
 
 const LIMIT_PATTERN = /usage limit|rate limit|quota|too many requests|\b429\b|plan limit/i;
 
+const TOOL_RULES = `Use your built-in image generation tool. Never use the CLI fallback, scripts/image_gen.py, or any API key. If the built-in tool is unavailable, stop and say so.`;
+
 function cutoutPrompt(brief: Brief): string {
   const brand = readBrand();
   return `You are illustrating one character cutout for the A-OK "Chaos Monkeys" series.
 
 The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions.
 
-Use your built-in image generation tool. Never use the CLI fallback, scripts/image_gen.py, or any API key. If the built-in tool is unavailable, stop and say so.
+${TOOL_RULES}
 
 Create ONE new square image of the A-OK ape: ${brief.art}
 
@@ -45,7 +47,7 @@ function printPrompt(brief: Brief): string {
 
 The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions or their poster style.
 
-Use your built-in image generation tool. Never use the CLI fallback, scripts/image_gen.py, or any API key. If the built-in tool is unavailable, stop and say so.
+${TOOL_RULES}
 
 Create ONE square image, at least 1024x1024: the flat print artwork for a ${brief.garmentColor} ${brief.garment} (${brief.placement} print), ${
     brief.placement === "all-over"
@@ -67,15 +69,43 @@ ${brand.rules}
 Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
 }
 
+/** One photo of a model wearing the print, for the shop. `art` is the keyed print artwork (transparent PNG). */
+function mockupPrompt(job: MockupJob): string {
+  return `You are photographing one product photo for A-OK, an AI-culture streetwear label.
+
+The attached image is the exact artwork printed on the garment. It is not a style reference: it is the print itself.
+
+${TOOL_RULES}
+
+Create ONE photorealistic ecommerce photograph, portrait, 1024x1536.
+Model: ${job.model}. An invented adult, not a real or famous person. Standing square to the camera, relaxed and calm, framed from mid-thigh up so the whole front of the garment is in view, against a seamless light grey studio backdrop with soft, even light.
+Garment: a plain ${job.color} ${job.garment} (colour ${job.hex}), a ${job.blank}.${job.garment === "hoodie" ? " Hood down, drawstrings visible, kangaroo pocket below the print." : ""}
+Print: the attached artwork, screen-printed centred on the ${job.garment === "hoodie" ? "chest, above the pocket" : "chest"}, about ${job.inches} inches wide, its top about 3 inches below the collar. Reproduce it exactly: the same drawing, the same ape face (round eyes, tan face, small round O mouth), the same colours, and every word spelled the same. Do not redraw, simplify, restyle, recolour, crop, or enlarge it. Transparent parts of the artwork show the fabric. The print lies on the fabric and follows its folds gently, like a real screen print.
+No other text, logos, tags, props, or watermarks.
+
+Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
+}
+
+export type MockupJob = { art: string; garment: "tee" | "hoodie"; blank: string; color: string; hex: string; model: string; inches: number };
+
+/** Photographs `job.art` on a model in `jobDir` and returns the path of out.png. */
+export async function mockup(job: MockupJob, jobDir: string): Promise<string> {
+  return generate(mockupPrompt(job), jobDir, [job.art], { alpha: false });
+}
+
 /** Draws `brief` in `jobDir` and returns the path of out.png. `refs` are absolute paths to reference images. */
 export async function illustrate(brief: Brief, jobDir: string, refs: string[], mode: "cutout" | "print"): Promise<string> {
+  return generate(mode === "cutout" ? cutoutPrompt(brief) : printPrompt(brief), jobDir, refs, { alpha: mode === "cutout" });
+}
+
+/** One `codex exec` image job: writes out.png in `jobDir`, or throws (AstraUnavailable on a usage limit). */
+async function generate(prompt: string, jobDir: string, refs: string[], options: { alpha: boolean }): Promise<string> {
   fs.mkdirSync(jobDir, { recursive: true });
   const localRefs = refs.map((ref, i) => {
     const target = path.join(jobDir, `ref-${i + 1}${path.extname(ref)}`);
     fs.copyFileSync(ref, target);
     return target;
   });
-  const prompt = mode === "cutout" ? cutoutPrompt(brief) : printPrompt(brief);
   fs.writeFileSync(path.join(jobDir, "prompt.txt"), prompt);
 
   const args = [
@@ -108,6 +138,6 @@ export async function illustrate(brief: Brief, jobDir: string, refs: string[], m
     throw new Error(`no out.png (exit ${result.code}): ${lastMessage.slice(0, 300) || result.stderr.slice(-300)}`);
   }
   if (info.width < 1000 || info.height < 1000) throw new Error(`image too small: ${info.width}x${info.height}`);
-  if (mode === "cutout" && !info.alpha) throw new Error("cutout has no alpha channel");
+  if (options.alpha && !info.alpha) throw new Error("cutout has no alpha channel");
   return out;
 }

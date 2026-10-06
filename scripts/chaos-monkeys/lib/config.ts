@@ -12,10 +12,14 @@ export const RUNS_DIR = path.join(STATE_DIR, "runs");
 export const FONTS_DIR = path.join(STATE_DIR, "fonts");
 export const LOGS_DIR = path.join(STATE_DIR, "logs");
 export const PAUSE_FILE = path.join(STATE_DIR, "PAUSE");
+/** Print files, mockups, and product copy for drafts headed to the shop, one folder per draft. */
+export const MERCH_DIR = path.join(STATE_DIR, "merch");
 
 /** Site paths, relative to a checkout of the repository. */
 export const MANIFEST_PATH = "app/data/chaos-monkeys.json";
 export const IMAGE_DIR = "public/chaos-monkeys";
+export const CATALOG_PATH = "product-catalog.json";
+export const PRODUCT_IMAGE_DIR = "public/images/products";
 export const REFERENCE_IMAGES = [
   "public/images/a-ok-suprised.jpg",
   "public/images/products/hallucination-club-inference-error-edition-3.png",
@@ -102,7 +106,13 @@ export type Draft = {
   feedback?: Feedback | null;
 };
 
-export type Feedback = { verdict: "keep" | "reject" | null; note: string; at: string };
+export type Feedback = {
+  verdict: "keep" | "reject" | null;
+  note: string;
+  at: string;
+  /** Ticked "Print" on the review page: make it into a tee, a hoodie, or both (`chaos print`). */
+  print?: { tee: boolean; hoodie: boolean };
+};
 
 export type Run = {
   /** The run's folder name: the date, optionally with a label, e.g. 2026-10-01-apparel. */

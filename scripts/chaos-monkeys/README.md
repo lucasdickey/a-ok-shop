@@ -12,6 +12,7 @@ The daily drop of new A-OK apes, made on this Mac using the Claude Code and Code
 | Judge | Claude | Reads every draft and scores spelling, character, rules, and whether the joke lands at thumbnail size |
 | Pick | You | `/chaos-monkeys` in Claude Code, or `chaos status`, then `chaos ship 2 4 5` |
 | Feedback | You | Optional: `chaos review` exports a run as a claude.ai Artifact where you keep or reject each draft and say why; `chaos feedback` imports the verdicts, and the next briefs and style picks learn from them |
+| Print | The tool | Drafts ticked Print on the review page: `chaos print` makes Printful print files, a model photo per colour, and product copy; `chaos sell` puts them on Stripe and the shop |
 | Publish | The tool | WebP images and `app/data/chaos-monkeys.json` in a dedicated clone at `~/.a-ok-chaos/site` (outside ~/Documents, which macOS keeps from background jobs), then `npm run lint`, `npm run build`, commit, and push to `main`. Vercel deploys |
 
 If Codex hits a usage limit, the rest of the day's drafts fall back to the A-OK badge in the same templates, so there is always something to pick.
@@ -35,11 +36,24 @@ This creates `~/.a-ok-chaos/` (the publish clone, drafts, logs, and a font cache
 ~/.a-ok-chaos/bin/chaos draft --count 15 --date 2026-10-01-apparel   # an extra, labelled batch
 ~/.a-ok-chaos/bin/chaos review --out DIR        # export the latest run for the feedback page
 ~/.a-ok-chaos/bin/chaos feedback verdicts.json  # import keep/reject verdicts and notes
+~/.a-ok-chaos/bin/chaos print                   # print files, model photos and copy for drafts ticked Print
+~/.a-ok-chaos/bin/chaos sell 2026-10-05-apparel-15  # put one on Stripe and the shop
 ~/.a-ok-chaos/bin/chaos unpublish 0007          # take one down
 ~/.a-ok-chaos/bin/chaos pause | resume          # stop or restart the daily drafts
 ```
 
 `ship` and `unpublish` also take `--branch <name>` and `--no-push`. `draft`, `status`, `judge`, `review`, and `ship` take `--date RUN`, where a run is a date or a date with a label (`2026-10-01-apparel`); labelled runs leave the daily run alone. A feedback file looks like `{"items": [{"run": "2026-10-01", "n": 3, "verdict": "keep", "note": "…"}], "notes": [{"run": "2026-10-01", "note": "…"}]}`. Drafts live in `~/.a-ok-chaos/runs/<run>/`: `sheet.png`, `run.json` (briefs, scores, feedback, and what shipped), each Codex job's prompt and log, and `log.txt`.
+
+## Merch
+
+`chaos print` turns drafts into shop products, in `~/.a-ok-chaos/merch/<run>-<n>/`:
+
+- `art.png`: the draft with its flat background removed and trimmed to the art. A full-bleed poster keeps its background and prints as a rectangle.
+- `print-tee.png`, `print-hoodie.png`: Printful DTG print files: transparent sRGB PNGs the size of the front print area at 300 DPI (15 × 18 in for the Bella + Canvas 3001 tee, 13 × 13 in for the Gildan 18500 hoodie), with the art centred an inch below the top. The art prints as wide as it can while keeping at least Printful's 150 DPI of real detail, up to 11 in on a tee and 10 in on a hoodie; the log prints the size and effective DPI.
+- `mockups/`, `web/`: a photo of a model wearing the garment in each of the seven colours (Red, Yellow, Blue, Green, Black, White, Navy, mapped to each blank's Printful colours in `lib/merch.ts`), drawn by GPT-6-Astra from the art, and checked by Claude against `art.png`. A photo whose print drifted gets one retry; `sheet.png` shows them all with their scores.
+- `merch.json`: print sizes, photo checks, and Claude's product copy (title, handle, description, product-page HTML, tags, SEO) in the house format.
+
+`chaos sell RUN-N` then adds the photos to `public/images/products/`, a product per garment to `product-catalog.json` (every colour in XS–2XL, $30 a tee and $60 a hoodie, each variant's SKU naming its Printful variant), creates the Stripe product with a price per variant (needs the shop's `STRIPE_SECRET_KEY` in the environment), and runs lint, build, commit, push, and the Vercel wait, like `ship`. `--dry-run` stops after the build and changes nothing. Orders still reach Printful by hand: upload the print file there and order the SKU's variant. The Gildan 18500 has no XS, so an XS hoodie order needs a substitute blank.
 
 ## Safety
 

@@ -380,3 +380,140 @@ ${lines.join("\n\n")}`;
   const output = (await askClaude(prompt, JUDGE_SCHEMA, runDir, "medium")) as { results: Judgment[] };
   return output.results.map((result) => ({ ...result, note: clip(result.note, 160) }));
 }
+
+/* ------------------------------------------------------------------ merch */
+
+export type CopyItem = {
+  key: string;
+  garment: "tee" | "hoodie";
+  blank: string;
+  colors: string[];
+  inches: number;
+  brief: Brief;
+};
+export type ProductCopyResult = {
+  key: string;
+  title: string;
+  handle: string;
+  description: string;
+  descriptionHtml: string;
+  tags: string[];
+  seoTitle: string;
+  seoDescription: string;
+};
+
+const COPY_SCHEMA = {
+  type: "object",
+  properties: {
+    products: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          key: TEXT,
+          title: TEXT,
+          handle: TEXT,
+          description: TEXT,
+          descriptionHtml: TEXT,
+          tags: { type: "array", items: TEXT },
+          seoTitle: TEXT,
+          seoDescription: TEXT,
+        },
+        required: ["key", "title", "handle", "description", "descriptionHtml", "tags", "seoTitle", "seoDescription"],
+      },
+    },
+  },
+  required: ["products"],
+};
+
+/** Product pages for designs headed to the shop, in the house format of `example` (an existing catalog product). */
+export async function writeProductCopy(
+  cwd: string,
+  items: CopyItem[],
+  example: { title: string; descriptionHtml: string; tags: string[] },
+  takenHandles: string[],
+): Promise<ProductCopyResult[]> {
+  const brand = readBrand();
+  const lines = items.map(
+    (item) => `- key "${item.key}": a ${item.garment}, ${item.blank}, in ${item.colors.join(", ")}.
+  Design: ${item.brief.title}. ${item.brief.joke}
+  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.
+  Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
+  );
+  const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
+
+BRAND GUIDE
+Voice:
+${brand.voice}
+Rules:
+${brand.rules}
+
+HOUSE FORMAT. Match the structure, length, and tone of this existing product page:
+Title: ${example.title}
+descriptionHtml: ${example.descriptionHtml}
+Tags: ${example.tags.join(", ")}
+
+Write one product per line item:
+${lines.join("\n")}
+
+Fields:
+- key: the line item's key, unchanged.
+- title: in the house pattern, "A-OK <Design> Tee" or "A-OK <Design> Hoodie", in title case.
+- handle: lowercase kebab-case, starting "a-ok-" and ending "-tee" or "-hoodie". Not one of: ${takenHandles.join(", ")}.
+- description: one or two plain sentences, at most 300 characters, for product cards and Stripe.
+- descriptionHtml: the house structure: a bold one-line lead, two to four short paragraphs that carry the joke dryly, a bold sign-off that ends with "A-OK.", then a <ul> of three or four facts: the print and its size, the inks, the garment, and the colours. Use only <p>, <strong>, <em>, <ul>, and <li>.
+- tags: five to eight, like the example's: first "T-shirts" or "Hoodies", then "A-OK" and "Apes on Keys", then tags specific to the design.
+- seoTitle: at most 60 characters. seoDescription: at most 160 characters.
+Every fact must be true to what is given here: don't invent fabric weights, fits, or claims.`;
+
+  const output = (await askClaude(prompt, COPY_SCHEMA, cwd, "high")) as { products: ProductCopyResult[] };
+  return output.products.map((p) => ({
+    ...p,
+    title: clip(p.title, 80),
+    handle: p.handle.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80),
+    description: clip(p.description, 300),
+    tags: p.tags.map((tag) => clip(tag, 40)).slice(0, 8),
+    seoTitle: clip(p.seoTitle, 70),
+    seoDescription: clip(p.seoDescription, 170),
+  }));
+}
+
+export type MockupCheck = { file: string; printMatches: boolean; garmentOk: boolean; score: number; note: string };
+
+const MOCKUP_SCHEMA = {
+  type: "object",
+  properties: {
+    results: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          file: TEXT,
+          printMatches: { type: "boolean" },
+          garmentOk: { type: "boolean" },
+          score: { type: "integer", minimum: 1, maximum: 10 },
+          note: TEXT,
+        },
+        required: ["file", "printMatches", "garmentOk", "score", "note"],
+      },
+    },
+  },
+  required: ["results"],
+};
+
+/** Checks that each model photo shows the right garment and reproduces `art` faithfully. Paths are relative to `cwd`. */
+export async function judgeMockups(cwd: string, art: string, photos: Array<{ file: string; garment: string; color: string }>): Promise<MockupCheck[]> {
+  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Open ${art} first with the Read tool: it is the exact print artwork. Then open each photo below and compare its print against it.
+
+For each photo report:
+- file: the photo's path, unchanged.
+- printMatches: the print is the same artwork: the same drawing and composition, the ape's face unchanged (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones), the same colours, every word spelled the same, and nothing added or missing.
+- garmentOk: one adult model wears a plain garment of the stated kind and colour, photographed realistically, with no stray text or logos.
+- score: 1–10; 7 or more means ready for the shop. A print that doesn't match scores at most 4.
+- note: at most 120 characters, the single most important problem or strength.
+
+Photos:
+${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}`).join("\n")}`;
+  const output = (await askClaude(prompt, MOCKUP_SCHEMA, cwd, "medium")) as { results: MockupCheck[] };
+  return output.results.map((result) => ({ ...result, note: clip(result.note, 140) }));
+}
