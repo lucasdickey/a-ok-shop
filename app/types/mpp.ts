@@ -52,12 +52,16 @@ export interface MPPCatalogResponse {
   total: number;
 }
 
+export interface MPPItem {
+  handle: string;
+  variantId: string;
+  quantity: number;
+  /** Required for tees and hoodies: one of CLOTHING_SIZES. */
+  size?: string;
+}
+
 export interface MPPPurchaseRequest {
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
   agentId?: string;
   email?: string;
 }
@@ -91,11 +95,7 @@ export interface MPPOrderConfirmation {
   currency: string;
   paymentMethod: 'stripe-link' | 'stripe-spt' | 'tempo';
   paymentId: string;
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
   message: string;
 }
 
@@ -114,11 +114,7 @@ export interface MPPOrder {
   paymentIntentId: string;
   agentId: string;
   email?: string;
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
   amount: number; // in cents
   currency: string;
   paymentMethod: 'stripe-spt' | 'tempo';
