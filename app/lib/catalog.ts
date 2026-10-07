@@ -324,13 +324,18 @@ export function getProductByHandle(handle: string): SimpleProduct | null {
 }
 
 // Get featured products (sorted by featuredOrder)
-export function getFeaturedProducts(): SimpleProduct[] {
-  const allProducts = getAllProducts();
-  return allProducts
-    .filter((product) => product.featured === true)
-    .sort((a, b) => {
-      const orderA = a.featuredOrder ?? 999;
-      const orderB = b.featuredOrder ?? 999;
-      return orderA - orderB;
-    });
+// Only the last month's products are featured, so the homepage shows the current style.
+const FEATURED_WINDOW_DAYS = 31;
+// If fewer than this many are that new, the most recent older ones fill in.
+const MIN_FEATURED = 4;
+
+export function getFeaturedProducts(now: Date = new Date()): SimpleProduct[] {
+  const created = (product: SimpleProduct) => Date.parse(product.createdAt) || 0;
+  const newestFirst = [...getAllProducts()].sort((a, b) => created(b) - created(a));
+  const cutoff = now.getTime() - FEATURED_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+  const recent = newestFirst.filter((product) => created(product) >= cutoff);
+  const picked = recent.length >= MIN_FEATURED ? recent : newestFirst.slice(0, MIN_FEATURED);
+
+  // Hand-picked featured products lead in their set order; the rest follow, newest first.
+  return picked.sort((a, b) => (a.featuredOrder ?? 999) - (b.featuredOrder ?? 999));
 }

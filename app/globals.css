@@ -209,6 +209,71 @@
     }
   }
 
+  /* monkey_theorem.md (components/MonkeyTheorem.tsx): a diff that plays out as it scrolls in.
+     The resting styles are the final state; .theorem-animate (added by script, never with
+     reduced motion) holds each change back until it gets .is-in. */
+  .diff-add {
+    background: linear-gradient(rgb(244 235 74 / 0.5), rgb(244 235 74 / 0.5)) 0 0 / 100% 100% no-repeat;
+  }
+  .diff-del {
+    color: #4a4a42;
+  }
+  /* The strike is a red rule drawn behind each line, so it can be drawn left to right. */
+  .diff-strike {
+    text-decoration: none;
+    background: linear-gradient(#c52224, #c52224) 0 58% / 100% 2px no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .theorem-caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    margin-left: 0.3em;
+    vertical-align: -0.2em;
+    background: currentColor;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .theorem-caret {
+      animation: caret-blink 1.1s steps(1) infinite;
+    }
+    .theorem-animate .diff-add,
+    .theorem-animate .diff-info {
+      opacity: 0;
+      transform: translateX(-18px);
+      transition: opacity 400ms ease-out, transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-size 700ms ease-out 250ms;
+    }
+    .theorem-animate .diff-add {
+      background-size: 0% 100%;
+    }
+    .theorem-animate .diff-add.is-in,
+    .theorem-animate .diff-info.is-in {
+      opacity: 1;
+      transform: none;
+      background-size: 100% 100%;
+    }
+    .theorem-animate .diff-del {
+      color: #22221e;
+      transition: color 600ms ease-out 700ms;
+    }
+    .theorem-animate .diff-strike {
+      background-size: 0% 2px;
+      transition: background-size 900ms ease-in-out 150ms;
+    }
+    .theorem-animate .diff-del.is-in {
+      color: #4a4a42;
+    }
+    .theorem-animate .diff-del.is-in .diff-strike {
+      background-size: 100% 2px;
+    }
+  }
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
   .barcode {
     background: repeating-linear-gradient(
       90deg,

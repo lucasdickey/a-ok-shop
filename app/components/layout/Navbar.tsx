@@ -40,7 +40,7 @@ export default function Navbar() {
           className="flex min-h-[44px] items-center whitespace-nowrap font-[Arial,sans-serif] text-[40px] font-bold leading-[0.9] tracking-[-4px] no-underline max-[359px]:text-[34px] max-[359px]:tracking-[-3px] lg:text-[48px] lg:tracking-[-5px]"
           aria-label="A-OK home"
         >
-          A–OK<sup className="ml-1 self-start text-[13px] tracking-normal">®</sup>
+          A–OK
         </Link>
         <span className="micro hidden leading-tight xl:block">
           Apes on keys
