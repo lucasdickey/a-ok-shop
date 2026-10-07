@@ -36,8 +36,10 @@ export async function generateMetadata({ params }: { params: { handle: string } 
 // Server component
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: { handle: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const product = await getProductByHandle(params.handle);
 
@@ -340,6 +342,7 @@ export default async function ProductPage({
         hasColorOptions={hasColorOptions}
         colorOptions={colorValues}
         colorAvailability={colorAvailability}
+        requestedColor={typeof searchParams.color === "string" ? searchParams.color : undefined}
       />
     </div>
   );

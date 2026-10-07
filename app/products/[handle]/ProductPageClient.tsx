@@ -334,6 +334,7 @@ export function ProductPageContent({
   hasColorOptions,
   colorOptions,
   colorAvailability,
+  requestedColor,
 }: {
   product: any;
   images: ProductImage[];
@@ -346,9 +347,12 @@ export function ProductPageContent({
   hasColorOptions: boolean;
   colorOptions?: string[];
   colorAvailability: Record<string, boolean>;
+  /** Color to open on, e.g. the one a shop tile showed (?color=Blue). */
+  requestedColor?: string;
 }) {
   const firstPhotoColor = images[0]?.color;
   const initialColor =
+    (requestedColor && colorOptions?.includes(requestedColor) ? requestedColor : undefined) ||
     (firstPhotoColor && colorOptions?.includes(firstPhotoColor) ? firstPhotoColor : undefined) ||
     colorOptions?.find((color) => color.toLowerCase() === 'black') ||
     colorOptions?.[0] ||

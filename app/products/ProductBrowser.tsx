@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { SimpleProduct } from "@/app/lib/catalog";
 import ProductCard from "@/app/components/product/ProductCard";
+import { pickTileColors } from "@/app/lib/tileColors";
 import { CATEGORY_FILTERS } from "./categories";
 
 const DELETE_MS = 28;
@@ -72,9 +73,12 @@ function ShopTitle({ word }: { word: string }) {
 export default function ProductBrowser({
   products,
   categoryIds,
+  tileSeed,
 }: {
   products: SimpleProduct[];
   categoryIds: Record<string, string[]>;
+  /** Seeds each tile's random color, so neighbors differ in every category. */
+  tileSeed: number;
 }) {
   const searchParams = useSearchParams();
   const category = (searchParams.get("category") ?? "").toLowerCase();
@@ -82,6 +86,7 @@ export default function ProductBrowser({
 
   const ids = category ? categoryIds[category] : undefined;
   const visible = ids ? products.filter((product) => ids.includes(product.id)) : products;
+  const tileColors = pickTileColors(visible, tileSeed);
   const lineItems = `${visible.length} line ${visible.length === 1 ? "item" : "items"}`;
 
   // Switch categories in place: update the address (so back, sharing and new tabs work)
@@ -173,7 +178,7 @@ export default function ProductBrowser({
           <div key={category} className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-3">
             {visible.map((product, index) => (
               <div key={product.id} className="rise-in" style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}>
-                <ProductCard product={product} index={index} priority={index < 4} />
+                <ProductCard product={product} index={index} priority={index < 4} color={tileColors[index]} />
               </div>
             ))}
           </div>
