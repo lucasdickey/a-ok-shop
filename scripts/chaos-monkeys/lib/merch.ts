@@ -71,6 +71,26 @@ export const MODELS: Record<ShopColor, string> = {
   Navy: "a person in their twenties with a short bleached crop",
 };
 
+/** The brand's black ink. */
+const INK = "#0b0b0c";
+
+function luminance(hex: string): number {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Dark garments get the light-ink artwork: any colour where the brand's black ink falls below 3:1 contrast
+ * (Black, Navy, and royal Blue on both blanks). Black ink on those is barely visible, and on black it disappears.
+ */
+export function needsLightInk(swatch: string): boolean {
+  const [a, b] = [luminance(swatch), luminance(INK)].sort((x, y) => y - x);
+  return (a + 0.05) / (b + 0.05) < 3;
+}
+
 /** How wide the art prints and at what resolution: as wide as the blank allows without dropping below 150 DPI. */
 export function printSize(blank: Blank, artPixels: number): { inches: number; dpi: number } {
   const inches = Math.floor(Math.min(blank.maxWidth, artPixels / MIN_DPI) * 10) / 10;
@@ -107,6 +127,8 @@ export type ProductCopy = {
 
 export type Mockup = {
   color: ShopColor;
+  /** The artwork it was photographed with: art.png, or art-light.png on dark garments. */
+  art?: string;
   /** Paths relative to the merch folder: Astra's photo, and the WebP the site serves. */
   image: string | null;
   web: string | null;
@@ -117,7 +139,10 @@ export type Mockup = {
 
 export type MerchProduct = {
   garment: GarmentKind;
+  /** For light garments; `printFileLight` (light ink) is for the colours in `lightInk`. */
   printFile: string;
+  printFileLight?: string | null;
+  lightInk?: ShopColor[];
   inches: number;
   dpi: number;
   mockups: Mockup[];
@@ -126,7 +151,18 @@ export type MerchProduct = {
 };
 
 /** One draft on its way to the shop: ~/.a-ok-chaos/merch/<run>-<n>/merch.json. */
-export type Merch = { id: string; run: string; n: number; title: string; art: string; artWidth: number; products: MerchProduct[] };
+export type Merch = {
+  id: string;
+  run: string;
+  n: number;
+  title: string;
+  art: string;
+  artWidth: number;
+  /** The art re-inked for dark garments, and the check that it is still the same art. */
+  artLight?: string | null;
+  artLightCheck?: { score: number; note: string } | null;
+  products: MerchProduct[];
+};
 
 export const merchDir = (id: string): string => path.join(MERCH_DIR, id);
 
@@ -293,7 +329,7 @@ async function stripePost(key: string, endpoint: string, params: Array<[string, 
  * Creates the Stripe product and one price per variant, the same shape scripts/sync-stripe-products.js makes, and
  * writes their ids into `node`. Checkout prices from the catalog either way; these keep Stripe's catalog complete.
  */
-export async function addToStripe(key: string, node: CatalogNode, siteUrl: string): Promise<void> {
+export async function addToStripe(key: string, node: CatalogNode, siteUrl: string, printFileFor: (color: string) => string): Promise<void> {
   const product = await stripePost(
     key,
     "products",
@@ -321,6 +357,8 @@ export async function addToStripe(key: string, node: CatalogNode, siteUrl: strin
         ["metadata[variantTitle]", variant.title],
         ["metadata[sku]", variant.sku],
         ["metadata[options]", JSON.stringify(variant.selectedOptions)],
+        // Which print file to send Printful for this colour.
+        ["metadata[printFile]", printFileFor(variant.selectedOptions.find((o) => o.name === "Color")?.value ?? "")],
       ],
       `${variant.id}-price`,
     );

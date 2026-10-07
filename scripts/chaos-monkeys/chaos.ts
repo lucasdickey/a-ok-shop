@@ -51,8 +51,8 @@ import {
   type ManifestEntry,
   type Run,
 } from "./lib/config.ts";
-import { judgeDrafts, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
-import { AstraUnavailable, illustrate, mockup } from "./lib/astra.ts";
+import { judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
+import { AstraUnavailable, illustrate, lightInk, mockup } from "./lib/astra.ts";
 import {
   BLANKS,
   GARMENT_KINDS,
@@ -64,6 +64,7 @@ import {
   idAllocator,
   loadMerch,
   merchDir,
+  needsLightInk,
   printSize,
   printfulCatalog,
   saveMerch,
@@ -73,6 +74,7 @@ import {
   type Merch,
   type MerchProduct,
   type Mockup,
+  type ShopColor,
 } from "./lib/merch.ts";
 import { ensureFonts, openRenderer, type Renderer } from "./lib/renderer.ts";
 import { fetchTopic } from "./lib/zingers.ts";
@@ -664,6 +666,20 @@ function printPicks(options: Options, record: Run): Array<{ d: Draft; garments: 
   });
 }
 
+/** How to order it from Printful by hand: the blank, the print size, and which print file goes with which colours. */
+function printfulNotes(merch: Merch): string {
+  const lines = [`# ${merch.title}: Printful`, "", `From Chaos Monkeys ${merch.run}, draft ${merch.n}. Front print, centred, 1 in below the top of the print area.`, ""];
+  for (const p of merch.products) {
+    const blank = BLANKS[p.garment];
+    const dark = new Set(p.lightInk ?? []);
+    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
+    lines.push(`- \`${p.printFile}\`: ${SHOP_COLORS.filter((c) => !dark.has(c)).map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    if (p.printFileLight && dark.size) lines.push(`- \`${p.printFileLight}\` (light ink): ${[...dark].map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    lines.push("- Each catalog variant's SKU is `printful-<variant id>`; the Stripe price for it names its print file.", "");
+  }
+  return lines.join("\n");
+}
+
 /**
  * Turns drafts into products: the print artwork (the draft with its background removed), a Printful print file per
  * garment, a model photo in each of the seven colours (checked against the art, with one retry), and product copy.
@@ -681,8 +697,9 @@ async function printMerch(options: Options): Promise<void> {
   const kinds = [...new Set(picks.flatMap((pick) => pick.garments))];
   const printful = new Map(await Promise.all(kinds.map(async (kind) => [kind, await printfulCatalog(BLANKS[kind])] as const)));
 
-  // Art and print files.
+  // Art, its light-ink version for dark garments, and print files.
   const merches: Merch[] = [];
+  let astraDown = false;
   let renderer = await openRenderer({ run: runDir, merch: MERCH_DIR });
   try {
     for (const { d, garments } of picks) {
@@ -695,39 +712,65 @@ async function printMerch(options: Options): Promise<void> {
       if (!art) throw new Error(`could not read ${merchId}/art.png`);
       const merch: Merch = existing ?? { id: merchId, run: id, n: d.n, title: d.brief.title, art: "art.png", artWidth: art.width, products: [] };
       merch.artWidth = art.width;
+
+      // House posters carry their own background, so only art Astra drew whole needs re-inking.
+      if (d.engine !== "astra") merch.artLight = null;
+      for (let attempt = 1; d.engine === "astra" && !astraDown && attempt <= 2 && !(merch.artLight && (merch.artLightCheck?.score ?? 0) >= 7); attempt++) {
+        try {
+          const out = await lightInk(path.join(dir, merch.art), path.join(dir, "jobs", `light-ink-${attempt}`));
+          fs.copyFileSync(out, path.join(dir, "art-light-raw.png"));
+          fs.writeFileSync(path.join(dir, "art-light.png"), await renderer.render({ kind: "keyed", image: `/merch/${merchId}/art-light-raw.png` }));
+          merch.artLight = "art-light.png";
+          merch.artLightCheck = await judgeLightInk(dir, merch.art, merch.artLight);
+          log(`${merchId}: light ink for dark garments, check ${merch.artLightCheck.score}/10: ${merch.artLightCheck.note}`);
+        } catch (error) {
+          if (error instanceof AstraUnavailable) astraDown = true;
+          log(`${merchId}: light ink failed: ${(error as Error).message.split("\n")[0].slice(0, 160)}`);
+        }
+        saveMerch(merch);
+      }
+      const light = merch.artLight ? pngInfo(path.join(dir, merch.artLight)) : null;
+
       for (const garment of garments) {
         const blank = BLANKS[garment];
-        // As wide as the blank and the art's resolution allow, and short enough to fit the print area under a 1-inch top margin.
-        const byWidth = printSize(blank, art.width).inches;
-        const inches = Math.min(byWidth, Math.floor(((blank.area.height - 1) * art.width * 10) / art.height) / 10);
-        const dpi = Math.round(art.width / inches);
-        const printFile = `print-${garment}.png`;
-        fs.writeFileSync(
-          path.join(dir, printFile),
-          await renderer.render({
-            kind: "printfile",
-            image: `/merch/${merchId}/art.png`,
-            width: blank.area.width * PRINT_DPI,
-            height: blank.area.height * PRINT_DPI,
-            artWidth: Math.round(inches * PRINT_DPI),
-            top: PRINT_DPI,
-          }),
+        const { swatch } = printful.get(garment) as Awaited<ReturnType<typeof printfulCatalog>>;
+        const lightColors = light ? SHOP_COLORS.filter((color) => needsLightInk(swatch[color])) : [];
+        // As wide as the blank and the art's resolution allow, short enough to fit the print area under a 1-inch top
+        // margin, and the same size in every colour.
+        const arts = light ? [art, light] : [art];
+        const inches = Math.min(...arts.map((a) => Math.min(printSize(blank, a.width).inches, Math.floor(((blank.area.height - 1) * a.width * 10) / a.height) / 10)));
+        const dpi = Math.round(Math.min(...arts.map((a) => a.width)) / inches);
+        const files: Array<[string, string]> = [[`print-${garment}.png`, merch.art], ...(light ? [[`print-${garment}-light-ink.png`, merch.artLight as string] as [string, string]] : [])];
+        for (const [file, source] of files) {
+          fs.writeFileSync(
+            path.join(dir, file),
+            await renderer.render({
+              kind: "printfile",
+              image: `/merch/${merchId}/${source}`,
+              width: blank.area.width * PRINT_DPI,
+              height: blank.area.height * PRINT_DPI,
+              artWidth: Math.round(inches * PRINT_DPI),
+              top: PRINT_DPI,
+            }),
+          );
+        }
+        log(
+          `${merchId} ${garment}: print files ${blank.area.width}×${blank.area.height} in at ${PRINT_DPI} DPI, art ${inches} in wide (${dpi} DPI of real detail)${lightColors.length ? `; light ink on ${lightColors.join(", ")}` : ""}`,
         );
-        log(`${merchId} ${garment}: print file ${blank.area.width}×${blank.area.height} in at ${PRINT_DPI} DPI, art ${inches} in wide (${dpi} DPI of real detail)`);
         const kept = merch.products.find((p) => p.garment === garment);
         const product: MerchProduct = kept ?? {
           garment,
-          printFile,
+          printFile: files[0][0],
           inches,
           dpi,
           mockups: SHOP_COLORS.map((color) => ({ color, image: null, web: null, score: null, note: "" })),
           copy: null,
           sold: null,
         };
-        product.inches = inches;
-        product.dpi = dpi;
+        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, inches, dpi });
         if (!kept) merch.products.push(product);
       }
+      fs.writeFileSync(path.join(dir, "PRINTFUL.md"), printfulNotes(merch));
       saveMerch(merch);
       merches.push(merch);
     }
@@ -737,9 +780,14 @@ async function printMerch(options: Options): Promise<void> {
 
   // Model photos, three at a time; each folder's photos are checked against its art, and failures get one more try.
   type Job = { merch: Merch; product: MerchProduct; mockup: Mockup };
+  const artFor = (merch: Merch, product: MerchProduct, color: ShopColor) =>
+    merch.artLight && product.lightInk?.includes(color) ? merch.artLight : merch.art;
   const wanted = (job: Job) => !job.product.sold && GARMENT_KINDS.includes(job.product.garment) && picks.some((p) => `${id}-${p.d.n}` === job.merch.id && p.garments.includes(job.product.garment));
   const all: Job[] = merches.flatMap((merch) => merch.products.flatMap((product) => product.mockups.map((m) => ({ merch, product, mockup: m })))).filter(wanted);
-  let astraDown = false;
+  // A photo taken with the other artwork (say, before light ink existed) is taken again.
+  for (const { merch, product, mockup: m } of all) {
+    if (m.image && (m.art ?? merch.art) !== artFor(merch, product, m.color)) Object.assign(m, { image: null, web: null, score: null, note: "" });
+  }
   for (let attempt = 1; attempt <= 2 && !astraDown; attempt++) {
     const todo = all.filter((job) => !job.mockup.image || (job.mockup.score !== null && job.mockup.score < 7));
     if (!todo.length) break;
@@ -752,7 +800,7 @@ async function printMerch(options: Options): Promise<void> {
       try {
         const out = await mockup(
           {
-            art: path.join(dir, merch.art),
+            art: path.join(dir, artFor(merch, product, m.color)),
             garment: product.garment,
             blank: blank.name,
             color: m.color.toLowerCase(),
@@ -763,6 +811,7 @@ async function printMerch(options: Options): Promise<void> {
           path.join(dir, "jobs", `${product.garment}-${m.color}-${attempt}`),
         );
         m.image = `mockups/${product.garment}-${m.color.toLowerCase()}.png`;
+        m.art = artFor(merch, product, m.color);
         fs.copyFileSync(out, path.join(dir, m.image));
         m.score = null;
         m.note = "";
@@ -775,10 +824,12 @@ async function printMerch(options: Options): Promise<void> {
       saveMerch(merch);
     });
     for (const merch of merches) {
-      const photos = merch.products.flatMap((p) => p.mockups.filter((m) => m.image && m.score === null).map((m) => ({ file: m.image as string, garment: p.garment, color: m.color })));
+      const photos = merch.products.flatMap((p) =>
+        p.mockups.filter((m) => m.image && m.score === null).map((m) => ({ file: m.image as string, garment: p.garment, color: m.color, art: m.art ?? merch.art })),
+      );
       if (!photos.length) continue;
       try {
-        for (const check of await judgeMockups(merchDir(merch.id), merch.art, photos)) {
+        for (const check of await judgeMockups(merchDir(merch.id), photos)) {
           const m = merch.products.flatMap((p) => p.mockups).find((x) => x.image === check.file);
           if (m) {
             m.score = check.printMatches ? check.score : Math.min(check.score, 4);
@@ -811,7 +862,7 @@ async function printMerch(options: Options): Promise<void> {
       if (needCopy.length) {
         const copies = await writeProductCopy(
           dir,
-          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...SHOP_COLORS], inches: p.inches, brief: d.brief })),
+          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...SHOP_COLORS], inches: p.inches, lightInk: p.lightInk ?? [], brief: d.brief })),
           { title: example.title, descriptionHtml: example.descriptionHtml, tags: example.tags },
           [...taken],
         );
@@ -848,7 +899,7 @@ async function printMerch(options: Options): Promise<void> {
           kind: "sheet",
           date: merch.title,
           heading: `CHAOS MONKEYS · MERCH · ${merch.title}`,
-          hint: `${merch.products.map((p) => `${p.copy?.title ?? p.garment}, ${p.inches} in wide at ${p.dpi} DPI`).join(" · ")} · sell with: chaos sell ${merch.id}`,
+          hint: `${merch.products.map((p) => `${p.copy?.title ?? p.garment}, ${p.inches} in wide at ${p.dpi} DPI${p.lightInk?.length ? `, light ink on ${p.lightInk.join("/")}` : ""}`).join(" · ")} · sell: chaos sell ${merch.id}`,
           topic: null,
           items,
         }));
@@ -884,6 +935,9 @@ async function sell(options: Options): Promise<void> {
       if (!p.copy) throw new Error(`${merch.id} ${p.garment} has no copy yet; run chaos print`);
       const missing = p.mockups.filter((m) => !m.web).map((m) => m.color);
       if (missing.length) throw new Error(`${merch.id} ${p.garment} is missing photos for ${missing.join(", ")}; run chaos print`);
+      if (p.lightInk?.length && (merch.artLightCheck?.score ?? 0) < 7 && !options.flags.has("--force")) {
+        throw new Error(`${merch.id}: the light-ink art for dark garments failed its check (${merch.artLightCheck?.note ?? "never made"}); rerun chaos print, or pass --force`);
+      }
       const weak = p.mockups.filter((m) => (m.score ?? 0) < 7).map((m) => m.color);
       if (weak.length && !options.flags.has("--force")) throw new Error(`${merch.id} ${p.garment}: the check flagged ${weak.join(", ")}; look at the sheet, then pass --force to sell anyway`);
     }
@@ -927,7 +981,8 @@ async function sell(options: Options): Promise<void> {
     }
     if (useStripe) {
       for (const { node } of added) {
-        await addToStripe(key as string, node, siteUrl);
+        const product = added.find((a) => a.node === node)?.product as MerchProduct;
+        await addToStripe(key as string, node, siteUrl, (color) => (product.printFileLight && product.lightInk?.includes(color as ShopColor) ? product.printFileLight : product.printFile));
         log(`Stripe: ${node.stripeProductId} with ${node.variants.edges.length} prices`);
       }
       writeCatalog();

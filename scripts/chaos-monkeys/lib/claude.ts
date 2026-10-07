@@ -389,6 +389,8 @@ export type CopyItem = {
   blank: string;
   colors: string[];
   inches: number;
+  /** Colours printed with the light-ink artwork. */
+  lightInk: string[];
   brief: Brief;
 };
 export type ProductCopyResult = {
@@ -437,7 +439,7 @@ export async function writeProductCopy(
   const lines = items.map(
     (item) => `- key "${item.key}": a ${item.garment}, ${item.blank}, in ${item.colors.join(", ")}.
   Design: ${item.brief.title}. ${item.brief.joke}
-  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.
+  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}
   Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
   );
   const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
@@ -478,6 +480,25 @@ Every fact must be true to what is given here: don't invent fabric weights, fits
   }));
 }
 
+const LIGHT_INK_SCHEMA = {
+  type: "object",
+  properties: { sameArt: { type: "boolean" }, inkOk: { type: "boolean" }, score: { type: "integer", minimum: 1, maximum: 10 }, note: TEXT },
+  required: ["sameArt", "inkOk", "score", "note"],
+};
+
+/** Checks that `light` is `art` re-inked for dark shirts and nothing else. Paths are relative to `cwd`. */
+export async function judgeLightInk(cwd: string, art: string, light: string): Promise<{ score: number; note: string }> {
+  const prompt = `You check a print re-inked for dark shirts for A-OK, an AI-culture streetwear label. Open ${art} (the original, for light shirts) and ${light} (the version for black, navy and royal-blue shirts) with the Read tool.
+
+Report:
+- sameArt: the drawing, composition, proportions, red and cream inks, and every word are unchanged, and the ape's face matches the original (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones).
+- inkOk: what was black ink (lettering, linework, shapes) is now bone cream, the ape keeps his black fur with a light outline around him, and the background is transparent.
+- score: 1–10; 7 or more means ready to print. If sameArt is false, at most 4.
+- note: at most 120 characters, the single most important problem or strength.`;
+  const output = (await askClaude(prompt, LIGHT_INK_SCHEMA, cwd, "medium")) as { sameArt: boolean; inkOk: boolean; score: number; note: string };
+  return { score: output.sameArt ? output.score : Math.min(output.score, 4), note: clip(output.note, 140) };
+}
+
 export type MockupCheck = { file: string; printMatches: boolean; garmentOk: boolean; score: number; note: string };
 
 const MOCKUP_SCHEMA = {
@@ -501,9 +522,13 @@ const MOCKUP_SCHEMA = {
   required: ["results"],
 };
 
-/** Checks that each model photo shows the right garment and reproduces `art` faithfully. Paths are relative to `cwd`. */
-export async function judgeMockups(cwd: string, art: string, photos: Array<{ file: string; garment: string; color: string }>): Promise<MockupCheck[]> {
-  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Open ${art} first with the Read tool: it is the exact print artwork. Then open each photo below and compare its print against it.
+/**
+ * Checks that each model photo shows the right garment and reproduces its artwork faithfully (`art` for light
+ * garments, the light-ink version for dark ones). Paths are relative to `cwd`.
+ */
+export async function judgeMockups(cwd: string, photos: Array<{ file: string; garment: string; color: string; art: string }>): Promise<MockupCheck[]> {
+  const arts = [...new Set(photos.map((p) => p.art))];
+  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Open ${arts.join(" and ")} first with the Read tool: ${arts.length > 1 ? "each is" : "it is"} the exact print artwork. Then open each photo below and compare its print against the artwork it names.
 
 For each photo report:
 - file: the photo's path, unchanged.
@@ -513,7 +538,7 @@ For each photo report:
 - note: at most 120 characters, the single most important problem or strength.
 
 Photos:
-${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}`).join("\n")}`;
+${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}, printed with ${p.art}`).join("\n")}`;
   const output = (await askClaude(prompt, MOCKUP_SCHEMA, cwd, "medium")) as { results: MockupCheck[] };
   return output.results.map((result) => ({ ...result, note: clip(result.note, 140) }));
 }

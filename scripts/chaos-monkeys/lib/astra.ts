@@ -86,6 +86,27 @@ No other text, logos, tags, props, or watermarks.
 Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
 }
 
+/** The same artwork re-inked for dark garments: black ink becomes bone cream, and the ape gets a light outline. */
+function lightInkPrompt(): string {
+  return `You are re-inking one finished print for A-OK, an AI-culture streetwear label, the way a screen printer prepares a design for dark shirts (black, navy, royal blue).
+
+The attached image is the artwork as printed on light shirts.
+
+${TOOL_RULES}
+
+Create ONE image of the same artwork, the same size and composition, on a genuinely TRANSPARENT background with a real alpha channel.
+- Everything printed in black or near-black ink becomes bone cream (#F1E8D6): lettering, outlines, linework, shapes, shading, and halftone. The one exception is the ape himself.
+- The ape keeps his black fur, warm tan face and muzzle, wide round eyes, small round O mouth, red-and-white A-OK cap, red headphones, and hoodie exactly as drawn. Add a thin, even bone-cream outline around his silhouette so his black fur reads against a dark shirt.
+- Everything else stays identical: the same drawing, composition and proportions, the same red and cream inks, and every word spelled the same. Do not redraw, restyle, simplify, crop, or add anything.
+
+Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
+}
+
+/** Re-inks `art` for dark garments in `jobDir` and returns the path of out.png (transparent). */
+export async function lightInk(art: string, jobDir: string): Promise<string> {
+  return generate(lightInkPrompt(), jobDir, [art], { alpha: true });
+}
+
 export type MockupJob = { art: string; garment: "tee" | "hoodie"; blank: string; color: string; hex: string; model: string; inches: number };
 
 /** Photographs `job.art` on a model in `jobDir` and returns the path of out.png. */
