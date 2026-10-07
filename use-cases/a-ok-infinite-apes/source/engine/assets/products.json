@@ -1,0 +1,58 @@
+[
+ {
+  "file": "products/00.jpg",
+  "name": "HALLUCINATED KEYSTROKES",
+  "kind": "TEE",
+  "price": "$50",
+  "title": "HALLUCINATED KEYSTROKES TEE"
+ },
+ {
+  "file": "products/01.jpg",
+  "name": "MIXTURE OF APES",
+  "kind": "TEE",
+  "price": "$40",
+  "title": "MIXTURE OF APES \u2014 Finetuned Personalities Tee"
+ },
+ {
+  "file": "products/02.jpg",
+  "name": "MULTI-MODAL OCTO MAYHEM",
+  "kind": "TEE",
+  "price": "$50",
+  "title": "A-OK MULTI-MODAL OCTO MAYHEM TEE"
+ },
+ {
+  "file": "products/03.jpg",
+  "name": "2034 PROPHECY",
+  "kind": "HOODIE",
+  "price": "$75",
+  "title": "A-OK 2034 PROPHECY HOODIE"
+ },
+ {
+  "file": "products/04.jpg",
+  "name": "MARCH OF THE AGENTS",
+  "kind": "TEE",
+  "price": "$40",
+  "title": "A-OK MARCH OF THE AGENTS TEE"
+ },
+ {
+  "file": "products/05.jpg",
+  "name": "RECURSIVE MONK",
+  "kind": "HOODIE",
+  "price": "$75",
+  "title": "A-OK RECURSIVE MONK HOODIE"
+ },
+ {
+  "file": "products/06.jpg",
+  "name": "HALLUCINATION CLUB",
+  "kind": "TEE",
+  "price": "$45",
+  "title": "HALLUCINATION CLUB \u2014 Inference Error Edition"
+ },
+ {
+  "file": "products/07.jpg",
+  "name": "GLITCHED VECTORS",
+  "kind": "TEE",
+  "price": "$50",
+  "title": "A-OK GLITCHED VECTORS TEE"
+ }
+]

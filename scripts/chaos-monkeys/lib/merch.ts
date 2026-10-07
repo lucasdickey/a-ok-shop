@@ -1,0 +1,361 @@
+/**
+ * Merch: a kept draft becomes a tee, a hoodie, or both. Print files follow Printful's DTG guidelines (PNG, sRGB, a
+ * transparent background, a 300 DPI canvas the size of the print area, and at least 150 DPI of real detail at print
+ * size); mockups put each colour on a model; products go to Stripe and to the site's catalog.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { MERCH_DIR } from "./config.ts";
+
+export type GarmentKind = "tee" | "hoodie";
+export const GARMENT_KINDS: GarmentKind[] = ["tee", "hoodie"];
+
+/** The shop's names for the seven colours every design comes in. */
+export const SHOP_COLORS = ["Red", "Yellow", "Blue", "Green", "Black", "White", "Navy"] as const;
+export type ShopColor = (typeof SHOP_COLORS)[number];
+
+/** Same list as app/lib/sizes.ts: the product page offers these for every tee and hoodie. */
+export const SIZES = ["XS", "S", "M", "L", "XL", "2XL"];
+
+export const PRINT_DPI = 300;
+/** Printful's floor for DTG: below this the print looks soft. */
+export const MIN_DPI = 150;
+
+export type Blank = {
+  kind: GarmentKind;
+  /** The Printful product and its exact name, for ordering. */
+  printful: number;
+  name: string;
+  productType: "T-Shirts" | "Hoodies";
+  price: number;
+  /** Printful's front print area in inches; the print file is this size at 300 DPI. */
+  area: { width: number; height: number };
+  /** The widest the art should print, in inches, when its resolution allows. */
+  maxWidth: number;
+  /** Shop colour → Printful colour name on this blank. */
+  colors: Record<ShopColor, string>;
+};
+
+export const BLANKS: Record<GarmentKind, Blank> = {
+  tee: {
+    kind: "tee",
+    printful: 71,
+    name: "Bella + Canvas 3001 Unisex Staple T-Shirt",
+    productType: "T-Shirts",
+    price: 30,
+    area: { width: 15, height: 18 },
+    maxWidth: 11,
+    colors: { Red: "Red", Yellow: "Yellow", Blue: "True Royal", Green: "Kelly", Black: "Black", White: "White", Navy: "Navy" },
+  },
+  hoodie: {
+    kind: "hoodie",
+    printful: 146,
+    name: "Gildan 18500 Unisex Heavy Blend Hoodie",
+    productType: "Hoodies",
+    price: 60,
+    // The pouch pocket caps the height.
+    area: { width: 13, height: 13 },
+    maxWidth: 10,
+    colors: { Red: "Red", Yellow: "Gold", Blue: "Royal", Green: "Irish Green", Black: "Black", White: "White", Navy: "Navy" },
+  },
+};
+
+/** A different model for each colour, so a product's photos don't look like one shoot repeated. */
+export const MODELS: Record<ShopColor, string> = {
+  Red: "a woman in her late twenties with short natural curls",
+  Yellow: "a man in his thirties with a close-cropped beard and glasses",
+  Blue: "a woman in her forties with straight shoulder-length dark hair",
+  Green: "a man in his twenties with a shaved head",
+  Black: "a woman in her thirties with long braids",
+  White: "a man in his fifties with grey hair and light stubble",
+  Navy: "a person in their twenties with a short bleached crop",
+};
+
+/**
+ * Whether a colour prints the light-ink art instead of the original, given the share of each version's inked area
+ * that would be hard to see on that fabric (under 3:1 contrast, measured by the renderer). Light ink wins only by
+ * a clear margin, so a colour where both read keeps the original.
+ */
+export function prefersLightInk(weakOriginal: number, weakLight: number): boolean {
+  return weakLight < weakOriginal - 0.03;
+}
+
+/** A colour where more of the print than this would be hard to see, whichever version it uses, isn't offered. */
+export const MAX_HARD_TO_SEE = 0.45;
+
+/** How wide the art prints and at what resolution: as wide as the blank allows without dropping below 150 DPI. */
+export function printSize(blank: Blank, artPixels: number): { inches: number; dpi: number } {
+  const inches = Math.floor(Math.min(blank.maxWidth, artPixels / MIN_DPI) * 10) / 10;
+  return { inches, dpi: Math.round(artPixels / inches) };
+}
+
+/** Swatch colours and variant ids for a blank, from Printful's public catalog API. */
+export async function printfulCatalog(blank: Blank): Promise<{ swatch: Record<ShopColor, string>; variant: (color: ShopColor, size: string) => number | null }> {
+  const response = await fetch(`https://api.printful.com/products/${blank.printful}`, { signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`Printful catalog: HTTP ${response.status}`);
+  const { result } = (await response.json()) as { result: { variants: Array<{ id: number; color: string; color_code: string; size: string }> } };
+  const swatch = {} as Record<ShopColor, string>;
+  for (const color of SHOP_COLORS) {
+    const match = result.variants.find((v) => v.color === blank.colors[color]);
+    if (!match) throw new Error(`Printful no longer offers ${blank.colors[color]} for ${blank.name}`);
+    swatch[color] = match.color_code.toLowerCase();
+  }
+  return {
+    swatch,
+    variant: (color, size) => result.variants.find((v) => v.color === blank.colors[color] && v.size === size)?.id ?? null,
+  };
+}
+
+/* ------------------------------------------------------------------ the merch folder */
+
+export type ProductCopy = {
+  title: string;
+  handle: string;
+  description: string;
+  descriptionHtml: string;
+  tags: string[];
+  seo: { title: string; description: string };
+};
+
+export type Mockup = {
+  color: ShopColor;
+  /** The artwork it was photographed with: art.png, or art-light.png on dark garments. */
+  art?: string;
+  /** Paths relative to the merch folder: Astra's photo, and the WebP the site serves. */
+  image: string | null;
+  web: string | null;
+  /** The judge's check that the print survived: the art, the face, the colours, the words. */
+  score: number | null;
+  note: string;
+};
+
+export type MerchProduct = {
+  garment: GarmentKind;
+  /** For light garments; `printFileLight` (light ink) is for the colours in `lightInk`. */
+  printFile: string;
+  printFileLight?: string | null;
+  lightInk?: ShopColor[];
+  /** The colours this product comes in: every shop colour the print reads on. */
+  colors?: ShopColor[];
+  inches: number;
+  dpi: number;
+  mockups: Mockup[];
+  copy: ProductCopy | null;
+  sold: { handle: string; stripeProductId: string | null; sha: string | null; at: string } | null;
+};
+
+/** One draft on its way to the shop: ~/.a-ok-chaos/merch/<run>-<n>/merch.json. */
+export type Merch = {
+  id: string;
+  run: string;
+  n: number;
+  title: string;
+  art: string;
+  artWidth: number;
+  /** The art re-inked for dark garments, and the check that it is still the same art. */
+  artLight?: string | null;
+  artLightCheck?: { score: number; note: string } | null;
+  products: MerchProduct[];
+};
+
+export const merchDir = (id: string): string => path.join(MERCH_DIR, id);
+
+export function loadMerch(id: string): Merch {
+  const file = path.join(merchDir(id), "merch.json");
+  if (!fs.existsSync(file)) throw new Error(`no merch for ${id}; run: chaos print`);
+  return JSON.parse(fs.readFileSync(file, "utf8")) as Merch;
+}
+
+export function saveMerch(merch: Merch): void {
+  fs.mkdirSync(merchDir(merch.id), { recursive: true });
+  fs.writeFileSync(path.join(merchDir(merch.id), "merch.json"), `${JSON.stringify(merch, null, 2)}\n`);
+}
+
+/* ------------------------------------------------------------------ the site's catalog */
+
+type Money = { amount: string; currencyCode: string };
+type Edge<T> = { node: T };
+export type CatalogVariant = {
+  id: string;
+  title: string;
+  sku: string;
+  stripePriceId?: string;
+  price: Money;
+  compareAtPrice: null;
+  availableForSale: boolean;
+  selectedOptions: Array<{ name: string; value: string }>;
+};
+export type CatalogNode = {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  descriptionHtml: string;
+  productType: string;
+  vendor: string;
+  tags: string[];
+  stripeProductId?: string;
+  seo: { title: string; description: string };
+  swatches: Record<string, string>;
+  priceRange: { minVariantPrice: Money; maxVariantPrice: Money };
+  compareAtPriceRange: { minVariantPrice: Money; maxVariantPrice: Money };
+  images: { edges: Array<Edge<{ id: string; url: string; altText: string; width: number; height: number; color: string }>> };
+  variants: { edges: Array<Edge<CatalogVariant>> };
+  options: Array<{ id: string; name: string; values: string[] }>;
+  collections: { edges: [] };
+  onlineStoreUrl: string;
+  availableForSale: boolean;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+};
+export type Catalog = { products: { edges: Array<Edge<CatalogNode>> } };
+
+/** Hands out ids that follow the catalog's existing ones, kind by kind (Product, ProductVariant, …). */
+export function idAllocator(catalog: Catalog): (kind: string) => string {
+  const text = JSON.stringify(catalog);
+  const next = new Map<string, number>();
+  return (kind) => {
+    if (!next.has(kind)) {
+      const used = [...text.matchAll(new RegExp(`gid://a-ok/${kind}/(\\d+)`, "g"))].map((m) => Number(m[1]));
+      next.set(kind, Math.max(0, ...used) + 1);
+    }
+    const n = next.get(kind) as number;
+    next.set(kind, n + 1);
+    return `gid://a-ok/${kind}/${n}`;
+  };
+}
+
+/** The catalog entry for one product: seven colours, the shop's sizes, a model photo per colour. */
+export function catalogNode(options: {
+  newId: (kind: string) => string;
+  blank: Blank;
+  copy: ProductCopy;
+  images: Array<{ color: ShopColor; url: string; width: number; height: number }>;
+  swatch: Record<ShopColor, string>;
+  variant: (color: ShopColor, size: string) => number | null;
+  now: string;
+}): CatalogNode {
+  const { blank, copy, now } = options;
+  const money = (amount: number): Money => ({ amount: amount.toFixed(1), currencyCode: "USD" });
+  const zero = { minVariantPrice: money(0), maxVariantPrice: money(0) };
+  const colors = options.images.map((image) => image.color);
+  return {
+    id: options.newId("Product"),
+    handle: copy.handle,
+    title: copy.title,
+    description: copy.description,
+    descriptionHtml: copy.descriptionHtml,
+    productType: blank.productType,
+    vendor: "A-OK Shop",
+    tags: copy.tags,
+    seo: copy.seo,
+    swatches: Object.fromEntries(colors.map((color) => [color, options.swatch[color]])),
+    priceRange: { minVariantPrice: money(blank.price), maxVariantPrice: money(blank.price) },
+    compareAtPriceRange: zero,
+    images: {
+      edges: options.images.map((image) => ({
+        node: {
+          id: options.newId("ProductImage"),
+          url: image.url,
+          altText: `${image.color} ${copy.title}, worn by a model`,
+          width: image.width,
+          height: image.height,
+          color: image.color,
+        },
+      })),
+    },
+    variants: {
+      edges: colors.flatMap((color) =>
+        SIZES.map((size) => {
+          const printful = options.variant(color, size);
+          return {
+            node: {
+              id: options.newId("ProductVariant"),
+              title: `${color} / ${size}`,
+              // The Printful variant to order; empty where the blank doesn't come in that size.
+              sku: printful ? `printful-${printful}` : "",
+              price: money(blank.price),
+              compareAtPrice: null,
+              availableForSale: true,
+              selectedOptions: [
+                { name: "Color", value: color },
+                { name: "Size", value: size },
+              ],
+            },
+          };
+        }),
+      ),
+    },
+    options: [
+      { id: options.newId("ProductOption"), name: "Color", values: colors },
+      { id: options.newId("ProductOption"), name: "Size", values: SIZES },
+    ],
+    collections: { edges: [] },
+    onlineStoreUrl: "",
+    availableForSale: true,
+    createdAt: now,
+    updatedAt: now,
+    publishedAt: now,
+  };
+}
+
+/* ------------------------------------------------------------------ Stripe */
+
+async function stripePost(key: string, endpoint: string, params: Array<[string, string]>, idempotencyKey: string): Promise<{ id: string }> {
+  const response = await fetch(`https://api.stripe.com/v1/${endpoint}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      // A retried run reuses the same keys, so it never creates a product or price twice.
+      "Idempotency-Key": idempotencyKey,
+    },
+    body: new URLSearchParams(params),
+    signal: AbortSignal.timeout(30_000),
+  });
+  const body = (await response.json()) as { id: string; error?: { message?: string } };
+  if (!response.ok) throw new Error(`Stripe ${endpoint}: ${body.error?.message ?? `HTTP ${response.status}`}`);
+  return body;
+}
+
+/**
+ * Creates the Stripe product and one price per variant, the same shape scripts/sync-stripe-products.js makes, and
+ * writes their ids into `node`. Checkout prices from the catalog either way; these keep Stripe's catalog complete.
+ */
+export async function addToStripe(key: string, node: CatalogNode, siteUrl: string, printFileFor: (color: string) => string): Promise<void> {
+  const product = await stripePost(
+    key,
+    "products",
+    [
+      ["name", node.title],
+      ["description", node.description.slice(0, 500)],
+      ["images[0]", `${siteUrl}${node.images.edges[0].node.url}`],
+      ["metadata[handle]", node.handle],
+      ["metadata[productType]", node.productType],
+      ["metadata[vendor]", node.vendor],
+      ["metadata[sizes]", SIZES.join(",")],
+    ],
+    `${node.id}-product`,
+  );
+  node.stripeProductId = product.id;
+  for (const { node: variant } of node.variants.edges) {
+    const price = await stripePost(
+      key,
+      "prices",
+      [
+        ["product", product.id],
+        ["unit_amount", String(Math.round(Number(variant.price.amount) * 100))],
+        ["currency", "usd"],
+        ["metadata[variantId]", variant.id],
+        ["metadata[variantTitle]", variant.title],
+        ["metadata[sku]", variant.sku],
+        ["metadata[options]", JSON.stringify(variant.selectedOptions)],
+        // Which print file to send Printful for this colour.
+        ["metadata[printFile]", printFileFor(variant.selectedOptions.find((o) => o.name === "Color")?.value ?? "")],
+      ],
+      `${variant.id}-price`,
+    );
+    variant.stripePriceId = price.id;
+  }
+}

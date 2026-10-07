@@ -52,14 +52,34 @@ export interface MPPCatalogResponse {
   total: number;
 }
 
+export interface MPPItem {
+  handle: string;
+  variantId: string;
+  quantity: number;
+  /** Required for tees and hoodies: one of CLOTHING_SIZES. */
+  size?: string;
+}
+
+/** Where a physical order ships. Same shape as Stripe's PaymentIntent `shipping`. */
+export interface MPPShipping {
+  name: string;
+  address: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    /** US or CA: the only countries the store ships to. */
+    country: string;
+  };
+}
+
 export interface MPPPurchaseRequest {
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
   agentId?: string;
   email?: string;
+  /** Required when any item ships (everything except digital goods). */
+  shipping?: MPPShipping;
 }
 
 export interface MPPPaymentChallenge {
@@ -91,11 +111,7 @@ export interface MPPOrderConfirmation {
   currency: string;
   paymentMethod: 'stripe-link' | 'stripe-spt' | 'tempo';
   paymentId: string;
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
   message: string;
 }
 
@@ -114,11 +130,8 @@ export interface MPPOrder {
   paymentIntentId: string;
   agentId: string;
   email?: string;
-  items: Array<{
-    handle: string;
-    variantId: string;
-    quantity: number;
-  }>;
+  items: MPPItem[];
+  shipping?: MPPShipping;
   amount: number; // in cents
   currency: string;
   paymentMethod: 'stripe-spt' | 'tempo';

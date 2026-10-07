@@ -108,10 +108,10 @@ export async function verifySite(): Promise<void> {
   }
 }
 
-/** Puts the clone back on its commit, removing anything shipping added. */
-export async function discardChanges(): Promise<void> {
+/** Puts the clone back on its commit, removing anything shipping added to `dirs`. */
+export async function discardChanges(dirs: string[] = [IMAGE_DIR]): Promise<void> {
   await git("checkout", "--quiet", "--", ".");
-  await git("clean", "--quiet", "-fd", "--", IMAGE_DIR);
+  await git("clean", "--quiet", "-fd", "--", ...dirs);
 }
 
 /** Commits exactly `paths` (restoring anything the build regenerated) and pushes to `branch`. Returns the new commit. */
