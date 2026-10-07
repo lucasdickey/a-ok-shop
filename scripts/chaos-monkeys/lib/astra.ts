@@ -22,6 +22,7 @@ Use your built-in image generation tool. Never use the CLI fallback, scripts/ima
 Create ONE new square image of the A-OK ape: ${brief.art}
 
 Character, matching the references closely: ${brand.character}
+His face is the brand's logo. Draw it exactly as on the round badge reference, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face. No angry brows, shouting mouth, tongue, star eyes, or recoloured face.
 Style: ${brand.style}
 Palette: ${brand.palette}
 
@@ -55,7 +56,8 @@ Style: ${style ? `${style.name}. ${style.description}` : `${brief.style}.`} Comm
 The graphic: ${brief.art}
 Text: ${words} The cap reads "A-OK". If the ape wears the hoodie and its front is visible, it reads "APES ON KEYS". No other letters, numbers, or logos.
 
-Character, recognisable in this style: ${brand.character}
+Character: ${brand.character}
+His face is the brand's logo. Draw it exactly as on the round badge reference, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face. No angry brows, shouting mouth, tongue, star eyes, or recoloured face.
 House look: ${brand.style}
 Palette for the inks: ${brand.palette}
 It must read from across a room and as a 300 px thumbnail.

@@ -252,7 +252,10 @@ async function judgeAndSheet(record: Run, runDir: string, renderer: Renderer): P
   if (ready.length) {
     log(`judging ${ready.length} drafts…`);
     try {
-      const results = await judgeDrafts(runDir, ready, dateLabel(date));
+      // The judge can only read files in the run directory, so the badge goes there.
+      const reference = "reference-ape.jpg";
+      fs.copyFileSync(path.join(CHECKOUT, REFERENCE_IMAGES[0]), path.join(runDir, reference));
+      const results = await judgeDrafts(runDir, ready, dateLabel(date), reference);
       for (const result of results) {
         const d = record.drafts.find((x) => x.n === result.draft);
         if (d) d.judgment = result;

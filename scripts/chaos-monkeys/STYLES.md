@@ -6,7 +6,7 @@ Homage is part of streetwear, and it is welcome here as homage to a *format*: th
 
 Each style is a `## id · Name` heading followed by `engine:` (`astra`, `hybrid specimen`, or `hybrid form`), `text:` (how many short printed strings it allows, beyond the cap and hoodie lettering), an optional `weight:` (relative chance of being picked, default 1; 0 retires a style without deleting it), and a description that both models read. Add, remove, or rewrite styles freely.
 
-Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern.
+Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern. Retired after the second: racing and crest (silly, juvenile) and monogram (rejected twice as uninspired).
 
 ## icon · Street-art icon
 engine: astra
@@ -49,6 +49,7 @@ Collegiate athletics: an arched slab-serif title with a drop-shadow outline, a b
 ## racing · Racing patches
 engine: astra
 text: 1
+weight: 0
 Motorsport jacket: the ape in a racing suit with his cap and headphones, ringed by invented sponsor-style patches made of icons (a GPU, a cursor, a spinner, a token), checkered flags and speed lines. Patches are icons, not words.
 
 ## workwear · Workwear label
@@ -59,7 +60,7 @@ Heritage workwear: a chain-stitched oval name patch or a woven-label rectangle, 
 ## souvenir · Souvenir badge
 engine: astra
 text: 2
-Roadside and national-park souvenir tee: a round or shield badge with a sunburst landscape, an arched name across the top and a small line below. An AI concept is treated as a tourist destination, with the ape as the ranger or the attraction.
+Roadside and national-park souvenir tee: a round or shield badge with a simple landscape under a plain round sun (no radiating rays or sunburst), an arched name across the top and a small line below. An AI concept is treated as a tourist destination, with the ape as the ranger or the attraction.
 
 ## skate-zine · Skate zine
 engine: astra
@@ -74,6 +75,7 @@ Ura-Harajuku camouflage homage: an all-over camo whose blobs are built from A-OK
 ## monogram · Monogram canvas
 engine: astra
 text: 0
+weight: 0
 Luxury monogram homage: a repeating canvas of an interlocked A-OK monogram, tiny ape heads and AI glyphs (a cursor, a token, a spinner), tonal cream on tan or red on black, with one centred leather-tag patch where the ape sits, looking stunned to be this expensive. The only letters are the A-OK monogram.
 
 ## advisory · Advisory label
@@ -105,6 +107,7 @@ American traditional tattoo flash: bold outlines, limited fills, a banner scroll
 ## crest · Club crest
 engine: astra
 text: 2
+weight: 0
 A football-club or rowing-club crest: shield, laurels, a founding year and a short invented club name, with the ape rampant like a heraldic beast holding an AI emblem.
 
 ## rubber-hose · Rubber-hose cartoon

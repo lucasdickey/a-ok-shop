@@ -344,7 +344,8 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
   return text;
 }
 
-export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string): Promise<Judgment[]> {
+/** `reference` is the badge image, copied into `runDir` so the judge can compare each ape's face against it. */
+export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -359,6 +360,8 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
+First open ${reference}: the round badge is the A-OK ape's canonical face, and every draft's ape must match it.
+
 Character: ${brand.character}
 Rules:
 ${brand.rules}
@@ -366,10 +369,10 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape is recognisably the character (round O mouth, A-OK cap, red headphones), drawn in the style's idiom.
+- onModel: the ape's face matches the badge: the same construction and proportions, wide round eyes with white around the pupils, warm tan face and muzzle, black fur, small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Angry brows, a shouting mouth, a tongue, star eyes, a recoloured face, or a different-looking chimp make it false.
 - rulesOk: no rule is broken.
-- jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style.
-- score: 1–10 overall; 7 or more means ready to publish.
+- jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
+- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 5. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
 - note: at most 140 characters, the single most important problem or strength.
 
 ${lines.join("\n\n")}`;
