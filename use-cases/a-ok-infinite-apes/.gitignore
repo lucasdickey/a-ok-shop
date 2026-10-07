@@ -1,0 +1,16 @@
+# Rendered media, stills and 3D frame caches stay on this machine; they are never committed.
+# The engine's small input art (below) is committed so the film can be rebuilt from Git.
+*.mp4
+*.mkv
+*.wav
+*.png
+*.jpg
+*.zip
+source/renders/
+source/engine/assets/fonts/SF-Mono-*
+source/engine/assets/fonts/ArialBlack.ttf
+source/engine/assets/fonts/DINCondensedBold.ttf
+.DS_Store
+!source/engine/assets/*.png
+!source/engine/assets/posters/*.jpg
+!source/engine/assets/products/*.jpg
