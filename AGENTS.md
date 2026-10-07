@@ -56,3 +56,13 @@ The A-OK Shop features:
 
 - This project has no automated test suite yet. Manually verify product listing, filtering, cart, and checkout behavior after code changes.
 - Test game functionality and discount code generation in both development and production modes.
+
+<!-- stripe-projects-cli managed:agents-md:start -->
+## Stripe Projects CLI
+
+This repository is initialized for the Stripe project "a-ok-shop".
+
+## Tools used
+
+- [Stripe CLI](https://docs.stripe.com/stripe-cli) with the `projects` plugin to manage third-party services, credentials, and deployments for this project. Use the stripe-projects-cli to manage deploying and access to third party services.
+<!-- stripe-projects-cli managed:agents-md:end -->
