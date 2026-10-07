@@ -61,7 +61,7 @@ export default function Footer() {
         <div>
           <p className="micro mb-3">Contact</p>
           <ul className="lg:space-y-2">
-            <li>Email: info @ a-ok.shop</li>
+            <li>Email: info @ a-ok.ai</li>
             <li>
               <Link href="https://x.com/apesonkeys" target="_blank" className={linkClass}>
                 Find us on X

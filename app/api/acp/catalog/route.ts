@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
     protocol: "acp-draft-2024-12",
     merchant: {
       id: process.env.NEXT_PUBLIC_SHOP_NAME || "a-ok-shop",
-      name: process.env.NEXT_PUBLIC_SHOP_NAME || "A-OK Shop",
+      name: process.env.NEXT_PUBLIC_SHOP_NAME || "A-OK",
       currency:
         products[0]?.priceRange.minVariantPrice.currencyCode || "USD",
     },

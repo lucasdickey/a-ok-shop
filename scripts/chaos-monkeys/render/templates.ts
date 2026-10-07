@@ -7,6 +7,9 @@
  *   form:     the ape as a die-cut sticker on an official form, the title as a rubber stamp.
  *   image:    re-encodes a finished poster at the publishing size.
  *   sheet:    the contact sheet a person picks from.
+ *   keyed:    a draft with its flat background removed and trimmed to the art: the print artwork.
+ *   printfile: that artwork on a transparent 300 DPI canvas the size of Printful's print area.
+ *   cover:    a photo cropped to fill a frame, for the shop's product images.
  */
 
 type Colorway = "cream" | "red" | "ink";
@@ -39,8 +42,13 @@ type SheetItem = {
   flags: string[];
   topical: boolean;
 };
-type SheetSpec = { kind: "sheet"; date: string; topic: string | null; items: SheetItem[] };
-type Spec = ArtSpec | ImageSpec | SheetSpec;
+/** `heading` and `hint` replace the drafts sheet's title and instructions, e.g. for a merch sheet. */
+type SheetSpec = { kind: "sheet"; date: string; topic: string | null; items: SheetItem[]; heading?: string; hint?: string };
+type KeyedSpec = { kind: "keyed"; image: string };
+/** All sizes in pixels at 300 DPI: the canvas is the print area, the art is `artWidth` wide, `top` below its top edge. */
+type PrintFileSpec = { kind: "printfile"; image: string; width: number; height: number; artWidth: number; top: number };
+type CoverSpec = { kind: "cover"; image: string; width: number; height: number; format: Format; quality?: number; focusY?: number };
+type Spec = ArtSpec | ImageSpec | SheetSpec | KeyedSpec | PrintFileSpec | CoverSpec;
 
 const C = {
   red: "#C8161D",
@@ -197,8 +205,8 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, width: number, maxLin
 }
 
 /** Snaps the image model's near-opaque alpha to solid, drops stray haze, and trims to the figure. */
-function prepareArt(img: HTMLImageElement): HTMLCanvasElement {
-  const c = makeCanvas(img.naturalWidth, img.naturalHeight);
+function prepareArt(img: HTMLImageElement | HTMLCanvasElement): HTMLCanvasElement {
+  const c = img instanceof HTMLImageElement ? makeCanvas(img.naturalWidth, img.naturalHeight) : makeCanvas(img.width, img.height);
   const ctx = context(c);
   ctx.drawImage(img, 0, 0);
   const data = ctx.getImageData(0, 0, c.width, c.height);
@@ -502,6 +510,109 @@ async function form(spec: ArtSpec): Promise<HTMLCanvasElement> {
   return c;
 }
 
+/* ------------------------------------------------------------------ merch */
+
+/**
+ * Removes a flat background: when nearly all of the border is one colour, everything connected to the border in
+ * that colour becomes transparent, and the anti-aliased edge is un-blended from it so no halo of the old colour
+ * prints. Art without a flat background (a full-bleed poster) keeps it and prints as a rectangle.
+ */
+async function keyed(spec: KeyedSpec): Promise<HTMLCanvasElement> {
+  const img = await loadImage(spec.image);
+  const W = img.naturalWidth;
+  const H = img.naturalHeight;
+  const c = makeCanvas(W, H);
+  const ctx = context(c);
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0, 0, W, H);
+  const p = data.data;
+  const border: number[] = [];
+  for (let x = 0; x < W; x++) border.push(x, (H - 1) * W + x);
+  for (let y = 1; y < H - 1; y++) border.push(y * W, y * W + W - 1);
+  const opaque = border.filter((i) => p[i * 4 + 3] > 200);
+  if (opaque.length > border.length / 2) {
+    const median = [0, 1, 2].map((ch) => {
+      const values = opaque.map((i) => p[i * 4 + ch]).sort((a, b) => a - b);
+      return values[values.length >> 1];
+    });
+    const tolerance = 30;
+    const dist = (i: number) => Math.max(Math.abs(p[i * 4] - median[0]), Math.abs(p[i * 4 + 1] - median[1]), Math.abs(p[i * 4 + 2] - median[2]));
+    if (opaque.filter((i) => dist(i) <= tolerance).length >= opaque.length * 0.85) {
+      const seen = new Uint8Array(W * H);
+      const queue = new Int32Array(W * H);
+      let head = 0;
+      let tail = 0;
+      for (const i of border) {
+        if (!seen[i] && dist(i) <= tolerance) {
+          seen[i] = 1;
+          queue[tail++] = i;
+        }
+      }
+      while (head < tail) {
+        const i = queue[head++];
+        const x = i % W;
+        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+          if (j >= 0 && j < W * H && !seen[j] && dist(j) <= tolerance) {
+            seen[j] = 1;
+            queue[tail++] = j;
+          }
+        }
+      }
+      for (let i = 0; i < W * H; i++) {
+        if (seen[i]) {
+          p[i * 4 + 3] = 0;
+          continue;
+        }
+        const x = i % W;
+        const touches = (x > 0 && seen[i - 1]) || (x < W - 1 && seen[i + 1]) || (i >= W && seen[i - W]) || (i + W < W * H && seen[i + W]);
+        if (!touches) continue;
+        // An edge pixel is part background: estimate how much, and recover the ink's own colour.
+        const a = Math.min(1, Math.max(0, (dist(i) - tolerance) / (2 * tolerance)));
+        if (a === 0) {
+          p[i * 4 + 3] = 0;
+          continue;
+        }
+        for (let ch = 0; ch < 3; ch++) p[i * 4 + ch] = Math.min(255, Math.max(0, Math.round(median[ch] + (p[i * 4 + ch] - median[ch]) / a)));
+        p[i * 4 + 3] = Math.round(p[i * 4 + 3] * a);
+      }
+      ctx.putImageData(data, 0, 0);
+    }
+  }
+  return prepareArt(c);
+}
+
+async function printfile(spec: PrintFileSpec): Promise<HTMLCanvasElement> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(spec.width, spec.height);
+  const ctx = context(c);
+  ctx.imageSmoothingQuality = "high";
+  let w = spec.artWidth;
+  let h = (w * img.naturalHeight) / img.naturalWidth;
+  if (h > spec.height - spec.top) {
+    w *= (spec.height - spec.top) / h;
+    h = spec.height - spec.top;
+  }
+  ctx.drawImage(img, (spec.width - w) / 2, spec.top, w, h);
+  return c;
+}
+
+/** Draws `img` to fill the box, cropping the overflow; `focusY` 0 keeps the top, 1 the bottom. */
+function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, w: number, h: number, focusY = 0.5): void {
+  const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+  const sw = w / scale;
+  const sh = h / scale;
+  ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * focusY, sw, sh, x, y, w, h);
+}
+
+async function cover(spec: CoverSpec): Promise<HTMLCanvasElement> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(spec.width, spec.height);
+  const ctx = context(c);
+  ctx.imageSmoothingQuality = "high";
+  drawCover(ctx, img, 0, 0, spec.width, spec.height, spec.focusY);
+  return c;
+}
+
 /* ------------------------------------------------------------------ image and sheet */
 
 async function image(spec: ImageSpec): Promise<HTMLCanvasElement> {
@@ -529,10 +640,10 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
 
   ctx.fillStyle = C.ink;
   ctx.font = "72px Bebas";
-  ctx.fillText(`CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
+  ctx.fillText(spec.heading ?? `CHAOS MONKEYS · DRAFTS · ${spec.date}`, gap, 86);
   ctx.font = "500 22px Mono";
   ctx.fillStyle = C.grey;
-  ctx.fillText("Pick two or three to ship (/chaos-monkeys ship 1 3 5), or review the whole set (/chaos-monkeys review)", gap, 126);
+  ctx.fillText(spec.hint ?? "Pick two or three to ship (/chaos-monkeys ship 1 3 5), or review the whole set (/chaos-monkeys review)", gap, 126);
   if (spec.topic) {
     ctx.fillStyle = C.red;
     ctx.fillText(`Topical, from Zingers: ${spec.topic}`.slice(0, 120), gap, 160);
@@ -542,8 +653,8 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
     const x = gap + (i % cols) * (tile + gap);
     const y = head + Math.floor(i / cols) * (tile + caption);
     if (item.image) {
-      const img = await loadImage(item.image);
-      ctx.drawImage(img, x, y, tile, tile);
+      // Product photos are portrait; keep the upper part, where the print is.
+      drawCover(ctx, await loadImage(item.image), x, y, tile, tile, 0.3);
     } else {
       ctx.fillStyle = "#D9CDB4";
       ctx.fillRect(x, y, tile, tile);
@@ -597,17 +708,42 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
   return c;
 }
 
+/**
+ * How much of a print would be hard to see on each garment colour: the share of its inked area whose contrast
+ * against the fabric is under 3:1. Used to choose, colour by colour, between the art and its light-ink version.
+ */
+async function measure(spec: { image: string; colors: string[] }): Promise<number[]> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(img.naturalWidth, img.naturalHeight);
+  const ctx = context(c);
+  ctx.drawImage(img, 0, 0);
+  const p = ctx.getImageData(0, 0, c.width, c.height).data;
+  const linear = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+  const lum = (r: number, g: number, b: number) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+  const inks: number[] = [];
+  for (let i = 0; i < p.length; i += 4) if (p[i + 3] > 128) inks.push(lum(p[i], p[i + 1], p[i + 2]));
+  return spec.colors.map((hex) => {
+    const fabric = lum(parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16));
+    const weak = inks.filter((ink) => (Math.max(ink, fabric) + 0.05) / (Math.min(ink, fabric) + 0.05) < 3).length;
+    return inks.length ? weak / inks.length : 0;
+  });
+}
+
 /* ------------------------------------------------------------------ entry point */
 
 async function render(spec: Spec): Promise<string> {
   if (spec.kind === "sheet") return encode(await sheet(spec), "png", undefined);
   if (spec.kind === "image") return encode(await image(spec), spec.format, spec.quality);
+  if (spec.kind === "keyed") return encode(await keyed(spec), "png", undefined);
+  if (spec.kind === "printfile") return encode(await printfile(spec), "png", undefined);
+  if (spec.kind === "cover") return encode(await cover(spec), spec.format, spec.quality);
   const c = spec.kind === "form" ? await form(spec) : await specimen(spec);
   return encode(c, spec.format, spec.quality);
 }
 
-const page = window as unknown as { render: typeof render; READY: boolean; ERROR: string | null };
+const page = window as unknown as { render: typeof render; measure: typeof measure; READY: boolean; ERROR: string | null };
 page.render = render;
+page.measure = measure;
 page.READY = false;
 page.ERROR = null;
 Promise.all(["40px Bebas", "500 20px Mono", "700 20px Mono", "40px ArialBlack"].map((font) => document.fonts.load(font)))

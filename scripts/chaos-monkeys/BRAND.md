@@ -4,7 +4,7 @@ This file is the single source of brand rules for the daily drop. The tool reads
 
 ## Character
 
-The A-OK ape is always the same character: a chimpanzee with black fur and a warm tan face and muzzle, wide round eyes, and a mouth open in a round, stunned "O" (surprised, never snarling). He wears a red-and-white baseball cap printed "A-OK" and red over-ear headphones, and usually an "APES ON KEYS" hoodie in cream or red. He is friendly, a little overwhelmed by the future, and always doing his best.
+The A-OK ape is always the same character: a chimpanzee with black fur and a warm tan face and muzzle, wide round eyes, and a mouth open in a round, stunned "O" (surprised, never snarling). He wears a red-and-white baseball cap printed "A-OK" and red over-ear headphones, and usually an "APES ON KEYS" hoodie in cream or red. He is friendly, a little overwhelmed by the future, and always doing his best. His face is the brand's logo: in every style it keeps the badge's construction and colours, and a style changes only the linework and rendering around it.
 
 ## Style
 
@@ -24,6 +24,7 @@ Dry, specific AI-culture satire that is in on its own joke. The brand is made by
 - **The picture carries the joke on its own.** Someone who sees only the thumbnail should get the gag from what the ape is doing.
 - **Dry, not silly.** The joke comes from the idea. Skip banana punchlines, slapstick, and other monkey clichés. Satire that stays cool: no mugging, gushing, cartoon chaos, or crowds of activity.
 - **A joke is optional; a sharp idea is not.** A clean, clever picture of an AI concept (an exploded diagram of a mixture of experts) can carry a shirt without a punchline.
+- **Adult streetwear, not a kids' tee.** The ape stays calm and stunned, never clowning: no mascot antics, crowds of props, or busy action.
 - **A shirt, not a post.** Something people wear for years, so skip gags that only work once, like a speech-bubble one-liner, and ideas that are already dated.
 - **Good territory:** tokens, context windows, hallucination, temperature, rate limits, fine-tuning, overfitting, benchmarks, evals, alignment, agents, tool calls, retries, prompts, system prompts, latency, caching, embeddings, attention, inference, model cards, datasets, labeling, GPUs (generic), chain of thought, guardrails.
 - **Avoid** jokes that only land if you know a specific company, product, person, or news story.
@@ -33,6 +34,7 @@ Dry, specific AI-culture satire that is in on its own joke. The brand is made by
 - No real people or likenesses.
 - No third-party logos, trademarks, or company, product, or model names in the art or text. Homage to a streetwear format (a box logo, a monogram canvas, a bootleg tee) is welcome; another brand's name, wordmark, logo, character, or signature pattern is not.
 - No partisan politics, elections, or politicians.
+- Nothing that echoes hate or authoritarian imagery, even by accident: no straight-arm raised salute (a raised hand bends at the elbow), no rising-sun rays, no propaganda-flag compositions.
 - The ape never smokes, drinks, or takes drugs. No weapons, gore, or sexual content. Nothing that punches down.
 - Spell every word exactly. The only words in the art are the brief's print text and the cap and hoodie lettering.
 - It must read as a 300 px thumbnail: one clear idea, big shapes, few words.

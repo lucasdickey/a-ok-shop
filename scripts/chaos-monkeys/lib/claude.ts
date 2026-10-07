@@ -344,7 +344,8 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
   return text;
 }
 
-export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string): Promise<Judgment[]> {
+/** `reference` is the badge image, copied into `runDir` so the judge can compare each ape's face against it. */
+export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -359,6 +360,8 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
+First open ${reference}: the round badge is the A-OK ape's canonical face, and every draft's ape must match it.
+
 Character: ${brand.character}
 Rules:
 ${brand.rules}
@@ -366,14 +369,176 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape is recognisably the character (round O mouth, A-OK cap, red headphones), drawn in the style's idiom.
+- onModel: the ape's face matches the badge: the same construction and proportions, wide round eyes with white around the pupils, warm tan face and muzzle, black fur, small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Angry brows, a shouting mouth, a tongue, star eyes, a recoloured face, or a different-looking chimp make it false.
 - rulesOk: no rule is broken.
-- jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style.
-- score: 1–10 overall; 7 or more means ready to publish.
+- jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
+- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 5. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
 - note: at most 140 characters, the single most important problem or strength.
 
 ${lines.join("\n\n")}`;
 
   const output = (await askClaude(prompt, JUDGE_SCHEMA, runDir, "medium")) as { results: Judgment[] };
   return output.results.map((result) => ({ ...result, note: clip(result.note, 160) }));
+}
+
+/* ------------------------------------------------------------------ merch */
+
+export type CopyItem = {
+  key: string;
+  garment: "tee" | "hoodie";
+  blank: string;
+  colors: string[];
+  inches: number;
+  /** Colours printed with the light-ink artwork. */
+  lightInk: string[];
+  brief: Brief;
+};
+export type ProductCopyResult = {
+  key: string;
+  title: string;
+  handle: string;
+  description: string;
+  descriptionHtml: string;
+  tags: string[];
+  seoTitle: string;
+  seoDescription: string;
+};
+
+const COPY_SCHEMA = {
+  type: "object",
+  properties: {
+    products: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          key: TEXT,
+          title: TEXT,
+          handle: TEXT,
+          description: TEXT,
+          descriptionHtml: TEXT,
+          tags: { type: "array", items: TEXT },
+          seoTitle: TEXT,
+          seoDescription: TEXT,
+        },
+        required: ["key", "title", "handle", "description", "descriptionHtml", "tags", "seoTitle", "seoDescription"],
+      },
+    },
+  },
+  required: ["products"],
+};
+
+/** Product pages for designs headed to the shop, in the house format of `example` (an existing catalog product). */
+export async function writeProductCopy(
+  cwd: string,
+  items: CopyItem[],
+  example: { title: string; descriptionHtml: string; tags: string[] },
+  takenHandles: string[],
+): Promise<ProductCopyResult[]> {
+  const brand = readBrand();
+  const lines = items.map(
+    (item) => `- key "${item.key}": a ${item.garment}, ${item.blank}, in ${item.colors.join(", ")}.
+  Design: ${item.brief.title}. ${item.brief.joke}
+  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}
+  Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
+  );
+  const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
+
+BRAND GUIDE
+Voice:
+${brand.voice}
+Rules:
+${brand.rules}
+
+HOUSE FORMAT. Match the structure, length, and tone of this existing product page:
+Title: ${example.title}
+descriptionHtml: ${example.descriptionHtml}
+Tags: ${example.tags.join(", ")}
+
+Write one product per line item:
+${lines.join("\n")}
+
+Fields:
+- key: the line item's key, unchanged.
+- title: in the house pattern, "A-OK <Design> Tee" or "A-OK <Design> Hoodie", in title case.
+- handle: lowercase kebab-case, starting "a-ok-" and ending "-tee" or "-hoodie". Not one of: ${takenHandles.join(", ")}.
+- description: one or two plain sentences, at most 300 characters, for product cards and Stripe.
+- descriptionHtml: the house structure: a bold one-line lead, two to four short paragraphs that carry the joke dryly, a bold sign-off that ends with "A-OK.", then a <ul> of three or four facts: the print and its size, the inks, the garment, and the colours. Use only <p>, <strong>, <em>, <ul>, and <li>.
+- tags: five to eight, like the example's: first "T-shirts" or "Hoodies", then "A-OK" and "Apes on Keys", then tags specific to the design.
+- seoTitle: at most 60 characters. seoDescription: at most 160 characters.
+Every fact must be true to what is given here: don't invent fabric weights, fits, or claims.`;
+
+  const output = (await askClaude(prompt, COPY_SCHEMA, cwd, "high")) as { products: ProductCopyResult[] };
+  return output.products.map((p) => ({
+    ...p,
+    title: clip(p.title, 80),
+    handle: p.handle.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80),
+    description: clip(p.description, 300),
+    tags: p.tags.map((tag) => clip(tag, 40)).slice(0, 8),
+    seoTitle: clip(p.seoTitle, 70),
+    seoDescription: clip(p.seoDescription, 170),
+  }));
+}
+
+const LIGHT_INK_SCHEMA = {
+  type: "object",
+  properties: { sameArt: { type: "boolean" }, inkOk: { type: "boolean" }, score: { type: "integer", minimum: 1, maximum: 10 }, note: TEXT },
+  required: ["sameArt", "inkOk", "score", "note"],
+};
+
+/** Checks that `light` is `art` re-inked for dark shirts and nothing else. Paths are relative to `cwd`. */
+export async function judgeLightInk(cwd: string, art: string, light: string): Promise<{ score: number; note: string }> {
+  const prompt = `You check a print re-inked for dark shirts for A-OK, an AI-culture streetwear label. Open ${art} (the original, for light shirts) and ${light} (the version for black, navy and royal-blue shirts) with the Read tool.
+
+Report:
+- sameArt: the drawing, composition, proportions, red and cream inks, and every word are unchanged, and the ape's face matches the original (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones).
+- inkOk: what was black ink (lettering, linework, shapes) is now bone cream, the ape keeps his black fur with a light outline around him, and the background is transparent.
+- score: 1–10; 7 or more means ready to print. If sameArt is false, at most 4.
+- note: at most 120 characters, the single most important problem or strength.`;
+  const output = (await askClaude(prompt, LIGHT_INK_SCHEMA, cwd, "medium")) as { sameArt: boolean; inkOk: boolean; score: number; note: string };
+  return { score: output.sameArt ? output.score : Math.min(output.score, 4), note: clip(output.note, 140) };
+}
+
+export type MockupCheck = { file: string; printMatches: boolean; garmentOk: boolean; score: number; note: string };
+
+const MOCKUP_SCHEMA = {
+  type: "object",
+  properties: {
+    results: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          file: TEXT,
+          printMatches: { type: "boolean" },
+          garmentOk: { type: "boolean" },
+          score: { type: "integer", minimum: 1, maximum: 10 },
+          note: TEXT,
+        },
+        required: ["file", "printMatches", "garmentOk", "score", "note"],
+      },
+    },
+  },
+  required: ["results"],
+};
+
+/**
+ * Checks that each model photo shows the right garment and reproduces its artwork faithfully (`art` for light
+ * garments, the light-ink version for dark ones). Paths are relative to `cwd`.
+ */
+export async function judgeMockups(cwd: string, photos: Array<{ file: string; garment: string; color: string; art: string }>): Promise<MockupCheck[]> {
+  const arts = [...new Set(photos.map((p) => p.art))];
+  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Open ${arts.join(" and ")} first with the Read tool: ${arts.length > 1 ? "each is" : "it is"} the exact print artwork. Then open each photo below and compare its print against the artwork it names.
+
+For each photo report:
+- file: the photo's path, unchanged.
+- printMatches: the print is the same artwork: the same drawing and composition, the ape's face unchanged (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones), the same colours, every word spelled the same, and nothing added or missing.
+- garmentOk: one adult model wears a plain garment of the stated kind and colour, photographed realistically, with no stray text or logos.
+- score: 1–10; 7 or more means ready for the shop. A print that doesn't match scores at most 4.
+- note: at most 120 characters, the single most important problem or strength.
+
+Photos:
+${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}, printed with ${p.art}`).join("\n")}`;
+  const output = (await askClaude(prompt, MOCKUP_SCHEMA, cwd, "medium")) as { results: MockupCheck[] };
+  return output.results.map((result) => ({ ...result, note: clip(result.note, 140) }));
 }

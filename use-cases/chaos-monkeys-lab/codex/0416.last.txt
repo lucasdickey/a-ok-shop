@@ -1,0 +1,25 @@
+Saved: [out/0416_cutout.png](/private/tmp/claude-501/-Users-ld-Documents-github-lucasdickey-a-ok-shop/03f9b351-ac06-493d-8ed5-0dc5f6fbf89b/scratchpad/chaos/codex/out/0416_cutout.png)  
+Size: **1254 × 1254 pixels**  
+Alpha: **Yes—RGBA, verified transparent pixels.**  
+Generated using the built-in image tool.
+
+Exact generation prompt:
+
+```text
+Create ONE new square PNG illustration with a genuinely TRANSPARENT background and real alpha channel.
+
+Use case: illustration-story.
+The two attached images are REFERENCE ONLY for character identity, not edit targets or composition templates. Match the A-OK ape closely: the same rounded face shape and muzzle, wide surprised eyes, stunned O-shaped open mouth, black fur, red-and-bone-white trucker cap printed exactly "A-OK", red over-ear headphones, and hoodie with bold black lettering exactly "APES ON KEYS" arranged APES / ON / KEYS.
+
+Show the ape FULL BODY, sitting cross-legged, typing furiously with both hands on a vintage mechanical keyboard resting in its lap. Include a few short motion lines by the fingers. Keep both crossed legs and feet visible, all of the cap and headphones inside the frame, and the hoodie lettering readable above the keyboard. Center the complete character with comfortable transparent margins.
+
+Style: flat screen-print illustration, thick confident ink-black linework, simple bold shapes, subtle halftone texture within the character. Strict palette: signal red #C8161D, ink black, bone cream #F1E8D6, and warm tan on the face only. Use red and bone cream for the cap, red headphones, bone cream hoodie with black lettering, and a vintage bone cream and black keyboard.
+
+Background must be empty transparency, not white, not a checkerboard drawing. No ground shadow, no floor, no frame or badge circle, no poster layout, no other text, no caption, no watermark. Only the requested cap and hoodie lettering. Preserve the reference character identity while creating the new seated typing pose.
+```
+
+Exact correction prompt:
+
+```text
+Revise this illustration into the final single square transparent PNG. Change only the warm tan fill on both hands and both feet to bone cream #F1E8D6, so warm tan is used on the face only. Preserve the entire composition, character, facial expression, cap lettering "A-OK", hoodie lettering "APES ON KEYS", red headphones, cross-legged pose, mechanical keyboard, finger motion lines, black linework and halftone. Preserve the genuinely transparent background and real alpha channel. No ground shadow, no frame, no additional text.
+```

@@ -1,0 +1,9 @@
+# Generated images, references and system fonts stay local; only scripts, briefs and notes are committable.
+*.png
+*.jpg
+*.jpeg
+*.webp
+claude/assets/fonts/SF-Mono-*
+claude/assets/fonts/ArialBlack.ttf
+claude/assets/fonts/DINCondensedBold.ttf
+.DS_Store

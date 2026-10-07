@@ -1,0 +1,26 @@
+Saved path: `out/0413.png`  
+Pixel size: **1254 × 1254** (PNG)
+
+Exact prompt given to the built-in image tool:
+
+```text
+Use case: ads-marketing
+Asset type: square illustrated screen-print poster, 1024x1024 pixels or larger.
+Create the finished poster for monkey 0413, titled "CONTEXT WINDOW WASHER".
+
+Scene: The A-OK ape stands on a window-washer's suspended platform high on a building, actively squeegeeing one pane of an enormous chat window. Make the window unmistakably a giant chat interface integrated into the building facade, with simple message bubbles and a visible cursor with small blink marks. Show a clear freshly cleaned swath on the pane where the squeegee passes. Include suspension ropes and the platform so the setting reads immediately. Heroic low angle, sunburst rays behind, strong propaganda-poster composition.
+
+Brand character: The A-OK ape has black fur, a warm tan face, eyes wide open, and a round surprised "O" mouth. It wears a red-and-white baseball cap printed exactly "A-OK", red over-ear headphones, and a red hoodie printed exactly "APES ON KEYS". Use bone cream as the white of the cap. Keep the warm tan confined to the face as the sole small accent colour. Make its face and brand details clearly visible.
+
+Style: Bold screen-print poster art, flat colour, confident thick black linework, subtle halftone and paper texture, WPA / propaganda-poster energy. Graphic illustration, not photographic and not 3D-rendered. Dry, specific AI-culture satire, in on its own joke.
+
+Palette: Signal red #C8161D, ink black #0B0B0C, bone cream #F1E8D6; only one small additional accent, the warm tan face. Use this tightly restricted palette across the whole artwork, including the architecture, chat pane, clothing, and sunburst.
+
+Typography and composition: Render all lettering as an integrated part of the poster. Place the large, bold, highly legible title at the top, with deliberate line breaks if needed:
+"CONTEXT WINDOW WASHER"
+Place the slogan in a clear, bold footer:
+"CLEAN CONTEXT. CLEAR CONSCIENCE."
+Spell every word and punctuation exactly as provided. The cap reads "A-OK" and hoodie reads "APES ON KEYS". No other text. Maintain strong hierarchy, generous text margins, and a dominant ape silhouette so the poster reads clearly as a 300px thumbnail. Keep the entire title, slogan, character, and platform within the square frame.
+
+Constraints: No real people or likenesses. No third-party logos or trademarks. No partisan politics. The ape does not smoke or drink. No photographic effects, no 3D rendering, no watermark. Produce one finished square poster.
+```

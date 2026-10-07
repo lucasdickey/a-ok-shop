@@ -48,6 +48,8 @@ export type Product = {
         height: number;
         /** The garment color this photo shows; artwork-only images have none. */
         color?: string;
+        /** Present the chest print close up while retaining the full garment asset. */
+        presentation?: "chest-detail";
       };
     }>;
   };
@@ -123,6 +125,7 @@ export type SimpleProduct = {
         url: string;
         altText: string;
         color?: string;
+        presentation?: "chest-detail";
       };
     }>;
   };
@@ -231,6 +234,7 @@ function loadMappedProducts(): SimpleProduct[] {
           url: edge.node.url,
           altText: edge.node.altText || product.title,
           color: edge.node.color,
+          presentation: edge.node.presentation,
         },
       })),
     },

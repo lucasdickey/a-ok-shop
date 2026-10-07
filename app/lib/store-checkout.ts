@@ -13,7 +13,7 @@ const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const FLAT_SHIPPING_CENTS = 999;
 const MAX_QUANTITY_PER_ITEM = 20;
 /** We only ship to these countries. */
-const SHIPPING_COUNTRIES = ["US", "CA"] as const;
+export const SHIPPING_COUNTRIES = ["US", "CA"] as const;
 
 export type CartItemInput = {
   variantId: string;

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
 import { runOnce } from "@/app/lib/kv";
+import { getProductByHandle, isSameId } from "@/app/lib/catalog";
+import type { MPPItem } from "@/app/types/mpp";
 
 // Support multiple webhook secrets (for different Stripe destinations)
 function getWebhookSecrets() {
@@ -306,7 +308,7 @@ async function sendOwnerOrderAlert(order: Order) {
       "Idempotency-Key": `order-alert-${order.sessionId}`,
     },
     body: JSON.stringify({
-      from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+      from: process.env.ORDER_EMAIL_FROM || "A-OK <orders@a-ok.ai>",
       to: to.split(",").map((address) => address.trim()).filter(Boolean),
       reply_to: order.customerEmail || undefined,
       subject,
@@ -329,7 +331,7 @@ function formatAmount(cents?: number | null) {
 function formatOrderItems(items: any[] = []) {
   return items.map((item: any) => {
     const metadata = item.price?.product?.metadata || item.metadata || {};
-    const description = item.description || item.title || item.handle || item.name || "A-OK Shop item";
+    const description = item.description || item.title || item.handle || item.name || "A-OK item";
     const quantity = item.quantity || 1;
     let itemStr = `${description} x${quantity}`;
 
@@ -396,7 +398,7 @@ async function sendConfirmationEmail(orderData: any) {
     // Determine the store name based on source
     const storeName = orderData.source === "monthly-deals"
       ? "A-OK Monthly Deal"
-      : "A-OK Shop";
+      : "A-OK";
     const subject = `Your ${storeName} Order Confirmation`;
 
     console.log("=== CONFIRMATION EMAIL ===");
@@ -434,7 +436,7 @@ async function sendConfirmationEmail(orderData: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: process.env.ORDER_EMAIL_FROM || "A-OK Shop <orders@a-ok.shop>",
+        from: process.env.ORDER_EMAIL_FROM || "A-OK <orders@a-ok.ai>",
         to: orderData.customerEmail,
         subject,
         html: generateOrderEmailHTML(orderData, storeName),
@@ -553,4 +555,46 @@ async function handleMPPPaymentSucceeded(stripeClient: Stripe, paymentIntent: St
   } catch (error) {
     console.error('[MPP] Error processing successful payment:', error);
   }
+
+  // Outside the try above: a failed alert must fail the webhook so Stripe retries it.
+  const customerEmail = await resolveMPPCustomerEmail(stripeClient, paymentIntent);
+  const order = toMPPOrder(paymentIntent, customerEmail ?? "");
+  await runOnce(`order-alert:${order.sessionId}`, () => sendOwnerOrderAlert(order));
+}
+
+/** Shapes an MPP payment like a Checkout order, so the owner alert has the address, sizes and totals. */
+function toMPPOrder(paymentIntent: Stripe.PaymentIntent, customerEmail: string): Order {
+  const items: OrderItem[] = parseMPPItems(paymentIntent.metadata?.items).map((item: MPPItem) => {
+    const product = getProductByHandle(item.handle);
+    const variant = product?.variants.edges.find((edge) => isSameId(edge.node.id, item.variantId))?.node;
+    const color = variant?.selectedOptions?.find((option) => option.name.toLowerCase() === "color")?.value;
+    return {
+      name: product?.title ?? item.handle,
+      quantity: item.quantity,
+      size: item.size ?? "",
+      color: color ?? "",
+      variantId: item.variantId,
+      sku: variant?.sku ?? "",
+      amountTotal: Math.round(parseFloat(variant?.price.amount ?? "0") * 100) * item.quantity,
+    };
+  });
+  const amountSubtotal = items.reduce((sum, item) => sum + item.amountTotal, 0);
+
+  return {
+    sessionId: paymentIntent.id,
+    paymentIntentId: paymentIntent.id,
+    source: "mpp-agent",
+    createdAt: new Date(paymentIntent.created * 1000),
+    customerName: paymentIntent.metadata?.agentId ?? "",
+    customerEmail,
+    customerPhone: paymentIntent.shipping?.phone ?? "",
+    shippingName: paymentIntent.shipping?.name ?? "",
+    shippingAddress: paymentIntent.shipping?.address ?? null,
+    items,
+    amountSubtotal,
+    amountShipping: Math.max(paymentIntent.amount - amountSubtotal, 0),
+    amountTax: 0,
+    amountTotal: paymentIntent.amount,
+    livemode: paymentIntent.livemode,
+  };
 }

@@ -29,6 +29,7 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
   const price = parseFloat(priceRange.minVariantPrice.amount);
   const imageUrl = images.edges[0]?.node.url || '/images/product-placeholder.jpg';
   const imageAlt = images.edges[0]?.node.altText || title;
+  const isChestDetail = images.edges[0]?.node.presentation === 'chest-detail';
 
   // The product's own type decides when it names a garment, so a tee tagged "red hoodie"
   // (describing the artwork) still reads as a tee. Tags only count when it doesn't.
@@ -65,7 +66,11 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
             fill
             priority={priority}
             sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-[1.035] motion-reduce:transition-none"
+            className={`object-cover transition-transform duration-300 motion-reduce:transition-none ${
+              isChestDetail
+                ? 'scale-[2] origin-[50%_10%] object-[50%_30%] group-hover:scale-[2.07]'
+                : 'group-hover:scale-[1.035]'
+            }`}
             unoptimized={!imageUrl.startsWith('http')}
           />
         </div>
