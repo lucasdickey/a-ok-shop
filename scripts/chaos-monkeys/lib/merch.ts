@@ -71,25 +71,17 @@ export const MODELS: Record<ShopColor, string> = {
   Navy: "a person in their twenties with a short bleached crop",
 };
 
-/** The brand's black ink. */
-const INK = "#0b0b0c";
-
-function luminance(hex: string): number {
-  const [r, g, b] = [1, 3, 5].map((i) => {
-    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
 /**
- * Dark garments get the light-ink artwork: any colour where the brand's black ink falls below 3:1 contrast
- * (Black, Navy, and royal Blue on both blanks). Black ink on those is barely visible, and on black it disappears.
+ * Whether a colour prints the light-ink art instead of the original, given the share of each version's inked area
+ * that would be hard to see on that fabric (under 3:1 contrast, measured by the renderer). Light ink wins only by
+ * a clear margin, so a colour where both read keeps the original.
  */
-export function needsLightInk(swatch: string): boolean {
-  const [a, b] = [luminance(swatch), luminance(INK)].sort((x, y) => y - x);
-  return (a + 0.05) / (b + 0.05) < 3;
+export function prefersLightInk(weakOriginal: number, weakLight: number): boolean {
+  return weakLight < weakOriginal - 0.03;
 }
+
+/** A colour where more of the print than this would be hard to see, whichever version it uses, isn't offered. */
+export const MAX_HARD_TO_SEE = 0.45;
 
 /** How wide the art prints and at what resolution: as wide as the blank allows without dropping below 150 DPI. */
 export function printSize(blank: Blank, artPixels: number): { inches: number; dpi: number } {
@@ -143,6 +135,8 @@ export type MerchProduct = {
   printFile: string;
   printFileLight?: string | null;
   lightInk?: ShopColor[];
+  /** The colours this product comes in: every shop colour the print reads on. */
+  colors?: ShopColor[];
   inches: number;
   dpi: number;
   mockups: Mockup[];

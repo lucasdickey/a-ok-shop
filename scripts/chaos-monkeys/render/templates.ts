@@ -708,6 +708,27 @@ async function sheet(spec: SheetSpec): Promise<HTMLCanvasElement> {
   return c;
 }
 
+/**
+ * How much of a print would be hard to see on each garment colour: the share of its inked area whose contrast
+ * against the fabric is under 3:1. Used to choose, colour by colour, between the art and its light-ink version.
+ */
+async function measure(spec: { image: string; colors: string[] }): Promise<number[]> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(img.naturalWidth, img.naturalHeight);
+  const ctx = context(c);
+  ctx.drawImage(img, 0, 0);
+  const p = ctx.getImageData(0, 0, c.width, c.height).data;
+  const linear = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+  const lum = (r: number, g: number, b: number) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+  const inks: number[] = [];
+  for (let i = 0; i < p.length; i += 4) if (p[i + 3] > 128) inks.push(lum(p[i], p[i + 1], p[i + 2]));
+  return spec.colors.map((hex) => {
+    const fabric = lum(parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16));
+    const weak = inks.filter((ink) => (Math.max(ink, fabric) + 0.05) / (Math.min(ink, fabric) + 0.05) < 3).length;
+    return inks.length ? weak / inks.length : 0;
+  });
+}
+
 /* ------------------------------------------------------------------ entry point */
 
 async function render(spec: Spec): Promise<string> {
@@ -720,8 +741,9 @@ async function render(spec: Spec): Promise<string> {
   return encode(c, spec.format, spec.quality);
 }
 
-const page = window as unknown as { render: typeof render; READY: boolean; ERROR: string | null };
+const page = window as unknown as { render: typeof render; measure: typeof measure; READY: boolean; ERROR: string | null };
 page.render = render;
+page.measure = measure;
 page.READY = false;
 page.ERROR = null;
 Promise.all(["40px Bebas", "500 20px Mono", "700 20px Mono", "40px ArialBlack"].map((font) => document.fonts.load(font)))

@@ -90,7 +90,7 @@ Save the final image in the current directory as out.png (copy it from where the
 function lightInkPrompt(): string {
   return `You are re-inking one finished print for A-OK, an AI-culture streetwear label, the way a screen printer prepares a design for dark shirts (black, navy, royal blue).
 
-The attached image is the artwork as printed on light shirts.
+The attached image is the artwork as printed on light shirts. Keep its pixel size.
 
 ${TOOL_RULES}
 
@@ -104,7 +104,8 @@ Save the final image in the current directory as out.png (copy it from where the
 
 /** Re-inks `art` for dark garments in `jobDir` and returns the path of out.png (transparent). */
 export async function lightInk(art: string, jobDir: string): Promise<string> {
-  return generate(lightInkPrompt(), jobDir, [art], { alpha: true });
+  // The re-ink keeps the art's own size, which can be under the usual 1000-pixel floor.
+  return generate(lightInkPrompt(), jobDir, [art], { alpha: true, minSize: 600 });
 }
 
 export type MockupJob = { art: string; garment: "tee" | "hoodie"; blank: string; color: string; hex: string; model: string; inches: number };
@@ -120,7 +121,7 @@ export async function illustrate(brief: Brief, jobDir: string, refs: string[], m
 }
 
 /** One `codex exec` image job: writes out.png in `jobDir`, or throws (AstraUnavailable on a usage limit). */
-async function generate(prompt: string, jobDir: string, refs: string[], options: { alpha: boolean }): Promise<string> {
+async function generate(prompt: string, jobDir: string, refs: string[], options: { alpha: boolean; minSize?: number }): Promise<string> {
   fs.mkdirSync(jobDir, { recursive: true });
   const localRefs = refs.map((ref, i) => {
     const target = path.join(jobDir, `ref-${i + 1}${path.extname(ref)}`);
@@ -158,7 +159,8 @@ async function generate(prompt: string, jobDir: string, refs: string[], options:
     if (LIMIT_PATTERN.test(evidence)) throw new AstraUnavailable(`Codex reported a usage limit (exit ${result.code})`);
     throw new Error(`no out.png (exit ${result.code}): ${lastMessage.slice(0, 300) || result.stderr.slice(-300)}`);
   }
-  if (info.width < 1000 || info.height < 1000) throw new Error(`image too small: ${info.width}x${info.height}`);
+  const minSize = options.minSize ?? 1000;
+  if (info.width < minSize || info.height < minSize) throw new Error(`image too small: ${info.width}x${info.height}`);
   if (options.alpha && !info.alpha) throw new Error("cutout has no alpha channel");
   return out;
 }

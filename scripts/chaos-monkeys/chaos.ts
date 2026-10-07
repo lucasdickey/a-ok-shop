@@ -64,7 +64,8 @@ import {
   idAllocator,
   loadMerch,
   merchDir,
-  needsLightInk,
+  MAX_HARD_TO_SEE,
+  prefersLightInk,
   printSize,
   printfulCatalog,
   saveMerch,
@@ -672,9 +673,12 @@ function printfulNotes(merch: Merch): string {
   for (const p of merch.products) {
     const blank = BLANKS[p.garment];
     const dark = new Set(p.lightInk ?? []);
+    const offered = p.colors ?? [...SHOP_COLORS];
     lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
-    lines.push(`- \`${p.printFile}\`: ${SHOP_COLORS.filter((c) => !dark.has(c)).map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
-    if (p.printFileLight && dark.size) lines.push(`- \`${p.printFileLight}\` (light ink): ${[...dark].map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    const original = offered.filter((c) => !dark.has(c));
+    if (original.length) lines.push(`- \`${p.printFile}\`: ${original.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    const light = offered.filter((c) => dark.has(c));
+    if (p.printFileLight && light.length) lines.push(`- \`${p.printFileLight}\` (light ink): ${light.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
     lines.push("- Each catalog variant's SKU is `printful-<variant id>`; the Stripe price for it names its print file.", "");
   }
   return lines.join("\n");
@@ -734,13 +738,24 @@ async function printMerch(options: Options): Promise<void> {
       for (const garment of garments) {
         const blank = BLANKS[garment];
         const { swatch } = printful.get(garment) as Awaited<ReturnType<typeof printfulCatalog>>;
-        const lightColors = light ? SHOP_COLORS.filter((color) => needsLightInk(swatch[color])) : [];
+        // Colour by colour, print whichever version leaves less of the art hard to see on that fabric.
+        const colors = SHOP_COLORS.map((color) => swatch[color]);
+        const weakOriginal = await renderer.measure({ image: `/merch/${merchId}/${merch.art}`, colors });
+        const weakLight = light ? await renderer.measure({ image: `/merch/${merchId}/${merch.artLight}`, colors }) : null;
+        const lightColors = weakLight ? SHOP_COLORS.filter((_, i) => prefersLightInk(weakOriginal[i], weakLight[i])) : [];
+        const weakChosen = SHOP_COLORS.map((color, i) => (weakLight && lightColors.includes(color) ? weakLight[i] : weakOriginal[i]));
+        const offered = SHOP_COLORS.filter((_, i) => weakChosen[i] <= MAX_HARD_TO_SEE);
+        const dropped = SHOP_COLORS.filter((color) => !offered.includes(color));
+        if (dropped.length) log(`${merchId} ${garment}: not offered in ${dropped.join(", ")}: too much of the print would be hard to see`);
+        log(
+          `${merchId} ${garment}: share of the print hard to see, original${weakLight ? " / light ink" : ""}: ${SHOP_COLORS.map((color, i) => `${color} ${Math.round(weakOriginal[i] * 100)}%${weakLight ? `/${Math.round(weakLight[i] * 100)}%` : ""}`).join(", ")}`,
+        );
         // As wide as the blank and the art's resolution allow, short enough to fit the print area under a 1-inch top
         // margin, and the same size in every colour.
-        const arts = light ? [art, light] : [art];
+        const arts = lightColors.length && light ? [art, light] : [art];
         const inches = Math.min(...arts.map((a) => Math.min(printSize(blank, a.width).inches, Math.floor(((blank.area.height - 1) * a.width * 10) / a.height) / 10)));
         const dpi = Math.round(Math.min(...arts.map((a) => a.width)) / inches);
-        const files: Array<[string, string]> = [[`print-${garment}.png`, merch.art], ...(light ? [[`print-${garment}-light-ink.png`, merch.artLight as string] as [string, string]] : [])];
+        const files: Array<[string, string]> = [[`print-${garment}.png`, merch.art], ...(lightColors.length ? [[`print-${garment}-light-ink.png`, merch.artLight as string] as [string, string]] : [])];
         for (const [file, source] of files) {
           fs.writeFileSync(
             path.join(dir, file),
@@ -767,10 +782,11 @@ async function printMerch(options: Options): Promise<void> {
           copy: null,
           sold: null,
         };
-        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, inches, dpi });
+        // New colours mean new copy: it lists them.
+        if (product.copy && (product.colors ?? SHOP_COLORS).join() !== offered.join()) product.copy = null;
+        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, colors: offered, inches, dpi });
         if (!kept) merch.products.push(product);
       }
-      fs.writeFileSync(path.join(dir, "PRINTFUL.md"), printfulNotes(merch));
       saveMerch(merch);
       merches.push(merch);
     }
@@ -782,7 +798,10 @@ async function printMerch(options: Options): Promise<void> {
   type Job = { merch: Merch; product: MerchProduct; mockup: Mockup };
   const artFor = (merch: Merch, product: MerchProduct, color: ShopColor) =>
     merch.artLight && product.lightInk?.includes(color) ? merch.artLight : merch.art;
-  const wanted = (job: Job) => !job.product.sold && GARMENT_KINDS.includes(job.product.garment) && picks.some((p) => `${id}-${p.d.n}` === job.merch.id && p.garments.includes(job.product.garment));
+  const wanted = (job: Job) =>
+    !job.product.sold &&
+    (job.product.colors ?? SHOP_COLORS).includes(job.mockup.color) &&
+    picks.some((p) => `${id}-${p.d.n}` === job.merch.id && p.garments.includes(job.product.garment));
   const all: Job[] = merches.flatMap((merch) => merch.products.flatMap((product) => product.mockups.map((m) => ({ merch, product, mockup: m })))).filter(wanted);
   // A photo taken with the other artwork (say, before light ink existed) is taken again.
   for (const { merch, product, mockup: m } of all) {
@@ -854,7 +873,7 @@ async function printMerch(options: Options): Promise<void> {
       const dir = merchDir(merch.id);
       const d = record.drafts.find((x) => x.n === merch.n) as Draft;
       for (const m of merch.products.flatMap((p) => p.mockups.map((x) => ({ p, x })))) {
-        if (!m.x.image) continue;
+        if (!m.x.image || !(m.p.colors ?? SHOP_COLORS).includes(m.x.color)) continue;
         m.x.web = `web/${m.p.garment}-${m.x.color.toLowerCase()}.webp`;
         fs.writeFileSync(path.join(dir, m.x.web), await renderer.render({ kind: "cover", image: `/merch/${merch.id}/${m.x.image}`, ...PHOTO, format: "webp", quality: 0.9, focusY: 0.35 }));
       }
@@ -862,7 +881,7 @@ async function printMerch(options: Options): Promise<void> {
       if (needCopy.length) {
         const copies = await writeProductCopy(
           dir,
-          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...SHOP_COLORS], inches: p.inches, lightInk: p.lightInk ?? [], brief: d.brief })),
+          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...(p.colors ?? SHOP_COLORS)], inches: p.inches, lightInk: p.lightInk ?? [], brief: d.brief })),
           { title: example.title, descriptionHtml: example.descriptionHtml, tags: example.tags },
           [...taken],
         );
@@ -883,8 +902,9 @@ async function printMerch(options: Options): Promise<void> {
         }
       }
       saveMerch(merch);
+      fs.writeFileSync(path.join(dir, "PRINTFUL.md"), printfulNotes(merch));
       const items = merch.products.flatMap((p) =>
-        p.mockups.map((m, i) => ({
+        p.mockups.filter((m) => (p.colors ?? SHOP_COLORS).includes(m.color)).map((m, i) => ({
           n: i + 1,
           image: m.image ? `/merch/${merch.id}/${m.image}` : null,
           title: `${m.color} ${p.garment}`.toUpperCase(),
@@ -903,8 +923,9 @@ async function printMerch(options: Options): Promise<void> {
           topic: null,
           items,
         }));
-      const ready = merch.products.every((p) => p.copy && p.mockups.every((m) => m.web));
-      const weak = merch.products.flatMap((p) => p.mockups.filter((m) => m.score !== null && m.score < 7).map((m) => `${p.garment} ${m.color}`));
+      const offeredMockups = (p: MerchProduct) => p.mockups.filter((m) => (p.colors ?? SHOP_COLORS).includes(m.color));
+      const ready = merch.products.every((p) => p.copy && offeredMockups(p).every((m) => m.web));
+      const weak = merch.products.flatMap((p) => offeredMockups(p).filter((m) => m.score !== null && m.score < 7).map((m) => `${p.garment} ${m.color}`));
       log(`${merch.id}: ${merch.products.map((p) => `${p.copy?.title ?? p.garment} (${p.inches} in, ${p.dpi} DPI)`).join(", ")}`);
       log(`  sheet: ${path.join(dir, "sheet.png")}${weak.length ? `; check: ${weak.join(", ")}` : ""}`);
       log(ready ? `  next: chaos sell ${merch.id}` : "  not ready to sell yet: some photos or copy are missing; run chaos print again");
@@ -933,12 +954,13 @@ async function sell(options: Options): Promise<void> {
   for (const merch of merches) {
     for (const p of merch.products.filter((x) => !x.sold)) {
       if (!p.copy) throw new Error(`${merch.id} ${p.garment} has no copy yet; run chaos print`);
-      const missing = p.mockups.filter((m) => !m.web).map((m) => m.color);
+      const offered = p.mockups.filter((m) => (p.colors ?? SHOP_COLORS).includes(m.color));
+      const missing = offered.filter((m) => !m.web).map((m) => m.color);
       if (missing.length) throw new Error(`${merch.id} ${p.garment} is missing photos for ${missing.join(", ")}; run chaos print`);
       if (p.lightInk?.length && (merch.artLightCheck?.score ?? 0) < 7 && !options.flags.has("--force")) {
         throw new Error(`${merch.id}: the light-ink art for dark garments failed its check (${merch.artLightCheck?.note ?? "never made"}); rerun chaos print, or pass --force`);
       }
-      const weak = p.mockups.filter((m) => (m.score ?? 0) < 7).map((m) => m.color);
+      const weak = offered.filter((m) => (m.score ?? 0) < 7).map((m) => m.color);
       if (weak.length && !options.flags.has("--force")) throw new Error(`${merch.id} ${p.garment}: the check flagged ${weak.join(", ")}; look at the sheet, then pass --force to sell anyway`);
     }
   }
@@ -956,7 +978,7 @@ async function sell(options: Options): Promise<void> {
       const copy = product.copy as NonNullable<MerchProduct["copy"]>;
       if (catalog.products.edges.some((e) => e.node.handle === copy.handle)) throw new Error(`the shop already has a product called ${copy.handle}`);
       const { swatch, variant } = await printfulCatalog(blank);
-      const images = product.mockups.map((m) => {
+      const images = product.mockups.filter((m) => (product.colors ?? SHOP_COLORS).includes(m.color)).map((m) => {
         const relative = `${PRODUCT_IMAGE_DIR}/${copy.handle}-${m.color.toLowerCase()}.webp`;
         fs.mkdirSync(path.dirname(path.join(SITE_DIR, relative)), { recursive: true });
         fs.copyFileSync(path.join(merchDir(merch.id), m.web as string), path.join(SITE_DIR, relative));
@@ -996,7 +1018,7 @@ async function sell(options: Options): Promise<void> {
   const message = [
     `Add ${added.map((a) => a.node.title).join(", ")}`,
     "",
-    ...added.map(({ node, merch, product }) => `- ${node.title}: Chaos Monkeys ${merch.run} draft ${merch.n}, printed ${product.inches} in wide on the ${BLANKS[product.garment].name}, in ${SHOP_COLORS.join(", ")}`),
+    ...added.map(({ node, merch, product }) => `- ${node.title}: Chaos Monkeys ${merch.run} draft ${merch.n}, printed ${product.inches} in wide on the ${BLANKS[product.garment].name}, in ${(product.colors ?? SHOP_COLORS).join(", ")}`),
     "",
     "Print files, model photos and copy by `chaos print`; photos by GPT-6-Astra, copy by Claude.",
   ].join("\n");

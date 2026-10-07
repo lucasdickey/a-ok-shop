@@ -58,6 +58,8 @@ const stripTypes = (nodeModule as unknown as { stripTypeScriptTypes: Strip }).st
 export type Renderer = {
   /** Calls `render(spec)` in the page and returns the encoded image. */
   render(spec: object): Promise<Buffer>;
+  /** Calls `measure(spec)` in the page and returns its numbers. */
+  measure(spec: { image: string; colors: string[] }): Promise<number[]>;
   close(): Promise<void>;
 };
 
@@ -153,6 +155,11 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
       const dataUrl = await evaluate(`render(${JSON.stringify(spec)})`);
       if (typeof dataUrl !== "string" || !dataUrl.startsWith("data:image/")) throw new Error("render returned no image");
       return Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
+    },
+    async measure(spec: { image: string; colors: string[] }): Promise<number[]> {
+      const values = await evaluate(`measure(${JSON.stringify(spec)})`);
+      if (!Array.isArray(values)) throw new Error("measure returned no numbers");
+      return values as number[];
     },
     async close(): Promise<void> {
       socket.close();
