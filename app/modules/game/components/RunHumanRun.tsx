@@ -578,7 +578,7 @@ export default function RunHumanRun() {
         {ended && (
           <div className="absolute inset-0 flex items-center justify-center overflow-auto bg-club-blue-dark/60 p-4">
             <div className="receipt-slip w-full max-w-sm text-dark" role="dialog" aria-modal="false" aria-labelledby="run-result">
-              <p className="micro border-b border-dashed border-dark pb-3 text-center">A–OK® · UBI credit receipt</p>
+              <p className="micro border-b border-dashed border-dark pb-3 text-center">A–OK · UBI credit receipt</p>
               <h3 id="run-result" className="display-heading mt-4 text-5xl">
                 {hud.phase === "won" ? "You got out." : "Caught."}
               </h3>

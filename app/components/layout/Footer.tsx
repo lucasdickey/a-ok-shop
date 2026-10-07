@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { FaYoutube, FaSpotify, FaGithub, FaSoundcloud } from 'react-icons/fa';
 
@@ -16,7 +17,7 @@ export default function Footer() {
           className="w-full font-[Arial,sans-serif] text-[88px] font-bold leading-none tracking-[-0.09em] no-underline sm:w-auto lg:text-[clamp(70px,10vw,145px)]"
           aria-label="A-OK home"
         >
-          A–OK<span className="align-top text-xl tracking-normal">®</span>
+          A–OK
         </Link>
         <p className="font-mono text-[11px] leading-relaxed sm:text-xs">
           APES ON KEYS.
@@ -25,7 +26,26 @@ export default function Footer() {
           <br />
           THANKS FOR BEING WEIRD.
         </p>
-        <div className="barcode h-8 w-full lg:ml-auto lg:h-16 lg:w-[210px]" aria-hidden="true" />
+        {/* A real QR code for https://a-ok.ai (generated once; public/images/a-ok-qr.svg). */}
+        <Link
+          href="/"
+          className="flex items-center gap-3 no-underline lg:ml-auto"
+          aria-label="A-OK home (QR code for a-ok.ai)"
+        >
+          <Image
+            src="/images/a-ok-qr.svg"
+            alt=""
+            width={96}
+            height={96}
+            unoptimized
+            className="h-20 w-20 border-2 border-dark bg-club-slip p-1.5 shadow-hard-sm lg:h-24 lg:w-24"
+          />
+          <span className="micro text-[10px] leading-relaxed">
+            Scan me.
+            <br />
+            a-ok.ai
+          </span>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-8 border-t-2 border-dashed border-dark py-8 text-sm sm:grid-cols-2 lg:grid-cols-4">

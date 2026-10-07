@@ -1,73 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import ImageGrid from "@/app/components/ImageGrid";
 import ChaosMonkeyCard from "@/app/components/ChaosMonkeyCard";
 import PrintRequestButton from "@/app/components/PrintRequestButton";
 import Asterisk from "@/app/components/Asterisk";
+import MonkeyTheorem from "@/app/components/MonkeyTheorem";
 import ProductCard from "@/app/components/product/ProductCard";
 import type { SimpleProduct } from "@/app/lib/catalog";
-import { formatDropDate, getChaosMonkeys, getLatestDrop } from "@/app/lib/chaos-monkeys";
-import fs from "fs";
-import path from "path";
-
-// Function to get gallery images either from JSON file or API
-async function getGalleryImages() {
-  // During build time or in production, use the pre-generated JSON file
-  if (
-    process.env.NODE_ENV === "production" ||
-    process.env.NEXT_PHASE === "phase-production-build"
-  ) {
-    try {
-      const imageListPath = path.join(
-        process.cwd(),
-        "app",
-        "data",
-        "image-list.json"
-      );
-      const imageList = JSON.parse(fs.readFileSync(imageListPath, "utf8"));
-      console.log(
-        `Loaded ${imageList.length} images from pre-generated list during build`
-      );
-      return imageList;
-    } catch (error) {
-      console.error("Error reading pre-generated image list:", error);
-      return [];
-    }
-  }
-
-  // In development, fetch from API
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    console.log(`Fetching gallery images from: ${baseUrl}/api/local-gallery`);
-
-    const galleryResponse = await fetch(`${baseUrl}/api/local-gallery`, {
-      next: { revalidate: 3600 },
-    });
-
-    if (galleryResponse.ok) {
-      const galleryData = await galleryResponse.json();
-      if (galleryData?.images && Array.isArray(galleryData.images)) {
-        const validImages = galleryData.images.filter((img: any) => {
-          if (typeof img === "string") return true;
-          return img && img.url && typeof img.url === "string";
-        });
-
-        console.log("Gallery images by source:");
-        const localImgs = validImages.filter(
-          (img: any) => img.source === "local"
-        );
-        console.log(`- Local images: ${localImgs.length}`);
-
-        return validImages;
-      }
-    }
-    console.error(`Failed to fetch gallery images: ${galleryResponse.status}`);
-    return [];
-  } catch (error) {
-    console.error("Error fetching gallery images:", error);
-    return [];
-  }
-}
+import { getChaosMonkeys } from "@/app/lib/chaos-monkeys";
 
 // Dynamically import the catalog functionality
 const getFeaturedProductsData = async () => {
@@ -79,6 +18,9 @@ const getFeaturedProductsData = async () => {
     return [];
   }
 };
+
+// The newest Chaos Monkeys fill a 3×2 grid; the rest live on /chaos-monkeys.
+const RECENT_MONKEYS = 6;
 
 /** Receipt-style section label and headline used down the homepage. */
 function SectionHeading({
@@ -116,14 +58,8 @@ export default async function Home() {
     console.error("Error fetching featured products:", error);
   }
 
-  // Get gallery images using the new function. Published Chaos Monkeys join the grid's pool.
-  const chaosMonkeyImages = getChaosMonkeys().map((monkey) => ({
-    name: monkey.title,
-    url: monkey.image,
-    source: "chaos-monkeys",
-  }));
-  const galleryImages = [...chaosMonkeyImages, ...(await getGalleryImages())];
-  const latestDrop = getLatestDrop();
+  const allMonkeys = getChaosMonkeys();
+  const recentMonkeys = allMonkeys.slice(0, RECENT_MONKEYS);
 
   // The hero ticket comes from the first featured product. The club photo stays on the
   // real-person hoodie shot ("Real human."), whatever is featured.
@@ -137,8 +73,8 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[1.07fr_1fr]">
-        <div className="px-5 pb-2 pt-8 sm:px-8 lg:px-[4vw] lg:pb-8 lg:pt-12">
+      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[0.82fr_1fr]">
+        <div className="px-5 pb-2 pt-8 sm:px-8 lg:pb-8 lg:pl-[4vw] lg:pr-[2vw] lg:pt-12">
           <p className="micro flex items-center gap-2 text-[10px] sm:text-[11px]">
             <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
             The hallucination club / open to all
@@ -164,8 +100,8 @@ export default async function Home() {
           <Link href="/products" className="btn btn-primary min-h-[52px] justify-between gap-6 px-5">
             {/* On the narrowest phones this breaks between the two sentences, never inside one. */}
             <span>
-              <span className="whitespace-nowrap">Find your people.</span>{" "}
-              <span className="whitespace-nowrap">Wear the tee.</span>
+              <span className="whitespace-nowrap">Shop the collection.</span>{" "}
+              <span className="whitespace-nowrap">Join the club.</span>
             </span>
             <span aria-hidden="true">↗</span>
           </Link>
@@ -290,7 +226,7 @@ export default async function Home() {
             {productsToShow.length} featured line {productsToShow.length === 1 ? "item" : "items"}
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-14">
           {productsToShow.map((product, index) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}
@@ -386,17 +322,17 @@ export default async function Home() {
           at work.
         </SectionHeading>
 
-        {latestDrop.length > 0 && (
+        {recentMonkeys.length > 0 && (
           <>
             <p className="micro mb-6 flex justify-between gap-4">
-              <span>Latest drop · {formatDropDate(latestDrop[0].date)}</span>
+              <span>The latest {recentMonkeys.length}</span>
               <span className="sm:hidden" aria-hidden="true">
                 Swipe →
               </span>
             </p>
-            {/* Phones swipe through the drop sideways; wider screens get a grid. */}
-            <div className="-mx-5 mb-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
-              {latestDrop.map((monkey, index) => (
+            {/* Phones swipe through them sideways; wider screens get a grid (3×2 on desktop). */}
+            <div className="-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+              {recentMonkeys.map((monkey, index) => (
                 <div
                   key={monkey.id}
                   className={`group w-[80%] shrink-0 snap-center border-2 border-dark sm:w-auto bg-club-paper p-3 pb-4 text-dark shadow-hard-lg transition-transform motion-reduce:transition-none ${
@@ -411,24 +347,19 @@ export default async function Home() {
                 </div>
               ))}
             </div>
+            {allMonkeys.length > recentMonkeys.length && (
+              <Link
+                href="/chaos-monkeys"
+                className="micro mt-8 flex min-h-[44px] items-center justify-between border-y-2 border-dashed border-club-paper py-3 text-club-paper no-underline hover:underline"
+              >
+                <span>
+                  + {allMonkeys.length - recentMonkeys.length} more in the archive
+                </span>
+                <span aria-hidden="true">↗</span>
+              </Link>
+            )}
           </>
         )}
-
-        <div className="border-2 border-dark bg-club-paper p-3 text-dark shadow-hard-lg sm:p-5">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <p className="micro">Fig. 04 / The whole archive, shuffling</p>
-            <Link href="/gallery" className="micro inline-flex min-h-[44px] items-center">
-              Enter the art archive ↗
-            </Link>
-          </div>
-          {galleryImages.length > 0 ? (
-            <ImageGrid images={galleryImages} title="CHAOS MONKEYS AT WORK" />
-          ) : (
-            <p className="micro border-2 border-dashed border-dark p-8 text-center">
-              Image gallery is currently loading or unavailable.
-            </p>
-          )}
-        </div>
       </section>
 
       {/* The fine print */}
@@ -438,79 +369,7 @@ export default async function Home() {
           <br />
           apes on keys?
         </SectionHeading>
-        <div className="receipt-slip mx-auto max-w-3xl p-0">
-          <div className="micro flex flex-wrap justify-between gap-2 border-b border-dashed border-dark px-5 py-3">
-            <span>monkey_theorem.md</span>
-            <span>commit 42a7f9e · Updated October 2025</span>
-          </div>
-          <div className="h-[420px] overflow-y-auto px-5 py-5 font-mono text-[13px] leading-relaxed" tabIndex={0} aria-label="The E/ACC Monkey Theorem">
-            <p className="mb-4">
-              <span className="font-bold text-primary">The E/ACC Monkey Theorem</span> states that if you give an
-              infinite number of AI models an infinite amount of compute, they will eventually generate every
-              possible text, image, video, and piece of code – including all of Shakespeare&apos;s works, their
-              various HBO adaptations, and at least 47 different AI-generated musicals where Hamlet raps.
-            </p>
-            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
-              <p className="micro mb-1 text-[10px]">+ Added in PR #238 (Oct 2025)</p>
-              <p>
-                Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku and OpenAI&apos;s GPT-5-mini,
-                we&apos;ve observed a 300% increase in AI-generated Shakespearean sonnets about blockchain
-                technology. The new multimodal capabilities have also resulted in an explosion of AI-generated
-                Renaissance paintings featuring historical figures wearing VR headsets and &quot;Web3
-                Enthusiast&quot; t-shirts.
-              </p>
-            </div>
-            <p className="mb-4 text-dark-light line-through decoration-primary">
-              However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
-              cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
-              of &quot;To yeet or not to yeet.&quot; The models will perpetually insist they&apos;re unsure about
-              events after their training cutoff date&quot; even when discussing events from the 16th century.
-            </p>
-            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
-              <p className="micro mb-1 text-[10px]">+ Replaced in PR #238 (Oct 2025)</p>
-              <p>
-                However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
-                cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
-                of &quot;To yeet or not to yeet.&quot; Despite the late 2025 introduction of &quot;temporal
-                awareness&quot; features, the models still perpetually insist they&apos;re &quot;unsure about
-                events after their training cutoff date&quot; even when discussing events from the 16th century or
-                when asked about Shakespeare&apos;s opinion on the Mars colony.
-              </p>
-            </div>
-            <p className="mb-4">
-              Unlike the original typing monkeys who would take eons to produce anything coherent, modern AI can
-              generate nonsense at unprecedented speeds and with unwavering confidence. They&apos;ll even add
-              citations to completely imaginary academic papers and insist they&apos;re being helpful while doing
-              so.
-            </p>
-            <div className="mb-4 border-l-4 border-dark bg-club-yellow/50 p-3">
-              <p className="micro mb-1 text-[10px]">+ Comment by @monkeydev (Nov 2025)</p>
-              <p className="italic">
-                The November 2025 &quot;Citation Verification Protocol&quot; has only made this worse. Now AIs
-                create elaborate fake DOIs and even generate QR codes linking to non-existent journal websites that
-                return 404 errors in extremely professional-looking fonts.
-              </p>
-            </div>
-            <p className="mb-4">
-              The theorem suggests that somewhere in this infinite digital soup of content, there exists a perfect
-              reproduction of Romeo and Juliet – though it&apos;s probably tagged as &quot;not financial
-              advice&quot; and ends with a prompt to like and subscribe.
-            </p>
-            <p className="mb-4 border border-dashed border-dark p-3">
-              <span className="italic text-dark-light">Note:</span> This theorem has been reviewed by approximately
-              2.7 million AI models, each claiming to have a knowledge cutoff date that makes them unable to verify
-              their own existence.
-            </p>
-            <div className="border-l-4 border-club-blue bg-club-sky/60 p-3">
-              <p className="micro mb-1 text-[10px]">i Updated Dec 2025</p>
-              <p>
-                As of December 2025, this number has increased to 4.3 million models, with several now claiming to
-                have &quot;quantum uncertainty&quot; about their training cutoff dates, existing in a superposition
-                of both knowing and not knowing information until a user query collapses their knowledge state.
-              </p>
-            </div>
-          </div>
-        </div>
+        <MonkeyTheorem />
       </section>
 
       {/* Bonus item: the game */}
