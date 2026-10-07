@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { buildProductJsonLd, productMarkdownUrl } from "@/app/lib/agent-docs";
 import { getProductByHandle } from "@/app/lib/catalog";
-import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
+import { CLOTHING_SIZES, getClothingSizes, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
 
 export const dynamic = "force-dynamic";
@@ -133,10 +133,10 @@ export default async function ProductPage({
       )
     );
 
-  // Every tee and hoodie is printed on demand, so every standard size is offered.
+  // Printed on demand in the sizes supported by this garment blank.
   if (isClothingItem) {
     sizeValues.length = 0; // Clear any existing sizes to ensure consistent ordering
-    sizeValues.push(...CLOTHING_SIZES);
+    sizeValues.push(...getClothingSizes(product));
   }
 
   // Sort sizes in the standard order

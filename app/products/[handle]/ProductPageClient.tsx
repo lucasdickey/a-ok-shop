@@ -64,7 +64,7 @@ export function SizeSelector({
   return (
     <div className="mt-6">
       <label htmlFor="size-select" className="micro mb-2 block">
-        Size / XS–2XL
+        Size / {sizes[0]}–{sizes[sizes.length - 1]}
       </label>
       <select
         id="size-select"

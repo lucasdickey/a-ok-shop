@@ -23,9 +23,9 @@ const CATALOG_PATH = path.join(__dirname, '..', 'product-catalog.json');
 // Every tee and hoodie is printed on demand in these sizes. Same list as app/lib/sizes.ts.
 const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
 // Same rule as isClothing() in app/lib/sizes.ts: product type or any tag.
-const sizesFor = (productType = '', tags = []) =>
-  [productType, ...tags].some((value) => /t-shirt|tshirt|hoodie/i.test(value))
-    ? CLOTHING_SIZES.join(',')
+const sizesFor = (productType = '', tags = [], supportedSizes = CLOTHING_SIZES) =>
+  [productType, ...tags].some((value) => /t-shirt|tshirt|hoodie|sweatshirt/i.test(value))
+    ? supportedSizes.join(',')
     : '';
 const DRY_RUN = process.argv.includes('--dry-run');
 const UPDATE_MODE = process.argv.includes('--update');
@@ -89,7 +89,7 @@ async function main() {
               handle: product.handle,
               productType: product.productType || '',
               vendor: product.vendor || '',
-              sizes: sizesFor(product.productType, product.tags),
+              sizes: sizesFor(product.productType, product.tags, product.supportedSizes),
             },
             active: product.availableForSale !== false,
           });
@@ -106,7 +106,7 @@ async function main() {
               handle: product.handle,
               productType: product.productType || '',
               vendor: product.vendor || '',
-              sizes: sizesFor(product.productType, product.tags),
+              sizes: sizesFor(product.productType, product.tags, product.supportedSizes),
             },
             active: product.availableForSale !== false,
           });

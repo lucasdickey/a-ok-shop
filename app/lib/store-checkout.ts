@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { getAllProducts, isSameId, type SimpleProduct } from "@/app/lib/catalog";
-import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
+import { getClothingSizes, isClothing } from "@/app/lib/sizes";
 
 /*
  * Turns a cart into a Stripe Checkout Session. Shared by the store's own checkout
@@ -60,9 +60,9 @@ function getOption(variant: ProductVariant, name: string): string | undefined {
 type Resolved = { product: SimpleProduct; variant: ProductVariant; size?: string };
 
 /**
- * Resolve the variant the customer actually picked, by color. Tees and hoodies
- * are printed on demand in any of CLOTHING_SIZES, so size is not part of the
- * match: it must be one of those sizes and is recorded on the order instead.
+ * Resolve the variant the customer actually picked, by color. Clothing is
+ * printed on demand in its supported sizes; the chosen size is validated
+ * against the garment blank and recorded on the order.
  */
 function resolveVariant(
   products: SimpleProduct[],
@@ -77,7 +77,7 @@ function resolveVariant(
   if (isClothing(product.productType, product.tags)) {
     // Only accept known sizes: this value ends up in Stripe metadata and the owner's email.
     if (!item.size) return { error: `Choose a size for ${product.title}` };
-    if (!CLOTHING_SIZES.includes(item.size)) {
+    if (!getClothingSizes(product).includes(item.size)) {
       return { error: `${item.size.slice(0, 10)} is no longer offered for ${product.title}` };
     }
     size = item.size;
