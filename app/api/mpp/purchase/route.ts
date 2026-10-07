@@ -3,7 +3,8 @@ import { getStripeClient } from '@/app/lib/stripe-client';
 import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
 import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
 import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
-import { MPPItem, MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest } from '@/app/types/mpp';
+import { SHIPPING_COUNTRIES } from '@/app/lib/store-checkout';
+import { MPPItem, MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest, MPPShipping } from '@/app/types/mpp';
 import { NextRequest, NextResponse } from 'next/server';
 
 const MAX_QUANTITY_PER_ITEM = 20;
@@ -28,10 +29,50 @@ function parsePurchaseRequest(raw: unknown): MPPPurchaseRequest | { error: strin
     parsedItems.push({ handle, variantId, quantity, size: typeof size === 'string' && size ? size : undefined });
   }
 
+  const parsedShipping = parseShipping((raw as Record<string, unknown>).shipping);
+  if (parsedShipping && 'error' in parsedShipping) return parsedShipping;
+
   return {
     items: parsedItems,
     agentId: typeof agentId === 'string' && agentId ? agentId.slice(0, 100) : undefined,
     email: typeof email === 'string' && email ? email.slice(0, 254) : undefined,
+    shipping: parsedShipping,
+  };
+}
+
+const SHIPPING_ERROR =
+  `\`shipping\` must be { name, address: { line1, line2?, city, state, postal_code, country } } with country ${SHIPPING_COUNTRIES.join(' or ')}`;
+
+/** Checks the shipping address. Returns undefined when none was sent. */
+function parseShipping(raw: unknown): MPPShipping | { error: string } | undefined {
+  if (raw === undefined || raw === null) return undefined;
+  if (typeof raw !== 'object') return { error: SHIPPING_ERROR };
+  const { name, address } = raw as Record<string, unknown>;
+  if (!address || typeof address !== 'object') return { error: SHIPPING_ERROR };
+  const fields = address as Record<string, unknown>;
+
+  // Trimmed, non-empty, and short enough for Stripe's address fields.
+  const text = (value: unknown, max: number) =>
+    typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : undefined;
+
+  const parsed = {
+    name: text(name, 100),
+    line1: text(fields.line1, 200),
+    line2: text(fields.line2, 200),
+    city: text(fields.city, 100),
+    state: text(fields.state, 100),
+    postal_code: text(fields.postal_code, 20),
+    country: text(fields.country, 2)?.toUpperCase(),
+  };
+  const { name: shipName, line1, city, state, postal_code, country } = parsed;
+  if (!shipName || !line1 || !city || !state || !postal_code || !country) return { error: SHIPPING_ERROR };
+  if (!(SHIPPING_COUNTRIES as readonly string[]).includes(country)) {
+    return { error: `We only ship to ${SHIPPING_COUNTRIES.join(' and ')}` };
+  }
+
+  return {
+    name: shipName,
+    address: { line1, line2: parsed.line2, city, state, postal_code, country },
   };
 }
 
@@ -55,6 +96,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
     const { items, agentId = 'unknown-agent', email } = parsed;
+    let { shipping } = parsed;
 
     console.log('[MPP] Purchase request from agent:', agentId, 'items:', items.length);
 
@@ -120,6 +162,12 @@ export async function POST(request: NextRequest) {
     // Add shipping. Orders that are entirely digital ship nothing and are
     // charged nothing for freight — otherwise the $0.05 machine-payable sticker
     // would settle at $10.04 and stop being a cheap way to exercise the protocol.
+    // A physical order without an address can't be fulfilled; digital orders don't keep one.
+    if (requiresShipping && !shipping) {
+      return NextResponse.json({ error: `This order ships, so it needs a shipping address. ${SHIPPING_ERROR}` }, { status: 400 });
+    }
+    if (!requiresShipping) shipping = undefined;
+
     const shippingCost = requiresShipping && totalAmount < 50 ? 9.99 : 0;
     const amountInCents = Math.round((totalAmount + shippingCost) * 100);
     console.log('[MPP] Order totals - items:', totalAmount.toFixed(2), 'shipping:', shippingCost.toFixed(2));
@@ -128,7 +176,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('Authorization');
     if (authHeader) {
       console.log('[MPP] Payment authorization header received, processing payment');
-      return handlePaymentAuthorization(authHeader, items, lineItems, amountInCents, agentId, email);
+      return handlePaymentAuthorization(authHeader, items, lineItems, amountInCents, agentId, email, shipping);
     }
 
     // First step: return 402 Payment Required with payment challenge
@@ -236,7 +284,8 @@ async function handlePaymentAuthorization(
   lineItems: Array<{ handle: string; variantId: string; quantity: number; price: number }>,
   amountInCents: number,
   agentId: string,
-  email?: string
+  email?: string,
+  shipping?: MPPShipping
 ): Promise<NextResponse> {
   try {
     // Parse the SPT from base64url-encoded Authorization header
@@ -259,7 +308,8 @@ async function handlePaymentAuthorization(
       agentId,
       orderId,
       email,
-      items
+      items,
+      shipping
     );
 
     if (!paymentResult.verified) {
@@ -276,6 +326,7 @@ async function handlePaymentAuthorization(
       agentId,
       email,
       items,
+      shipping,
       amount: amountInCents,
       currency: 'USD',
       paymentMethod: 'stripe-spt',

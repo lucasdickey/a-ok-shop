@@ -60,10 +60,26 @@ export interface MPPItem {
   size?: string;
 }
 
+/** Where a physical order ships. Same shape as Stripe's PaymentIntent `shipping`. */
+export interface MPPShipping {
+  name: string;
+  address: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    /** US or CA: the only countries the store ships to. */
+    country: string;
+  };
+}
+
 export interface MPPPurchaseRequest {
   items: MPPItem[];
   agentId?: string;
   email?: string;
+  /** Required when any item ships (everything except digital goods). */
+  shipping?: MPPShipping;
 }
 
 export interface MPPPaymentChallenge {
@@ -115,6 +131,7 @@ export interface MPPOrder {
   agentId: string;
   email?: string;
   items: MPPItem[];
+  shipping?: MPPShipping;
   amount: number; // in cents
   currency: string;
   paymentMethod: 'stripe-spt' | 'tempo';

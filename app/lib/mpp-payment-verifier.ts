@@ -1,5 +1,5 @@
 import { getStripeClient } from './stripe-client';
-import type { MPPItem } from '@/app/types/mpp';
+import type { MPPItem, MPPShipping } from '@/app/types/mpp';
 
 /**
  * MPP Payment Verifier
@@ -29,7 +29,8 @@ export async function createStripePaymentFromSPT(
   agentId: string,
   orderId: string,
   email?: string,
-  items?: MPPItem[]
+  items?: MPPItem[],
+  shipping?: MPPShipping
 ): Promise<PaymentVerificationResult> {
   try {
     const stripe = await getStripeClient();
@@ -70,6 +71,9 @@ export async function createStripePaymentFromSPT(
           items: items ? JSON.stringify(items) : '',
         },
         receipt_email: email,
+        // Stripe's own field, so the address shows on the payment in the Dashboard
+        // and reaches the webhook's owner alert.
+        shipping,
       } as any,
       { idempotencyKey } as any
     );
