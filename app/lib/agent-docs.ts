@@ -1,7 +1,7 @@
 import { getAllProducts, getFeaturedProducts, getProductByHandle, getProductsByCategory, type SimpleProduct } from "@/app/lib/catalog";
 import { formatDropDate, getChaosMonkeys, getLatestDrop, type ChaosMonkey } from "@/app/lib/chaos-monkeys";
 import { absoluteUrl, SITE_URL } from "@/app/lib/site";
-import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
+import { CLOTHING_SIZES, getClothingSizes, isClothing } from "@/app/lib/sizes";
 
 /*
  * Plain-text versions of the shop for AI agents: /llms.txt, the markdown pages
@@ -12,7 +12,7 @@ import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
 
 const CATEGORIES = [
   { id: "t-shirts", label: "Tees" },
-  { id: "hoodies", label: "Hoodies" },
+  { id: "hoodies", label: "Hoodies & sweatshirts" },
   { id: "hats", label: "Hats" },
 ] as const;
 
@@ -39,7 +39,7 @@ export function describeProduct(product: SimpleProduct) {
     currency: product.priceRange.minVariantPrice.currencyCode,
     category: category?.label ?? product.productType,
     colors: colorOption.filter((color) => variants.some((v) => v.color === color && v.available)),
-    sizes: isClothing(product.productType, product.tags) ? [...CLOTHING_SIZES] : [],
+    sizes: isClothing(product.productType, product.tags) ? [...getClothingSizes(product)] : [],
     variants,
     images: product.images.edges.map(({ node }) => ({ ...node, url: absoluteUrl(node.url) })),
   };

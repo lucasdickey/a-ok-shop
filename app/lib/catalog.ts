@@ -18,6 +18,8 @@ export type Product = {
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   /** Swatch color per Color option value, measured from the product's photos. */
   swatches?: Record<string, string>;
+  /** Sizes supported by the specific garment blank, when different from the shop default. */
+  supportedSizes?: string[];
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -112,6 +114,7 @@ export type SimpleProduct = {
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   /** Swatch color per Color option value, measured from the product's photos. */
   swatches?: Record<string, string>;
+  supportedSizes?: string[];
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -221,6 +224,7 @@ function loadMappedProducts(): SimpleProduct[] {
     featuredOrder: product.featuredOrder,
     seo: product.seo,
     swatches: product.swatches,
+    supportedSizes: product.supportedSizes,
     priceRange: {
       minVariantPrice: {
         amount: product.priceRange.minVariantPrice.amount,

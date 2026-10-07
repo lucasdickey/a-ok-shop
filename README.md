@@ -2,6 +2,8 @@
 
 A custom storefront for [Apes on Keys](https://www.apesonkeys.com), built with Next.js 14, TypeScript, and Tailwind CSS. Products come from a bundled catalog (`product-catalog.json`) and checkout runs on Stripe.
 
+Catalog garments may specify `supportedSizes` when their blank differs from the default XS–2XL range. Product pages, checkout, agent descriptions and Stripe synchronization use that restriction. The Cotton Heritage M2480 sweatshirts offer S–2XL. The original Printful mockup URLs and garment models for the October 2026 sweatshirt additions are recorded in `catalog-sources/printful-sweatshirts.json`.
+
 [![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38B2AC.svg)](https://tailwindcss.com/)

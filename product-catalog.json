@@ -6887,6 +6887,619 @@
           "publishedAt": "2026-10-07T00:56:44.505Z",
           "stripeProductId": "prod_VOWCxDg2VvNgBQ"
         }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000007",
+          "handle": "a-ok-operator-turnaround-hoodie",
+          "title": "A-OK Operator Turnaround Hoodie",
+          "description": "The A-OK operator, documented from every angle: a red-hoodie ape with cap, headphones and sneakers, printed on a Khaki Green Stanley/Stella Chaser hoodie. Front view, side view, rear view. Internal reasoning unavailable.",
+          "descriptionHtml": "<p><strong>Every angle documented. Internal reasoning unavailable.</strong></p><p>The A-OK operator gets the full character-sheet treatment: a large front view, a side view, a rear view and a close-up of that permanently surprised face.</p><p>Red hoodie. A-OK cap. Headphones on. APES ON KEYS across the chest. A hoodie wearing a hoodie, because the layers of abstraction had to end somewhere.</p><p>Printed on a Khaki Green Stanley/Stella Chaser hooded sweatshirt, with the red, black and cream artwork centered on the front.</p><ul><li>Stanley/Stella Chaser SASU038 / STSU077 hooded sweatshirt.</li><li>Relaxed fit, pullover hood and kangaroo pocket.</li><li>Khaki Green colorway.</li><li>Front print with stacked side, rear and head-detail views.</li><li>Sizes XS–2XL.</li></ul><p><strong>More views. Same ape. A-OK.</strong></p>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies",
+            "Apes on Keys"
+          ],
+          "supportedSizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000071",
+              "name": "Color",
+              "values": [
+                "Khaki Green"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000072",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000070",
+                  "url": "/images/products/a-ok-operator-turnaround-hoodie-khaki-green-front.png",
+                  "altText": "Khaki Green pullover hoodie with a large red-hoodie A-OK ape on the chest and smaller side, rear and head-detail views stacked beside it.",
+                  "width": 800,
+                  "height": 800,
+                  "color": "Khaki Green"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000137",
+                  "title": "Khaki Green / XS",
+                  "sku": "a-ok-operator-turnaround-hoodie-XS",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000138",
+                  "title": "Khaki Green / S",
+                  "sku": "a-ok-operator-turnaround-hoodie-S",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000139",
+                  "title": "Khaki Green / M",
+                  "sku": "a-ok-operator-turnaround-hoodie-M",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000140",
+                  "title": "Khaki Green / L",
+                  "sku": "a-ok-operator-turnaround-hoodie-L",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000141",
+                  "title": "Khaki Green / XL",
+                  "sku": "a-ok-operator-turnaround-hoodie-XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000142",
+                  "title": "Khaki Green / 2XL",
+                  "sku": "a-ok-operator-turnaround-hoodie-2XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "swatches": {
+            "Khaki Green": "#555a45"
+          },
+          "seo": {
+            "title": "A-OK Operator Turnaround Hoodie | Apes on Keys",
+            "description": "A red-hoodie A-OK ape character sheet on a Khaki Green Stanley/Stella Chaser hoodie. Front, side, rear and head-detail views. Sizes XS–2XL."
+          },
+          "availableForSale": true,
+          "createdAt": "2026-10-06T23:00:00Z",
+          "updatedAt": "2026-10-06T23:00:00Z",
+          "publishedAt": "2026-10-06T23:00:00Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000008",
+          "handle": "a-ok-fuzzy-spectrum-sweatshirt",
+          "title": "A-OK Fuzzy Spectrum Sweatshirt",
+          "description": "FUZZY SPECTRUM. APES GENERAL INTELLIGENCE. A skeptical A-OK ape beneath bold black-and-red type, printed on a Khaki Cotton Heritage crewneck sweatshirt. General intelligence. Specific doubts.",
+          "descriptionHtml": "<p><strong>General intelligence. Specific doubts.</strong></p><p>Somewhere on the fuzzy spectrum between a useful answer and a very confident guess, our ape is taking a moment.</p><p>Cap on. Headphones ready. Chin in hand. The headline says <strong>FUZZY SPECTRUM</strong>. The fine print says <strong>APES GENERAL INTELLIGENCE</strong>. The expression suggests the benchmark needs another look.</p><p>Bold black-and-red lettering and a red halftone field frame the seated operator on a Khaki crewneck sweatshirt.</p><ul><li>Cotton Heritage M2480 unisex premium sweatshirt.</li><li>Crewneck with ribbed collar, cuffs and hem.</li><li>Khaki colorway with a centered front graphic.</li><li>Original FUZZY SPECTRUM and APES GENERAL INTELLIGENCE lettering.</li><li>Sizes S–2XL.</li></ul><p><strong>Confidence varies. A-OK.</strong></p>",
+          "productType": "Sweatshirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Sweatshirts",
+            "Apes on Keys"
+          ],
+          "supportedSizes": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000081",
+              "name": "Color",
+              "values": [
+                "Khaki"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000082",
+              "name": "Size",
+              "values": [
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000080",
+                  "url": "/images/products/a-ok-fuzzy-spectrum-sweatshirt-khaki-front.png",
+                  "altText": "Khaki crewneck sweatshirt with black FUZZY and red SPECTRUM lettering above a seated, thoughtful A-OK ape, a red halftone field and APES GENERAL INTELLIGENCE below.",
+                  "width": 800,
+                  "height": 800,
+                  "color": "Khaki"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000147",
+                  "title": "Khaki / S",
+                  "sku": "a-ok-fuzzy-spectrum-sweatshirt-S",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000148",
+                  "title": "Khaki / M",
+                  "sku": "a-ok-fuzzy-spectrum-sweatshirt-M",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000149",
+                  "title": "Khaki / L",
+                  "sku": "a-ok-fuzzy-spectrum-sweatshirt-L",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000150",
+                  "title": "Khaki / XL",
+                  "sku": "a-ok-fuzzy-spectrum-sweatshirt-XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000151",
+                  "title": "Khaki / 2XL",
+                  "sku": "a-ok-fuzzy-spectrum-sweatshirt-2XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Khaki"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "swatches": {
+            "Khaki": "#b68e5c"
+          },
+          "seo": {
+            "title": "A-OK Fuzzy Spectrum Sweatshirt | Apes on Keys",
+            "description": "A thoughtful A-OK ape under FUZZY SPECTRUM lettering on a Khaki Cotton Heritage crewneck sweatshirt. APES GENERAL INTELLIGENCE. Sizes S–2XL."
+          },
+          "availableForSale": true,
+          "createdAt": "2026-10-06T23:00:00Z",
+          "updatedAt": "2026-10-06T23:00:00Z",
+          "publishedAt": "2026-10-06T23:00:00Z"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000009",
+          "handle": "a-ok-blueprint-sweatshirt",
+          "title": "A-OK Blueprint Sweatshirt",
+          "description": "The Apes on Keys operator as a technical drawing: pale-blue linework, measurements and front, side, rear and head-detail views on a Team Royal Cotton Heritage crewneck sweatshirt. Specifications included. Understanding pending.",
+          "descriptionHtml": "<p><strong>Specifications included. Understanding pending.</strong></p><p>We measured the ape. Documented the angles. Added enough guide lines to make the whole thing feel engineered.</p><p>The <strong>A-OK Blueprint Sweatshirt</strong> presents our operator as a technical character study: front view, side view, rear view and head detail, complete with dimension lines and an APES ON KEYS blueprint label.</p><p>Pale-blue linework prints directly onto the Team Royal crewneck. The A-OK cap, headphones, hoodie and sneakers are all accounted for. The thought process remains outside the drawing.</p><ul><li>Cotton Heritage M2480 unisex premium sweatshirt.</li><li>Crewneck with ribbed collar, cuffs and hem.</li><li>Team Royal colorway.</li><li>Centered pale-blue technical illustration with measurements and view labels.</li><li>Sizes S–2XL.</li></ul><p><strong>Built to spec. Still surprised. A-OK.</strong></p>",
+          "productType": "Sweatshirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Sweatshirts",
+            "Apes on Keys"
+          ],
+          "supportedSizes": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000091",
+              "name": "Color",
+              "values": [
+                "Team Royal"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000092",
+              "name": "Size",
+              "values": [
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "75.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89400000000090",
+                  "url": "/images/products/a-ok-blueprint-sweatshirt-team-royal-front.png",
+                  "altText": "Team Royal crewneck sweatshirt with pale-blue blueprint linework showing the A-OK ape from the front, side and rear, with a head detail and measurement guides.",
+                  "width": 800,
+                  "height": 800,
+                  "color": "Team Royal"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000157",
+                  "title": "Team Royal / S",
+                  "sku": "a-ok-blueprint-sweatshirt-S",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Team Royal"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000158",
+                  "title": "Team Royal / M",
+                  "sku": "a-ok-blueprint-sweatshirt-M",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Team Royal"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000159",
+                  "title": "Team Royal / L",
+                  "sku": "a-ok-blueprint-sweatshirt-L",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Team Royal"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000160",
+                  "title": "Team Royal / XL",
+                  "sku": "a-ok-blueprint-sweatshirt-XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Team Royal"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000161",
+                  "title": "Team Royal / 2XL",
+                  "sku": "a-ok-blueprint-sweatshirt-2XL",
+                  "price": {
+                    "amount": "75.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Team Royal"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "swatches": {
+            "Team Royal": "#273e7c"
+          },
+          "seo": {
+            "title": "A-OK Blueprint Sweatshirt | Apes on Keys",
+            "description": "The A-OK operator in pale-blue technical linework on a Team Royal Cotton Heritage crewneck sweatshirt. Blueprint views, measurements and head detail. Sizes S–2XL."
+          },
+          "availableForSale": true,
+          "createdAt": "2026-10-06T23:00:00Z",
+          "updatedAt": "2026-10-06T23:00:00Z",
+          "publishedAt": "2026-10-06T23:00:00Z"
+        }
       }
     ]
   }

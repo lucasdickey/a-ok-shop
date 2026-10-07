@@ -1,0 +1,52 @@
+{
+  "order": "PF177745028",
+  "orderedOn": "2026-09-23",
+  "shippedOn": "2026-09-27",
+  "pricing": "Provisional $75 per garment, matching the majority of existing A-OK hoodie listings. Confirm before merging.",
+  "sizeReference": "https://www.printful.com/custom/products/all/unisex-premium-sweatshirt-cotton-heritage-M2480",
+  "products": [
+    {
+      "handle": "a-ok-operator-turnaround-hoodie",
+      "garment": "Stanley/Stella SASU038 / STSU077",
+      "color": "Khaki Green",
+      "imageSource": "https://files.cdn.printful.com/files/b73/b73ef1402e86699bc60a7086ff3b761c_preview.png",
+      "imageTreatment": "Original 800x800 Printful preview copied without editing.",
+      "supportedSizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "handle": "a-ok-fuzzy-spectrum-sweatshirt",
+      "garment": "Cotton Heritage M2480",
+      "color": "Khaki",
+      "imageSource": "https://files.cdn.printful.com/files/3ee/3ee46af0d4bac2a567da62bf71d814f2_preview.png",
+      "imageTreatment": "Original 800x800 Printful preview copied without editing.",
+      "supportedSizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    },
+    {
+      "handle": "a-ok-blueprint-sweatshirt",
+      "garment": "Cotton Heritage M2480",
+      "color": "Team Royal",
+      "imageSource": "https://files.cdn.printful.com/files/f18/f188471ee8d2fe9bd8b353f861a19f91_preview.png",
+      "imageTreatment": "Original 800x800 Printful preview copied without editing.",
+      "supportedSizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ]
+    }
+  ]
+}
