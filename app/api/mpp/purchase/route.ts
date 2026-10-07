@@ -2,8 +2,38 @@ import { getProductByHandle, isSameId } from '@/app/lib/catalog';
 import { getStripeClient } from '@/app/lib/stripe-client';
 import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
 import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
-import { MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest } from '@/app/types/mpp';
+import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
+import { MPPItem, MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest } from '@/app/types/mpp';
 import { NextRequest, NextResponse } from 'next/server';
+
+const MAX_QUANTITY_PER_ITEM = 20;
+
+/** Checks the request shape, keeping only the fields we use. */
+function parsePurchaseRequest(raw: unknown): MPPPurchaseRequest | { error: string } {
+  if (!raw || typeof raw !== 'object') return { error: 'Request body must be a JSON object' };
+  const { items, agentId, email } = raw as Record<string, unknown>;
+  const shapeError = {
+    error: `\`items\` must be a non-empty array of { handle, variantId, quantity (1-${MAX_QUANTITY_PER_ITEM}), size }; tees and hoodies need a size`,
+  };
+  if (!Array.isArray(items) || items.length === 0) return shapeError;
+
+  const parsedItems: MPPItem[] = [];
+  for (const entry of items) {
+    if (!entry || typeof entry !== 'object') return shapeError;
+    const { handle, variantId, quantity, size } = entry as Record<string, unknown>;
+    if (typeof handle !== 'string' || !handle || typeof variantId !== 'string' || !variantId) return shapeError;
+    if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY_PER_ITEM) {
+      return shapeError;
+    }
+    parsedItems.push({ handle, variantId, quantity, size: typeof size === 'string' && size ? size : undefined });
+  }
+
+  return {
+    items: parsedItems,
+    agentId: typeof agentId === 'string' && agentId ? agentId.slice(0, 100) : undefined,
+    email: typeof email === 'string' && email ? email.slice(0, 254) : undefined,
+  };
+}
 
 /**
  * MPP Purchase Endpoint (Machine Payments Protocol)
@@ -19,8 +49,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as MPPPurchaseRequest;
-    const { items, agentId = 'unknown-agent', email } = body;
+    const body = await request.json().catch(() => null);
+    const parsed = parsePurchaseRequest(body);
+    if ('error' in parsed) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
+    }
+    const { items, agentId = 'unknown-agent', email } = parsed;
 
     console.log('[MPP] Purchase request from agent:', agentId, 'items:', items.length);
 
@@ -45,6 +79,18 @@ export async function POST(request: NextRequest) {
       if (!variant) {
         console.warn('[MPP] Variant not found:', item.variantId);
         return NextResponse.json({ error: `Variant not found: ${item.variantId}` }, { status: 404 });
+      }
+
+      // Tees and hoodies are printed to order, so an order without a size can't be filled.
+      if (isClothing(product.productType, product.tags)) {
+        if (!item.size) {
+          return NextResponse.json({ error: `Choose a size for ${product.title}: ${CLOTHING_SIZES.join(', ')}` }, { status: 400 });
+        }
+        if (!CLOTHING_SIZES.includes(item.size)) {
+          return NextResponse.json({ error: `Size must be one of ${CLOTHING_SIZES.join(', ')}` }, { status: 400 });
+        }
+      } else {
+        delete item.size;
       }
 
       if (!variant.availableForSale) {

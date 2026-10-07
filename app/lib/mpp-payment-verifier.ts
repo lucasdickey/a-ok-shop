@@ -1,4 +1,5 @@
 import { getStripeClient } from './stripe-client';
+import type { MPPItem } from '@/app/types/mpp';
 
 /**
  * MPP Payment Verifier
@@ -28,7 +29,7 @@ export async function createStripePaymentFromSPT(
   agentId: string,
   orderId: string,
   email?: string,
-  items?: Array<{ handle: string; variantId: string; quantity: number }>
+  items?: MPPItem[]
 ): Promise<PaymentVerificationResult> {
   try {
     const stripe = await getStripeClient();
