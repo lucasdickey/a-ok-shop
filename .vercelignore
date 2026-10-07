@@ -5,3 +5,6 @@ v0-retro-style-game-concept/**/*
 .github/
 use-cases/a-ok-infinite-apes/
 use-cases/chaos-monkeys-lab/
+
+# PR screenshots live in git history, not in deployments.
+docs/pr-screenshots/
