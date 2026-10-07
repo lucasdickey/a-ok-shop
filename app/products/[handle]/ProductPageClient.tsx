@@ -411,6 +411,12 @@ export function ProductPageContent({
                 key={index}
                 aria-label={`Show ${image.alt || `photo ${index + 1} of ${images.length}`}`}
                 aria-pressed={selectedImageIndex === index}
+                // The chosen photo's offset takes its shirt color; photos without one stay red.
+                style={
+                  selectedImageIndex === index && image.color && product.swatches?.[image.color]
+                    ? { boxShadow: `5px 5px 0 ${product.swatches[image.color]}` }
+                    : undefined
+                }
                 className={`relative aspect-square overflow-hidden border-2 border-dark bg-club-sky ${
                   selectedImageIndex === index ? 'shadow-hard-red' : 'hover:shadow-hard-sm'
                 }`}
