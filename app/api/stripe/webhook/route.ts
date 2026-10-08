@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
 import { runOnce } from "@/app/lib/kv";
-import { findItem } from "@/app/lib/acp/items";
+import { parseItemList } from "@/app/lib/acp/items";
+import { sendOrderCreated } from "@/app/lib/acp/order-events";
 import { getProductByHandle, isSameId } from "@/app/lib/catalog";
 import type { MPPItem } from "@/app/types/mpp";
 
@@ -78,6 +79,8 @@ export async function POST(request: NextRequest) {
           // ACP agent checkout (app/lib/acp/payment.ts)
           const order = toACPOrder(paymentIntent);
           await runOnce(`order-alert:${order.sessionId}`, () => sendOwnerOrderAlert(order));
+          // Then tell the agent platform, when one is configured (ACP_WEBHOOK_URL).
+          await runOnce(`acp-order-event:${order.sessionId}`, () => sendOrderCreated(paymentIntent));
         }
         break;
       }
@@ -606,29 +609,19 @@ function toMPPOrder(paymentIntent: Stripe.PaymentIntent, customerEmail: string):
 
 /**
  * Shapes an ACP agent payment like a Checkout order, so the owner alert has the
- * address, sizes, colors and totals. Items are "itemId*quantity" pairs; the
- * item ID carries the color and size (app/lib/acp/items.ts).
+ * address, sizes, colors and totals.
  */
 function toACPOrder(paymentIntent: Stripe.PaymentIntent): Order {
   const metadata = paymentIntent.metadata ?? {};
-  const items: OrderItem[] = (metadata.items ?? "")
-    .split(",")
-    .filter(Boolean)
-    .map((entry) => {
-      const [itemId, quantityText] = entry.split("*");
-      const quantity = Number(quantityText) || 1;
-      const found = findItem(itemId);
-      const item = found && !("error" in found) ? found : null;
-      return {
-        name: item?.product.title ?? itemId,
-        quantity,
-        size: item?.size ?? "",
-        color: item?.color ?? "",
-        variantId: item?.variant.id ?? itemId,
-        sku: item?.variant.sku ?? "",
-        amountTotal: (item?.unitAmount ?? 0) * quantity,
-      };
-    });
+  const items: OrderItem[] = parseItemList(metadata.items).map(({ itemId, quantity, item }) => ({
+    name: item?.product.title ?? itemId,
+    quantity,
+    size: item?.size ?? "",
+    color: item?.color ?? "",
+    variantId: item?.variant.id ?? itemId,
+    sku: item?.variant.sku ?? "",
+    amountTotal: (item?.unitAmount ?? 0) * quantity,
+  }));
   const itemsTotal = items.reduce((sum, item) => sum + item.amountTotal, 0);
   const amountSubtotal = Number(metadata.amount_subtotal) || itemsTotal;
 

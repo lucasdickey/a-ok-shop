@@ -1,12 +1,14 @@
 import { createHash } from "crypto";
 import Stripe from "stripe";
 
+import { formatItemList } from "@/app/lib/acp/items";
 import { AcpError, invalid, type AcpResult } from "@/app/lib/acp/protocol";
 import {
   PAYMENT_HANDLER_ID,
   applyCompletion,
   assertOpen,
   loadSession,
+  orderPermalink,
   priceSession,
   renderSession,
   saveSession,
@@ -14,7 +16,6 @@ import {
   type StoredSession,
 } from "@/app/lib/acp/sessions";
 import { remove, setJsonIfAbsent } from "@/app/lib/acp/store";
-import { absoluteUrl } from "@/app/lib/site";
 import { getStripeClient } from "@/app/lib/stripe-client";
 
 /*
@@ -95,8 +96,7 @@ async function charge(stripe: Stripe, session: StoredSession, pricing: Pricing, 
     metadata: {
       source: "acp",
       checkout_session_id: session.id,
-      // "itemId*quantity,..." — the item ID carries the color and size. Fits Stripe's 500-character limit at 20 lines.
-      items: pricing.lines.map((line) => `${line.item.id}*${line.quantity}`).join(","),
+      items: formatItemList(pricing.lines.map((line) => ({ itemId: line.item.id, quantity: line.quantity }))),
       amount_subtotal: String(pricing.subtotal),
       amount_shipping: String(pricing.shipping),
       customer_email: email ?? "",
@@ -170,7 +170,7 @@ export async function completeSession(id: string, owner: string, body: Json): Pr
       session.order = {
         id: outcome.paymentIntentId,
         paymentIntentId: outcome.paymentIntentId,
-        permalinkUrl: absoluteUrl(`/checkout/success?session_id=${session.id}`),
+        permalinkUrl: orderPermalink(session.id),
       };
     } else {
       session.paymentError = outcome.message;

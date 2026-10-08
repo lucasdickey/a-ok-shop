@@ -40,6 +40,30 @@ function makeItem(product: SimpleProduct, variant: ProductVariant, size?: string
   };
 }
 
+/**
+ * The items of a paid ACP order as Stripe metadata: "itemId*quantity,...".
+ * The item ID carries the color and size; 20 lines fit Stripe's 500-character limit.
+ */
+export function formatItemList(lines: Array<{ itemId: string; quantity: number }>): string {
+  return lines.map((line) => `${line.itemId}*${line.quantity}`).join(",");
+}
+
+/** Reads formatItemList back. `item` is null if the catalog no longer has it. */
+export function parseItemList(list: string | undefined) {
+  return (list ?? "")
+    .split(",")
+    .filter(Boolean)
+    .map((entry) => {
+      const [itemId, quantityText] = entry.split("*");
+      const found = findItem(itemId);
+      return {
+        itemId,
+        quantity: Number(quantityText) || 1,
+        item: found && !("error" in found) ? found : null,
+      };
+    });
+}
+
 /** Every item a shopper can buy for this product: one per color, times each size for clothing. */
 export function listItems(product: SimpleProduct): AcpItem[] {
   const clothing = isClothing(product.productType, product.tags);

@@ -232,6 +232,11 @@ function applyRequest(session: StoredSession, body: Json, creating: boolean) {
   session.updatedAt = new Date().toISOString();
 }
 
+/** Where the buyer can see the order: the store's order confirmation page. */
+export function orderPermalink(sessionId: string): string {
+  return absoluteUrl(`/checkout/success?session_id=${sessionId}`);
+}
+
 function sessionKey(id: string) {
   return `acp:session:${id}`;
 }
