@@ -801,6 +801,8 @@ async function printMerch(options: Options): Promise<void> {
         }
         saveMerch(merch);
       }
+      // Light ink that failed its check is never printed.
+      if (merch.artLight && (merch.artLightCheck?.score ?? 0) < 7) merch.artLight = null;
       const light = merch.artLight ? pngInfo(path.join(dir, merch.artLight)) : null;
       // Print masters: the art enlarged 4× when the upscaler is installed, so the print carries real 300 DPI detail.
       const master = async (file: string) => {
@@ -815,14 +817,20 @@ async function printMerch(options: Options): Promise<void> {
 
       for (const garment of garments) {
         const blank = BLANKS[garment];
+        const kept = merch.products.find((p) => p.garment === garment);
+        // A product already on the shop keeps the inks, colours and size its photos and page show; only its print
+        // files are remade.
+        const frozen = kept?.sold ? kept : null;
         const { swatch } = printful.get(garment) as Awaited<ReturnType<typeof printfulCatalog>>;
         // Colour by colour, print whichever version leaves less of the art hard to see on that fabric.
         const colors = SHOP_COLORS.map((color) => swatch[color]);
         const weakOriginal = await renderer.measure({ image: `/merch/${merchId}/${merch.art}`, colors });
         const weakLight = light ? await renderer.measure({ image: `/merch/${merchId}/${merch.artLight}`, colors }) : null;
-        const lightColors = weakLight ? SHOP_COLORS.filter((_, i) => prefersLightInk(weakOriginal[i], weakLight[i])) : [];
+        const lightColors = frozen ? (frozen.lightInk ?? []) : weakLight ? SHOP_COLORS.filter((_, i) => prefersLightInk(weakOriginal[i], weakLight[i])) : [];
         const weakChosen = SHOP_COLORS.map((color, i) => (weakLight && lightColors.includes(color) ? weakLight[i] : weakOriginal[i]));
-        const offered = SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)));
+        const offered = frozen
+          ? (frozen.colors ?? [...SHOP_COLORS])
+          : SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)));
         const dropped = SHOP_COLORS.filter((color) => !offered.includes(color));
         if (dropped.length) {
           log(`${merchId} ${garment}: not offered in ${dropped.join(", ")}: ${background ? "the poster only prints true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
@@ -833,10 +841,8 @@ async function printMerch(options: Options): Promise<void> {
         // As wide as the blank and the art's resolution allow, short enough to fit the print area under a 1-inch top
         // margin, and the same size in every colour.
         const arts = lightColors.length && lightMasterInfo ? [masterInfo, lightMasterInfo] : [masterInfo];
-        const kept = merch.products.find((p) => p.garment === garment);
-        // A product already on the shop keeps the print size its page describes.
-        const inches = kept?.sold
-          ? kept.inches
+        const inches = frozen
+          ? frozen.inches
           : Math.min(...arts.map((a) => Math.min(printSize(blank, a.width).inches, Math.floor(((blank.area.height - 1) * a.width * 10) / a.height) / 10)));
         const dpi = Math.round(Math.min(...arts.map((a) => a.width)) / inches);
         const files: Array<[string, string]> = [
