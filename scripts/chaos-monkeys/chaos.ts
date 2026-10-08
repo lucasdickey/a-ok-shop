@@ -57,6 +57,7 @@ import {
 import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
 import { AstraUnavailable, illustrate, lightInk, mockup } from "./lib/astra.ts";
 import { allMerch, syncToArchive, type ArchiveWork } from "./lib/printfiles.ts";
+import { upscale } from "./lib/upscale.ts";
 import {
   BLANKS,
   GARMENT_KINDS,
@@ -801,6 +802,16 @@ async function printMerch(options: Options): Promise<void> {
         saveMerch(merch);
       }
       const light = merch.artLight ? pngInfo(path.join(dir, merch.artLight)) : null;
+      // Print masters: the art enlarged 4× when the upscaler is installed, so the print carries real 300 DPI detail.
+      const master = async (file: string) => {
+        const target = file.replace(/\.png$/, "-print.png");
+        return (await upscale(path.join(dir, file), path.join(dir, target))) ? target : file;
+      };
+      const artMaster = await master(merch.art);
+      const lightMaster = merch.artLight ? await master(merch.artLight) : null;
+      const upscaled = artMaster !== merch.art;
+      const masterInfo = pngInfo(path.join(dir, artMaster)) ?? art;
+      const lightMasterInfo = lightMaster ? (pngInfo(path.join(dir, lightMaster)) ?? light) : null;
 
       for (const garment of garments) {
         const blank = BLANKS[garment];
@@ -821,10 +832,17 @@ async function printMerch(options: Options): Promise<void> {
         );
         // As wide as the blank and the art's resolution allow, short enough to fit the print area under a 1-inch top
         // margin, and the same size in every colour.
-        const arts = lightColors.length && light ? [art, light] : [art];
-        const inches = Math.min(...arts.map((a) => Math.min(printSize(blank, a.width).inches, Math.floor(((blank.area.height - 1) * a.width * 10) / a.height) / 10)));
+        const arts = lightColors.length && lightMasterInfo ? [masterInfo, lightMasterInfo] : [masterInfo];
+        const kept = merch.products.find((p) => p.garment === garment);
+        // A product already on the shop keeps the print size its page describes.
+        const inches = kept?.sold
+          ? kept.inches
+          : Math.min(...arts.map((a) => Math.min(printSize(blank, a.width).inches, Math.floor(((blank.area.height - 1) * a.width * 10) / a.height) / 10)));
         const dpi = Math.round(Math.min(...arts.map((a) => a.width)) / inches);
-        const files: Array<[string, string]> = [[`print-${garment}.png`, merch.art], ...(lightColors.length ? [[`print-${garment}-light-ink.png`, merch.artLight as string] as [string, string]] : [])];
+        const files: Array<[string, string]> = [
+          [`print-${garment}.png`, artMaster],
+          ...(lightColors.length && lightMaster ? [[`print-${garment}-light-ink.png`, lightMaster] as [string, string]] : []),
+        ];
         for (const [file, source] of files) {
           fs.writeFileSync(
             path.join(dir, file),
@@ -839,9 +857,8 @@ async function printMerch(options: Options): Promise<void> {
           );
         }
         log(
-          `${merchId} ${garment}: print files ${blank.area.width}×${blank.area.height} in at ${PRINT_DPI} DPI, art ${inches} in wide (${dpi} DPI of real detail)${lightColors.length ? `; light ink on ${lightColors.join(", ")}` : ""}`,
+          `${merchId} ${garment}: print files ${blank.area.width}×${blank.area.height} in at ${PRINT_DPI} DPI, art ${inches} in wide (${dpi} DPI${upscaled ? ", enlarged 4×" : " of real detail"})${lightColors.length ? `; light ink on ${lightColors.join(", ")}` : ""}`,
         );
-        const kept = merch.products.find((p) => p.garment === garment);
         const product: MerchProduct = kept ?? {
           garment,
           printFile: files[0][0],
@@ -851,9 +868,13 @@ async function printMerch(options: Options): Promise<void> {
           copy: null,
           sold: null,
         };
-        // New colours mean new copy: it lists them.
+        // New colours or a new print size mean new copy (it states both), and a new size means new photos.
+        if (!product.sold && Math.abs(product.inches - inches) > 0.4) {
+          for (const m of product.mockups) Object.assign(m, { image: null, web: null, score: null, note: "" });
+          product.copy = null;
+        }
         if (product.copy && (product.colors ?? SHOP_COLORS).join() !== offered.join()) product.copy = null;
-        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, colors: offered, inches, dpi });
+        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, colors: offered, inches, dpi, upscaled });
         if (!kept) merch.products.push(product);
       }
       saveMerch(merch);

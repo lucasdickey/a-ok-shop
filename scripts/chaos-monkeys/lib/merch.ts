@@ -148,6 +148,8 @@ export type MerchProduct = {
   colors?: ShopColor[];
   inches: number;
   dpi: number;
+  /** Whether the print files were made from art enlarged by Real-ESRGAN (lib/upscale.ts). */
+  upscaled?: boolean;
   mockups: Mockup[];
   copy: ProductCopy | null;
   sold: { handle: string; stripeProductId: string | null; sha: string | null; at: string } | null;
@@ -187,7 +189,7 @@ export function printfulNotes(merch: Merch, name: (file: string) => string = (fi
     const blank = BLANKS[p.garment];
     const dark = new Set(p.lightInk ?? []);
     const offered = p.colors ?? [...SHOP_COLORS];
-    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
+    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI${p.upscaled ? " (art enlarged 4× by Real-ESRGAN)" : " of real detail"}, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
     const original = offered.filter((c) => !dark.has(c));
     if (original.length) lines.push(`- \`${name(p.printFile)}\`: ${original.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
     const light = offered.filter((c) => dark.has(c));

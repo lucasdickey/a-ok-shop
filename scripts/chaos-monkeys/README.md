@@ -55,7 +55,18 @@ This creates `~/.a-ok-chaos/` (the publish clone, drafts, logs, and a font cache
 - `PRINTFUL.md`: how to order it by hand: the blank, the print size, and which print file goes with which colours.
 - `merch.json`: print sizes, photo checks, and Claude's product copy (title, handle, description, product-page HTML, tags, SEO) in the house format.
 
-`chaos sell RUN-N` then adds the photos to `public/images/products/`, a product per garment to `product-catalog.json` (every colour in XS–2XL, $30 a tee and $60 a hoodie, each variant's SKU naming its Printful variant), creates the Stripe product with a price per variant, each naming its print file (needs the shop's `STRIPE_SECRET_KEY` in the environment), and runs lint, build, commit, push, and the Vercel wait, like `ship`. `--dry-run` stops after the build and changes nothing. ## Archive
+`chaos sell RUN-N` then adds the photos to `public/images/products/`, a product per garment to `product-catalog.json` (every colour in XS–2XL, $30 a tee and $60 a hoodie, each variant's SKU naming its Printful variant), creates the Stripe product with a price per variant, each naming its print file (needs the shop's `STRIPE_SECRET_KEY` in the environment), and runs lint, build, commit, push, and the Vercel wait, like `ship`. `--dry-run` stops after the build and changes nothing. ## Print masters
+
+Astra draws at about 1250 pixels, enough for Printful's 150 DPI floor at 8 inches and no more. `chaos print` enlarges the art 4× with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) (its anime model, which suits flat illustration) before making print files, so a print carries 300 DPI or more and can go up to 11 in wide on a tee. Products already on the shop keep the size their page states. Install it once per Mac (without it, print files use the art as drawn):
+
+```sh
+mkdir -p ~/.a-ok-chaos/tools && cd ~/.a-ok-chaos/tools
+curl -LO https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip
+unzip -q realesrgan-ncnn-vulkan-20220424-macos.zip -d realesrgan && rm realesrgan-ncnn-vulkan-20220424-macos.zip
+chmod +x realesrgan/realesrgan-ncnn-vulkan
+```
+
+## Archive
 
 This repository is public, so everything else the tool makes goes to the private [lucasdickey/a-ok-print-files](https://github.com/lucasdickey/a-ok-print-files) (cloned at `~/.a-ok-chaos/print-files`) as it is made: `concepts/<run>/` gets every draft as a near-lossless WebP with its brief, score, and verdict after each `draft`, `judge`, `ship`, and `feedback`; `merch/<run>-<n>/` gets the print files, art, original draft PNG, model photos, and Printful notes after `print`, plus `<handle>-product.json` (Printful variant ids) after `sell`; `TASTE.md` sits at the top. Every file name starts with its design (`a-ok-insert-token-tee-art-light.png`, `2026-10-08-03-beam-search.webp`). A failed push never fails the step; `chaos archive --all` catches up.
 
