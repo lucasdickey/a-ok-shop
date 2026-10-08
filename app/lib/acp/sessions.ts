@@ -256,6 +256,16 @@ export function updateSession(session: StoredSession, body: Json) {
   applyRequest(session, body, false);
 }
 
+/** The buyer and order notes may also arrive with the payment (the complete request). */
+export function applyCompletion(session: StoredSession, body: Json) {
+  if (body.buyer !== undefined && body.buyer !== null) {
+    session.buyer = parseBuyer(body.buyer, "$.buyer");
+  }
+  if (body.order_notes !== undefined && body.order_notes !== null) {
+    session.orderNotes = text(body.order_notes, "$.order_notes", { max: 500 });
+  }
+}
+
 export function assertOpen(session: StoredSession) {
   if (session.state !== "open") {
     throw invalid("invalid_state", `This checkout session is ${session.state} and can't be changed`);
