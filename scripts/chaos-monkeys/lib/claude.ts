@@ -527,8 +527,7 @@ const MOCKUP_SCHEMA = {
  * garments, the light-ink version for dark ones). Paths are relative to `cwd`.
  */
 export async function judgeMockups(cwd: string, photos: Array<{ file: string; garment: string; color: string; art: string }>): Promise<MockupCheck[]> {
-  const arts = [...new Set(photos.map((p) => p.art))];
-  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Open ${arts.join(" and ")} first with the Read tool: ${arts.length > 1 ? "each is" : "it is"} the exact print artwork. Then open each photo below and compare its print against the artwork it names.
+  const prompt = `You check product photos for A-OK, an AI-culture streetwear label, before they go on the shop. Each photo below names a reference image: the exact print artwork on a swatch of that fabric colour, which is how the real print will look. Open each reference and its photo with the Read tool and compare the print on the garment against the reference.
 
 For each photo report:
 - file: the photo's path, unchanged.
@@ -538,7 +537,7 @@ For each photo report:
 - note: at most 120 characters, the single most important problem or strength.
 
 Photos:
-${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}, printed with ${p.art}`).join("\n")}`;
+${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}; reference ${p.art}`).join("\n")}`;
   const output = (await askClaude(prompt, MOCKUP_SCHEMA, cwd, "medium")) as { results: MockupCheck[] };
   return output.results.map((result) => ({ ...result, note: clip(result.note, 140) }));
 }

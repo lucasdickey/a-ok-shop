@@ -80,6 +80,15 @@ export function prefersLightInk(weakOriginal: number, weakLight: number): boolea
   return weakLight < weakOriginal - 0.03;
 }
 
+/**
+ * Whether a fabric is close enough to a house poster's ground to stand in for it. Removing the ground also removes
+ * anything drawn in the same colour (the ink poster's ground is the ape's black fur), so such a print only comes out
+ * right on fabric of about that colour.
+ */
+export function matchesGround(swatch: string, ground: string): boolean {
+  return [1, 3, 5].every((i) => Math.abs(parseInt(swatch.slice(i, i + 2), 16) - parseInt(ground.slice(i, i + 2), 16)) <= 48);
+}
+
 /** A colour where more of the print than this would be hard to see, whichever version it uses, isn't offered. */
 export const MAX_HARD_TO_SEE = 0.45;
 
