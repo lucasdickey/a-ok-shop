@@ -6,7 +6,7 @@ Homage is part of streetwear, and it is welcome here as homage to a *format*: th
 
 Each style is a `## id · Name` heading followed by `engine:` (`astra`, `hybrid specimen`, or `hybrid form`), `text:` (how many short printed strings it allows, beyond the cap and hoodie lettering), an optional `weight:` (relative chance of being picked, default 1; 0 retires a style without deleting it), and a description that both models read. Add, remove, or rewrite styles freely.
 
-Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern. Retired after the second: racing and crest (silly, juvenile) and monogram (rejected twice as uninspired).
+Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern. Retired after the second: racing and crest (silly, juvenile) and monogram (rejected twice as uninspired). Retired after the Oct 7 review: varsity ("no sports t-shirt looks"), box-logo ("no more Supreme references"), souvenir (the ape and a landscape in a circle, tried too often), and swiss ("looks like bad AI slop"); pixel halved ("too many 8-bits lately").
 
 ## icon · Street-art icon
 engine: astra
@@ -29,6 +29,7 @@ A single-layer spray-paint stencil of the ape doing one thing: hard cut edges wi
 ## box-logo · Box logo
 engine: astra
 text: 1
+weight: 0
 The streetwear box logo: one or two words in heavy white italic grotesque, set tight inside a solid signal-red rectangle. The box is the whole design, big and centred. The ape interacts with it: peeks over it, holds it up like a protest sign, is stuck inside it, or props it up like a shelf.
 
 ## bootleg · 90s bootleg tee
@@ -44,6 +45,7 @@ Front of a vintage rock tour tee: an ornate arched name across the top, a dramat
 ## varsity · Varsity
 engine: astra
 text: 2
+weight: 0
 Collegiate athletics: an arched slab-serif title with a drop-shadow outline, a big varsity numeral that is itself the joke (404, 429, 0.7), and the ape as a felt chenille patch mascot. Letterman-jacket chest energy.
 
 ## racing · Racing patches
@@ -60,6 +62,7 @@ Heritage workwear: a chain-stitched oval name patch or a woven-label rectangle, 
 ## souvenir · Souvenir badge
 engine: astra
 text: 2
+weight: 0
 Roadside and national-park souvenir tee: a round or shield badge with a simple landscape under a plain round sun (no radiating rays or sunburst), an arched name across the top and a small line below. An AI concept is treated as a tourist destination, with the ape as the ranger or the attraction.
 
 ## skate-zine · Skate zine
@@ -118,11 +121,13 @@ text: 1
 ## pixel · Pixel sprite
 engine: astra
 text: 1
+weight: 0.5
 8-bit game: the ape as a chunky pixel-art sprite in one game moment (a health bar, a power-up, a level-up), with hard pixel edges and only the brand inks.
 
 ## swiss · Swiss grid
 engine: astra
 text: 1
+weight: 0
 Swiss International Style: a strict grid, the ape simplified into circles and rectangles, one word in a clean grotesque, and a lot of negative space.
 
 ## pattern · All-over pattern

@@ -44,11 +44,14 @@ type SheetItem = {
 };
 /** `heading` and `hint` replace the drafts sheet's title and instructions, e.g. for a merch sheet. */
 type SheetSpec = { kind: "sheet"; date: string; topic: string | null; items: SheetItem[]; heading?: string; hint?: string };
-type KeyedSpec = { kind: "keyed"; image: string };
+/** `background`: the colour to remove when it is known (a house poster's ground); otherwise it is found on the border. */
+type KeyedSpec = { kind: "keyed"; image: string; background?: string };
 /** All sizes in pixels at 300 DPI: the canvas is the print area, the art is `artWidth` wide, `top` below its top edge. */
 type PrintFileSpec = { kind: "printfile"; image: string; width: number; height: number; artWidth: number; top: number };
+/** The art as it should look printed: on a swatch of the fabric colour, so transparency reads as fabric, not black. */
+type OnFabricSpec = { kind: "onfabric"; image: string; color: string; size: number };
 type CoverSpec = { kind: "cover"; image: string; width: number; height: number; format: Format; quality?: number; focusY?: number };
-type Spec = ArtSpec | ImageSpec | SheetSpec | KeyedSpec | PrintFileSpec | CoverSpec;
+type Spec = ArtSpec | ImageSpec | SheetSpec | KeyedSpec | PrintFileSpec | CoverSpec | OnFabricSpec;
 
 const C = {
   red: "#C8161D",
@@ -531,13 +534,16 @@ async function keyed(spec: KeyedSpec): Promise<HTMLCanvasElement> {
   for (let y = 1; y < H - 1; y++) border.push(y * W, y * W + W - 1);
   const opaque = border.filter((i) => p[i * 4 + 3] > 200);
   if (opaque.length > border.length / 2) {
-    const median = [0, 1, 2].map((ch) => {
-      const values = opaque.map((i) => p[i * 4 + ch]).sort((a, b) => a - b);
-      return values[values.length >> 1];
-    });
+    const known = spec.background ? [1, 3, 5].map((i) => parseInt((spec.background as string).slice(i, i + 2), 16)) : null;
+    const median =
+      known ??
+      [0, 1, 2].map((ch) => {
+        const values = opaque.map((i) => p[i * 4 + ch]).sort((a, b) => a - b);
+        return values[values.length >> 1];
+      });
     const tolerance = 30;
     const dist = (i: number) => Math.max(Math.abs(p[i * 4] - median[0]), Math.abs(p[i * 4 + 1] - median[1]), Math.abs(p[i * 4 + 2] - median[2]));
-    if (opaque.filter((i) => dist(i) <= tolerance).length >= opaque.length * 0.85) {
+    if (known || opaque.filter((i) => dist(i) <= tolerance).length >= opaque.length * 0.85) {
       const seen = new Uint8Array(W * H);
       const queue = new Int32Array(W * H);
       let head = 0;
@@ -602,6 +608,20 @@ function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: numb
   const sw = w / scale;
   const sh = h / scale;
   ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) * focusY, sw, sh, x, y, w, h);
+}
+
+async function onFabric(spec: OnFabricSpec): Promise<HTMLCanvasElement> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(spec.size);
+  const ctx = context(c);
+  ctx.fillStyle = spec.color;
+  ctx.fillRect(0, 0, spec.size, spec.size);
+  const scale = Math.min((spec.size * 0.8) / img.naturalWidth, (spec.size * 0.8) / img.naturalHeight);
+  const w = img.naturalWidth * scale;
+  const h = img.naturalHeight * scale;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, (spec.size - w) / 2, (spec.size - h) / 2, w, h);
+  return c;
 }
 
 async function cover(spec: CoverSpec): Promise<HTMLCanvasElement> {
@@ -737,6 +757,7 @@ async function render(spec: Spec): Promise<string> {
   if (spec.kind === "keyed") return encode(await keyed(spec), "png", undefined);
   if (spec.kind === "printfile") return encode(await printfile(spec), "png", undefined);
   if (spec.kind === "cover") return encode(await cover(spec), spec.format, spec.quality);
+  if (spec.kind === "onfabric") return encode(await onFabric(spec), "png", undefined);
   const c = spec.kind === "form" ? await form(spec) : await specimen(spec);
   return encode(c, spec.format, spec.quality);
 }

@@ -65,6 +65,7 @@ import {
   loadMerch,
   merchDir,
   MAX_HARD_TO_SEE,
+  matchesGround,
   prefersLightInk,
   printSize,
   printfulCatalog,
@@ -708,14 +709,23 @@ async function printMerch(options: Options): Promise<void> {
   // Art, its light-ink version for dark garments, and print files.
   const merches: Merch[] = [];
   let astraDown = false;
-  let renderer = await openRenderer({ run: runDir, merch: MERCH_DIR });
+  let renderer = await openRenderer({ run: runDir, merch: MERCH_DIR, site: path.join(CHECKOUT, "public") });
   try {
     for (const { d, garments } of picks) {
       const merchId = `${id}-${d.n}`;
       const dir = merchDir(merchId);
       for (const sub of ["mockups", "web", "jobs"]) fs.mkdirSync(path.join(dir, sub), { recursive: true });
       const existing = fs.existsSync(path.join(dir, "merch.json")) && !force ? loadMerch(merchId) : null;
-      fs.writeFileSync(path.join(dir, "art.png"), await renderer.render({ kind: "keyed", image: `/run/${d.image}` }));
+      // A house poster's draft carries a "DRAFT 3" label; the shirt gets the poster redrawn with the brand's name there.
+      // Its ground is a known colour, so it comes off even where the slogan bar meets the edge.
+      let source = `/run/${d.image}`;
+      let background: string | undefined;
+      if (d.engine !== "astra") {
+        fs.writeFileSync(path.join(dir, "source.png"), await renderer.render(compositionSpec(d, "A-OK", record.date, "png")));
+        source = `/merch/${merchId}/source.png`;
+        background = d.brief.template === "form" ? "#F4EDDD" : { cream: "#F1E8D6", red: "#C8161D", ink: "#141315" }[d.brief.colorway];
+      }
+      fs.writeFileSync(path.join(dir, "art.png"), await renderer.render({ kind: "keyed", image: source, background }));
       const art = pngInfo(path.join(dir, "art.png"));
       if (!art) throw new Error(`could not read ${merchId}/art.png`);
       const merch: Merch = existing ?? { id: merchId, run: id, n: d.n, title: d.brief.title, art: "art.png", artWidth: art.width, products: [] };
@@ -748,9 +758,11 @@ async function printMerch(options: Options): Promise<void> {
         const weakLight = light ? await renderer.measure({ image: `/merch/${merchId}/${merch.artLight}`, colors }) : null;
         const lightColors = weakLight ? SHOP_COLORS.filter((_, i) => prefersLightInk(weakOriginal[i], weakLight[i])) : [];
         const weakChosen = SHOP_COLORS.map((color, i) => (weakLight && lightColors.includes(color) ? weakLight[i] : weakOriginal[i]));
-        const offered = SHOP_COLORS.filter((_, i) => weakChosen[i] <= MAX_HARD_TO_SEE);
+        const offered = SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)));
         const dropped = SHOP_COLORS.filter((color) => !offered.includes(color));
-        if (dropped.length) log(`${merchId} ${garment}: not offered in ${dropped.join(", ")}: too much of the print would be hard to see`);
+        if (dropped.length) {
+          log(`${merchId} ${garment}: not offered in ${dropped.join(", ")}: ${background ? "the poster only prints true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
+        }
         log(
           `${merchId} ${garment}: share of the print hard to see, original${weakLight ? " / light ink" : ""}: ${SHOP_COLORS.map((color, i) => `${color} ${Math.round(weakOriginal[i] * 100)}%${weakLight ? `/${Math.round(weakLight[i] * 100)}%` : ""}`).join(", ")}`,
         );
@@ -851,6 +863,19 @@ async function printMerch(options: Options): Promise<void> {
         p.mockups.filter((m) => m.image && m.score === null).map((m) => ({ file: m.image as string, garment: p.garment, color: m.color, art: m.art ?? merch.art })),
       );
       if (!photos.length) continue;
+      // The judge compares each photo with the art on a swatch of its fabric: a transparent file alone reads as black.
+      const previews = await openRenderer({ merch: MERCH_DIR });
+      try {
+        fs.mkdirSync(path.join(merchDir(merch.id), "previews"), { recursive: true });
+        for (const photo of photos) {
+          const swatch = (printful.get(photo.garment) as Awaited<ReturnType<typeof printfulCatalog>>).swatch[photo.color];
+          const preview = `previews/${photo.garment}-${photo.color.toLowerCase()}.png`;
+          fs.writeFileSync(path.join(merchDir(merch.id), preview), await previews.render({ kind: "onfabric", image: `/merch/${merch.id}/${photo.art}`, color: swatch, size: 1000 }));
+          photo.art = preview;
+        }
+      } finally {
+        await previews.close();
+      }
       try {
         for (const check of await judgeMockups(merchDir(merch.id), photos)) {
           const m = merch.products.flatMap((p) => p.mockups).find((x) => x.image === check.file);
