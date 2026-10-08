@@ -381,7 +381,8 @@ function paymentHandlers() {
         accepted_brands: ["visa", "mastercard", "amex", "discover"],
         accepted_funding_types: ["credit", "debit"],
         supports_3ds: false,
-        environment: secretKey.startsWith("sk_live_") ? "production" : "sandbox",
+        // Secret (sk_) and restricted (rk_) keys both mark live mode with "_live_".
+        environment: /^(sk|rk)_live_/.test(secretKey) ? "production" : "sandbox",
       },
     },
   ];
