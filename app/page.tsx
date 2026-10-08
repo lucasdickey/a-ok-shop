@@ -7,6 +7,7 @@ import MonkeyTheorem from "@/app/components/MonkeyTheorem";
 import ProductCard from "@/app/components/product/ProductCard";
 import type { SimpleProduct } from "@/app/lib/catalog";
 import { getChaosMonkeys } from "@/app/lib/chaos-monkeys";
+import { newTileSeed, pickTileColors } from "@/app/lib/tileColors";
 
 // Dynamically import the catalog functionality
 const getFeaturedProductsData = async () => {
@@ -57,6 +58,8 @@ export default async function Home() {
   } catch (error) {
     console.error("Error fetching featured products:", error);
   }
+
+  const tileColors = pickTileColors(productsToShow, newTileSeed());
 
   const allMonkeys = getChaosMonkeys();
   const recentMonkeys = allMonkeys.slice(0, RECENT_MONKEYS);
@@ -228,7 +231,7 @@ export default async function Home() {
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-14">
           {productsToShow.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
+            <ProductCard key={product.id} product={product} index={index} color={tileColors[index]} />
           ))}
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-y-2 border-dashed border-dark py-6">

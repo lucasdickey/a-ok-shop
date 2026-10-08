@@ -12,6 +12,8 @@ type ProductCardProps = {
   index?: number;
   /** Load the photo eagerly (for cards above the fold). */
   priority?: boolean;
+  /** Garment color to show, from pickTileColors; the first photo shows when unset. */
+  color?: string;
 };
 
 // Photo panel colors rotate through the Club Receipt palette.
@@ -23,13 +25,18 @@ const CATEGORY_LABELS: Record<string, string> = {
   't-shirt': 'Tees',
 };
 
-export default function ProductCard({ product, index = 0, priority = false }: ProductCardProps) {
+export default function ProductCard({ product, index = 0, priority = false, color }: ProductCardProps) {
   const { handle, title, priceRange, images, productType, tags } = product;
 
   const price = parseFloat(priceRange.minVariantPrice.amount);
-  const imageUrl = images.edges[0]?.node.url || '/images/product-placeholder.jpg';
-  const imageAlt = images.edges[0]?.node.altText || title;
-  const isChestDetail = images.edges[0]?.node.presentation === 'chest-detail';
+  const photo = images.edges.find((edge) => color && edge.node.color === color)?.node ?? images.edges[0]?.node;
+  const imageUrl = photo?.url || '/images/product-placeholder.jpg';
+  const imageAlt = photo?.altText || title;
+  const isChestDetail = photo?.presentation === 'chest-detail';
+  // Open the product page on the color the tile shows.
+  const href = photo?.color
+    ? `/products/${handle}?color=${encodeURIComponent(photo.color)}`
+    : `/products/${handle}`;
 
   // The product's own type decides when it names a garment, so a tee tagged "red hoodie"
   // (describing the artwork) still reads as a tee. Tags only count when it doesn't.
@@ -50,7 +57,7 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
     // only, so it doesn't double the teeth into a dark band.
     <article className="group flex h-full min-w-0 flex-col border-2 border-b-0 border-dark bg-club-paper [filter:drop-shadow(6px_0_0_#22221E)]">
       <Link
-        href={`/products/${handle}`}
+        href={href}
         // The title link below is the one keyboard and screen reader stop for this card.
         tabIndex={-1}
         aria-hidden="true"
@@ -84,7 +91,7 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
         <PixelFade />
         <p className="micro text-primary">{categoryLabel}</p>
         <h3 className="mt-1.5 flex flex-col gap-1 text-[15px] font-bold leading-tight sm:mt-2 sm:flex-row sm:justify-between sm:gap-3 sm:text-[17px]">
-          <Link href={`/products/${handle}`} className="no-underline hover:underline">
+          <Link href={href} className="no-underline hover:underline">
             {title}
           </Link>
           <span className="shrink-0">${price.toFixed(2)}</span>

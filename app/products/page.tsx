@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { getAllProducts, getProductsByCategory, type SimpleProduct } from "@/app/lib/catalog";
+import { newTileSeed } from "@/app/lib/tileColors";
 import ProductBrowser from "./ProductBrowser";
 import { CATEGORY_FILTERS } from "./categories";
 
@@ -44,7 +45,7 @@ export default async function ProductsPage({
       ) : null}
       {/* ProductBrowser reads the category from the address, which needs a Suspense boundary. */}
       <Suspense fallback={<p className="micro px-5 py-10 sm:px-8 lg:px-[4vw]">Loading products...</p>}>
-        <ProductBrowser products={products} categoryIds={categoryIds} />
+        <ProductBrowser products={products} categoryIds={categoryIds} tileSeed={newTileSeed()} />
       </Suspense>
     </>
   );
