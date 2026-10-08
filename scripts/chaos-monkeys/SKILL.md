@@ -22,7 +22,7 @@ The review page is a claude.ai Artifact where the user keeps or rejects each dra
 1. Export the run: `~/.a-ok-chaos/bin/chaos review --date RUN --out <scratchpad>/chaos-review`. It writes `index.html`, `drafts.json`, and `img/RUN-N.webp`. To review several runs on one page (say an extra batch and that day's dailies), list them: `--date 2026-10-07-apparel,2026-10-07`. Each gets its own section and notes.
 2. Publish it with the Artifact tool: `file_path` the exported `index.html`, `root` the export folder, `files` set to `drafts.json` and every `img/…` file. If `~/.a-ok-chaos/review-artifact.txt` holds a URL, read that Artifact first and publish to it with `url` (feedback from earlier runs stays in its database). Otherwise publish a new one with `capabilities: {"db": {}}` and `icon: "shirt"`, then save its URL to that file. Give the user the link.
 3. When the user says they're done, read the feedback with the `ArtifactData` tool on that URL: `query` the `feedback` collection where `run` is in the runs on the page, and `get` the document `notes/RUN` for each. Write them to a file shaped `{"items": [{"run", "n", "verdict", "note"}], "notes": [{"run", "note"}]}` and run `~/.a-ok-chaos/bin/chaos feedback FILE`. Feedback can also come straight from chat: put the user's words in the same shape.
-4. Report what was imported and the style record the command prints, then ask whether to ship any of the kept drafts. The imported items also carry the Print ticks (`"print": {"tee": true, "hoodie": false}`); copy them into the feedback file.
+4. The import also re-distills `~/.a-ok-chaos/TASTE.md`, the owner's rules from every review, and prints it. Report what was imported and anything new in the rules, then ask whether to ship any of the kept drafts. `chaos taste --show` prints the rules any time. The imported items also carry the Print ticks (`"print": {"tee": true, "hoodie": false}`); copy them into the feedback file.
 
 ## Print and sell
 
@@ -30,7 +30,7 @@ When drafts are ticked Print (or the user names drafts to put on a shirt):
 
 1. Run `~/.a-ok-chaos/bin/chaos print --date RUN` (or name drafts: `chaos print 3 5:tee 6:hoodie`). It takes about a minute per photo: seven colours per garment. It writes Printful print files, model photos checked against the art, and product copy to `~/.a-ok-chaos/merch/RUN-N/`, and prints each folder's sheet path and the print size and DPI.
 2. Read each `sheet.png`, send it to the user, and summarize: the product titles, the print size and DPI, and any photo the check flagged. Show the product copy from `merch.json`. Ask before selling: this creates live Stripe products and puts them on the public shop.
-3. On the user's go, run `STRIPE_SECRET_KEY=… ~/.a-ok-chaos/bin/chaos sell RUN-N …` with the key read from the shop checkout's `.env.local` (never print it). Add `--force` only if the user accepts flagged photos. Report the product URLs and the deploy, and remind the user that Printful orders are placed by hand from the print files.
+3. On the user's go, run `STRIPE_SECRET_KEY=… ~/.a-ok-chaos/bin/chaos sell RUN-N …` with the key read from the shop checkout's `.env.local` (never print it). Add `--force` only if the user accepts flagged photos. Report the product URLs and the deploy. Concepts, print files, and Printful notes go to the private repo lucasdickey/a-ok-print-files at every step (`concepts/<run>/`, `merch/<run>-<n>/`); if a push fails, run `chaos archive --all`. Printful orders are placed by hand from those files.
 
 ## Ship
 
