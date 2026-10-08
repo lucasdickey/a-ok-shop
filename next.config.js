@@ -58,6 +58,11 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // The ACP discovery spec asks agents be allowed to cache this for an hour.
+        source: '/.well-known/acp.json',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=3600' }],
+      },
     ];
   },
 };

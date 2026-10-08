@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "A-OK - Agentic Commerce Protocol API",
-    "description": "API for browsing products and completing purchases at A-OK using the Agentic Commerce Protocol (ACP). Browse AI-inspired streetwear, get product details with variants and pricing, and create secure Stripe checkout sessions.",
-    "version": "1.0.0",
+    "description": "Buy A-OK streetwear through the Agentic Commerce Protocol (ACP, version 2026-04-17). Every color and size has its own item ID in the ACP product feed (/api/acp/products). Create a checkout session with those IDs, add the shopper's shipping address, then complete it with a Stripe shared payment token. For a simpler flow, /api/acp/checkout returns a Stripe-hosted checkout page instead. Full ACP schemas: https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/tree/main/spec/2026-04-17",
+    "version": "1.1.0",
     "contact": {
       "email": "info@a-ok.ai"
     }
@@ -38,7 +38,7 @@
       "post": {
         "operationId": "createCheckout",
         "summary": "Create checkout session",
-        "description": "Create a Stripe Checkout Session for purchasing products. Returns a hosted checkout URL that can be used to complete the purchase. Supports multiple items and custom success/cancel URLs. Items are priced from the catalog; shipping to the US and Canada is added at checkout (free over $50), and the shopper enters shipping and payment on the hosted page.",
+        "description": "Hosted checkout: returns a Stripe checkout page where the shopper enters shipping and payment. Simpler than the ACP checkout sessions below; tees and hoodies need a `size`. Create a Stripe Checkout Session for purchasing products. Returns a hosted checkout URL that can be used to complete the purchase. Supports multiple items and custom success/cancel URLs. Items are priced from the catalog; shipping to the US and Canada is added at checkout (free over $50), and the shopper enters shipping and payment on the hosted page.",
         "requestBody": {
           "required": true,
           "content": {
@@ -73,38 +73,452 @@
         }
       }
     },
-    "/api/acp/delegate-payment": {
+    "/api/acp/products": {
+      "get": {
+        "operationId": "getAcpProducts",
+        "summary": "ACP product feed",
+        "description": "Products in the ACP 2026-04-17 ProductsResponse format. Each variant is one color and size; its `id` is the item ID for checkout sessions.",
+        "responses": {
+          "200": {
+            "description": "Products with one variant per color and size",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpProductsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/checkout_sessions": {
       "post": {
-        "operationId": "createPaymentIntent",
-        "summary": "Create payment intent",
-        "description": "Create a Stripe Payment Intent for delegated payment processing. Returns a client secret that can be used to confirm the payment with a payment method. Supports custom amounts, currency, and metadata.",
+        "operationId": "createCheckoutSession",
+        "summary": "Create an ACP checkout session",
+        "description": "Starts a checkout from item IDs. The response is the full session: line items with Color and Size, shipping, totals in cents, and messages saying what the shopper still needs to provide. `status` is `ready_for_payment` once a US or Canadian address is set.",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DelegatePaymentRequest"
+                "$ref": "#/components/schemas/AcpCreateSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpCheckoutSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request, missing size, unknown item, or unsupported API-Version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ACP_API_KEYS is set and the bearer key is missing or wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A request with this Idempotency-Key is still being processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Idempotency-Key reused with a different body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited (120 requests a minute)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/checkout_sessions/{checkout_session_id}": {
+      "get": {
+        "operationId": "getCheckoutSession",
+        "summary": "Retrieve an ACP checkout session",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "checkout_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cs_0db0995cd4964943aae720fcec833bdd"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpCheckoutSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "updateCheckoutSession",
+        "summary": "Update items, buyer, address or notes",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Fields left out stay as they are; `null` clears a field. `line_items`, when sent, replaces the whole list.",
+        "parameters": [
+          {
+            "name": "checkout_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cs_0db0995cd4964943aae720fcec833bdd"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcpUpdateSessionRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Payment intent created successfully",
+            "description": "Updated session",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DelegatePaymentResponse"
+                  "$ref": "#/components/schemas/AcpCheckoutSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request payload",
+            "description": "Invalid request, missing size, unknown item, or unsupported API-Version",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ACP_API_KEYS is set and the bearer key is missing or wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A request with this Idempotency-Key is still being processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Idempotency-Key reused with a different body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited (120 requests a minute)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/checkout_sessions/{checkout_session_id}/complete": {
+      "post": {
+        "operationId": "completeCheckoutSession",
+        "summary": "Pay and place the order",
+        "description": "Charges the session total to the buyer's Stripe shared payment token (granted to this shop's Stripe profile, the handler's `merchant_id`). On success `status` is `completed` and `order` is set. A declined card returns the session, still `ready_for_payment`, with a `payment_declined` message. Cards that need 3D Secure aren't supported yet.",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "checkout_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cs_0db0995cd4964943aae720fcec833bdd"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcpCompleteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Completed, or declined with a message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpCheckoutSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Payments not configured, or Stripe unavailable; retry with the same Idempotency-Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request, missing size, unknown item, or unsupported API-Version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ACP_API_KEYS is set and the bearer key is missing or wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A request with this Idempotency-Key is still being processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Idempotency-Key reused with a different body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited (120 requests a minute)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/acp/checkout_sessions/{checkout_session_id}/cancel": {
+      "post": {
+        "operationId": "cancelCheckoutSession",
+        "summary": "Cancel an open session",
+        "security": [
+          {},
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "checkout_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "cs_0db0995cd4964943aae720fcec833bdd"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersion"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canceled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpCheckoutSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Already completed or canceled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcpError"
                 }
               }
             }
@@ -208,7 +622,12 @@
                   "items": {
                     "type": "string"
                   },
-                  "example": ["S", "M", "L", "XL"]
+                  "example": [
+                    "S",
+                    "M",
+                    "L",
+                    "XL"
+                  ]
                 }
               }
             }
@@ -250,17 +669,24 @@
       },
       "CheckoutRequest": {
         "type": "object",
-        "required": ["cart"],
+        "required": [
+          "cart"
+        ],
         "properties": {
           "cart": {
             "type": "object",
-            "required": ["items"],
+            "required": [
+              "items"
+            ],
             "properties": {
               "items": {
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["variantId", "quantity"],
+                  "required": [
+                    "variantId",
+                    "quantity"
+                  ],
                   "properties": {
                     "variantId": {
                       "type": "string",
@@ -275,7 +701,14 @@
                     },
                     "size": {
                       "type": "string",
-                      "enum": ["XS", "S", "M", "L", "XL", "2XL"],
+                      "enum": [
+                        "XS",
+                        "S",
+                        "M",
+                        "L",
+                        "XL",
+                        "2XL"
+                      ],
                       "description": "Required for tees and hoodies, which are printed to order in any of these sizes. Ask the shopper rather than guessing.",
                       "example": "L"
                     },
@@ -331,7 +764,11 @@
               },
               "status": {
                 "type": "string",
-                "enum": ["open", "complete", "expired"]
+                "enum": [
+                  "open",
+                  "complete",
+                  "expired"
+                ]
               },
               "url": {
                 "type": "string",
@@ -345,72 +782,6 @@
           }
         }
       },
-      "DelegatePaymentRequest": {
-        "type": "object",
-        "required": ["amount"],
-        "properties": {
-          "amount": {
-            "type": "integer",
-            "description": "Amount in smallest currency unit (cents for USD)",
-            "example": 1200
-          },
-          "currency": {
-            "type": "string",
-            "default": "usd",
-            "example": "usd"
-          },
-          "payment_method": {
-            "type": "string",
-            "description": "Stripe Payment Method ID (required if confirm is true)"
-          },
-          "customer_email": {
-            "type": "string",
-            "format": "email"
-          },
-          "confirm": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to immediately confirm the payment (requires payment_method)"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "Custom metadata to attach to the payment intent"
-          }
-        }
-      },
-      "DelegatePaymentResponse": {
-        "type": "object",
-        "properties": {
-          "protocol": {
-            "type": "string",
-            "example": "acp-draft-2024-12"
-          },
-          "payment_intent": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Stripe Payment Intent ID"
-              },
-              "client_secret": {
-                "type": "string",
-                "description": "Client secret for confirming the payment"
-              },
-              "status": {
-                "type": "string",
-                "enum": ["requires_payment_method", "requires_confirmation", "requires_action", "processing", "succeeded", "canceled"]
-              },
-              "next_action": {
-                "type": "object",
-                "description": "Next action required to complete the payment (e.g., 3D Secure)"
-              }
-            }
-          }
-        }
-      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -419,6 +790,461 @@
             "description": "Error message"
           }
         }
+      },
+      "AcpItem": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Item ID from /api/acp/products: the variant number plus the size for clothing",
+            "example": "47200000000110-L"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "default": 1
+          }
+        }
+      },
+      "AcpAddress": {
+        "type": "object",
+        "required": [
+          "name",
+          "line_one",
+          "city",
+          "state",
+          "country",
+          "postal_code"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "line_one": {
+            "type": "string"
+          },
+          "line_two": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "description": "US or CA",
+            "example": "US"
+          },
+          "postal_code": {
+            "type": "string"
+          }
+        }
+      },
+      "AcpFulfillmentDetails": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AcpAddress"
+          }
+        }
+      },
+      "AcpBuyer": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone_number": {
+            "type": "string"
+          }
+        }
+      },
+      "AcpCreateSessionRequest": {
+        "type": "object",
+        "required": [
+          "line_items"
+        ],
+        "properties": {
+          "currency": {
+            "type": "string",
+            "enum": [
+              "usd"
+            ]
+          },
+          "line_items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/AcpItem"
+            }
+          },
+          "buyer": {
+            "$ref": "#/components/schemas/AcpBuyer"
+          },
+          "fulfillment_details": {
+            "$ref": "#/components/schemas/AcpFulfillmentDetails"
+          },
+          "order_notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "capabilities": {
+            "type": "object",
+            "description": "The agent's capabilities (ACP spec)."
+          }
+        }
+      },
+      "AcpUpdateSessionRequest": {
+        "type": "object",
+        "properties": {
+          "line_items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/AcpItem"
+            }
+          },
+          "buyer": {
+            "$ref": "#/components/schemas/AcpBuyer"
+          },
+          "fulfillment_details": {
+            "$ref": "#/components/schemas/AcpFulfillmentDetails"
+          },
+          "order_notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "selected_fulfillment_options": {
+            "type": "array",
+            "description": "The only option is `standard`.",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "AcpCompleteRequest": {
+        "type": "object",
+        "required": [
+          "payment_data"
+        ],
+        "properties": {
+          "buyer": {
+            "$ref": "#/components/schemas/AcpBuyer"
+          },
+          "payment_data": {
+            "type": "object",
+            "properties": {
+              "handler_id": {
+                "type": "string",
+                "enum": [
+                  "card_tokenized"
+                ]
+              },
+              "instrument": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "card"
+                  },
+                  "credential": {
+                    "type": "object",
+                    "required": [
+                      "token"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "spt"
+                        ]
+                      },
+                      "token": {
+                        "type": "string",
+                        "example": "spt_123"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "AcpCheckoutSession": {
+        "type": "object",
+        "description": "The full ACP CheckoutSession; see https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/tree/main/spec/2026-04-17/json-schema/schema.agentic_checkout.json",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "not_ready_for_payment",
+              "ready_for_payment",
+              "completed",
+              "canceled"
+            ]
+          },
+          "currency": {
+            "type": "string",
+            "example": "usd"
+          },
+          "line_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "item": {
+                  "$ref": "#/components/schemas/AcpItem"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "unit_amount": {
+                  "type": "integer",
+                  "description": "Amount in cents"
+                },
+                "variant_options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Size"
+                      },
+                      "value": {
+                        "type": "string",
+                        "example": "L"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "fulfillment_details": {
+            "$ref": "#/components/schemas/AcpFulfillmentDetails"
+          },
+          "totals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "total"
+                },
+                "display_text": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "integer",
+                  "description": "Amount in cents"
+                }
+              }
+            }
+          },
+          "messages": {
+            "type": "array",
+            "description": "What still needs doing, e.g. a missing address or a declined card",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "info",
+                    "error"
+                  ]
+                },
+                "code": {
+                  "type": "string"
+                },
+                "param": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "capabilities": {
+            "type": "object",
+            "description": "`payment.handlers` lists the Stripe card handler while the session is open"
+          },
+          "order": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "checkout_session_id": {
+                "type": "string"
+              },
+              "permalink_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      },
+      "AcpError": {
+        "type": "object",
+        "required": [
+          "type",
+          "code",
+          "message"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "invalid_request",
+              "processing_error",
+              "service_unavailable"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "example": "size_required"
+          },
+          "message": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string",
+            "example": "$.line_items[0].id"
+          },
+          "supported_versions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AcpProductsResponse": {
+        "type": "object",
+        "description": "ACP ProductsResponse; see https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/tree/main/spec/2026-04-17/json-schema/schema.feed.json",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "variants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "47200000000110-L"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "integer",
+                            "description": "Amount in cents"
+                          },
+                          "currency": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "variant_options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "ApiVersion": {
+        "name": "API-Version",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "2026-04-17"
+          ]
+        }
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "description": "Required on every POST. A retry with the same key and body returns the first answer.",
+        "schema": {
+          "type": "string",
+          "maxLength": 255
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Required only when the shop sets ACP_API_KEYS."
       }
     }
   }

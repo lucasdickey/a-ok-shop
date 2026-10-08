@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
 import { runOnce } from "@/app/lib/kv";
+import { parseItemList } from "@/app/lib/acp/items";
+import { sendOrderCreated } from "@/app/lib/acp/order-events";
 import { getProductByHandle, isSameId } from "@/app/lib/catalog";
 import type { MPPItem } from "@/app/types/mpp";
 
@@ -73,6 +75,12 @@ export async function POST(request: NextRequest) {
         // Handle MPP agent payments
         if (paymentIntent.metadata?.source === "mpp-agent") {
           await handleMPPPaymentSucceeded(stripeClient, paymentIntent);
+        } else if (paymentIntent.metadata?.source === "acp") {
+          // ACP agent checkout (app/lib/acp/payment.ts)
+          const order = toACPOrder(paymentIntent);
+          await runOnce(`order-alert:${order.sessionId}`, () => sendOwnerOrderAlert(order));
+          // Then tell the agent platform, when one is configured (ACP_WEBHOOK_URL).
+          await runOnce(`acp-order-event:${order.sessionId}`, () => sendOrderCreated(paymentIntent));
         }
         break;
       }
@@ -593,6 +601,43 @@ function toMPPOrder(paymentIntent: Stripe.PaymentIntent, customerEmail: string):
     items,
     amountSubtotal,
     amountShipping: Math.max(paymentIntent.amount - amountSubtotal, 0),
+    amountTax: 0,
+    amountTotal: paymentIntent.amount,
+    livemode: paymentIntent.livemode,
+  };
+}
+
+/**
+ * Shapes an ACP agent payment like a Checkout order, so the owner alert has the
+ * address, sizes, colors and totals.
+ */
+function toACPOrder(paymentIntent: Stripe.PaymentIntent): Order {
+  const metadata = paymentIntent.metadata ?? {};
+  const items: OrderItem[] = parseItemList(metadata.items).map(({ itemId, quantity, item }) => ({
+    name: item?.product.title ?? itemId,
+    quantity,
+    size: item?.size ?? "",
+    color: item?.color ?? "",
+    variantId: item?.variant.id ?? itemId,
+    sku: item?.variant.sku ?? "",
+    amountTotal: (item?.unitAmount ?? 0) * quantity,
+  }));
+  const itemsTotal = items.reduce((sum, item) => sum + item.amountTotal, 0);
+  const amountSubtotal = Number(metadata.amount_subtotal) || itemsTotal;
+
+  return {
+    sessionId: metadata.checkout_session_id || paymentIntent.id,
+    paymentIntentId: paymentIntent.id,
+    source: "acp",
+    createdAt: new Date(paymentIntent.created * 1000),
+    customerName: metadata.customer_name ?? "",
+    customerEmail: metadata.customer_email || paymentIntent.receipt_email || "",
+    customerPhone: paymentIntent.shipping?.phone ?? "",
+    shippingName: paymentIntent.shipping?.name ?? "",
+    shippingAddress: paymentIntent.shipping?.address ?? null,
+    items,
+    amountSubtotal,
+    amountShipping: Number(metadata.amount_shipping) || Math.max(paymentIntent.amount - amountSubtotal, 0),
     amountTax: 0,
     amountTotal: paymentIntent.amount,
     livemode: paymentIntent.livemode,
