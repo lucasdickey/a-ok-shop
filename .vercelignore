@@ -4,6 +4,7 @@ v0-retro-style-game-concept/**/*
 .git/
 .github/
 use-cases/a-ok-infinite-apes/
+use-cases/a-ok-hallucination-receipt/
 use-cases/chaos-monkeys-lab/
 
 # PR screenshots live in git history, not in deployments.

@@ -1,0 +1,12 @@
+# Rendered media and stills stay on the machine that made them; they are never committed.
+# The film reads its photos and catalog from the storefront itself (public/, product-catalog.json).
+source/out/
+source/audio/
+*.mp4
+*.mkv
+*.wav
+*.png
+*.jpg
+*.zip
+.DS_Store
+__pycache__/
