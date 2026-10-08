@@ -57,21 +57,31 @@ export function listItems(product: SimpleProduct): AcpItem[] {
  * agents get the same size checks and messages as shoppers on the site.
  * Returns an error for the shopper (e.g. a missing size), or null if the ID is unknown.
  */
-export function findItem(itemId: string): AcpItem | { error: string } | null {
+export type ItemError = { error: string; code: "size_required" | "invalid_size" };
+
+export function findItem(itemId: string): AcpItem | ItemError | null {
   const match = itemId.match(/^(\d+)(?:-([A-Za-z0-9]{1,5}))?$/);
   if (!match) return null;
   const [, number, size] = match;
 
   const products = getAllProducts();
+  const product = products.find((p) => p.variants.edges.some((v) => isSameId(v.node.id, number)));
   const resolved = resolveVariant(products, { variantId: number, quantity: 1, size });
   if (!resolved) {
     // Known but sold out, or not ours at all.
-    const product = products.find((p) => p.variants.edges.some((v) => isSameId(v.node.id, number)));
     const variant = product?.variants.edges.find((v) => isSameId(v.node.id, number))?.node;
     return product && variant ? { ...makeItem(product, variant, size), id: itemId, available: false } : null;
   }
-  if ("error" in resolved) return resolved;
-  if (size && !resolved.size) return { error: `${resolved.product.title} doesn't come in sizes` };
+  if ("error" in resolved) {
+    const sizes = product ? getClothingSizes(product).join(", ") : "";
+    return {
+      error: sizes ? `${resolved.error}. Sizes: ${sizes}` : resolved.error,
+      code: size ? "invalid_size" : "size_required",
+    };
+  }
+  if (size && !resolved.size) {
+    return { error: `${resolved.product.title} doesn't come in sizes`, code: "invalid_size" };
+  }
 
   return { ...makeItem(resolved.product, resolved.variant, resolved.size), id: itemId };
 }
