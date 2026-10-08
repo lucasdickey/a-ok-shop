@@ -19,6 +19,7 @@ const PHOTO_BACKGROUNDS = ['bg-club-yellow', 'bg-club-sky', 'bg-club-gold'];
 
 const CATEGORY_LABELS: Record<string, string> = {
   hoodie: 'Hoodies',
+  sweatshirt: 'Sweatshirts',
   hat: 'Hats',
   't-shirt': 'Tees',
 };
@@ -37,7 +38,14 @@ export default function ProductCard({ product, index = 0, priority = false }: Pr
   const typeIsGarment = ['hoodie', 'sweatshirt', 'hat', 'cap', 'shirt', 'tee'].some((word) => typeText.includes(word));
   const isType = (type: string) =>
     typeText.includes(type) || (!typeIsGarment && tags.some((tag) => tag.toLowerCase().includes(type)));
-  const cardType = isType('hoodie') ? 'hoodie' : isType('hat') ? 'hat' : 't-shirt';
+  // Sweatshirts are filed with hoodies in the shop ("Hoodies & sweatshirts"), not with tees.
+  const cardType = isType('hoodie')
+    ? 'hoodie'
+    : isType('sweatshirt')
+      ? 'sweatshirt'
+      : isType('hat')
+        ? 'hat'
+        : 't-shirt';
 
   const itemNumber = String(index + 1).padStart(2, '0');
   // Stickers and other non-clothing items fall back to the t-shirt card type.
