@@ -3,7 +3,7 @@
   "name_for_human": "A-OK Shop",
   "name_for_model": "a_ok_shop",
   "description_for_human": "Browse and purchase AI-inspired streetwear from A-OK Shop (Apes on Keys). Nerd streetwear for AI junkies.",
-  "description_for_model": "Access the A-OK Shop product catalog and create checkout sessions for AI-inspired streetwear merchandise. Use the Agentic Commerce Protocol (ACP) to browse products, get detailed product information including variants and pricing, and initiate Stripe-powered checkout flows. You can create both hosted checkout sessions and direct payment intents. All products include detailed sizing charts, color options, and high-quality images.",
+  "description_for_model": "Browse and buy A-OK's AI-inspired streetwear through the Agentic Commerce Protocol (ACP 2026-04-17). Every color and size has its own item ID in the ACP product feed; tees and hoodies need a size, so ask the shopper rather than guessing. Create a checkout session with item IDs, add a US or Canadian shipping address, then complete it with a Stripe shared payment token, or create a Stripe-hosted checkout page for the shopper to finish.",
   "auth": {
     "type": "none"
   },
