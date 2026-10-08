@@ -5,7 +5,7 @@
  *   chaos draft [--count 6] [--date RUN] [--force] [--zingers]  brief, illustrate, compose, judge, contact sheet (~10 min)
  *   chaos status [--date RUN]                                the latest drafts, their scores, and what shipped
  *   chaos judge [--date RUN]                                 re-score a run's drafts and rebuild its contact sheet
- *   chaos review [--date RUN] --out DIR                      export a run for the feedback page (index.html, drafts.json, img/)
+ *   chaos review [--date RUN[,RUN…]] --out DIR               export runs for the feedback page (index.html, drafts.json, img/)
  *   chaos feedback FILE.json [--date RUN]                    import keep/reject verdicts and notes; future briefs learn from them
  *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force]    print files, model mockups, and copy for drafts ticked Print
  *   chaos sell RUN-N … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
@@ -556,52 +556,56 @@ async function unpublish(options: Options): Promise<void> {
 /* ------------------------------------------------------------------ review and feedback */
 
 /**
- * Exports a run for the feedback page: the page itself, drafts.json, and a WebP of each draft in img/. Publish the
- * folder as an Artifact (index.html with the rest as files); the page stores verdicts in the Artifact's database.
+ * Exports one or more runs for the feedback page: the page itself, drafts.json, and a WebP of each draft in img/.
+ * Publish the folder as an Artifact (index.html with the rest as files); the page stores verdicts in the Artifact's
+ * database, one document per draft, keyed by run and number.
  */
 async function review(options: Options): Promise<void> {
-  const id = flag(options, "--date") ?? latestRunId();
+  const ids = (flag(options, "--date") ?? latestRunId()).split(",").map((id) => id.trim()).filter(Boolean);
   const out = flag(options, "--out");
-  if (!out) throw new Error("usage: chaos review [--date RUN] --out DIR");
-  const record = loadRun(id);
-  const runDir = runDirFor(id);
+  if (!out) throw new Error("usage: chaos review [--date RUN[,RUN…]] --out DIR");
+  const records = ids.map((id) => loadRun(id));
   const styles = new Map(readStyles().map((style) => [style.id, style.name]));
   fs.rmSync(path.join(out, "img"), { recursive: true, force: true });
   fs.mkdirSync(path.join(out, "img"), { recursive: true });
   fs.copyFileSync(path.join(TOOL_DIR, "review", "index.html"), path.join(out, "index.html"));
 
-  const shipped = new Map(record.shipped.map((s) => [s.draft, s.id]));
   const drafts = [];
-  const renderer = await openRenderer({ run: runDir, site: path.join(CHECKOUT, "public") });
+  const renderer = await openRenderer({ runs: RUNS_DIR });
   try {
-    for (const d of record.drafts) {
-      if (!d.image || d.error) continue;
-      const image = `img/${id}-${d.n}.webp`;
-      fs.writeFileSync(path.join(out, image), await renderer.render({ kind: "image", size: 900, format: "webp", quality: 0.84, image: `/run/${d.image}` }));
-      const { brief } = d;
-      drafts.push({
-        n: d.n,
-        image,
-        title: brief.title,
-        style: styles.get(brief.style) ?? brief.style,
-        garment: `${brief.garmentColor} ${brief.garment}, ${brief.placement}`,
-        printText: brief.printText,
-        slogan: brief.slogan,
-        productCopy: brief.productCopy,
-        marketingCopy: brief.marketingCopy,
-        joke: brief.joke,
-        topical: brief.inspiration !== null,
-        score: d.judgment?.score ?? null,
-        judgeNote: d.judgment?.note ?? "",
-        shipped: shipped.get(d.n) ?? null,
-      });
+    for (const [i, record] of records.entries()) {
+      const id = ids[i];
+      const shipped = new Map(record.shipped.map((s) => [s.draft, s.id]));
+      for (const d of record.drafts) {
+        if (!d.image || d.error) continue;
+        const image = `img/${id}-${d.n}.webp`;
+        fs.writeFileSync(path.join(out, image), await renderer.render({ kind: "image", size: 900, format: "webp", quality: 0.84, image: `/runs/${id}/${d.image}` }));
+        const { brief } = d;
+        drafts.push({
+          run: id,
+          n: d.n,
+          image,
+          title: brief.title,
+          style: styles.get(brief.style) ?? brief.style,
+          garment: `${brief.garmentColor} ${brief.garment}, ${brief.placement}`,
+          printText: brief.printText,
+          slogan: brief.slogan,
+          productCopy: brief.productCopy,
+          marketingCopy: brief.marketingCopy,
+          joke: brief.joke,
+          topical: brief.inspiration !== null,
+          score: d.judgment?.score ?? null,
+          judgeNote: d.judgment?.note ?? "",
+          shipped: shipped.get(d.n) ?? null,
+        });
+      }
     }
   } finally {
     await renderer.close();
   }
-  const data = { run: id, date: record.date, label: dateLabel(record.date), topic: record.topic?.headline ?? null, drafts };
-  fs.writeFileSync(path.join(out, "drafts.json"), `${JSON.stringify(data, null, 2)}\n`);
-  log(`review page for ${id}: ${path.join(out, "index.html")} (${drafts.length} drafts)`);
+  const runs = records.map((record, i) => ({ run: ids[i], date: record.date, label: dateLabel(record.date), topic: record.topic?.headline ?? null }));
+  fs.writeFileSync(path.join(out, "drafts.json"), `${JSON.stringify({ runs, drafts }, null, 2)}\n`);
+  log(`review page for ${ids.join(", ")}: ${path.join(out, "index.html")} (${drafts.length} drafts)`);
 }
 
 type FeedbackFile = {

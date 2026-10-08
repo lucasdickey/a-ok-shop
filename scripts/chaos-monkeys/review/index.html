@@ -1,7 +1,7 @@
 <title>Chaos Monkeys Review</title>
 <!--
-  The feedback page for a run of Chaos Monkeys drafts. `chaos review --out DIR` copies this file next to the run's
-  drafts.json and img/, and the folder is published as a claude.ai Artifact with the `db` capability. Verdicts, notes,
+  The feedback page for one or more runs of Chaos Monkeys drafts. `chaos review --out DIR` copies this file next to the
+  runs' drafts.json and img/, and the folder is published as a claude.ai Artifact with the `db` capability. Verdicts, notes,
   and Print ticks are stored in the Artifact's database (collection "feedback", one document per draft; collection
   "notes", one document per run). `chaos feedback` imports them into run.json, where the next briefs learn from them
   and `chaos print` finds what to print.
@@ -70,7 +70,13 @@ textarea:disabled { opacity: .6; }
 .meta { display: flex; justify-content: space-between; gap: 10px; font: 12px/1.3 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 .meta b { color: var(--fg); font-weight: 600; }
 .score { font-variant-numeric: tabular-nums; white-space: nowrap; }
-h2 { font: 400 34px/.95 var(--display); margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.card h3 { font: 400 34px/.95 var(--display); margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.runs { display: grid; gap: 44px; }
+.run { display: grid; gap: 16px; }
+.run-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; border-top: 2px solid var(--fg); padding-top: 14px; }
+.run-title { font: 400 clamp(30px, 4vw, 44px)/.95 var(--display); margin: 0; letter-spacing: .01em; }
+.run-count { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.run-topic { margin: 0; color: var(--muted); max-width: 68ch; }
 .prints { font: 600 13px/1.4 var(--mono); color: var(--red); overflow-wrap: anywhere; }
 .prints.none { color: var(--muted); font-weight: 400; }
 dl { margin: 0; display: grid; gap: 8px; }
@@ -110,15 +116,10 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
       <button class="chip" id="f-keep" data-filter="keep" aria-pressed="false">Kept <span></span></button>
       <button class="chip" id="f-reject" data-filter="reject" aria-pressed="false">Rejected <span></span></button>
     </div>
-    <div class="batch">
-      <label class="small" for="batch-note">Notes on the whole set</label>
-      <textarea id="batch-note" rows="2" placeholder="More of this, less of that: styles, garments, how much text, which jokes land."></textarea>
-      <div class="status" id="batch-status"></div>
-    </div>
     <div class="notice" id="notice" hidden></div>
   </header>
 
-  <main class="grid" id="grid" aria-live="polite"></main>
+  <main class="runs" id="runs" aria-live="polite"></main>
 
   <footer id="footer">When you're done, tell Claude in the chat. It imports your verdicts and notes, and the next drafts lean toward what you kept. Anything ticked Print gets print files, model photos in seven colours, and product copy, ready to go on the shop.</footer>
 </div>
@@ -127,16 +128,17 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
 
 <script>
 (() => {
-  const grid = document.getElementById("grid");
+  const runsEl = document.getElementById("runs");
   const zoom = document.getElementById("zoom");
-  const batchNote = document.getElementById("batch-note");
-  const batchStatus = document.getElementById("batch-status");
   const notice = document.getElementById("notice");
-  const state = { run: null, drafts: [], feedback: new Map(), filter: "all", db: null, readOnly: false };
+  // Drafts are keyed "<run>~<n>", the same id as their feedback document.
+  const state = { runs: [], drafts: [], feedback: new Map(), filter: "all", db: null, readOnly: false };
   const cards = new Map();
+  const sections = new Map();
   const queues = new Map();
   const timers = new Map();
   const EMPTY = { verdict: null, note: "", print: { tee: false, hoodie: false } };
+  const keyOf = (d) => `${d.run}~${d.n}`;
 
   const el = (tag, attrs = {}, ...children) => {
     const node = document.createElement(tag);
@@ -154,14 +156,18 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
     notice.hidden = !text;
   }
 
+  /** "OCT 7, 2026 · APPAREL" for a labelled run, "OCT 7, 2026 · DAILY" for the morning's. */
+  const runTitle = (run) => `${run.label} · ${run.run.length > 10 ? run.run.slice(11).replace(/-/g, " ").toUpperCase() : "DAILY"}`;
+
   /* ---------------------------------------------------------------- render */
 
   function card(d) {
+    const key = keyOf(d);
     const verdictButtons = ["keep", "reject"].map((v) =>
-      el("button", { type: "button", "data-v": v, "aria-pressed": "false", id: `v-${d.n}-${v}`, text: v === "keep" ? "Keep" : "Reject" }),
+      el("button", { type: "button", "data-v": v, "aria-pressed": "false", id: `v-${key}-${v}`, text: v === "keep" ? "Keep" : "Reject" }),
     );
-    const note = el("textarea", { id: `note-${d.n}`, rows: "2", placeholder: "What works, what doesn't, what to try instead" });
-    const printBoxes = ["tee", "hoodie"].map((kind) => el("input", { type: "checkbox", id: `print-${d.n}-${kind}`, "data-kind": kind }));
+    const note = el("textarea", { id: `note-${key}`, rows: "2", placeholder: "What works, what doesn't, what to try instead" });
+    const printBoxes = ["tee", "hoodie"].map((kind) => el("input", { type: "checkbox", id: `print-${key}-${kind}`, "data-kind": kind }));
     const printRow = el("div", { class: "print", role: "group", "aria-label": `Print draft ${d.n} on` },
       el("span", { class: "small", text: "Print on" }),
       ...printBoxes.map((box) => el("label", { class: "opt", for: box.id }, box, document.createTextNode(box.dataset.kind === "tee" ? "Tee" : "Hoodie"))),
@@ -192,45 +198,69 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
         el("span", {}, el("b", { text: d.style }), document.createTextNode(` · ${d.garment}`)),
         el("span", { class: "score", text: d.score === null ? "unscored" : `judge ${d.score}/10` }),
       ),
-      el("h2", { text: d.title }),
+      el("h3", { text: d.title }),
       prints,
       details,
       d.judgeNote ? el("div", { class: "judge", text: `Judge: ${d.judgeNote}` }) : null,
       el("div", { class: "verdict", role: "group", "aria-label": `Verdict for draft ${d.n}` }, ...verdictButtons),
       printRow,
-      el("label", { class: "small", for: `note-${d.n}`, text: "Why" }),
+      el("label", { class: "small", for: note.id, text: "Why" }),
       note,
       status,
     );
-    const root = el("article", { class: "card", id: `draft-${d.n}`, "data-verdict": "" }, shot, body);
+    const root = el("article", { class: "card", id: `draft-${key}`, "data-verdict": "" }, shot, body);
 
     for (const button of verdictButtons) {
       button.addEventListener("click", () => {
-        const current = state.feedback.get(d.n) ?? EMPTY;
+        const current = state.feedback.get(key) ?? EMPTY;
         const verdict = current.verdict === button.dataset.v ? null : button.dataset.v;
         setFeedback(d, { ...current, verdict, note: note.value.trim() });
       });
     }
     for (const box of printBoxes) {
       box.addEventListener("change", () => {
-        const current = state.feedback.get(d.n) ?? EMPTY;
+        const current = state.feedback.get(key) ?? EMPTY;
         setFeedback(d, { ...current, note: note.value.trim(), print: { ...current.print, [box.dataset.kind]: box.checked } });
       });
     }
     note.addEventListener("input", () => {
-      clearTimeout(timers.get(d.n));
-      timers.set(d.n, setTimeout(() => flushNote(d), 800));
+      clearTimeout(timers.get(key));
+      timers.set(key, setTimeout(() => flushNote(d), 800));
     });
     note.addEventListener("blur", () => flushNote(d));
 
-    cards.set(d.n, { root, verdictButtons, printBoxes, note, status });
+    cards.set(key, { root, verdictButtons, printBoxes, note, status });
     return root;
   }
 
-  function paint(n) {
-    const c = cards.get(n);
+  /** One run: its title, its own notes, and its drafts. */
+  function section(run, drafts) {
+    const textarea = el("textarea", { id: `notes-${run.run}`, rows: "2", placeholder: "More of this, less of that: styles, garments, how much text, which jokes land." });
+    const status = el("div", { class: "status" });
+    const grid = el("div", { class: "grid" }, ...drafts.map(card));
+    const root = el("section", { class: "run", "aria-label": runTitle(run) },
+      el("div", { class: "run-head" },
+        el("h2", { class: "run-title", text: runTitle(run) }),
+        el("span", { class: "run-count", text: `${drafts.length} draft${drafts.length === 1 ? "" : "s"}` }),
+      ),
+      run.topic ? el("p", { class: "run-topic", text: `The draft marked Zingers riffs on the day's story: ${run.topic}` }) : null,
+      el("div", { class: "batch" }, el("label", { class: "small", for: textarea.id, text: "Notes on this set" }), textarea, status),
+      grid,
+    );
+    const entry = { root, textarea, status, saved: "", timer: null, drafts };
+    textarea.addEventListener("input", () => {
+      clearTimeout(entry.timer);
+      entry.timer = setTimeout(() => flushRunNote(run.run), 900);
+    });
+    textarea.addEventListener("blur", () => flushRunNote(run.run));
+    sections.set(run.run, entry);
+    return root;
+  }
+
+  function paint(key) {
+    const c = cards.get(key);
     if (!c) return;
-    const fb = state.feedback.get(n) ?? EMPTY;
+    const fb = state.feedback.get(key) ?? EMPTY;
     c.root.dataset.verdict = fb.verdict ?? "";
     for (const button of c.verdictButtons) button.setAttribute("aria-pressed", String(button.dataset.v === fb.verdict));
     for (const box of c.printBoxes) box.checked = fb.print[box.dataset.kind] === true;
@@ -238,7 +268,7 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
   }
 
   function tally() {
-    const verdicts = state.drafts.map((d) => state.feedback.get(d.n)?.verdict ?? null);
+    const verdicts = state.drafts.map((d) => state.feedback.get(keyOf(d))?.verdict ?? null);
     const counts = {
       all: state.drafts.length,
       open: verdicts.filter((v) => !v).length,
@@ -247,10 +277,11 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
     };
     for (const [key, count] of Object.entries(counts)) document.querySelector(`#f-${key} span`).textContent = String(count);
     for (const d of state.drafts) {
-      const v = state.feedback.get(d.n)?.verdict ?? null;
-      const show = state.filter === "all" || (state.filter === "open" ? !v : v === state.filter);
-      cards.get(d.n).root.hidden = !show;
+      const v = state.feedback.get(keyOf(d))?.verdict ?? null;
+      cards.get(keyOf(d)).root.hidden = !(state.filter === "all" || (state.filter === "open" ? !v : v === state.filter));
     }
+    // A set with nothing left to show under the filter folds away.
+    for (const entry of sections.values()) entry.root.hidden = entry.drafts.every((d) => cards.get(keyOf(d)).root.hidden);
   }
 
   document.querySelectorAll(".chip").forEach((chip) =>
@@ -289,36 +320,32 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
   }
 
   function setFeedback(d, fb) {
-    state.feedback.set(d.n, fb);
-    paint(d.n);
+    const key = keyOf(d);
+    state.feedback.set(key, fb);
+    paint(key);
     tally();
-    write(`feedback/${state.run}~${d.n}`, { run: state.run, n: d.n, title: d.title, verdict: fb.verdict, note: fb.note, print: fb.print, updatedAt: new Date().toISOString() }, cards.get(d.n).status);
+    write(`feedback/${key}`, { run: d.run, n: d.n, title: d.title, verdict: fb.verdict, note: fb.note, print: fb.print, updatedAt: new Date().toISOString() }, cards.get(key).status);
   }
 
   function flushNote(d) {
-    clearTimeout(timers.get(d.n));
-    const current = state.feedback.get(d.n) ?? EMPTY;
-    const note = cards.get(d.n).note.value.trim();
+    const key = keyOf(d);
+    clearTimeout(timers.get(key));
+    const current = state.feedback.get(key) ?? EMPTY;
+    const note = cards.get(key).note.value.trim();
     if (note !== current.note) setFeedback(d, { ...current, note });
   }
 
-  let batchTimer = null;
-  let batchSaved = "";
-  function flushBatch() {
-    clearTimeout(batchTimer);
-    const note = batchNote.value.trim();
-    if (note === batchSaved) return;
-    batchSaved = note;
-    write(`notes/${state.run}`, { run: state.run, note, updatedAt: new Date().toISOString() }, batchStatus);
+  function flushRunNote(run) {
+    const entry = sections.get(run);
+    clearTimeout(entry.timer);
+    const note = entry.textarea.value.trim();
+    if (note === entry.saved) return;
+    entry.saved = note;
+    write(`notes/${run}`, { run, note, updatedAt: new Date().toISOString() }, entry.status);
   }
-  batchNote.addEventListener("input", () => {
-    clearTimeout(batchTimer);
-    batchTimer = setTimeout(flushBatch, 900);
-  });
-  batchNote.addEventListener("blur", flushBatch);
 
   function lockInputs() {
-    batchNote.disabled = true;
+    for (const entry of sections.values()) entry.textarea.disabled = true;
     for (const c of cards.values()) {
       c.note.disabled = true;
       for (const button of [...c.verdictButtons, ...c.printBoxes]) button.disabled = true;
@@ -335,31 +362,35 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
       return;
     }
     state.db = db;
-    db.collection("feedback").where("run", "==", state.run).onSnapshot(
+    db.collection("feedback").where("run", "in", state.runs.map((r) => r.run)).onSnapshot(
       (snap) => {
         for (const doc of snap.docs) {
           const data = doc.data();
           if (!data || typeof data.n !== "number") continue;
+          const key = `${data.run}~${data.n}`;
           const print = data.print && typeof data.print === "object" ? data.print : {};
-          state.feedback.set(data.n, {
+          state.feedback.set(key, {
             verdict: data.verdict === "keep" || data.verdict === "reject" ? data.verdict : null,
             note: String(data.note ?? ""),
             print: { tee: print.tee === true, hoodie: print.hoodie === true },
           });
-          paint(data.n);
+          paint(key);
         }
         tally();
       },
       (error) => showNotice(`Saved feedback couldn't be loaded (${error.code}). Reload the page to try again.`),
     );
-    db.doc(`notes/${state.run}`).onSnapshot(
-      (snap) => {
-        const note = snap.exists ? String(snap.data().note ?? "") : "";
-        batchSaved = note;
-        if (document.activeElement !== batchNote) batchNote.value = note;
-      },
-      () => {},
-    );
+    for (const run of state.runs) {
+      db.doc(`notes/${run.run}`).onSnapshot(
+        (snap) => {
+          const entry = sections.get(run.run);
+          const note = snap.exists ? String(snap.data().note ?? "") : "";
+          entry.saved = note;
+          if (document.activeElement !== entry.textarea) entry.textarea.value = note;
+        },
+        () => {},
+      );
+    }
   }
 
   async function start() {
@@ -373,13 +404,13 @@ footer { color: var(--muted); font: 13px/1.5 var(--mono); }
       showNotice(`drafts.json didn't load (${error.message}). Ask Claude to export the run again with chaos review.`);
       return;
     }
-    state.run = data.run;
-    state.drafts = data.drafts;
-    const label = data.run.length > 10 ? `${data.label} · ${data.run.slice(11).replace(/-/g, " ")}` : data.label;
-    document.getElementById("heading").textContent = `${label} · ${data.drafts.length} drafts`;
+    // Older exports held a single run at the top level.
+    state.runs = data.runs ?? [{ run: data.run, label: data.label, topic: data.topic ?? null }];
+    state.drafts = data.drafts.map((d) => ({ ...d, run: d.run ?? data.run }));
+    const total = `${state.drafts.length} draft${state.drafts.length === 1 ? "" : "s"}`;
+    document.getElementById("heading").textContent = state.runs.length === 1 ? `${runTitle(state.runs[0])} · ${total}` : `${total} in ${state.runs.length} sets`;
     document.title = "Chaos Monkeys Review";
-    if (data.topic) document.getElementById("sub").textContent += ` The draft marked Zingers riffs on the day's story: ${data.topic}`;
-    for (const d of data.drafts) grid.append(card(d));
+    for (const run of state.runs) runsEl.append(section(run, state.drafts.filter((d) => d.run === run.run)));
     tally();
     connect();
   }
