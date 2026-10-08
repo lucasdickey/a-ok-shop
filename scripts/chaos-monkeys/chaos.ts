@@ -9,6 +9,8 @@
  *   chaos feedback FILE.json [--date RUN]                    import keep/reject verdicts and notes; future briefs learn from them
  *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force]    print files, model mockups, and copy for drafts ticked Print
  *   chaos sell RUN-N … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
+ *   chaos archive RUN-N …                                    push sold products' print files to the private archive
+ *   chaos taste [--show]                                     re-distill (or show) TASTE.md, the rules every review adds up to
  *   chaos ship 1 3 5 [--date RUN] [--branch main] [--no-push]  publish drafts: lint, build, commit, push
  *   chaos unpublish 0007 [--branch main] [--no-push]         take a published monkey down
  *   chaos pause | resume                                     stop or restart the daily job
@@ -34,6 +36,7 @@ import {
   RUNS_DIR,
   SITE_DIR,
   STATE_DIR,
+  TASTE_FILE,
   TOOL_DIR,
   log,
   notify,
@@ -51,8 +54,9 @@ import {
   type ManifestEntry,
   type Run,
 } from "./lib/config.ts";
-import { judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
+import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
 import { AstraUnavailable, illustrate, lightInk, mockup } from "./lib/astra.ts";
+import { archiveProducts } from "./lib/printfiles.ts";
 import {
   BLANKS,
   GARMENT_KINDS,
@@ -202,6 +206,37 @@ function recentlyDrafted(id: string): string[] {
  * Everything the person who picks has said, newest first: shipped drafts, keep/reject verdicts with notes, and notes
  * on whole batches. Feeds the next briefs (the last 45 days) and the style weights (all time).
  */
+const readTaste = (): string | null => (fs.existsSync(TASTE_FILE) ? fs.readFileSync(TASTE_FILE, "utf8").trim() || null : null);
+
+/** Styles drafted in the three days before run `id`, with how often. */
+function recentStyles(id: string): Map<string, number> {
+  const end = Date.parse(`${dateOf(id)}T12:00:00Z`);
+  const counts = new Map<string, number>();
+  for (const d of runDates()) {
+    if (d === id) continue;
+    const age = end - Date.parse(`${dateOf(d)}T12:00:00Z`);
+    if (age < 0 || age > 3 * 86_400_000) continue;
+    for (const draft of loadRun(d).drafts) counts.set(draft.brief.style, (counts.get(draft.brief.style) ?? 0) + 1);
+  }
+  return counts;
+}
+
+/** Every verdict with a note or a decision, newest first, for distilling TASTE.md. */
+function allVerdicts(): { lines: FeedbackLine[]; notes: string[] } {
+  const lines: FeedbackLine[] = [];
+  const notes: string[] = [];
+  for (const id of runDates().reverse()) {
+    const record = loadRun(id);
+    if (record.feedbackNote) notes.push(record.feedbackNote);
+    const shipped = new Set(record.shipped.map((s) => s.draft));
+    for (const d of record.drafts) {
+      const verdict = shipped.has(d.n) ? "shipped" : d.feedback?.verdict;
+      if (verdict) lines.push({ verdict, style: d.brief.style, title: d.brief.title, printText: d.brief.printText, note: d.feedback?.note ?? "" });
+    }
+  }
+  return { lines, notes };
+}
+
 function pastFeedback(): { lines: FeedbackLine[]; notes: string[]; scores: StyleScores } {
   const lines: FeedbackLine[] = [];
   const notes: string[] = [];
@@ -287,7 +322,7 @@ async function judgeAndSheet(record: Run, runDir: string, renderer: Renderer): P
       // The judge can only read files in the run directory, so the badge goes there.
       const reference = "reference-ape.jpg";
       fs.copyFileSync(path.join(CHECKOUT, REFERENCE_IMAGES[0]), path.join(runDir, reference));
-      const results = await judgeDrafts(runDir, ready, dateLabel(date), reference);
+      const results = await judgeDrafts(runDir, ready, dateLabel(date), reference, readTaste());
       for (const result of results) {
         const d = record.drafts.find((x) => x.n === result.draft);
         if (d) d.judgment = result;
@@ -347,6 +382,8 @@ async function draft(options: Options): Promise<void> {
       feedback: feedback.lines,
       feedbackNotes: feedback.notes,
       styleScores: feedback.scores,
+      taste: readTaste(),
+      recentStyles: recentStyles(id),
     });
     const record: Run = {
       id,
@@ -649,6 +686,18 @@ async function feedback(options: Options): Promise<void> {
   const ranked = [...scores.entries()].sort((a, b) => b[1].keep - b[1].reject - (a[1].keep - a[1].reject));
   log(`imported ${verdicts} verdicts and ${notes.length} batch notes into ${[...records.keys()].join(", ")}`);
   if (ranked.length) log(`style record (kept/rejected): ${ranked.map(([style, s]) => `${style} ${s.keep}/${s.reject}`).join(", ")}`);
+  await updateTaste();
+}
+
+/** Re-distills TASTE.md from every verdict so far and prints it. */
+async function updateTaste(): Promise<void> {
+  const { lines, notes } = allVerdicts();
+  if (!lines.length) return log("no verdicts yet, so no rules");
+  log(`distilling the owner's rules from ${lines.length} verdicts…`);
+  const taste = await distillTaste(RUNS_DIR, lines, notes);
+  fs.writeFileSync(TASTE_FILE, `${taste}\n`);
+  console.log(`\n${taste}\n`);
+  log(`rules: ${TASTE_FILE}`);
 }
 
 /* ------------------------------------------------------------------ print and sell */
@@ -1056,6 +1105,12 @@ async function sell(options: Options): Promise<void> {
     product.sold = { handle: node.handle, stripeProductId: node.stripeProductId ?? null, sha: push ? sha : null, at: now };
     saveMerch(merch);
   }
+  // The shop is live either way; a failed archive is reported, and `chaos archive` retries it.
+  if (push) {
+    await archiveProducts(added).catch((error: Error) =>
+      log(`could not push the print files (${error.message.split("\n")[0]}); retry with: chaos archive ${[...new Set(added.map((a) => a.merch.id))].join(" ")}`),
+    );
+  }
   if (push && branch === "main") {
     log("waiting for Vercel to deploy…");
     const url = await waitForDeploy(sha).catch((error: Error) => {
@@ -1065,6 +1120,25 @@ async function sell(options: Options): Promise<void> {
     log(url ? `deployed: ${url}` : "could not confirm the deployment; check Vercel");
     for (const { node } of added) log(`${siteUrl}/products/${node.handle}`);
   }
+}
+
+/** Pushes sold products' print files to the private archive, for products sold before it existed or a failed push. */
+async function archive(options: Options): Promise<void> {
+  if (!options.positional.length) throw new Error("usage: chaos archive RUN-N … (merch folders of sold products)");
+  await syncSite("main");
+  const catalog = JSON.parse(fs.readFileSync(path.join(SITE_DIR, CATALOG_PATH), "utf8")) as Catalog;
+  const entries = options.positional.map(loadMerch).flatMap((merch) =>
+    merch.products
+      .filter((product) => product.sold)
+      .map((product) => {
+        const node = catalog.products.edges.map((e) => e.node).find((n) => n.handle === product.sold?.handle);
+        if (!node) throw new Error(`${product.sold?.handle} is not in the shop's catalog`);
+        return { merch, product, node };
+      }),
+  );
+  if (!entries.length) return log("none of those have sold products to archive");
+  const sha = await archiveProducts(entries);
+  if (!sha) log("the archive already has these files");
 }
 
 /* ------------------------------------------------------------------ install */
@@ -1157,6 +1231,11 @@ const commands: Record<string, () => Promise<void>> = {
   ship: () => ship(options),
   review: () => review(options),
   print: () => printMerch(options),
+  archive: () => archive(options),
+  taste: async () => {
+    if (options.flags.has("--show") && readTaste()) return console.log(readTaste());
+    await updateTaste();
+  },
   sell: () => sell(options),
   feedback: () => feedback(options),
   unpublish: () => unpublish(options),

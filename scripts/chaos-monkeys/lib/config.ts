@@ -12,6 +12,8 @@ export const RUNS_DIR = path.join(STATE_DIR, "runs");
 export const FONTS_DIR = path.join(STATE_DIR, "fonts");
 export const LOGS_DIR = path.join(STATE_DIR, "logs");
 export const PAUSE_FILE = path.join(STATE_DIR, "PAUSE");
+/** The owner's rules, distilled by Claude from every review; the brief writer and the judge both obey them. */
+export const TASTE_FILE = path.join(STATE_DIR, "TASTE.md");
 /** Print files, mockups, and product copy for drafts headed to the shop, one folder per draft. */
 export const MERCH_DIR = path.join(STATE_DIR, "merch");
 

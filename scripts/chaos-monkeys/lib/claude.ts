@@ -122,20 +122,24 @@ type Slot = { style: Style | null; topical: boolean };
 export type StyleScores = Map<string, { keep: number; reject: number }>;
 
 /**
- * Picks `count` different styles at random, weighted by STYLES.md and by feedback: each keep raises a style's odds
- * and each reject lowers them, so the mix drifts toward what the person picks without ever losing a style entirely.
- * With a Zingers topic, the first slot is topical and Claude chooses its style.
+ * Picks `count` different styles at random, weighted by STYLES.md and by feedback. Each reject lowers a style's odds,
+ * and two rejects with no keep retire it. A keep raises them, but only up to double, because a kept design asks for
+ * more good ideas, not more of the same format. A style drafted in the last few days (`recent`) is less likely, so
+ * batches keep exploring. With a Zingers topic, the first slot is topical and Claude chooses its style.
  */
-export function draftSlots(count: number, topical: boolean, styles: Style[], scores: StyleScores): Slot[] {
+export function draftSlots(count: number, topical: boolean, styles: Style[], scores: StyleScores, recent: Map<string, number> = new Map()): Slot[] {
   const weightOf = (style: Style) => {
     const score = scores.get(style.id) ?? { keep: 0, reject: 0 };
-    return style.weight * ((1 + score.keep) / (1 + score.reject));
+    if (score.reject >= 2 && score.keep === 0) return 0;
+    const novelty = recent.has(style.id) ? 0.35 : 1;
+    return (style.weight * (1 + Math.min(score.keep, 2) * 0.5) * novelty) / (1 + score.reject);
   };
   const picked: Style[] = [];
-  let pool = styles.filter((style) => style.weight > 0);
+  const open = () => styles.filter((style) => weightOf(style) > 0);
+  let pool = open();
   const wanted = topical ? count - 1 : count;
-  while (picked.length < wanted && styles.length) {
-    if (!pool.length) pool = styles.filter((style) => style.weight > 0);
+  while (picked.length < wanted && open().length) {
+    if (!pool.length) pool = open();
     const total = pool.reduce((sum, style) => sum + weightOf(style), 0);
     let roll = Math.random() * total;
     const index = Math.max(0, pool.findIndex((style) => (roll -= weightOf(style)) <= 0));
@@ -227,10 +231,14 @@ export async function writeBriefs(options: {
   feedback: FeedbackLine[];
   feedbackNotes: string[];
   styleScores: StyleScores;
+  /** TASTE.md: the owner's rules, distilled from every review. */
+  taste: string | null;
+  /** Styles drafted in the last few days, so this batch tries others. */
+  recentStyles: Map<string, number>;
 }): Promise<Brief[]> {
   const brand = readBrand();
   const styles = readStyles();
-  const slots = draftSlots(options.count, options.topic !== null, styles, options.styleScores);
+  const slots = draftSlots(options.count, options.topic !== null, styles, options.styleScores, options.recentStyles);
   const styleLine = (style: Style) =>
     `"${style.id}" (${style.name}): ${style.description} ${style.engine === "hybrid" ? "Prints the title and slogan." : style.text === 0 ? "Print text: none." : `Print text: at most ${style.text} short string${style.text > 1 ? "s" : ""}.`}`;
   const slotLines = slots.map((slot, i) =>
@@ -269,7 +277,10 @@ ${brand.voice}
 Rules:
 ${brand.rules}
 
-${feedbackBlock(options.feedback, options.feedbackNotes)}ALREADY PUBLISHED (never repeat these jokes; you may riff on one and list its number in "parents"):
+${options.taste ? `THE OWNER'S RULES. Distilled from every review; binding. A brief that breaks one is a failed draft, whatever its assigned style: if the style pulls toward a banned motif, find another way to do the style.
+${options.taste}
+
+` : ""}${feedbackBlock(options.feedback, options.feedbackNotes)}ALREADY PUBLISHED (never repeat these jokes; you may riff on one and list its number in "parents"):
 ${published}
 
 DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat):
@@ -345,7 +356,7 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
 }
 
 /** `reference` is the badge image, copied into `runDir` so the judge can compare each ape's face against it. */
-export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string): Promise<Judgment[]> {
+export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string, taste: string | null): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -361,6 +372,10 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
 First open ${reference}: the round badge is the A-OK ape's canonical face, and every draft's ape must match it.
+${taste ? `
+THE OWNER'S RULES, distilled from every review. A draft that breaks one fails rulesOk and scores at most 4:
+${taste}
+` : ""}
 
 Character: ${brand.character}
 Rules:
@@ -540,4 +555,48 @@ Photos:
 ${photos.map((p) => `- ${p.file}: ${p.color} ${p.garment}; reference ${p.art}`).join("\n")}`;
   const output = (await askClaude(prompt, MOCKUP_SCHEMA, cwd, "medium")) as { results: MockupCheck[] };
   return output.results.map((result) => ({ ...result, note: clip(result.note, 140) }));
+}
+
+/* ------------------------------------------------------------------ taste */
+
+const TASTE_SCHEMA = {
+  type: "object",
+  properties: {
+    never: { type: "array", items: TEXT },
+    avoid: { type: "array", items: TEXT },
+    more: { type: "array", items: TEXT },
+    shirt: { type: "array", items: TEXT },
+  },
+  required: ["never", "avoid", "more", "shirt"],
+};
+
+/**
+ * Turns every verdict and note into a short set of rules (TASTE.md). A list of sixty verdicts reads as examples;
+ * "no more hearts" has to read as a rule, to the brief writer and the judge alike.
+ */
+export async function distillTaste(cwd: string, lines: FeedbackLine[], notes: string[]): Promise<string> {
+  const verdicts = lines.map((line) => `- ${line.verdict.toUpperCase()} [${line.style}] ${line.title}${line.note ? `: "${line.note}"` : ""}`).join("\n");
+  const prompt = `You keep the house rules for A-OK, an AI-culture streetwear label that drafts tee and hoodie graphics daily. Below is every verdict the owner has given on past drafts, newest first, with their notes (typos and all), plus notes on whole batches.
+
+Write the rules the next drafts must follow. Only rules the evidence supports; each one short and concrete enough to check against a picture, with a few words of evidence in parentheses.
+- never: hard bans. Things the owner said no to outright ("no more Supreme references"), or rejected two or more times with nothing like them kept (a motif, a format, a reference, a tone). Name motifs plainly: hearts, sports and varsity looks, box logos.
+- avoid: softer patterns that usually get rejected.
+- more: what the owner keeps and asks for.
+- shirt: what the owner means by "a t-shirt" as opposed to a fun graphic or a social post.
+
+BATCH NOTES
+${notes.length ? notes.map((note) => `- "${note}"`).join("\n") : "(none)"}
+
+VERDICTS
+${verdicts}`;
+  const output = (await askClaude(prompt, TASTE_SCHEMA, cwd, "high")) as { never: string[]; avoid: string[]; more: string[]; shirt: string[] };
+  const section = (title: string, items: string[]) => (items.length ? [`## ${title}`, "", ...items.map((item) => `- ${clip(item, 220)}`), ""] : []);
+  return [
+    ...section("Never", output.never),
+    ...section("Avoid", output.avoid),
+    ...section("More of", output.more),
+    ...section("What makes it a shirt", output.shirt),
+  ]
+    .join("\n")
+    .trim();
 }

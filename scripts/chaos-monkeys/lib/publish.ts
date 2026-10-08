@@ -21,17 +21,18 @@ const git = (...args: string[]) => runOrThrow("git", ["-C", SITE_DIR, ...args]);
  * links the commit to no account, and Vercel refuses to deploy it. Copies the identity from the checkout the tool
  * runs from when the clone has none.
  */
-async function ensureIdentity(): Promise<void> {
-  const local = await run("git", ["-C", SITE_DIR, "config", "--get", "user.email"]);
+export async function ensureIdentity(dir: string = SITE_DIR): Promise<void> {
+  const local = await run("git", ["-C", dir, "config", "--get", "user.email"]);
   if (local.code === 0 && local.stdout.trim()) return;
-  const name = (await run("git", ["-C", TOOL_DIR, "config", "--get", "user.name"])).stdout.trim();
-  const email = (await run("git", ["-C", TOOL_DIR, "config", "--get", "user.email"])).stdout.trim();
+  const from = dir === SITE_DIR ? TOOL_DIR : SITE_DIR;
+  const name = (await run("git", ["-C", from, "config", "--get", "user.name"])).stdout.trim();
+  const email = (await run("git", ["-C", from, "config", "--get", "user.email"])).stdout.trim();
   if (!name || !email) {
-    throw new Error(`the publish clone has no commit identity; run: git -C ${SITE_DIR} config user.name "…" && git -C ${SITE_DIR} config user.email "…"`);
+    throw new Error(`${dir} has no commit identity; run: git -C ${dir} config user.name "…" && git -C ${dir} config user.email "…"`);
   }
-  await git("config", "user.name", name);
-  await git("config", "user.email", email);
-  log(`publish clone will commit as ${name} <${email}>`);
+  await runOrThrow("git", ["-C", dir, "config", "user.name", name]);
+  await runOrThrow("git", ["-C", dir, "config", "user.email", email]);
+  log(`${path.basename(dir)} will commit as ${name} <${email}>`);
 }
 
 /** Creates the publish clone if needed and moves it to origin/<branch>, refusing to discard any work. */
