@@ -30,7 +30,7 @@ When drafts are ticked Print (or the user names drafts to put on a shirt):
 
 1. Run `~/.a-ok-chaos/bin/chaos print --date RUN` (or name drafts: `chaos print 3 5:tee 6:hoodie`). It takes about a minute per photo: seven colours per garment. It writes Printful print files, model photos checked against the art, and product copy to `~/.a-ok-chaos/merch/RUN-N/`, and prints each folder's sheet path and the print size and DPI.
 2. Read each `sheet.png`, send it to the user, and summarize: the product titles, the print size and DPI, and any photo the check flagged. Show the product copy from `merch.json`. Ask before selling: this creates live Stripe products and puts them on the public shop.
-3. On the user's go, run `STRIPE_SECRET_KEY=… ~/.a-ok-chaos/bin/chaos sell RUN-N …` with the key read from the shop checkout's `.env.local` (never print it). Add `--force` only if the user accepts flagged photos. Report the product URLs and the deploy. The print files go to the private repo lucasdickey/a-ok-print-files (one folder per product handle); if that push fails, run `chaos archive RUN-N`. Printful orders are placed by hand from those files.
+3. On the user's go, run `STRIPE_SECRET_KEY=… ~/.a-ok-chaos/bin/chaos sell RUN-N …` with the key read from the shop checkout's `.env.local` (never print it). Add `--force` only if the user accepts flagged photos. Report the product URLs and the deploy. Concepts, print files, and Printful notes go to the private repo lucasdickey/a-ok-print-files at every step (`concepts/<run>/`, `merch/<run>-<n>/`); if a push fails, run `chaos archive --all`. Printful orders are placed by hand from those files.
 
 ## Ship
 

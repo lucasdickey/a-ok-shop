@@ -180,6 +180,23 @@ export function saveMerch(merch: Merch): void {
   fs.writeFileSync(path.join(merchDir(merch.id), "merch.json"), `${JSON.stringify(merch, null, 2)}\n`);
 }
 
+/** How to order it from Printful by hand: the blank, the print size, and which print file goes with which colours. */
+export function printfulNotes(merch: Merch, name: (file: string) => string = (file) => file): string {
+  const lines = [`# ${merch.title}: Printful`, "", `From Chaos Monkeys ${merch.run}, draft ${merch.n}. Front print, centred, 1 in below the top of the print area.`, ""];
+  for (const p of merch.products) {
+    const blank = BLANKS[p.garment];
+    const dark = new Set(p.lightInk ?? []);
+    const offered = p.colors ?? [...SHOP_COLORS];
+    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
+    const original = offered.filter((c) => !dark.has(c));
+    if (original.length) lines.push(`- \`${name(p.printFile)}\`: ${original.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    const light = offered.filter((c) => dark.has(c));
+    if (p.printFileLight && light.length) lines.push(`- \`${name(p.printFileLight)}\` (light ink): ${light.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
+    lines.push("- Each catalog variant's SKU is `printful-<variant id>`; the Stripe price for it names its print file.", "");
+  }
+  return lines.join("\n");
+}
+
 /* ------------------------------------------------------------------ the site's catalog */
 
 type Money = { amount: string; currencyCode: string };

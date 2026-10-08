@@ -9,7 +9,7 @@
  *   chaos feedback FILE.json [--date RUN]                    import keep/reject verdicts and notes; future briefs learn from them
  *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force]    print files, model mockups, and copy for drafts ticked Print
  *   chaos sell RUN-N … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
- *   chaos archive RUN-N …                                    push sold products' print files to the private archive
+ *   chaos archive --all | RUN … | RUN-N …                    copy concepts and print files to the private archive
  *   chaos taste [--show]                                     re-distill (or show) TASTE.md, the rules every review adds up to
  *   chaos ship 1 3 5 [--date RUN] [--branch main] [--no-push]  publish drafts: lint, build, commit, push
  *   chaos unpublish 0007 [--branch main] [--no-push]         take a published monkey down
@@ -56,7 +56,7 @@ import {
 } from "./lib/config.ts";
 import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
 import { AstraUnavailable, illustrate, lightInk, mockup } from "./lib/astra.ts";
-import { archiveProducts } from "./lib/printfiles.ts";
+import { allMerch, syncToArchive, type ArchiveWork } from "./lib/printfiles.ts";
 import {
   BLANKS,
   GARMENT_KINDS,
@@ -70,6 +70,7 @@ import {
   merchDir,
   MAX_HARD_TO_SEE,
   matchesGround,
+  printfulNotes,
   prefersLightInk,
   printSize,
   printfulCatalog,
@@ -207,6 +208,20 @@ function recentlyDrafted(id: string): string[] {
  * on whole batches. Feeds the next briefs (the last 45 days) and the style weights (all time).
  */
 const readTaste = (): string | null => (fs.existsSync(TASTE_FILE) ? fs.readFileSync(TASTE_FILE, "utf8").trim() || null : null);
+
+/** The shop's catalog entry for a handle, from the publish clone (for sold products' Printful variant ids). */
+function catalogNodeFor(handle: string): CatalogNode | undefined {
+  const file = path.join(SITE_DIR, CATALOG_PATH);
+  if (!fs.existsSync(file)) return undefined;
+  return (JSON.parse(fs.readFileSync(file, "utf8")) as Catalog).products.edges.map((e) => e.node).find((n) => n.handle === handle);
+}
+
+/** Copies work into the private archive. The work itself is done either way, so a failure is reported, not thrown. */
+async function toArchive(work: ArchiveWork): Promise<void> {
+  await syncToArchive({ nodeFor: catalogNodeFor, ...work }).catch((error: Error) =>
+    log(`could not update the archive (${error.message.split("\n")[0]}); catch up with: chaos archive --all`),
+  );
+}
 
 /** Styles drafted in the three days before run `id`, with how often. */
 function recentStyles(id: string): Map<string, number> {
@@ -441,6 +456,7 @@ async function draft(options: Options): Promise<void> {
     const ok = record.drafts.filter((d) => d.image && !d.error);
     const best = [...ok].sort((a, b) => (b.judgment?.score ?? 0) - (a.judgment?.score ?? 0))[0];
     log(`contact sheet: ${path.join(runDir, "sheet.png")}`);
+    await toArchive({ runs: [record], message: `Concepts for ${id}` });
     await notify(`${ok.length} drafts ready${best ? `; top pick: ${best.brief.title} (${best.judgment?.score ?? "?"}/10)` : ""}. Run /chaos-monkeys to choose.`);
   } catch (error) {
     log(`draft failed: ${(error as Error).message}`);
@@ -466,6 +482,7 @@ async function judge(options: Options): Promise<void> {
   }
   saveRun(record);
   log(`contact sheet: ${path.join(runDir, "sheet.png")}`);
+  await toArchive({ runs: [record], message: `Re-judged ${id}` });
 }
 
 /* ------------------------------------------------------------------ status */
@@ -561,6 +578,7 @@ async function ship(options: Options): Promise<void> {
   const sha = await commitAndPush([MANIFEST_PATH, ...added.map((a) => imagePath(a.id).relative)], message, branch, push);
   record.shipped.push(...added.map((a, i) => ({ draft: picks[i], id: a.id, sha: push ? sha : null })));
   saveRun(record);
+  await toArchive({ runs: [record], message: `Shipped ${added.map((a) => `Nº ${a.id}`).join(", ")} from ${id}` });
 
   if (push && branch === "main") {
     log("waiting for Vercel to deploy…");
@@ -682,11 +700,13 @@ async function feedback(options: Options): Promise<void> {
     if (clean) recordFor(id).feedbackNote = clean;
   }
   for (const record of records.values()) saveRun(record);
+  const reviewed = [...records.values()];
   const scores = pastFeedback().scores;
   const ranked = [...scores.entries()].sort((a, b) => b[1].keep - b[1].reject - (a[1].keep - a[1].reject));
   log(`imported ${verdicts} verdicts and ${notes.length} batch notes into ${[...records.keys()].join(", ")}`);
   if (ranked.length) log(`style record (kept/rejected): ${ranked.map(([style, s]) => `${style} ${s.keep}/${s.reject}`).join(", ")}`);
   await updateTaste();
+  await toArchive({ runs: reviewed, message: `Verdicts for ${reviewed.map((r) => r.id).join(", ")}` });
 }
 
 /** Re-distills TASTE.md from every verdict so far and prints it. */
@@ -721,22 +741,6 @@ function printPicks(options: Options, record: Run): Array<{ d: Draft; garments: 
   });
 }
 
-/** How to order it from Printful by hand: the blank, the print size, and which print file goes with which colours. */
-function printfulNotes(merch: Merch): string {
-  const lines = [`# ${merch.title}: Printful`, "", `From Chaos Monkeys ${merch.run}, draft ${merch.n}. Front print, centred, 1 in below the top of the print area.`, ""];
-  for (const p of merch.products) {
-    const blank = BLANKS[p.garment];
-    const dark = new Set(p.lightInk ?? []);
-    const offered = p.colors ?? [...SHOP_COLORS];
-    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
-    const original = offered.filter((c) => !dark.has(c));
-    if (original.length) lines.push(`- \`${p.printFile}\`: ${original.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
-    const light = offered.filter((c) => dark.has(c));
-    if (p.printFileLight && light.length) lines.push(`- \`${p.printFileLight}\` (light ink): ${light.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
-    lines.push("- Each catalog variant's SKU is `printful-<variant id>`; the Stripe price for it names its print file.", "");
-  }
-  return lines.join("\n");
-}
 
 /**
  * Turns drafts into products: the print artwork (the draft with its background removed), a Printful print file per
@@ -1011,6 +1015,7 @@ async function printMerch(options: Options): Promise<void> {
   } finally {
     await renderer.close();
   }
+  await toArchive({ merch: merches, message: `Printed: ${merches.map((m) => m.title).join(", ")}` });
 }
 
 /**
@@ -1105,11 +1110,13 @@ async function sell(options: Options): Promise<void> {
     product.sold = { handle: node.handle, stripeProductId: node.stripeProductId ?? null, sha: push ? sha : null, at: now };
     saveMerch(merch);
   }
-  // The shop is live either way; a failed archive is reported, and `chaos archive` retries it.
   if (push) {
-    await archiveProducts(added).catch((error: Error) =>
-      log(`could not push the print files (${error.message.split("\n")[0]}); retry with: chaos archive ${[...new Set(added.map((a) => a.merch.id))].join(" ")}`),
-    );
+    const sold = new Map(added.map((a) => [a.node.handle, a.node]));
+    await toArchive({
+      merch: [...new Set(added.map((a) => a.merch))],
+      nodeFor: (handle) => sold.get(handle) ?? catalogNodeFor(handle),
+      message: `On the shop: ${added.map((a) => a.node.title).join(", ")}`,
+    });
   }
   if (push && branch === "main") {
     log("waiting for Vercel to deploy…");
@@ -1122,23 +1129,16 @@ async function sell(options: Options): Promise<void> {
   }
 }
 
-/** Pushes sold products' print files to the private archive, for products sold before it existed or a failed push. */
+/** Writes runs and printed drafts into the private archive: `--all`, or runs (2026-10-07) and merch folders (2026-10-07-3). */
 async function archive(options: Options): Promise<void> {
-  if (!options.positional.length) throw new Error("usage: chaos archive RUN-N … (merch folders of sold products)");
+  const all = options.flags.has("--all");
+  if (!all && !options.positional.length) throw new Error("usage: chaos archive --all | RUN … | RUN-N …");
   await syncSite("main");
-  const catalog = JSON.parse(fs.readFileSync(path.join(SITE_DIR, CATALOG_PATH), "utf8")) as Catalog;
-  const entries = options.positional.map(loadMerch).flatMap((merch) =>
-    merch.products
-      .filter((product) => product.sold)
-      .map((product) => {
-        const node = catalog.products.edges.map((e) => e.node).find((n) => n.handle === product.sold?.handle);
-        if (!node) throw new Error(`${product.sold?.handle} is not in the shop's catalog`);
-        return { merch, product, node };
-      }),
-  );
-  if (!entries.length) return log("none of those have sold products to archive");
-  const sha = await archiveProducts(entries);
-  if (!sha) log("the archive already has these files");
+  const merchIds = new Set(allMerch().map((m) => m.id));
+  const runs = all ? runDates().map((id) => loadRun(id)) : options.positional.filter((id) => !merchIds.has(id)).map((id) => loadRun(id));
+  const merch = all ? allMerch() : options.positional.filter((id) => merchIds.has(id)).map(loadMerch);
+  const sha = await syncToArchive({ runs, merch, nodeFor: catalogNodeFor, message: all ? "Everything on this Mac" : `Archive ${options.positional.join(", ")}` });
+  log(sha ? `archived ${runs.length} runs and ${merch.length} printed drafts` : "the archive already has all of that");
 }
 
 /* ------------------------------------------------------------------ install */
