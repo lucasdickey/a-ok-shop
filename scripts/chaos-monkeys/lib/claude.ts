@@ -406,6 +406,8 @@ export type CopyItem = {
   inches: number;
   /** Colours printed with the light-ink artwork. */
   lightInk: string[];
+  /** An all-over print: the pattern covers the whole garment instead of a print on the chest. */
+  allOver?: boolean;
   brief: Brief;
 };
 export type ProductCopyResult = {
@@ -454,7 +456,11 @@ export async function writeProductCopy(
   const lines = items.map(
     (item) => `- key "${item.key}": a ${item.garment}, ${item.blank}, in ${item.colors.join(", ")}.
   Design: ${item.brief.title}. ${item.brief.joke}
-  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}
+  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. ${
+    item.allOver
+      ? `An all-over print: the pattern covers the whole garment edge to edge, front, back and sleeves, repeating about every ${item.inches} inches; one colourway, the pattern itself.`
+      : `The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}`
+  }
   Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
   );
   const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
@@ -547,7 +553,7 @@ export async function judgeMockups(cwd: string, photos: Array<{ file: string; ga
 For each photo report:
 - file: the photo's path, unchanged.
 - printMatches: the print is the same artwork: the same drawing and composition, the ape's face unchanged (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones), the same colours, every word spelled the same, and nothing added or missing.
-- garmentOk: one adult model wears a plain garment of the stated kind and colour, photographed realistically, with no stray text or logos.
+- garmentOk: one adult model wears the stated garment (plain apart from the print, unless it is an all-over print), photographed realistically, with no stray text or logos.
 - score: 1–10; 7 or more means ready for the shop. A print that doesn't match scores at most 4.
 - note: at most 120 characters, the single most important problem or strength.
 

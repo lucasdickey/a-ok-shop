@@ -55,12 +55,17 @@ import {
   type Run,
 } from "./lib/config.ts";
 import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
-import { AstraUnavailable, illustrate, lightInk, mockup } from "./lib/astra.ts";
+import { AstraUnavailable, allOverMockup, illustrate, lightInk, mockup } from "./lib/astra.ts";
 import { allMerch, syncToArchive, type ArchiveWork } from "./lib/printfiles.ts";
 import { upscale } from "./lib/upscale.ts";
 import {
+  ALL_OVER_BLANKS,
+  ALL_OVER_COLOR,
   BLANKS,
   GARMENT_KINDS,
+  TILE,
+  printfulAllOver,
+  type AllOverProduct,
   MODELS,
   PRINT_DPI,
   SHOP_COLORS,
@@ -744,6 +749,148 @@ function printPicks(options: Options, record: Run): Array<{ d: Draft; garments: 
 
 
 /**
+ * All-over prints, for drafts whose placement is all-over: the draft's whole motifs relaid as a seamless half-drop
+ * repeat (an 18-inch tile at 150 DPI, drawn from the 4× master) and that tile pre-repeated into a fabric swatch;
+ * front and back photos of a model wearing it, checked against the tile, with one retry; product copy; a sheet.
+ */
+async function printAllOver(record: Run, pick: { d: Draft; garments: GarmentKind[] }, force: boolean): Promise<Merch> {
+  const id = record.id ?? record.date;
+  const { d, garments } = pick;
+  const merchId = `${id}-${d.n}`;
+  const dir = merchDir(merchId);
+  for (const sub of ["mockups", "web", "jobs"]) fs.mkdirSync(path.join(dir, sub), { recursive: true });
+  const merch: Merch =
+    fs.existsSync(path.join(dir, "merch.json")) && !force ? loadMerch(merchId) : { id: merchId, run: id, n: d.n, title: d.brief.title, art: "art.png", artWidth: 0, products: [] };
+  const allOver = (merch.allOver ??= []);
+  let renderer = await openRenderer({ run: runDirFor(id), merch: MERCH_DIR });
+  try {
+    const ground = await renderer.dominant(`/run/${d.image}`);
+    fs.writeFileSync(path.join(dir, "art.png"), await renderer.render({ kind: "keyed", image: `/run/${d.image}`, background: ground }));
+    merch.artWidth = pngInfo(path.join(dir, "art.png"))?.width ?? 0;
+    const master = (await upscale(path.join(dir, "art.png"), path.join(dir, "art-print.png"))) ? "art-print.png" : "art.png";
+    fs.writeFileSync(
+      path.join(dir, "tile.png"),
+      await renderer.render({ kind: "repeat", art: `/merch/${merchId}/art.png`, master: `/merch/${merchId}/${master}`, ground, size: TILE.inches * TILE.dpi, cells: TILE.cells }),
+    );
+    fs.writeFileSync(
+      path.join(dir, "fabric.jpg"),
+      await renderer.render({ kind: "fabric", image: `/merch/${merchId}/tile.png`, width: TILE.fabric.width * TILE.dpi, height: TILE.fabric.height * TILE.dpi, format: "jpeg", quality: 0.9 }),
+    );
+    log(`${merchId}: all-over repeat, ${TILE.inches} in tile at ${TILE.dpi} DPI on ${ground}${master === "art.png" ? "" : ", from the 4× master"}`);
+    for (const garment of garments) {
+      if (allOver.some((p) => p.garment === garment)) continue;
+      allOver.push({
+        garment,
+        tile: "tile.png",
+        fabric: "fabric.jpg",
+        ground,
+        photos: (["front", "back"] as const).map((view) => ({ view, image: null, web: null, score: null, note: "" })),
+        copy: null,
+        sold: null,
+      });
+    }
+    saveMerch(merch);
+  } finally {
+    await renderer.close();
+  }
+
+  // Photos: the same model front and back, checked against the tile; failures get one more try.
+  const shots = allOver.filter((p) => garments.includes(p.garment) && !p.sold).flatMap((p) => p.photos.map((photo) => ({ p, photo })));
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const todo = shots.filter(({ photo }) => !photo.image || (photo.score !== null && photo.score < 7));
+    if (!todo.length) break;
+    log(`${merchId}: photographing ${todo.length} all-over mockups${attempt > 1 ? " again (they failed the check)" : ""}…`);
+    await pool(todo, 3, async ({ p, photo }) => {
+      const blank = ALL_OVER_BLANKS[p.garment];
+      try {
+        const out = await allOverMockup(
+          { tile: path.join(dir, p.tile), garment: p.garment, blank: blank.name, panels: blank.panels, view: photo.view, model: p.garment === "tee" ? MODELS.Red : MODELS.Blue },
+          path.join(dir, "jobs", `allover-${p.garment}-${photo.view}-${attempt}`),
+        );
+        photo.image = `mockups/allover-${p.garment}-${photo.view}.png`;
+        fs.copyFileSync(out, path.join(dir, photo.image));
+        Object.assign(photo, { score: null, note: "" });
+      } catch (error) {
+        photo.note = `failed: ${(error as Error).message.split("\n")[0].slice(0, 160)}`;
+        log(`${merchId} all-over ${p.garment} ${photo.view}: ${photo.note}`);
+      }
+      saveMerch(merch);
+    });
+    const unchecked = shots.filter(({ photo }) => photo.image && photo.score === null);
+    if (unchecked.length) {
+      try {
+        const checks = await judgeMockups(
+          dir,
+          unchecked.map(({ p, photo }) => ({ file: photo.image as string, garment: `${p.garment}, all-over print, seen from the ${photo.view}`, color: "all-over", art: p.tile })),
+        );
+        for (const check of checks) {
+          const shot = unchecked.find(({ photo }) => photo.image === check.file);
+          if (shot) Object.assign(shot.photo, { score: check.printMatches ? check.score : Math.min(check.score, 4), note: check.note });
+        }
+      } catch (error) {
+        log(`checking ${merchId} failed, its photos stay unscored: ${(error as Error).message.split("\n")[0]}`);
+      }
+      saveMerch(merch);
+    }
+  }
+
+  // Shop-sized photos, copy, notes, and a sheet.
+  renderer = await openRenderer({ merch: MERCH_DIR });
+  try {
+    for (const { p, photo } of shots) {
+      if (!photo.image) continue;
+      photo.web = `web/allover-${p.garment}-${photo.view}.webp`;
+      fs.writeFileSync(path.join(dir, photo.web), await renderer.render({ kind: "cover", image: `/merch/${merchId}/${photo.image}`, ...PHOTO, format: "webp", quality: 0.9, focusY: 0.35 }));
+    }
+    const needCopy = allOver.filter((p) => !p.copy && !p.sold);
+    if (needCopy.length) {
+      const catalog = JSON.parse(fs.readFileSync(path.join(CHECKOUT, CATALOG_PATH), "utf8")) as Catalog;
+      const example = catalog.products.edges.map((e) => e.node).find((n) => n.handle === "a-ok-all-angles-tee") ?? catalog.products.edges[0].node;
+      const taken = new Set([...catalog.products.edges.map((e) => e.node.handle), ...allMerch().flatMap((m) => [...m.products, ...(m.allOver ?? [])].map((p) => p.copy?.handle ?? ""))]);
+      const copies = await writeProductCopy(
+        dir,
+        needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: ALL_OVER_BLANKS[p.garment].name, colors: [ALL_OVER_COLOR], inches: TILE.inches, lightInk: [], allOver: true, brief: d.brief })),
+        { title: example.title, descriptionHtml: example.descriptionHtml, tags: example.tags },
+        [...taken],
+      );
+      for (const copy of copies) {
+        const product = needCopy.find((p) => p.garment === copy.key);
+        if (!product) continue;
+        let handle = copy.handle;
+        for (let i = 2; taken.has(handle); i++) handle = `${copy.handle}-${i}`;
+        taken.add(handle);
+        product.copy = { title: copy.title, handle, description: copy.description, descriptionHtml: copy.descriptionHtml, tags: copy.tags, seo: { title: copy.seoTitle, description: copy.seoDescription } };
+      }
+    }
+    saveMerch(merch);
+    fs.writeFileSync(path.join(dir, "PRINTFUL.md"), printfulNotes(merch));
+    const items = allOver.flatMap((p) =>
+      p.photos.map((photo, i) => ({
+        n: i + 1,
+        image: photo.image ? `/merch/${merchId}/${photo.image}` : null,
+        title: `ALL-OVER ${p.garment} ${photo.view}`.toUpperCase(),
+        engine: p.copy?.title ?? p.garment,
+        score: photo.score,
+        note: photo.note,
+        flags: photo.score !== null && photo.score < 7 ? ["PRINT?"] : [],
+        topical: false,
+      })),
+    );
+    items.unshift({ n: 0, image: `/merch/${merchId}/tile.png`, title: "THE REPEAT", engine: `${TILE.inches} in tile`, score: null, note: "One repeat of the all-over print.", flags: [], topical: false });
+    fs.writeFileSync(
+      path.join(dir, "sheet.png"),
+      await renderer.render({ kind: "sheet", date: merch.title, heading: `CHAOS MONKEYS · ALL-OVER · ${merch.title}`, hint: `sell: chaos sell ${merch.id}`, topic: null, items }),
+    );
+    const weak = shots.filter(({ photo }) => (photo.score ?? 0) < 7).map(({ p, photo }) => `${p.garment} ${photo.view}`);
+    log(`${merchId}: ${allOver.map((p) => p.copy?.title ?? p.garment).join(", ")}`);
+    log(`  sheet: ${path.join(dir, "sheet.png")}${weak.length ? `; check: ${weak.join(", ")}` : ""}`);
+  } finally {
+    await renderer.close();
+  }
+  return merch;
+}
+
+/**
  * Turns drafts into products: the print artwork (the draft with its background removed), a Printful print file per
  * garment, a model photo in each of the seven colours (checked against the art, with one retry), and product copy.
  * Everything lands in ~/.a-ok-chaos/merch/<run>-<n>/ with a contact sheet; `chaos sell` publishes it.
@@ -753,9 +900,12 @@ async function printMerch(options: Options): Promise<void> {
   const force = options.flags.has("--force");
   const record = loadRun(id);
   const runDir = runDirFor(id);
-  const picks = printPicks(options, record);
-  if (!picks.length) throw new Error(`nothing to print in ${id}: tick Print on the review page and import it, or name drafts (chaos print 3 5:tee)`);
-  for (const { d } of picks) if (!d.image || d.error) throw new Error(`draft ${d.n} of ${id} has no image`);
+  const allPicks = printPicks(options, record);
+  if (!allPicks.length) throw new Error(`nothing to print in ${id}: tick Print on the review page and import it, or name drafts (chaos print 3 5:tee)`);
+  for (const { d } of allPicks) if (!d.image || d.error) throw new Error(`draft ${d.n} of ${id} has no image`);
+  // Patterns become all-over prints; everything else prints on the chest.
+  const allOverPicks = allPicks.filter((pick) => pick.d.brief.placement === "all-over");
+  const picks = allPicks.filter((pick) => pick.d.brief.placement !== "all-over");
   await preflight();
   const kinds = [...new Set(picks.flatMap((pick) => pick.garments))];
   const printful = new Map(await Promise.all(kinds.map(async (kind) => [kind, await printfulCatalog(BLANKS[kind])] as const)));
@@ -1042,6 +1192,7 @@ async function printMerch(options: Options): Promise<void> {
   } finally {
     await renderer.close();
   }
+  for (const pick of allOverPicks) merches.push(await printAllOver(record, pick, force));
   await toArchive({ merch: merches, message: `Printed: ${merches.map((m) => m.title).join(", ")}` });
 }
 
@@ -1073,6 +1224,12 @@ async function sell(options: Options): Promise<void> {
       const weak = offered.filter((m) => (m.score ?? 0) < 7).map((m) => m.color);
       if (weak.length && !options.flags.has("--force")) throw new Error(`${merch.id} ${p.garment}: the check flagged ${weak.join(", ")}; look at the sheet, then pass --force to sell anyway`);
     }
+    for (const p of (merch.allOver ?? []).filter((x) => !x.sold)) {
+      if (!p.copy) throw new Error(`${merch.id} all-over ${p.garment} has no copy yet; run chaos print`);
+      if (p.photos.some((photo) => !photo.web)) throw new Error(`${merch.id} all-over ${p.garment} is missing photos; run chaos print`);
+      const weak = p.photos.filter((photo) => (photo.score ?? 0) < 7).map((photo) => photo.view);
+      if (weak.length && !options.flags.has("--force")) throw new Error(`${merch.id} all-over ${p.garment}: the check flagged ${weak.join(", ")}; look at the sheet, then pass --force to sell anyway`);
+    }
   }
 
   await syncSite(branch);
@@ -1080,7 +1237,7 @@ async function sell(options: Options): Promise<void> {
   const catalog = JSON.parse(fs.readFileSync(catalogFile, "utf8")) as Catalog;
   const newId = idAllocator(catalog);
   const now = new Date().toISOString();
-  const added: Array<{ merch: Merch; product: MerchProduct; node: CatalogNode }> = [];
+  const added: Array<{ merch: Merch; product: MerchProduct | AllOverProduct; node: CatalogNode }> = [];
   const paths = [CATALOG_PATH];
   for (const merch of merches) {
     for (const product of merch.products.filter((p) => !p.sold)) {
@@ -1095,10 +1252,27 @@ async function sell(options: Options): Promise<void> {
         paths.push(relative);
         return { color: m.color, url: `/${relative.replace(/^public\//, "")}`, ...PHOTO };
       });
-      const node = catalogNode({ newId, blank, copy, images, swatch, variant, now });
+      const node = catalogNode({ newId, blank, copy, images, swatch, variant: (color, size) => variant(color as ShopColor, size), now });
       catalog.products.edges.push({ node });
       added.push({ merch, product, node });
       log(`${node.title} (${node.handle}): ${node.variants.edges.length} variants at $${blank.price}`);
+    }
+    for (const product of (merch.allOver ?? []).filter((p) => !p.sold)) {
+      const blank = ALL_OVER_BLANKS[product.garment];
+      const copy = product.copy as NonNullable<AllOverProduct["copy"]>;
+      if (catalog.products.edges.some((e) => e.node.handle === copy.handle)) throw new Error(`the shop already has a product called ${copy.handle}`);
+      const variantBySize = await printfulAllOver(blank);
+      const images = product.photos.map((photo) => {
+        const relative = `${PRODUCT_IMAGE_DIR}/${copy.handle}-${photo.view}.webp`;
+        fs.mkdirSync(path.dirname(path.join(SITE_DIR, relative)), { recursive: true });
+        fs.copyFileSync(path.join(merchDir(merch.id), photo.web as string), path.join(SITE_DIR, relative));
+        paths.push(relative);
+        return { color: ALL_OVER_COLOR, url: `/${relative.replace(/^public\//, "")}`, ...PHOTO, alt: `${copy.title}, all-over print, ${photo.view} on a model` };
+      });
+      const node = catalogNode({ newId, blank, copy, images, swatch: { [ALL_OVER_COLOR]: product.ground }, variant: (_color, size) => variantBySize(size), now });
+      catalog.products.edges.push({ node });
+      added.push({ merch, product, node });
+      log(`${node.title} (${node.handle}): all-over, ${node.variants.edges.length} variants at $${blank.price}`);
     }
   }
   if (!added.length) return log("nothing left to sell in those folders");
@@ -1113,8 +1287,10 @@ async function sell(options: Options): Promise<void> {
     }
     if (useStripe) {
       for (const { node } of added) {
-        const product = added.find((a) => a.node === node)?.product as MerchProduct;
-        await addToStripe(key as string, node, siteUrl, (color) => (product.printFileLight && product.lightInk?.includes(color as ShopColor) ? product.printFileLight : product.printFile));
+        const product = added.find((a) => a.node === node)?.product as MerchProduct | AllOverProduct;
+        await addToStripe(key as string, node, siteUrl, (color) =>
+          "tile" in product ? product.tile : product.printFileLight && product.lightInk?.includes(color as ShopColor) ? product.printFileLight : product.printFile,
+        );
         log(`Stripe: ${node.stripeProductId} with ${node.variants.edges.length} prices`);
       }
       writeCatalog();
@@ -1128,7 +1304,11 @@ async function sell(options: Options): Promise<void> {
   const message = [
     `Add ${added.map((a) => a.node.title).join(", ")}`,
     "",
-    ...added.map(({ node, merch, product }) => `- ${node.title}: Chaos Monkeys ${merch.run} draft ${merch.n}, printed ${product.inches} in wide on the ${BLANKS[product.garment].name}, in ${(product.colors ?? SHOP_COLORS).join(", ")}`),
+    ...added.map(({ node, merch, product }) =>
+      "tile" in product
+        ? `- ${node.title}: Chaos Monkeys ${merch.run} draft ${merch.n}, an all-over print on the ${ALL_OVER_BLANKS[product.garment].name}`
+        : `- ${node.title}: Chaos Monkeys ${merch.run} draft ${merch.n}, printed ${product.inches} in wide on the ${BLANKS[product.garment].name}, in ${(product.colors ?? SHOP_COLORS).join(", ")}`,
+    ),
     "",
     "Print files, model photos and copy by `chaos print`; photos by GPT-6-Astra, copy by Claude.",
   ].join("\n");

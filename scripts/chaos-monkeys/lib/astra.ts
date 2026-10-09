@@ -108,6 +108,29 @@ export async function lightInk(art: string, jobDir: string): Promise<string> {
   return generate(lightInkPrompt(), jobDir, [art], { alpha: true, minSize: 600 });
 }
 
+/** One photo of a model wearing an all-over print of `tile`. */
+function allOverPrompt(job: AllOverJob): string {
+  return `You are photographing one product photo for A-OK, an AI-culture streetwear label.
+
+The attached image is one repeat of an all-over print: the exact pattern printed on the garment. It is not a style reference: it is the fabric itself.
+
+${TOOL_RULES}
+
+Create ONE photorealistic ecommerce photograph, portrait, 1024x1536.
+Model: ${job.model}. An invented adult, not a real or famous person. ${job.view === "front" ? "Standing square to the camera, relaxed and calm" : "Standing with their back to the camera, head turned slightly, relaxed"}, framed from mid-thigh up so the whole ${job.view} of the garment is in view, against a seamless light grey studio backdrop with soft, even light.
+Garment: an all-over-print ${job.garment}, a ${job.blank}. The attached pattern covers the entire garment edge to edge (${job.panels.join(", ")}), cut and sewn so it continues across the seams, repeating about every 18 inches, so the front shows a little more than one repeat across the chest.${job.garment === "hoodie" ? " Hood down, drawstrings visible." : ""}
+Reproduce the pattern exactly: the same motifs, the ape's face unchanged (round eyes, tan face, small round O mouth, A-OK cap, red headphones), the same colours, and every word spelled the same. Do not redraw, restyle, recolour, or enlarge the motifs. No other text, logos, tags, props, or watermarks.
+
+Save the final image in the current directory as out.png (copy it from where the image tool saved it). Then reply with the saved path and pixel size.`;
+}
+
+export type AllOverJob = { tile: string; garment: "tee" | "hoodie"; blank: string; panels: string[]; view: "front" | "back"; model: string };
+
+/** Photographs an all-over print of `job.tile` on a model in `jobDir` and returns the path of out.png. */
+export async function allOverMockup(job: AllOverJob, jobDir: string): Promise<string> {
+  return generate(allOverPrompt(job), jobDir, [job.tile], { alpha: false });
+}
+
 export type MockupJob = { art: string; garment: "tee" | "hoodie"; blank: string; color: string; hex: string; model: string; inches: number };
 
 /** Photographs `job.art` on a model in `jobDir` and returns the path of out.png. */
