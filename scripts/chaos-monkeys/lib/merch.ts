@@ -60,6 +60,53 @@ export const BLANKS: Record<GarmentKind, Blank> = {
   },
 };
 
+/**
+ * All-over prints: Printful's direct-to-fabric garments, printed edge to edge on every panel, in one colourway (the
+ * pattern). The print file is a seamless tile that Printful's design maker repeats across the panels, plus the same
+ * tile pre-repeated into a large fabric swatch for placing panel by panel.
+ */
+export type AllOverBlank = { kind: GarmentKind; printful: number; name: string; productType: "T-Shirts" | "Hoodies"; price: number; panels: string[] };
+
+export const ALL_OVER_BLANKS: Record<GarmentKind, AllOverBlank> = {
+  tee: { kind: "tee", printful: 1414, name: "All-Over Print Men's Cotton Crew Neck T-Shirt", productType: "T-Shirts", price: 45, panels: ["front", "back", "left sleeve", "right sleeve"] },
+  hoodie: {
+    kind: "hoodie",
+    printful: 1419,
+    name: "All-Over Print Unisex Cotton Hoodie",
+    productType: "Hoodies",
+    price: 90,
+    panels: ["front", "back", "left sleeve", "right sleeve", "hood", "pocket"],
+  },
+};
+
+/** The single colour option an all-over product has. */
+export const ALL_OVER_COLOR = "All-over";
+
+/** The repeat: an 18-inch tile of 4 × 4 cells at Printful's 150 DPI for direct-to-fabric, and a 36 × 40 in swatch. */
+export const TILE = { inches: 18, cells: 4, dpi: 150, fabric: { width: 36, height: 40 } };
+
+export type AllOverPhoto = { view: "front" | "back"; image: string | null; web: string | null; score: number | null; note: string };
+
+export type AllOverProduct = {
+  garment: GarmentKind;
+  /** The seamless tile and the pre-repeated swatch, relative to the merch folder. */
+  tile: string;
+  fabric: string;
+  /** The pattern's ground colour, for the swatch. */
+  ground: string;
+  photos: AllOverPhoto[];
+  copy: ProductCopy | null;
+  sold: { handle: string; stripeProductId: string | null; sha: string | null; at: string } | null;
+};
+
+/** Printful variant ids for an all-over blank, by size (it comes in one base colour). */
+export async function printfulAllOver(blank: AllOverBlank): Promise<(size: string) => number | null> {
+  const response = await fetch(`https://api.printful.com/products/${blank.printful}`, { signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`Printful catalog: HTTP ${response.status}`);
+  const { result } = (await response.json()) as { result: { variants: Array<{ id: number; size: string }> } };
+  return (size) => result.variants.find((v) => v.size === size)?.id ?? null;
+}
+
 /** A different model for each colour, so a product's photos don't look like one shoot repeated. */
 export const MODELS: Record<ShopColor, string> = {
   Red: "a woman in her late twenties with short natural curls",
@@ -148,6 +195,8 @@ export type MerchProduct = {
   colors?: ShopColor[];
   inches: number;
   dpi: number;
+  /** Whether the print files were made from art enlarged by Real-ESRGAN (lib/upscale.ts). */
+  upscaled?: boolean;
   mockups: Mockup[];
   copy: ProductCopy | null;
   sold: { handle: string; stripeProductId: string | null; sha: string | null; at: string } | null;
@@ -165,6 +214,8 @@ export type Merch = {
   artLight?: string | null;
   artLightCheck?: { score: number; note: string } | null;
   products: MerchProduct[];
+  /** All-over versions, for drafts whose placement is all-over. */
+  allOver?: AllOverProduct[];
 };
 
 export const merchDir = (id: string): string => path.join(MERCH_DIR, id);
@@ -182,12 +233,23 @@ export function saveMerch(merch: Merch): void {
 
 /** How to order it from Printful by hand: the blank, the print size, and which print file goes with which colours. */
 export function printfulNotes(merch: Merch, name: (file: string) => string = (file) => file): string {
-  const lines = [`# ${merch.title}: Printful`, "", `From Chaos Monkeys ${merch.run}, draft ${merch.n}. Front print, centred, 1 in below the top of the print area.`, ""];
+  const lines = [`# ${merch.title}: Printful`, "", `From Chaos Monkeys ${merch.run}, draft ${merch.n}.`, ""];
+  for (const p of merch.allOver ?? []) {
+    const blank = ALL_OVER_BLANKS[p.garment];
+    lines.push(
+      `## ${p.copy?.title ?? `All-over ${p.garment}`}`,
+      "",
+      `- Blank: ${blank.name} (Printful product ${blank.printful}), one colourway.`,
+      `- Print: all-over, on every panel (${blank.panels.join(", ")}). In Printful's design maker, upload \`${name(p.tile)}\` (a seamless ${TILE.inches} in repeat at ${TILE.dpi} DPI) and repeat it as a pattern across each panel at ${TILE.inches} in per repeat. Or place \`${name(p.fabric)}\` (${TILE.fabric.width} × ${TILE.fabric.height} in at ${TILE.dpi} DPI, already repeated) on each panel.`,
+      "- Each catalog variant's SKU is `printful-<variant id>`.",
+      "",
+    );
+  }
   for (const p of merch.products) {
     const blank = BLANKS[p.garment];
     const dark = new Set(p.lightInk ?? []);
     const offered = p.colors ?? [...SHOP_COLORS];
-    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, `- Print: ${p.inches} in wide, ${p.dpi} DPI of real detail, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
+    lines.push(`## ${p.copy?.title ?? p.garment}`, "", `- Blank: ${blank.name} (Printful product ${blank.printful})`, "- Front print, centred, 1 in below the top of the print area.", `- Print: ${p.inches} in wide, ${p.dpi} DPI${p.upscaled ? " (art enlarged 4× by Real-ESRGAN)" : " of real detail"}, on a ${blank.area.width} × ${blank.area.height} in file at ${PRINT_DPI} DPI`);
     const original = offered.filter((c) => !dark.has(c));
     if (original.length) lines.push(`- \`${name(p.printFile)}\`: ${original.map((c) => `${c} (${blank.colors[c]})`).join(", ")}`);
     const light = offered.filter((c) => dark.has(c));
@@ -255,17 +317,17 @@ export function idAllocator(catalog: Catalog): (kind: string) => string {
 /** The catalog entry for one product: seven colours, the shop's sizes, a model photo per colour. */
 export function catalogNode(options: {
   newId: (kind: string) => string;
-  blank: Blank;
+  blank: { productType: string; price: number };
   copy: ProductCopy;
-  images: Array<{ color: ShopColor; url: string; width: number; height: number }>;
-  swatch: Record<ShopColor, string>;
-  variant: (color: ShopColor, size: string) => number | null;
+  images: Array<{ color: string; url: string; width: number; height: number; alt?: string }>;
+  swatch: Record<string, string>;
+  variant: (color: string, size: string) => number | null;
   now: string;
 }): CatalogNode {
   const { blank, copy, now } = options;
   const money = (amount: number): Money => ({ amount: amount.toFixed(1), currencyCode: "USD" });
   const zero = { minVariantPrice: money(0), maxVariantPrice: money(0) };
-  const colors = options.images.map((image) => image.color);
+  const colors = [...new Set(options.images.map((image) => image.color))];
   return {
     id: options.newId("Product"),
     handle: copy.handle,
@@ -284,7 +346,7 @@ export function catalogNode(options: {
         node: {
           id: options.newId("ProductImage"),
           url: image.url,
-          altText: `${image.color} ${copy.title}, worn by a model`,
+          altText: image.alt ?? `${image.color} ${copy.title}, worn by a model`,
           width: image.width,
           height: image.height,
           color: image.color,

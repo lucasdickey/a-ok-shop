@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { MERCH_DIR, RUNS_DIR, STATE_DIR, TASTE_FILE, log, pngInfo, run, runOrThrow, type Run } from "./config.ts";
-import { BLANKS, SHOP_COLORS, merchDir, printfulNotes, type CatalogNode, type Merch, type MerchProduct } from "./merch.ts";
+import { ALL_OVER_BLANKS, BLANKS, SHOP_COLORS, TILE, merchDir, printfulNotes, type AllOverProduct, type CatalogNode, type Merch, type MerchProduct } from "./merch.ts";
 import { ensureIdentity } from "./publish.ts";
 import { openRenderer } from "./renderer.ts";
 
@@ -182,12 +182,15 @@ function conceptsReadme(data: ConceptData): string {
  * A design printed on one garment uses that product's handle; one on both uses its own name for the shared art.
  */
 function archiveNames(merch: Merch) {
-  const only = merch.products.length === 1 ? merch.products[0].copy?.handle : undefined;
+  const all: Array<MerchProduct | AllOverProduct> = [...merch.products, ...(merch.allOver ?? [])];
+  const only = all.length === 1 ? all[0].copy?.handle : undefined;
   const design = only ?? `a-ok-${slug(merch.title)}`;
-  const productName = (p: MerchProduct) => p.copy?.handle ?? `${design}-${p.garment}`;
+  const productName = (p: MerchProduct | AllOverProduct) => p.copy?.handle ?? `${design}-${"tile" in p ? "all-over-" : ""}${p.garment}`;
   const name = (file: string): string => {
     const product = merch.products.find((p) => p.printFile === file || p.printFileLight === file);
     if (product) return `${productName(product)}-${file === product.printFileLight ? "print-light-ink" : "print"}.png`;
+    // One tile and swatch serve every all-over garment of a design.
+    if (file === "tile.png" || file === "fabric.jpg") return `${design}-all-over-${file}`;
     return `${design}-${file}`;
   };
   return { design, productName, name };
@@ -237,6 +240,31 @@ function writeMerch(merch: Merch, nodeFor: (handle: string) => CatalogNode | und
       )}\n`,
     );
   }
+  for (const product of merch.allOver ?? []) {
+    copy(product.tile);
+    copy(product.fabric);
+    for (const photo of product.photos) if (photo.web) copy(photo.web, `mockups/${productName(product)}-${photo.view}.webp`);
+    const node = product.sold ? nodeFor(product.sold.handle) : undefined;
+    if (!node) continue;
+    const blank = ALL_OVER_BLANKS[product.garment];
+    fs.writeFileSync(
+      path.join(dir, `${productName(product)}-product.json`),
+      `${JSON.stringify(
+        {
+          handle: node.handle,
+          title: node.title,
+          url: `https://a-ok.ai/products/${node.handle}`,
+          blank: { name: blank.name, printful: blank.printful },
+          print: { placement: `all-over: ${blank.panels.join(", ")}`, tile: name(product.tile), fabric: name(product.fabric), repeatInches: TILE.inches, dpi: TILE.dpi },
+          colors: [{ color: "All-over", printFile: name(product.tile) }],
+          variants: Object.fromEntries(node.variants.edges.map((e) => [e.node.title, e.node.sku.replace(/^printful-/, "") || null])),
+          stripeProductId: node.stripeProductId ?? null,
+        },
+        null,
+        2,
+      )}\n`,
+    );
+  }
   // The original draft, full size.
   const runFile = path.join(RUNS_DIR, merch.run, "run.json");
   if (fs.existsSync(runFile)) {
@@ -270,13 +298,16 @@ function writeIndex(): void {
           title: string;
           url: string;
           blank: { name: string };
-          print: { inches: number; dpi: number };
+          print: { inches?: number; dpi: number; placement: string };
           colors: Array<{ color: string }>;
         }),
       })),
   );
   lines.push("## On the shop", "", "| Product | Files | Blank | Print | Colours |", "|---|---|---|---|---|");
-  for (const p of products) lines.push(`| [${p.title}](${p.url}) | [merch/${p.id}](merch/${p.id}/) | ${p.blank.name} | ${p.print.inches} in, ${p.print.dpi} DPI | ${p.colors.map((c) => c.color).join(", ")} |`);
+  for (const p of products) {
+    const print = p.print.inches ? `${p.print.inches} in, ${p.print.dpi} DPI` : `all-over, ${p.print.dpi} DPI`;
+    lines.push(`| [${p.title}](${p.url}) | [merch/${p.id}](merch/${p.id}/) | ${p.blank.name} | ${print} | ${p.colors.map((c) => c.color).join(", ")} |`);
+  }
   const unsold = merchIds.filter((id) => !products.some((p) => p.id === id));
   if (unsold.length) lines.push("", "## Printed, not on the shop yet", "", ...unsold.map((id) => `- [merch/${id}](merch/${id}/)`));
   const conceptRoot = path.join(PRINT_FILES_DIR, "concepts");
