@@ -107,6 +107,7 @@ This app is deployed using [Vercel](https://vercel.com):
 ## Catalog and Checkout
 
 - **Catalog:** `product-catalog.json`, read through `app/lib/catalog.ts`. Edit it to change content; see [STRIPE_CATALOG_SYNC.md](./STRIPE_CATALOG_SYNC.md) to keep Stripe products and prices in step.
+- **Pending product assets:** [Apes on Keys Graphic T-Shirt — Black](artwork/apes-on-keys-black-graphic-tee/README.md) includes print artwork, a black-shirt mockup, product-page copy, and a structured intake record. Production and pricing must be confirmed before adding it to the live catalog.
 - **Sizes:** every tee and hoodie is printed on demand in XS–2XL (`app/lib/sizes.ts`). The size a shopper picks is recorded on the Stripe line item and in the owner's order email.
 - **Checkout:** `/api/catalog/checkout` re-prices every line from the catalog and creates a Stripe Checkout session. Free shipping at $50; $9.99 below that.
 
