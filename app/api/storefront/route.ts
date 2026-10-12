@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAllProducts, getProductsByCategory } from "@/app/lib/catalog";
 import { getChaosMonkeys } from "@/app/lib/chaos-monkeys";
-import { CLOTHING_SIZES, isClothing } from "@/app/lib/sizes";
+import { getClothingSizes, isClothing } from "@/app/lib/sizes";
 
 // What the storefront shows, for the in-page agent tools (components/WebMcpTools.tsx).
 // Built from the same catalog as the shop pages, so it never lists agent-only items.
@@ -44,7 +44,7 @@ export async function GET() {
         swatch: product.swatches?.[name] ?? null,
         image: images.find((image) => image.color === name)?.url ?? null,
       })),
-      sizes: isClothing(product.productType, product.tags) ? [...CLOTHING_SIZES] : [],
+      sizes: isClothing(product.productType, product.tags) ? [...getClothingSizes(product)] : [],
       variants,
     };
   });

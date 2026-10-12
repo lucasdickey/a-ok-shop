@@ -2,7 +2,7 @@ import { getProductByHandle, isSameId } from '@/app/lib/catalog';
 import { getStripeClient } from '@/app/lib/stripe-client';
 import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
 import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
-import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
+import { getClothingSizes, isClothing } from '@/app/lib/sizes';
 import { SHIPPING_COUNTRIES } from '@/app/lib/store-checkout';
 import { MPPItem, MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest, MPPShipping } from '@/app/types/mpp';
 import { NextRequest, NextResponse } from 'next/server';
@@ -123,13 +123,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `Variant not found: ${item.variantId}` }, { status: 404 });
       }
 
-      // Tees and hoodies are printed to order, so an order without a size can't be filled.
+      // Tees, hoodies and onesies are printed to order, so an order without a size can't be filled.
       if (isClothing(product.productType, product.tags)) {
+        const sizes = getClothingSizes(product);
         if (!item.size) {
-          return NextResponse.json({ error: `Choose a size for ${product.title}: ${CLOTHING_SIZES.join(', ')}` }, { status: 400 });
+          return NextResponse.json({ error: `Choose a size for ${product.title}: ${sizes.join(', ')}` }, { status: 400 });
         }
-        if (!CLOTHING_SIZES.includes(item.size)) {
-          return NextResponse.json({ error: `Size must be one of ${CLOTHING_SIZES.join(', ')}` }, { status: 400 });
+        if (!sizes.includes(item.size)) {
+          return NextResponse.json({ error: `Size must be one of ${sizes.join(', ')}` }, { status: 400 });
         }
       } else {
         delete item.size;

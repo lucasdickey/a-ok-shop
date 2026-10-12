@@ -8604,6 +8604,218 @@
           "publishedAt": "2026-10-08T23:15:24.381Z",
           "stripeProductId": "prod_VPF1MawxNBebYn"
         }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000012",
+          "handle": "a-ok-baby-ape-little-operator-onesie",
+          "title": "Baby Ape — Little Operator Onesie",
+          "description": "Small model. Smaller shirt. The A-OK baby ape, in his red hoodie, signature cap, and oversized headphones, on a dark heather baby bodysuit. Sizes newborn to 24 months. Confidence well ahead of the training data.",
+          "descriptionHtml": "<p><strong>Small model. Smaller shirt.</strong></p><p>Headphones on. Backpack packed. Nap schedule non-negotiable.</p><p>Little Operator, the baby ape with an A-OK cap, a chip on his hoodie, and the confidence of a model that has never once checked its sources, now on a baby bodysuit for operators who are still in early training.</p><p>Printed in red, black, and cream on a dark heather onesie with a lap-shoulder neckline and bottom snaps. Sizes newborn to 24 months.</p><p>Still training. Already A-OK.</p><ul><li>Smiling baby ape with an A-OK cap and backpack.</li><li>Crown-marked headphones and a microchip emblem on the hoodie.</li><li>Bold red, black, and cream artwork on dark heather.</li><li>Lap-shoulder neckline and bottom snaps for quick changes.</li><li>Sizes NB, 6M, 12M, 18M, and 24M.</li></ul><p>Onboard the newest operator. Add to cart.</p>",
+          "productType": "Onesies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Onesies",
+            "Baby",
+            "Apes on Keys"
+          ],
+          "supportedSizes": [
+            "NB",
+            "6M",
+            "12M",
+            "18M",
+            "24M"
+          ],
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000097",
+              "name": "Color",
+              "values": [
+                "Dark Heather"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000098",
+              "name": "Size",
+              "values": [
+                "NB",
+                "6M",
+                "12M",
+                "18M",
+                "24M"
+              ]
+            }
+          ],
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "25.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "25.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000048",
+                  "url": "/images/products/a-ok-baby-ape-little-operator-onesie-0.webp",
+                  "altText": "Laughing baby held up in a dark heather onesie printed with the red, black, and cream Little Operator baby ape wearing an A-OK cap, headphones, and a hoodie with a microchip emblem.",
+                  "width": 1120,
+                  "height": 1400,
+                  "color": "Dark Heather"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000198",
+                  "title": "Dark Heather / NB",
+                  "sku": "",
+                  "price": {
+                    "amount": "25.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Dark Heather"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "NB"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000199",
+                  "title": "Dark Heather / 6M",
+                  "sku": "",
+                  "price": {
+                    "amount": "25.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Dark Heather"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "6M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000200",
+                  "title": "Dark Heather / 12M",
+                  "sku": "",
+                  "price": {
+                    "amount": "25.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Dark Heather"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "12M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000201",
+                  "title": "Dark Heather / 18M",
+                  "sku": "",
+                  "price": {
+                    "amount": "25.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Dark Heather"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "18M"
+                    }
+                  ]
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000202",
+                  "title": "Dark Heather / 24M",
+                  "sku": "",
+                  "price": {
+                    "amount": "25.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Dark Heather"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "24M"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-12T22:50:00Z",
+          "updatedAt": "2026-10-12T22:50:00Z",
+          "publishedAt": "2026-10-12T22:50:00Z",
+          "seo": {
+            "title": "Little Operator Baby Ape Onesie | A-OK",
+            "description": "Small model. Smaller shirt. The A-OK Little Operator baby ape on a dark heather baby bodysuit, sizes newborn to 24 months."
+          },
+          "featured": false,
+          "swatches": {
+            "Dark Heather": "#3d3d3f"
+          }
+        }
       }
     ]
   }

@@ -22,6 +22,7 @@ const PHOTO_BACKGROUNDS = ['bg-club-yellow', 'bg-club-sky', 'bg-club-gold'];
 const CATEGORY_LABELS: Record<string, string> = {
   hoodie: 'Hoodies',
   hat: 'Hats',
+  onesie: 'Onesies',
   't-shirt': 'Tees',
 };
 
@@ -41,10 +42,10 @@ export default function ProductCard({ product, index = 0, priority = false, colo
   // The product's own type decides when it names a garment, so a tee tagged "red hoodie"
   // (describing the artwork) still reads as a tee. Tags only count when it doesn't.
   const typeText = productType.toLowerCase();
-  const typeIsGarment = ['hoodie', 'sweatshirt', 'hat', 'cap', 'shirt', 'tee'].some((word) => typeText.includes(word));
+  const typeIsGarment = ['hoodie', 'sweatshirt', 'hat', 'cap', 'onesie', 'shirt', 'tee'].some((word) => typeText.includes(word));
   const isType = (type: string) =>
     typeText.includes(type) || (!typeIsGarment && tags.some((tag) => tag.toLowerCase().includes(type)));
-  const cardType = isType('hoodie') ? 'hoodie' : isType('hat') ? 'hat' : 't-shirt';
+  const cardType = isType('hoodie') ? 'hoodie' : isType('hat') ? 'hat' : isType('onesie') ? 'onesie' : 't-shirt';
 
   const itemNumber = String(index + 1).padStart(2, '0');
   // Stickers and other non-clothing items fall back to the t-shirt card type.

@@ -20,11 +20,12 @@ const Stripe = require('stripe');
 
 const CATALOG_PATH = path.join(__dirname, '..', 'product-catalog.json');
 
-// Every tee and hoodie is printed on demand in these sizes. Same list as app/lib/sizes.ts.
+// Every tee and hoodie is printed on demand in these sizes, unless the blank lists its own
+// (a baby onesie, say). Same list as app/lib/sizes.ts.
 const CLOTHING_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
 // Same rule as isClothing() in app/lib/sizes.ts: product type or any tag.
 const sizesFor = (productType = '', tags = [], supportedSizes = CLOTHING_SIZES) =>
-  [productType, ...tags].some((value) => /t-shirt|tshirt|hoodie|sweatshirt/i.test(value))
+  [productType, ...tags].some((value) => /t-shirt|tshirt|hoodie|sweatshirt|onesie|bodysuit/i.test(value))
     ? supportedSizes.join(',')
     : '';
 const DRY_RUN = process.argv.includes('--dry-run');

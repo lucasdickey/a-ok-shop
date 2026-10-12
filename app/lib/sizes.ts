@@ -1,13 +1,13 @@
 // Kept separate from catalog.ts so client components can use it without bundling the catalog.
 
-/** Default sizes for clothing printed on demand. Individual blanks can restrict this list. */
+/** Default sizes for clothing printed on demand. Individual blanks (a baby onesie, say) replace this list. */
 export const CLOTHING_SIZES: readonly string[] = ["XS", "S", "M", "L", "XL", "2XL"];
 
-/** Tees, hoodies and crewneck sweatshirts take a size. */
+/** Tees, hoodies, crewneck sweatshirts and baby onesies take a size. */
 export function isClothing(productType: string, tags: readonly string[] = []): boolean {
   return [productType, ...tags].some((value) => {
     const text = value.toLowerCase();
-    return text.includes("t-shirt") || text.includes("tshirt") || text.includes("hoodie") || text.includes("sweatshirt");
+    return text.includes("t-shirt") || text.includes("tshirt") || text.includes("hoodie") || text.includes("sweatshirt") || text.includes("onesie") || text.includes("bodysuit");
   });
 }
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { buildProductJsonLd, productMarkdownUrl } from "@/app/lib/agent-docs";
 import { getProductByHandle } from "@/app/lib/catalog";
-import { CLOTHING_SIZES, getClothingSizes, isClothing } from "@/app/lib/sizes";
+import { getClothingSizes, isClothing } from "@/app/lib/sizes";
 import { ProductPageContent } from "./ProductPageClient";
 
 export const dynamic = "force-dynamic";
@@ -141,8 +141,9 @@ export default async function ProductPage({
     sizeValues.push(...getClothingSizes(product));
   }
 
-  // Sort sizes in the standard order
-  sizeValues.sort((a, b) => CLOTHING_SIZES.indexOf(a) - CLOTHING_SIZES.indexOf(b));
+  // Sort sizes in the order the blank lists them
+  const sizeOrder = getClothingSizes(product);
+  sizeValues.sort((a, b) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
 
   const hasSizeOptions = sizeValues.length > 0;
 
