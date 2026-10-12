@@ -1,0 +1,50 @@
+# Nightly: create Stripe products and prices for catalog entries that don't have them yet,
+# then commit the new IDs back to product-catalog.json. Checkout prices come from the catalog,
+# so the store sells a new item before this runs; the Stripe IDs feed the agent catalog
+# (app/api/mpp/catalog) and the Stripe dashboard. Needs the STRIPE_SECRET_KEY repository secret.
+name: Sync Stripe products
+
+on:
+  schedule:
+    - cron: "17 9 * * *" # 09:17 UTC, daily
+  workflow_dispatch:
+
+concurrency:
+  group: sync-stripe-products
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Create missing Stripe products and prices
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        run: node scripts/sync-stripe-products.js
+
+      - name: Commit new Stripe IDs
+        run: |
+          if git diff --quiet -- product-catalog.json; then
+            echo "Catalog already in sync with Stripe."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add product-catalog.json
+          git commit -m "Add Stripe IDs for new catalog items"
+          git push
