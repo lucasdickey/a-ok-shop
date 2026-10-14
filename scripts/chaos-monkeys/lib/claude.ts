@@ -395,7 +395,7 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
-First open ${reference}: the round badge is the A-OK ape's canonical face, and every draft's ape must match it.
+First open ${reference}: the flat logo is the A-OK ape's canonical face, and every draft's ape must match it. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
 ${taste ? `
 THE OWNER'S RULES, distilled from every review. A draft that breaks one fails rulesOk and scores at most 4:
 ${taste}
@@ -408,10 +408,10 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape's face matches the badge: the same construction and proportions, wide round eyes with white around the pupils, warm tan face and muzzle, black fur, small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Angry brows, a shouting mouth, a tongue, star eyes, a recoloured face, or a different-looking chimp make it false.
+- onModel: the ape's face matches the logo: the same eye shape and spacing with white around the pupils, the same brow line, muzzle and nose shape, warm tan face and muzzle, black fur, and a small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a tongue or open shout, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
 - rulesOk: no rule is broken.
 - jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
-- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 5. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
+- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 4. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
 - note: at most 140 characters, the single most important problem or strength.
 
 ${lines.join("\n\n")}`;

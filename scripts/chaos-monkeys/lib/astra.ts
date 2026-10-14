@@ -17,14 +17,14 @@ function cutoutPrompt(brief: Brief): string {
   const brand = readBrand();
   return `You are illustrating one character cutout for the A-OK "Chaos Monkeys" series.
 
-The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions.
+The attached images are REFERENCE ONLY for the character's identity: the flat O-face logo is his exact face; the round badge adds the cap and headphones; the hoodie drawing gives his body and hoodie lettering. Do not copy their compositions.
 
 ${TOOL_RULES}
 
 Create ONE new square image of the A-OK ape: ${brief.art}
 
 Character, matching the references closely: ${brand.character}
-His face is the brand's logo. Draw it exactly as on the round badge reference, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face. No angry brows, shouting mouth, tongue, star eyes, or recoloured face.
+His face is the brand's logo, and the owner rejects any drift from it. Copy the flat O-face logo reference exactly, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face: keep the logo's eye shape and spacing, the white around the pupils, the brow line, the muzzle and nose shape, and the round O mouth. No stencil bridges or cuts across the eyes. No angry brows, shouting mouth, tongue, star eyes, cute or kid-cartoon proportions, realistic chimp anatomy, or recoloured face.
 Style: ${brand.style}
 Palette: ${brand.palette}
 
@@ -45,7 +45,7 @@ function printPrompt(brief: Brief): string {
     : "No words in the print at all.";
   return `You are illustrating one tee or hoodie graphic for A-OK, an AI-culture streetwear label.
 
-The attached images are REFERENCE ONLY for the character's identity (the round badge: face, cap and headphones; the hoodie drawing: body and hoodie lettering). Do not copy their compositions or their poster style.
+The attached images are REFERENCE ONLY for the character's identity: the flat O-face logo is his exact face; the round badge adds the cap and headphones; the hoodie drawing gives his body and hoodie lettering. Do not copy their compositions or their poster style.
 
 ${TOOL_RULES}
 
@@ -59,7 +59,7 @@ The graphic: ${brief.art}
 Text: ${words} The cap reads "A-OK". If the ape wears the hoodie and its front is visible, it reads "APES ON KEYS". No other letters, numbers, or logos.
 
 Character: ${brand.character}
-His face is the brand's logo. Draw it exactly as on the round badge reference, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face. No angry brows, shouting mouth, tongue, star eyes, or recoloured face.
+His face is the brand's logo, and the owner rejects any drift from it. Copy the flat O-face logo reference exactly, whatever the style: the same construction and proportions, wide round eyes with white around the pupils, a warm tan face and muzzle, black fur, and a small round O mouth, under the red-and-white A-OK cap and red headphones. The style changes the linework and rendering around him, never the construction or colours of his face: keep the logo's eye shape and spacing, the white around the pupils, the brow line, the muzzle and nose shape, and the round O mouth. No stencil bridges or cuts across the eyes. No angry brows, shouting mouth, tongue, star eyes, cute or kid-cartoon proportions, realistic chimp anatomy, or recoloured face.
 House look: ${brand.style}
 Palette for the inks: ${brand.palette}
 It must read from across a room and as a 300 px thumbnail.
@@ -105,7 +105,7 @@ Save the final image in the current directory as out.png (copy it from where the
 /** Re-inks `art` for dark garments in `jobDir` and returns the path of out.png (transparent). */
 export async function lightInk(art: string, jobDir: string): Promise<string> {
   // The re-ink keeps the art's own size, which can be under the usual 1000-pixel floor.
-  return generate(lightInkPrompt(), jobDir, [art], { alpha: true, minSize: 600 });
+  return generate(lightInkPrompt(), jobDir, [art], { alpha: true, minSize: 400 });
 }
 
 /** One photo of a model wearing an all-over print of `tile`. */

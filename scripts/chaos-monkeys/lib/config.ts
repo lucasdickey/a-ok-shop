@@ -22,7 +22,9 @@ export const MANIFEST_PATH = "app/data/chaos-monkeys.json";
 export const IMAGE_DIR = "public/chaos-monkeys";
 export const CATALOG_PATH = "product-catalog.json";
 export const PRODUCT_IMAGE_DIR = "public/images/products";
+/** Astra's references, face first: the flat O-face logo is the canonical face; the badge and the hoodie drawing add the cap, headphones and body. */
 export const REFERENCE_IMAGES = [
+  "public/images/a-ok-o-face.png",
   "public/images/a-ok-suprised.jpg",
   "public/images/products/hallucination-club-inference-error-edition-3.png",
 ];

@@ -9,8 +9,9 @@
  *   chaos review [--date RUN[,RUN…]] --out DIR               export runs for the feedback page (index.html, drafts.json, img/)
  *   chaos feedback FILE.json [--date RUN]                    import keep/reject verdicts and notes; future briefs learn from them
  *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force]    print files, model mockups, and copy for drafts ticked Print
- *   chaos sell RUN-N … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
+ *   chaos sell RUN-N[:tee|:hoodie] … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
  *   chaos archive --all | RUN … | RUN-N …                    copy concepts and print files to the private archive
+ *   chaos stripe [--dry-run]                                 give every catalog product missing from Stripe its product and prices
  *   chaos taste [--show]                                     re-distill (or show) TASTE.md, the rules every review adds up to
  *   chaos ship 1 3 5 [--date RUN] [--branch main] [--no-push]  publish drafts: lint, build, commit, push
  *   chaos unpublish 0007 [--branch main] [--no-push]         take a published monkey down
@@ -77,6 +78,7 @@ import {
   merchDir,
   MAX_HARD_TO_SEE,
   matchesGround,
+  missingFromStripe,
   printfulNotes,
   prefersLightInk,
   printSize,
@@ -342,7 +344,7 @@ async function judgeAndSheet(record: Run, runDir: string, renderer: Renderer): P
     log(`judging ${ready.length} drafts…`);
     try {
       // The judge can only read files in the run directory, so the badge goes there.
-      const reference = "reference-ape.jpg";
+      const reference = "reference-ape.png";
       fs.copyFileSync(path.join(CHECKOUT, REFERENCE_IMAGES[0]), path.join(runDir, reference));
       const results = await judgeDrafts(runDir, ready, dateLabel(date), reference, readTaste());
       for (const result of results) {
@@ -1227,9 +1229,19 @@ async function sell(options: Options): Promise<void> {
   if (useStripe && !key) throw new Error("set STRIPE_SECRET_KEY to the shop's key (its .env.local), or pass --no-stripe");
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://a-ok.ai").replace(/\/+$/, "");
 
-  const merches = ids.map(loadMerch);
+  // RUN-N sells every product in that folder; RUN-N:tee or RUN-N:hoodie only that garment.
+  const only = new Map<string, GarmentKind>();
+  const merches = ids.map((arg) => {
+    const [id, garment] = arg.split(":");
+    if (garment) {
+      if (!GARMENT_KINDS.includes(garment as GarmentKind)) throw new Error(`not a garment: ${garment} (tee or hoodie)`);
+      only.set(id, garment as GarmentKind);
+    }
+    return loadMerch(id);
+  });
+  const wanted = (merch: Merch, garment: GarmentKind) => !only.has(merch.id) || only.get(merch.id) === garment;
   for (const merch of merches) {
-    for (const p of merch.products.filter((x) => !x.sold)) {
+    for (const p of merch.products.filter((x) => !x.sold && wanted(merch, x.garment))) {
       if (!p.copy) throw new Error(`${merch.id} ${p.garment} has no copy yet; run chaos print`);
       const offered = p.mockups.filter((m) => (p.colors ?? SHOP_COLORS).includes(m.color));
       const missing = offered.filter((m) => !m.web).map((m) => m.color);
@@ -1240,7 +1252,7 @@ async function sell(options: Options): Promise<void> {
       const weak = offered.filter((m) => (m.score ?? 0) < 7).map((m) => m.color);
       if (weak.length && !options.flags.has("--force")) throw new Error(`${merch.id} ${p.garment}: the check flagged ${weak.join(", ")}; look at the sheet, then pass --force to sell anyway`);
     }
-    for (const p of (merch.allOver ?? []).filter((x) => !x.sold)) {
+    for (const p of (merch.allOver ?? []).filter((x) => !x.sold && wanted(merch, x.garment))) {
       if (!p.copy) throw new Error(`${merch.id} all-over ${p.garment} has no copy yet; run chaos print`);
       if (p.photos.some((photo) => !photo.web)) throw new Error(`${merch.id} all-over ${p.garment} is missing photos; run chaos print`);
       const weak = p.photos.filter((photo) => (photo.score ?? 0) < 7).map((photo) => photo.view);
@@ -1256,7 +1268,7 @@ async function sell(options: Options): Promise<void> {
   const added: Array<{ merch: Merch; product: MerchProduct | AllOverProduct; node: CatalogNode }> = [];
   const paths = [CATALOG_PATH];
   for (const merch of merches) {
-    for (const product of merch.products.filter((p) => !p.sold)) {
+    for (const product of merch.products.filter((p) => !p.sold && wanted(merch, p.garment))) {
       const blank = BLANKS[product.garment];
       const copy = product.copy as NonNullable<MerchProduct["copy"]>;
       if (catalog.products.edges.some((e) => e.node.handle === copy.handle)) throw new Error(`the shop already has a product called ${copy.handle}`);
@@ -1273,7 +1285,7 @@ async function sell(options: Options): Promise<void> {
       added.push({ merch, product, node });
       log(`${node.title} (${node.handle}): ${node.variants.edges.length} variants at $${blank.price}`);
     }
-    for (const product of (merch.allOver ?? []).filter((p) => !p.sold)) {
+    for (const product of (merch.allOver ?? []).filter((p) => !p.sold && wanted(merch, p.garment))) {
       const blank = ALL_OVER_BLANKS[product.garment];
       const copy = product.copy as NonNullable<AllOverProduct["copy"]>;
       if (catalog.products.edges.some((e) => e.node.handle === copy.handle)) throw new Error(`the shop already has a product called ${copy.handle}`);
@@ -1302,6 +1314,11 @@ async function sell(options: Options): Promise<void> {
       return log(`dry run: lint and build pass with ${added.length} new products; nothing was sent to Stripe or committed`);
     }
     if (useStripe) {
+      // With --fill-stripe, close any other gaps too, so Stripe's catalog matches the shop's.
+      for (const node of options.flags.has("--fill-stripe") ? missingFromStripe(catalog).filter((n) => !added.some((a) => a.node === n)) : []) {
+        await addToStripe(key as string, node, siteUrl, () => "");
+        log(`Stripe: filled in ${node.title} (${node.stripeProductId})`);
+      }
       for (const { node } of added) {
         const product = added.find((a) => a.node === node)?.product as MerchProduct | AllOverProduct;
         await addToStripe(key as string, node, siteUrl, (color) =>
@@ -1350,6 +1367,33 @@ async function sell(options: Options): Promise<void> {
     log(url ? `deployed: ${url}` : "could not confirm the deployment; check Vercel");
     for (const { node } of added) log(`${siteUrl}/products/${node.handle}`);
   }
+}
+
+/**
+ * Gives every product in the shop's catalog a Stripe product and a price per variant, for products added outside
+ * `chaos sell` (which does this itself). Checkout prices from the catalog either way; this keeps Stripe's catalog
+ * complete. `--dry-run` lists what is missing.
+ */
+async function stripeSync(options: Options): Promise<void> {
+  const key = process.env.STRIPE_SECRET_KEY;
+  const dryRun = options.flags.has("--dry-run");
+  if (!key && !dryRun) throw new Error("set STRIPE_SECRET_KEY to the shop's key (its .env.local), or pass --dry-run");
+  const branch = flag(options, "--branch") ?? "main";
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://a-ok.ai").replace(/\/+$/, "");
+  await syncSite(branch);
+  const catalogFile = path.join(SITE_DIR, CATALOG_PATH);
+  const catalog = JSON.parse(fs.readFileSync(catalogFile, "utf8")) as Catalog;
+  const missing = missingFromStripe(catalog);
+  for (const node of missing) {
+    const gaps = node.variants.edges.filter((e) => !e.node.stripePriceId).length;
+    log(`${node.title} (${node.handle}): ${node.stripeProductId ? `${gaps} of ${node.variants.edges.length} prices missing` : `not in Stripe, ${gaps} prices`}`);
+  }
+  if (!missing.length) return log("Stripe has every product in the catalog");
+  if (dryRun) return log("dry run: nothing sent to Stripe");
+  for (const node of missing) await addToStripe(key as string, node, siteUrl, () => "");
+  fs.writeFileSync(catalogFile, `${JSON.stringify(catalog, null, 2)}\n`);
+  const sha = await commitAndPush([CATALOG_PATH], `Add Stripe ids for ${missing.map((n) => n.title).join(", ")}`, branch, !options.flags.has("--no-push"));
+  log(`Stripe: ${missing.length} products filled in (${sha.slice(0, 8)})`);
 }
 
 /** Writes runs and printed drafts into the private archive: `--all`, or runs (2026-10-07) and merch folders (2026-10-07-3). */
@@ -1455,6 +1499,7 @@ const commands: Record<string, () => Promise<void>> = {
   review: () => review(options),
   print: () => printMerch(options),
   archive: () => archive(options),
+  stripe: () => stripeSync(options),
   taste: async () => {
     if (options.flags.has("--show") && readTaste()) return console.log(readTaste());
     await updateTaste();

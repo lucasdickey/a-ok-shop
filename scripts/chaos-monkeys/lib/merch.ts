@@ -273,6 +273,13 @@ export type CatalogVariant = {
   availableForSale: boolean;
   selectedOptions: Array<{ name: string; value: string }>;
 };
+/** Products in the shop's catalog that Stripe is missing, or whose variants lack prices. Agent-only items are skipped. */
+export function missingFromStripe(catalog: Catalog): CatalogNode[] {
+  return catalog.products.edges
+    .map((e) => e.node)
+    .filter((n) => !n.tags.includes("agent-only") && (!n.stripeProductId || n.variants.edges.some((e) => !e.node.stripePriceId)));
+}
+
 export type CatalogNode = {
   id: string;
   handle: string;
@@ -412,7 +419,8 @@ async function stripePost(key: string, endpoint: string, params: Array<[string, 
  * writes their ids into `node`. Checkout prices from the catalog either way; these keep Stripe's catalog complete.
  */
 export async function addToStripe(key: string, node: CatalogNode, siteUrl: string, printFileFor: (color: string) => string): Promise<void> {
-  const product = await stripePost(
+  // A product already in Stripe only gets the prices it is missing.
+  const product = node.stripeProductId ? { id: node.stripeProductId } : await stripePost(
     key,
     "products",
     [
@@ -427,7 +435,7 @@ export async function addToStripe(key: string, node: CatalogNode, siteUrl: strin
     `${node.id}-product`,
   );
   node.stripeProductId = product.id;
-  for (const { node: variant } of node.variants.edges) {
+  for (const { node: variant } of node.variants.edges.filter((e) => !e.node.stripePriceId)) {
     const price = await stripePost(
       key,
       "prices",

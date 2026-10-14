@@ -100,7 +100,7 @@ Two-colour risograph: red and black overprinting with slight misregistration, gr
 ## manual · Instruction manual
 engine: astra
 text: 1
-Appliance-manual technical drawing: the ape in an exploded or cutaway view with numbered callouts (numbers only), dashed arrows and one figure label such as FIG. 1. Clean line art with one red highlight.
+Appliance-manual technical drawing: the ape in an exploded or cutaway view with numbered callouts (numbers only) and dashed arrows, but no figure label or caption. Clean line art with one red highlight.
 
 ## flash · Tattoo flash
 engine: astra
