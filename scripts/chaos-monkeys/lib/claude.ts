@@ -116,7 +116,11 @@ function briefsSchema(styleIds: string[]) {
 }
 
 /** A draft's assigned style; the topical slot (style null) lets Claude choose. */
-type Slot = { style: Style | null; topical: boolean };
+/** A draft the owner asked to see again, with what to change. */
+export type Redo = { ref: string; brief: Brief; note: string; judgeNote: string };
+
+/** A draft's assigned style; the topical slot (style null) lets Claude choose; a redo keeps its draft's style. */
+type Slot = { style: Style | null; topical: boolean; redo?: Redo };
 
 /** Kept and rejected counts per style, from every run's feedback. A shipped draft counts as kept. */
 export type StyleScores = Map<string, { keep: number; reject: number }>;
@@ -198,6 +202,7 @@ function normalizeBrief(raw: Brief, slot: Slot, styles: Style[], publishedIds: S
     form,
     parents: raw.parents.filter((id) => publishedIds.has(id)).slice(0, 2),
     inspiration: slot.topical && topic ? { label: `Zingers, ${topic.date}`, url: topic.url } : null,
+    redoOf: slot.redo?.ref ?? null,
   };
 }
 
@@ -235,17 +240,36 @@ export async function writeBriefs(options: {
   taste: string | null;
   /** Styles drafted in the last few days, so this batch tries others. */
   recentStyles: Map<string, number>;
+  /** Drafts to redo first, then styles to use next, before the rest are picked at random. */
+  redos?: Redo[];
+  styles?: string[];
 }): Promise<Brief[]> {
   const brand = readBrand();
   const styles = readStyles();
-  const slots = draftSlots(options.count, options.topic !== null, styles, options.styleScores, options.recentStyles);
+  const fixed: Slot[] = [
+    ...(options.redos ?? []).map((redo) => ({ style: styles.find((s) => s.id === redo.brief.style) ?? null, topical: false, redo })),
+    ...(options.styles ?? []).map((id) => {
+      const style = styles.find((s) => s.id === id);
+      if (!style) throw new Error(`no style "${id}" in STYLES.md`);
+      return { style, topical: false };
+    }),
+  ];
+  const slots = [...fixed, ...draftSlots(Math.max(0, options.count - fixed.length), options.topic !== null, styles, options.styleScores, options.recentStyles)];
   const styleLine = (style: Style) =>
     `"${style.id}" (${style.name}): ${style.description} ${style.engine === "hybrid" ? "Prints the title and slogan." : style.text === 0 ? "Print text: none." : `Print text: at most ${style.text} short string${style.text > 1 ? "s" : ""}.`}`;
-  const slotLines = slots.map((slot, i) =>
-    slot.style
+  const slotLines = slots.map((slot, i) => {
+    if (slot.redo) {
+      const { brief, note, judgeNote, ref } = slot.redo;
+      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, art: brief.art };
+      return `- Draft ${i + 1}: REDO of ${brief.title} (${ref}), style ${slot.style ? styleLine(slot.style) : `"${brief.style}"`}
+  The original brief: ${JSON.stringify(original)}
+  The owner's note on it: "${note}"${judgeNote ? `\n  The judge's note on it: "${judgeNote}"` : ""}
+  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply.`;
+    }
+    return slot.style
       ? `- Draft ${i + 1}: style ${styleLine(slot.style)}`
-      : `- Draft ${i + 1}: TOPICAL (see TODAY'S STORY). Choose whichever style from the library below suits the joke best.`,
-  );
+      : `- Draft ${i + 1}: TOPICAL (see TODAY'S STORY). Choose whichever style from the library below suits the joke best.`;
+  });
   const topicBlock = options.topic
     ? `TODAY'S STORY (from Zingers, our daily AI-news comic)
 Headline: ${options.topic.headline}
@@ -283,7 +307,7 @@ ${options.taste}
 ` : ""}${feedbackBlock(options.feedback, options.feedbackNotes)}ALREADY PUBLISHED (never repeat these jokes; you may riff on one and list its number in "parents"):
 ${published}
 
-DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat):
+DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat, except the redos asked for below):
 ${recent}
 
 ${topicBlock}Write exactly ${slots.length} new briefs, in this order:

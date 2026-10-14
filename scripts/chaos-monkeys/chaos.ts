@@ -3,6 +3,7 @@
  * No API keys, no CI. See README.md.
  *
  *   chaos draft [--count 6] [--date RUN] [--force] [--zingers]  brief, illustrate, compose, judge, contact sheet (~10 min)
+ *               [--redo RUN-N,…] [--styles stencil,…]       redo drafts with the owner's notes first, then use these styles
  *   chaos status [--date RUN]                                the latest drafts, their scores, and what shipped
  *   chaos judge [--date RUN]                                 re-score a run's drafts and rebuild its contact sheet
  *   chaos review [--date RUN[,RUN…]] --out DIR               export runs for the feedback page (index.html, drafts.json, img/)
@@ -54,7 +55,7 @@ import {
   type ManifestEntry,
   type Run,
 } from "./lib/config.ts";
-import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type StyleScores } from "./lib/claude.ts";
+import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type Redo, type StyleScores } from "./lib/claude.ts";
 import { AstraUnavailable, allOverMockup, illustrate, lightInk, mockup } from "./lib/astra.ts";
 import { allMerch, syncToArchive, type ArchiveWork } from "./lib/printfiles.ts";
 import { upscale } from "./lib/upscale.ts";
@@ -126,7 +127,7 @@ function parseArgs(argv: string[]): Options {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (!arg.startsWith("--")) positional.push(arg);
-    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out"].includes(arg)) flags.set(arg, argv[++i]);
+    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out", "--redo", "--styles"].includes(arg)) flags.set(arg, argv[++i]);
     else flags.set(arg, true);
   }
   return { positional, flags };
@@ -393,6 +394,19 @@ async function draft(options: Options): Promise<void> {
     const published = await publishedOn("main");
     const topic = options.flags.has("--zingers") ? await fetchTopic(date) : null;
     const feedback = pastFeedback();
+    // Redos: RUN-N references to drafts the owner asked to see again, with their notes.
+    const redos: Redo[] = (flag(options, "--redo") ?? "")
+      .split(",")
+      .map((ref) => ref.trim())
+      .filter(Boolean)
+      .map((ref) => {
+        const match = ref.match(/^(.+)-(\d+)$/);
+        const source = match ? loadRun(match[1]).drafts.find((x) => x.n === Number(match[2])) : undefined;
+        if (!match || !source) throw new Error(`no draft ${ref} to redo (expected RUN-N, e.g. 2026-10-09-2)`);
+        return { ref, brief: source.brief, note: source.feedback?.note ?? "", judgeNote: source.judgment?.note ?? "" };
+      });
+    const fixedStyles = (flag(options, "--styles") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    if (redos.length) log(`redoing ${redos.map((r) => `${r.brief.title} (${r.ref})`).join(", ")}`);
     log(`briefing ${count} drafts for ${id}${topic ? `; topical story: ${topic.headline}` : ""}${feedback.lines.length ? `; learning from ${feedback.lines.length} past verdicts` : ""}`);
     const briefs = await writeBriefs({
       count,
@@ -405,6 +419,8 @@ async function draft(options: Options): Promise<void> {
       styleScores: feedback.scores,
       taste: readTaste(),
       recentStyles: recentStyles(id),
+      redos,
+      styles: fixedStyles,
     });
     const record: Run = {
       id,

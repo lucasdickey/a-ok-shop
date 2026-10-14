@@ -75,6 +75,8 @@ export type Brief = {
   parents: string[];
   /** Set by the tool (not the model) when the brief riffs on the day's Zingers story. */
   inspiration: Inspiration | null;
+  /** The draft this one redoes, as RUN-N, when the owner asked for another turn on it. */
+  redoOf?: string | null;
 };
 
 export type Inspiration = { label: string; url: string };
