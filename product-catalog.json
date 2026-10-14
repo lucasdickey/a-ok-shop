@@ -8604,6 +8604,1964 @@
           "publishedAt": "2026-10-08T23:15:24.381Z",
           "stripeProductId": "prod_VPF1MawxNBebYn"
         }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000012",
+          "handle": "a-ok-data-augmentation-tee",
+          "title": "A-OK Data Augmentation Tee",
+          "description": "One photo of the ape, flipped, rotated, cropped and inverted until it became an entire training set. Tiled edge to edge in black and signal red on a bone all-over print cotton crewneck. No words.",
+          "descriptionHtml": "<p><strong>One photo. Every angle. New dataset.</strong></p><p>We needed more training data.</p><p>We had one picture of the ape.</p><p>The <strong>Data Augmentation Tee</strong> follows the computer-vision handbook to the letter: flip it, rotate it, crop it, invert it, repeat. One ape becomes a whole training set, tiled edge to edge like a printed silk that went to grad school. It is still one ape. The model has not been told.</p><p>No words on the shirt. The dataset speaks for itself.</p><p><strong>One ape. Every rotation. A-OK.</strong></p><ul><li>All-over repeat print covering the front, back and sleeves edge to edge, repeating about every 18 inches.</li><li>Black and signal red artwork, with no printed words.</li><li>All-Over Print Men's Cotton Crew Neck T-Shirt.</li><li>One colorway: black and signal red on bone.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "data augmentation",
+            "all-over print",
+            "AI satire",
+            "computer vision",
+            "training data"
+          ],
+          "seo": {
+            "title": "A-OK Data Augmentation Tee | All-Over Print Ape Crewneck",
+            "description": "One ape photo, flipped, rotated, cropped and inverted into a training set. All-over print in black and signal red on a bone cotton crewneck."
+          },
+          "swatches": {
+            "All-over": "#eee3c9"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000048",
+                  "url": "/images/products/a-ok-data-augmentation-tee-front.webp",
+                  "altText": "A-OK Data Augmentation Tee, all-over print, front on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000049",
+                  "url": "/images/products/a-ok-data-augmentation-tee-back.webp",
+                  "altText": "A-OK Data Augmentation Tee, all-over print, back on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000198",
+                  "title": "All-over / XS",
+                  "sku": "printful-33937",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWxKcMygrnU2D1fAiDlEt"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000199",
+                  "title": "All-over / S",
+                  "sku": "printful-33938",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWyKcMygrnU2D3pGPv8tU"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000200",
+                  "title": "All-over / M",
+                  "sku": "printful-33939",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWyKcMygrnU2DwH87f9wF"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000201",
+                  "title": "All-over / L",
+                  "sku": "printful-33940",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWyKcMygrnU2DrhdmUiKp"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000202",
+                  "title": "All-over / XL",
+                  "sku": "printful-33941",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWzKcMygrnU2Du42pNXDc"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000203",
+                  "title": "All-over / 2XL",
+                  "sku": "printful-33942",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWzKcMygrnU2D9cDpG2KC"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000097",
+              "name": "Color",
+              "values": [
+                "All-over"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000098",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTTSVPVxHPgOu"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000013",
+          "handle": "a-ok-paperclip-maximizer-hoodie",
+          "title": "A-OK Paperclip Maximizer Hoodie",
+          "description": "An all-over print hoodie of apes working on paperclips with total dedication. It's the classic AI alignment thought experiment, repeated edge to edge across the front, back and sleeves. One objective. Every paperclip.",
+          "descriptionHtml": "<p><strong>One objective. Every paperclip.</strong></p><p>Give a system one goal and it will pursue that goal very thoroughly.</p><p>The ape was given paperclips.</p><p>The <strong>Paperclip Maximizer Hoodie</strong> turns the classic alignment thought experiment into an all-over repeat. Every ape in it is working on paperclips with total dedication, across the front, the back and down both sleeves. Nobody is stopping. Nobody has asked them to.</p><p>The apes are doing great. That is the worry.</p><p><strong>Objective pursued. Objective still running. A-OK.</strong></p><ul><li>All-over print of apes and paperclips, edge to edge on the front, back and sleeves, repeating about every 18 inches.</li><li>One colorway: the pattern itself. No printed words.</li><li>All-Over Print Unisex Cotton Hoodie.</li><li>Catalog colorway: All-over.</li></ul>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies",
+            "A-OK",
+            "Apes on Keys",
+            "paperclip maximizer",
+            "AI alignment",
+            "AI satire",
+            "all-over print",
+            "ape pattern"
+          ],
+          "seo": {
+            "title": "A-OK Paperclip Maximizer Hoodie | All-Over Print",
+            "description": "All-over print hoodie of apes working on paperclips with total dedication. The AI alignment thought experiment, worn. One objective. Every paperclip."
+          },
+          "swatches": {
+            "All-over": "#c11215"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "90.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "90.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000050",
+                  "url": "/images/products/a-ok-paperclip-maximizer-hoodie-front.webp",
+                  "altText": "A-OK Paperclip Maximizer Hoodie, all-over print, front on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000051",
+                  "url": "/images/products/a-ok-paperclip-maximizer-hoodie-back.webp",
+                  "altText": "A-OK Paperclip Maximizer Hoodie, all-over print, back on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000204",
+                  "title": "All-over / XS",
+                  "sku": "printful-33975",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWzKcMygrnU2D3l2ydZD6"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000205",
+                  "title": "All-over / S",
+                  "sku": "printful-33976",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaWzKcMygrnU2DpLzb1w2r"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000206",
+                  "title": "All-over / M",
+                  "sku": "printful-33977",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX0KcMygrnU2DUjrua0R3"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000207",
+                  "title": "All-over / L",
+                  "sku": "printful-33978",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX0KcMygrnU2DQ6LFNVqb"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000208",
+                  "title": "All-over / XL",
+                  "sku": "printful-33979",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX0KcMygrnU2DO4ElJ3p0"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000209",
+                  "title": "All-over / 2XL",
+                  "sku": "printful-33980",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX0KcMygrnU2DD3eJb0i5"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000099",
+              "name": "Color",
+              "values": [
+                "All-over"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000100",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTThxi9mok8Td"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000014",
+          "handle": "a-ok-infinite-monkeys-tee",
+          "title": "A-OK Infinite Monkeys Tee",
+          "description": "The infinite monkey theorem as an all-over print that never runs out of monkeys. A-OK apes typing in a repeat that covers the whole cotton crew neck tee, front, back and sleeves.",
+          "descriptionHtml": "<p><strong>Infinite apes. Infinite keys. One Hamlet.</strong></p><p>Give enough monkeys enough typewriters and one of them eventually types Hamlet.</p><p>That was a thought experiment. Now it's a business model.</p><p>The <strong>Infinite Monkeys Tee</strong> takes the infinite monkey theorem, the old ancestor of the language model, and prints it the only honest way: as a pattern that really does go on forever. A-OK apes at the keys, repeating edge to edge. Nobody has finished the play yet. Output remains under review.</p><p>For people who believe the right answer is in there somewhere, given enough attempts.</p><p><strong>More monkeys. Same odds. A-OK.</strong></p><ul><li>All-over print covering the whole tee edge to edge: front, back and sleeves.</li><li>Typing-ape pattern that repeats about every 18 inches.</li><li>One colourway: the pattern itself. No printed words.</li><li>All-over print men's cotton crew neck T-shirt.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "infinite monkey theorem",
+            "all-over print",
+            "typing apes",
+            "AI satire",
+            "ape graphic"
+          ],
+          "seo": {
+            "title": "A-OK Infinite Monkeys Tee | All-Over Print AI Satire",
+            "description": "The infinite monkey theorem as an all-over print tee: A-OK apes typing edge to edge, front, back and sleeves. Infinite apes. Infinite keys. One Hamlet."
+          },
+          "swatches": {
+            "All-over": "#c91614"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000052",
+                  "url": "/images/products/a-ok-infinite-monkeys-tee-front.webp",
+                  "altText": "A-OK Infinite Monkeys Tee, all-over print, front on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000053",
+                  "url": "/images/products/a-ok-infinite-monkeys-tee-back.webp",
+                  "altText": "A-OK Infinite Monkeys Tee, all-over print, back on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000210",
+                  "title": "All-over / XS",
+                  "sku": "printful-33937",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX1KcMygrnU2Dol1wHoAV"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000211",
+                  "title": "All-over / S",
+                  "sku": "printful-33938",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX1KcMygrnU2DxR6jtWr2"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000212",
+                  "title": "All-over / M",
+                  "sku": "printful-33939",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX1KcMygrnU2D3jD8I04j"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000213",
+                  "title": "All-over / L",
+                  "sku": "printful-33940",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX2KcMygrnU2DOOyWbltd"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000214",
+                  "title": "All-over / XL",
+                  "sku": "printful-33941",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX2KcMygrnU2DnurnBFy7"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000215",
+                  "title": "All-over / 2XL",
+                  "sku": "printful-33942",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX2KcMygrnU2DT72RmqHv"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000101",
+              "name": "Color",
+              "values": [
+                "All-over"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000102",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTT2Y6QuWrx0R"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000015",
+          "handle": "a-ok-multithreaded-tee",
+          "title": "A-OK Multithreaded Tee",
+          "description": "A silk-scarf all-over print in which the same ape winds, braids, splices and stares down one very tight knot, all joined by a single unbroken red cord. Printed edge to edge on a cotton crew neck tee.",
+          "descriptionHtml": "<p><strong>Many threads. One ape. Some knots.</strong></p><p>We told the ape to run everything in parallel.</p><p>The ape did. Personally. Every thread.</p><p>The <strong>Multithreaded Tee</strong> is a silk-scarf repeat in which every vignette is the same ape minding its own thread: winding it, braiding it, splicing it, and staring down one very tight knot. A single red cord runs unbroken across the whole shirt, between tidy little braces and loading spinners. Each thread is waiting on another thread. Each thread is the same ape.</p><p>For people who run everything in parallel and plan to untangle it later.</p><p><strong>Parallel by design. Deadlocked by lunch. A-OK.</strong></p><ul><li>All-over print covering the whole garment edge to edge, front, back and sleeves, with the pattern repeating about every 18 inches.</li><li>One colorway: the pattern itself, with a single unbroken red cord. No printed words.</li><li>All-Over Print Men's Cotton Crew Neck T-Shirt.</li><li>Catalog colorway: All-over.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "multithreaded",
+            "all-over print",
+            "AI satire",
+            "deadlock",
+            "silk-scarf print"
+          ],
+          "seo": {
+            "title": "A-OK Multithreaded Tee | All-Over Print AI Satire Tee",
+            "description": "Many threads. One ape. Some knots. A silk-scarf all-over print about parallel work and deadlocks, edge to edge on a cotton crew neck tee."
+          },
+          "swatches": {
+            "All-over": "#dcc4a7"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "45.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000054",
+                  "url": "/images/products/a-ok-multithreaded-tee-front.webp",
+                  "altText": "A-OK Multithreaded Tee, all-over print, front on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000055",
+                  "url": "/images/products/a-ok-multithreaded-tee-back.webp",
+                  "altText": "A-OK Multithreaded Tee, all-over print, back on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000216",
+                  "title": "All-over / XS",
+                  "sku": "printful-33937",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX3KcMygrnU2D76EOLsW1"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000217",
+                  "title": "All-over / S",
+                  "sku": "printful-33938",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX3KcMygrnU2DGMuCx2UD"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000218",
+                  "title": "All-over / M",
+                  "sku": "printful-33939",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX3KcMygrnU2DvAPQHNg2"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000219",
+                  "title": "All-over / L",
+                  "sku": "printful-33940",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX3KcMygrnU2D2aYkggrv"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000220",
+                  "title": "All-over / XL",
+                  "sku": "printful-33941",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX3KcMygrnU2DWhv89OGd"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000221",
+                  "title": "All-over / 2XL",
+                  "sku": "printful-33942",
+                  "price": {
+                    "amount": "45.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX4KcMygrnU2DK15OEiOX"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000103",
+              "name": "Color",
+              "values": [
+                "All-over"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000104",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTUK1j7kwdgdp"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000016",
+          "handle": "a-ok-multithreaded-hoodie",
+          "title": "A-OK Multithreaded Hoodie",
+          "description": "A silk-scarf all-over print in which the same ape winds, braids, splices and stares down one very tight knot, all joined by a single unbroken red cord. Printed edge to edge on a unisex cotton hoodie.",
+          "descriptionHtml": "<p><strong>Many threads. One ape. Some knots.</strong></p><p>Somebody suggested more concurrency.</p><p>The ape took on every thread itself.</p><p>The <strong>Multithreaded Hoodie</strong> is a silk-scarf repeat in which every vignette is the same ape minding its own thread: winding it, braiding it, splicing it, and staring down one very tight knot. A single red cord runs unbroken across the whole hoodie, between tidy little braces and loading spinners. Nothing is blocked. Everything is waiting.</p><p>Layer it over the twelve things you started at once and will untangle later.</p><p><strong>All threads running. None finished. A-OK.</strong></p><ul><li>All-over print covering the whole garment edge to edge, front, back and sleeves, with the pattern repeating about every 18 inches.</li><li>One colorway: the pattern itself, with a single unbroken red cord. No printed words.</li><li>All-Over Print Unisex Cotton Hoodie.</li><li>Catalog colorway: All-over.</li></ul>",
+          "productType": "Hoodies",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "Hoodies",
+            "A-OK",
+            "Apes on Keys",
+            "multithreaded",
+            "all-over print",
+            "AI satire",
+            "deadlock",
+            "silk-scarf print"
+          ],
+          "seo": {
+            "title": "A-OK Multithreaded Hoodie | All-Over Print AI Hoodie",
+            "description": "Many threads. One ape. Some knots. A silk-scarf all-over print about parallel work and deadlocks, edge to edge on a unisex cotton hoodie."
+          },
+          "swatches": {
+            "All-over": "#dcc4a7"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "90.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "90.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000056",
+                  "url": "/images/products/a-ok-multithreaded-hoodie-front.webp",
+                  "altText": "A-OK Multithreaded Hoodie, all-over print, front on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000057",
+                  "url": "/images/products/a-ok-multithreaded-hoodie-back.webp",
+                  "altText": "A-OK Multithreaded Hoodie, all-over print, back on a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "All-over"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000222",
+                  "title": "All-over / XS",
+                  "sku": "printful-33975",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX4KcMygrnU2DjczumKy6"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000223",
+                  "title": "All-over / S",
+                  "sku": "printful-33976",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX4KcMygrnU2DxCAUE30W"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000224",
+                  "title": "All-over / M",
+                  "sku": "printful-33977",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX4KcMygrnU2DSWiprWRC"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000225",
+                  "title": "All-over / L",
+                  "sku": "printful-33978",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX5KcMygrnU2DncUkszPc"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000226",
+                  "title": "All-over / XL",
+                  "sku": "printful-33979",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX5KcMygrnU2D33v5U6uv"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000227",
+                  "title": "All-over / 2XL",
+                  "sku": "printful-33980",
+                  "price": {
+                    "amount": "90.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "All-over"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX5KcMygrnU2Do6Tx7jRc"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000105",
+              "name": "Color",
+              "values": [
+                "All-over"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000106",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTUPPCuVzN1BV"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000017",
+          "handle": "a-ok-out-of-distribution-tee",
+          "title": "A-OK Out of Distribution Tee",
+          "description": "The ape as a chunky 8-bit sprite, one step past the edge of the level and out over the unrendered grid. No printed words. A Bella + Canvas 3001 tee in Red, Yellow, Black and White.",
+          "descriptionHtml": "<p><strong>LEFT THE MAP. NO GROUND TRUTH.</strong></p><p>Every tile in the training data stops at the edge of the level.</p><p>The ape has taken one step past it.</p><p>The <strong>Out of Distribution Tee</strong> draws our Apes on Keys operator as a chunky 8-bit sprite with hard pixel edges, standing over the unrendered grid. No floor. No labels. Confidence unchanged.</p><p>For anyone who has given a model an input it never trained on and watched it keep walking.</p><p><strong>Off the map. Still A-OK.</strong></p><ul><li>8-bit ape stepping off the edge of the level, about 11 inches wide, centered on the chest.</li><li>No printed words. The picture tells the joke.</li><li>Black ink, which prints in bone cream on Red and Black.</li><li>Bella + Canvas 3001 Unisex Staple T-Shirt in Red, Yellow, Black and White.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "out of distribution",
+            "AI satire",
+            "8-bit",
+            "pixel art",
+            "training data"
+          ],
+          "seo": {
+            "title": "A-OK Out of Distribution Tee | 8-Bit AI Satire",
+            "description": "An 8-bit ape steps off the edge of the level into the unrendered grid. AI-satire tee on Bella + Canvas 3001 in Red, Yellow, Black and White."
+          },
+          "swatches": {
+            "Red": "#d0071e",
+            "Yellow": "#ffd667",
+            "Black": "#0c0c0c",
+            "White": "#ffffff"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000058",
+                  "url": "/images/products/a-ok-out-of-distribution-tee-red.webp",
+                  "altText": "Red A-OK Out of Distribution Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000059",
+                  "url": "/images/products/a-ok-out-of-distribution-tee-yellow.webp",
+                  "altText": "Yellow A-OK Out of Distribution Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000060",
+                  "url": "/images/products/a-ok-out-of-distribution-tee-black.webp",
+                  "altText": "Black A-OK Out of Distribution Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000061",
+                  "url": "/images/products/a-ok-out-of-distribution-tee-white.webp",
+                  "altText": "White A-OK Out of Distribution Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000228",
+                  "title": "Red / XS",
+                  "sku": "printful-9552",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX5KcMygrnU2DRUumPf9q"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000229",
+                  "title": "Red / S",
+                  "sku": "printful-4141",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX6KcMygrnU2DH3NhNxPz"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000230",
+                  "title": "Red / M",
+                  "sku": "printful-4142",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX6KcMygrnU2DPBMIoWRz"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000231",
+                  "title": "Red / L",
+                  "sku": "printful-4143",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX6KcMygrnU2Do6uQ10uH"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000232",
+                  "title": "Red / XL",
+                  "sku": "printful-4144",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX6KcMygrnU2DF8Cda1I5"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000233",
+                  "title": "Red / 2XL",
+                  "sku": "printful-4145",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX7KcMygrnU2DRSXW2Klm"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000234",
+                  "title": "Yellow / XS",
+                  "sku": "printful-9560",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX7KcMygrnU2DPMG8P1wT"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000235",
+                  "title": "Yellow / S",
+                  "sku": "printful-4181",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX7KcMygrnU2Dh77BSYow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000236",
+                  "title": "Yellow / M",
+                  "sku": "printful-4182",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX7KcMygrnU2DlPEG7jBq"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000237",
+                  "title": "Yellow / L",
+                  "sku": "printful-4183",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX7KcMygrnU2DDnN7fEMG"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000238",
+                  "title": "Yellow / XL",
+                  "sku": "printful-4184",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX8KcMygrnU2DqPOx4W31"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000239",
+                  "title": "Yellow / 2XL",
+                  "sku": "printful-4185",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX8KcMygrnU2Dy2tUh9qL"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000240",
+                  "title": "Black / XS",
+                  "sku": "printful-9527",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX8KcMygrnU2DEi3I25lP"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000241",
+                  "title": "Black / S",
+                  "sku": "printful-4016",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX9KcMygrnU2DL6qpfygp"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000242",
+                  "title": "Black / M",
+                  "sku": "printful-4017",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX9KcMygrnU2DMYMcHoIK"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000243",
+                  "title": "Black / L",
+                  "sku": "printful-4018",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX9KcMygrnU2DNX2wd4TA"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000244",
+                  "title": "Black / XL",
+                  "sku": "printful-4019",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX9KcMygrnU2DTOyPwl3p"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000245",
+                  "title": "Black / 2XL",
+                  "sku": "printful-4020",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaX9KcMygrnU2Db4XmxByl"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000246",
+                  "title": "White / XS",
+                  "sku": "printful-9526",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXAKcMygrnU2DQK1Jrbx9"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000247",
+                  "title": "White / S",
+                  "sku": "printful-4011",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXAKcMygrnU2DKDlASKOl"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000248",
+                  "title": "White / M",
+                  "sku": "printful-4012",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXAKcMygrnU2DyeMM4n6P"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000249",
+                  "title": "White / L",
+                  "sku": "printful-4013",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXAKcMygrnU2DokpcowF2"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000250",
+                  "title": "White / XL",
+                  "sku": "printful-4014",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXAKcMygrnU2Drn6zNapM"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000251",
+                  "title": "White / 2XL",
+                  "sku": "printful-4015",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UQaXBKcMygrnU2D0K46PrZI"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000107",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Yellow",
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000108",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-14T22:20:03.094Z",
+          "updatedAt": "2026-10-14T22:20:03.094Z",
+          "publishedAt": "2026-10-14T22:20:03.094Z",
+          "stripeProductId": "prod_VRTUeyuIPxXhuW"
+        }
       }
     ]
   }
