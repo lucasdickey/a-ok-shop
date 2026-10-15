@@ -191,8 +191,10 @@ export type MerchProduct = {
   printFile: string;
   printFileLight?: string | null;
   lightInk?: ShopColor[];
-  /** The colours this product comes in: every shop colour the print reads on. */
+  /** The colours this product comes in: every shop colour the print reads on, less any the owner dropped. */
   colors?: ShopColor[];
+  /** Colours the owner dropped (`chaos print --drop`), kept out on every rerun. */
+  dropped?: ShopColor[];
   inches: number;
   dpi: number;
   /** Whether the print files were made from art enlarged by Real-ESRGAN (lib/upscale.ts). */

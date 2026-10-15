@@ -8,7 +8,7 @@
  *   chaos judge [--date RUN]                                 re-score a run's drafts and rebuild its contact sheet
  *   chaos review [--date RUN[,RUN…]] --out DIR               export runs for the feedback page (index.html, drafts.json, img/)
  *   chaos feedback FILE.json [--date RUN]                    import keep/reject verdicts and notes; future briefs learn from them
- *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force]    print files, model mockups, and copy for drafts ticked Print
+ *   chaos print [3 5:tee 6:hoodie] [--date RUN] [--force] [--drop Blue,Navy]  print files, mockups, copy for drafts ticked Print
  *   chaos sell RUN-N[:tee|:hoodie] … [--dry-run] [--no-stripe] [--no-push] [--force]  put printed drafts on Stripe and the shop
  *   chaos archive --all | RUN … | RUN-N …                    copy concepts and print files to the private archive
  *   chaos stripe [--dry-run]                                 give every catalog product missing from Stripe its product and prices
@@ -129,7 +129,7 @@ function parseArgs(argv: string[]): Options {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (!arg.startsWith("--")) positional.push(arg);
-    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out", "--redo", "--styles"].includes(arg)) flags.set(arg, argv[++i]);
+    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out", "--redo", "--styles", "--drop"].includes(arg)) flags.set(arg, argv[++i]);
     else flags.set(arg, true);
   }
   return { positional, flags };
@@ -916,6 +916,16 @@ async function printAllOver(record: Run, pick: { d: Draft; garments: GarmentKind
 async function printMerch(options: Options): Promise<void> {
   const id = flag(options, "--date") ?? latestRunId();
   const force = options.flags.has("--force");
+  // Colours the owner wants left out, e.g. --drop Blue,Navy when their photos keep failing.
+  const dropFlag = (flag(options, "--drop") ?? "")
+    .split(",")
+    .map((c) => c.trim().toLowerCase())
+    .filter(Boolean)
+    .map((c) => {
+      const color = SHOP_COLORS.find((s) => s.toLowerCase() === c);
+      if (!color) throw new Error(`not a shop colour: ${c} (${SHOP_COLORS.join(", ")})`);
+      return color;
+    });
   const record = loadRun(id);
   const runDir = runDirFor(id);
   const allPicks = printPicks(options, record);
@@ -996,13 +1006,15 @@ async function printMerch(options: Options): Promise<void> {
         const weakLight = light ? await renderer.measure({ image: `/merch/${merchId}/${merch.artLight}`, colors }) : null;
         const lightColors = frozen ? (frozen.lightInk ?? []) : weakLight ? SHOP_COLORS.filter((_, i) => prefersLightInk(weakOriginal[i], weakLight[i])) : [];
         const weakChosen = SHOP_COLORS.map((color, i) => (weakLight && lightColors.includes(color) ? weakLight[i] : weakOriginal[i]));
+        const dropped = [...new Set([...(kept?.dropped ?? []), ...dropFlag])];
         const offered = frozen
           ? (frozen.colors ?? [...SHOP_COLORS])
-          : SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)));
-        const dropped = SHOP_COLORS.filter((color) => !offered.includes(color));
-        if (dropped.length) {
-          log(`${merchId} ${garment}: not offered in ${dropped.join(", ")}: ${background ? "the poster only prints true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
+          : SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)) && !dropped.includes(color));
+        const unread = SHOP_COLORS.filter((color) => !offered.includes(color) && !dropped.includes(color));
+        if (unread.length) {
+          log(`${merchId} ${garment}: not offered in ${unread.join(", ")}: ${background ? "the poster only prints true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
         }
+        if (dropped.length) log(`${merchId} ${garment}: dropped by request: ${dropped.join(", ")}`);
         log(
           `${merchId} ${garment}: share of the print hard to see, original${weakLight ? " / light ink" : ""}: ${SHOP_COLORS.map((color, i) => `${color} ${Math.round(weakOriginal[i] * 100)}%${weakLight ? `/${Math.round(weakLight[i] * 100)}%` : ""}`).join(", ")}`,
         );
@@ -1048,7 +1060,7 @@ async function printMerch(options: Options): Promise<void> {
           product.copy = null;
         }
         if (product.copy && (product.colors ?? SHOP_COLORS).join() !== offered.join()) product.copy = null;
-        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, colors: offered, inches, dpi, upscaled });
+        Object.assign(product, { printFile: files[0][0], printFileLight: files[1]?.[0] ?? null, lightInk: lightColors, colors: offered, dropped, inches, dpi, upscaled });
         if (!kept) merch.products.push(product);
       }
       saveMerch(merch);

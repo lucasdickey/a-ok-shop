@@ -333,9 +333,25 @@ const FEATURED_WINDOW_DAYS = 31;
 // If fewer than this many are that new, the most recent older ones fill in.
 const MIN_FEATURED = 4;
 
+/**
+ * The graphic a product carries, read from its title: "A-OK Multithreaded Tee" and "A-OK Multithreaded Hoodie"
+ * are the same design on two garments.
+ */
+export function designOf(product: { title: string }): string {
+  return product.title
+    .toLowerCase()
+    .replace(/\s+(all-over(\s+print)?\s+)?(t-shirt|tee|shirt|hoodie|sweatshirt|crewneck|crew neck|sweater)$/, "")
+    .trim();
+}
+
 export function getFeaturedProducts(now: Date = new Date()): SimpleProduct[] {
   const created = (product: SimpleProduct) => Date.parse(product.createdAt) || 0;
-  const newestFirst = [...getAllProducts()].sort((a, b) => created(b) - created(a));
+  // One garment per graphic: a design sold as a tee and a hoodie shows once here (the hand-featured one, else the
+  // newest); the other stays in the shop's full list.
+  const byPriority = [...getAllProducts()].sort((a, b) => (a.featuredOrder ?? 999) - (b.featuredOrder ?? 999) || created(b) - created(a));
+  const seen = new Set<string>();
+  const distinct = byPriority.filter((product) => !seen.has(designOf(product)) && Boolean(seen.add(designOf(product))));
+  const newestFirst = distinct.sort((a, b) => created(b) - created(a));
   const cutoff = now.getTime() - FEATURED_WINDOW_DAYS * 24 * 60 * 60 * 1000;
   const recent = newestFirst.filter((product) => created(product) >= cutoff);
   const picked = recent.length >= MIN_FEATURED ? recent : newestFirst.slice(0, MIN_FEATURED);
