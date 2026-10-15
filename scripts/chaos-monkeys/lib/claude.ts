@@ -198,7 +198,7 @@ function normalizeBrief(raw: Brief, slot: Slot, styles: Style[], publishedIds: S
     printText,
     productCopy: clip(raw.productCopy ?? "", 500),
     marketingCopy: clip(raw.marketingCopy ?? "", 220),
-    art: clip(raw.art, 1000),
+    art: clip(raw.art, 1200),
     form,
     parents: raw.parents.filter((id) => publishedIds.has(id)).slice(0, 2),
     inspiration: slot.topical && topic ? { label: `Zingers, ${topic.date}`, url: topic.url } : null,
@@ -260,11 +260,11 @@ export async function writeBriefs(options: {
   const slotLines = slots.map((slot, i) => {
     if (slot.redo) {
       const { brief, note, judgeNote, ref } = slot.redo;
-      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, art: brief.art };
+      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, joke: brief.joke, art: brief.art };
       return `- Draft ${i + 1}: REDO of ${brief.title} (${ref}), style ${slot.style ? styleLine(slot.style) : `"${brief.style}"`}
   The original brief: ${JSON.stringify(original)}
   The owner's note on it: "${note}"${judgeNote ? `\n  The judge's note on it: "${judgeNote}"` : ""}
-  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply.`;
+  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply. A note about the face is fixed in the drawing, which now gets the canonical badge; keep the art about the idea, not the face.`;
     }
     return slot.style
       ? `- Draft ${i + 1}: style ${styleLine(slot.style)}`
@@ -324,7 +324,7 @@ Fields:
 - joke: one plain sentence explaining the gag, for the archive page.
 - alt: one sentence describing the finished graphic for screen readers: the ape, what he is doing, the style, and any printed words.
 - garment, garmentColor, placement: the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette.
-- art: for Astra styles, describe the whole graphic: composition, how the style shows up, the ape's pose and props, and where each printText string sits. For "specimen" and "form", describe only the ape's pose, expression, and props, with no background and no text beyond the cap and hoodie.
+- art: at most 900 characters. For Astra styles, lead with the idea: what the ape is doing and the props that carry the joke, then the composition, how the style shows up, and where each printText string sits. For "specimen" and "form", describe only the ape's pose and props, with no background and no text beyond the cap and hoodie. Do not describe his face, cap, headphones or hoodie: Astra gets the badge and the face rules with every brief, and this space is for the idea.
 - colorway: for "specimen", cream, red, or ink. Otherwise "cream".
 - form: for "form", a heading (an official-sounding form name, at most 36 characters) and 3–6 rows (labels at most 18 characters, values at most 24). Otherwise null.
 - parents: [] unless the draft deliberately riffs on a published monkey.`;
