@@ -151,7 +151,8 @@
           "swatches": {
             "Red": "#d30227",
             "Black": "#262626"
-          }
+          },
+          "archived": true
         }
       },
       {
@@ -453,7 +454,8 @@
           "swatches": {
             "Red": "#d30227",
             "Black": "#262626"
-          }
+          },
+          "archived": true
         }
       },
       {
@@ -546,7 +548,8 @@
           "stripeProductId": "prod_TPh6XeXm0yM3pi",
           "swatches": {
             "Gray": "#3d3d3f"
-          }
+          },
+          "archived": true
         }
       },
       {
@@ -754,7 +757,8 @@
             "White": "#efefef",
             "Black": "#262626",
             "Red": "#d30227"
-          }
+          },
+          "archived": true
         }
       },
       {
@@ -941,7 +945,8 @@
             "Black": "#262626",
             "White": "#efefef",
             "Red": "#d30227"
-          }
+          },
+          "archived": true
         }
       },
       {

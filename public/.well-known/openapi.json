@@ -158,17 +158,17 @@
           "id": {
             "type": "string",
             "description": "Unique product identifier",
-            "example": "gid://a-ok/Product/8755818758363"
+            "example": "gid://a-ok/Product/8871269892315"
           },
           "handle": {
             "type": "string",
             "description": "URL-friendly product handle",
-            "example": "a-ok-glitch-art-face-mask-t-shirt"
+            "example": "same-vibes-but-more"
           },
           "title": {
             "type": "string",
             "description": "Product name",
-            "example": "A-OK GLITCHED VECTORS TEE"
+            "example": "A-OK DAY 2 MONKEY HOODIE"
           },
           "description": {
             "type": "string",
