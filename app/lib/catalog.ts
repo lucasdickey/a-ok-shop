@@ -14,6 +14,8 @@ export type Product = {
   stripeProductId?: string; // Stripe product ID for this product
   featured?: boolean; // Whether this product is featured on homepage
   featuredOrder?: number; // Display order for featured products
+  /** Taken off the shop: hidden from every listing, feed and product page, and no longer for sale. Kept for past orders. */
+  archived?: boolean;
   /** Search and social-preview copy for the product page, from the product's copy file. */
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   /** Swatch color per Color option value, measured from the product's photos. */
@@ -111,6 +113,7 @@ export type SimpleProduct = {
   stripeProductId?: string;
   featured?: boolean;
   featuredOrder?: number;
+  archived?: boolean;
   seo?: { title?: string; description?: string; socialTitle?: string; socialDescription?: string };
   /** Swatch color per Color option value, measured from the product's photos. */
   swatches?: Record<string, string>;
@@ -205,7 +208,7 @@ function isAgentOnly(product: { tags?: string[] }): boolean {
   );
 }
 
-// Every product, agent-only ones included, sorted newest first.
+// Every product, agent-only and archived ones included, sorted newest first.
 function loadMappedProducts(): SimpleProduct[] {
   const products = [...loadProducts()].sort(
     (a, b) => getNumericProductId(b.id) - getNumericProductId(a.id)
@@ -222,6 +225,7 @@ function loadMappedProducts(): SimpleProduct[] {
     stripeProductId: product.stripeProductId,
     featured: product.featured,
     featuredOrder: product.featuredOrder,
+    archived: product.archived,
     seo: product.seo,
     swatches: product.swatches,
     supportedSizes: product.supportedSizes,
@@ -269,19 +273,24 @@ function loadMappedProducts(): SimpleProduct[] {
   }));
 }
 
-/**
- * Products for the human storefront (sorted newest first).
- * Agent-only SKUs are excluded — see {@link AGENT_ONLY_TAG}.
- */
-export function getAllProducts(): SimpleProduct[] {
-  return loadMappedProducts().filter((product) => !isAgentOnly(product));
+// Products still on sale: everything but the archived ones.
+function loadLiveProducts(): SimpleProduct[] {
+  return loadMappedProducts().filter((product) => !product.archived);
 }
 
 /**
- * Products for machine buyers (MPP / ACP feeds), including agent-only SKUs.
+ * Products for the human storefront (sorted newest first).
+ * Agent-only SKUs are excluded — see {@link AGENT_ONLY_TAG} — and so are archived ones.
+ */
+export function getAllProducts(): SimpleProduct[] {
+  return loadLiveProducts().filter((product) => !isAgentOnly(product));
+}
+
+/**
+ * Products for machine buyers (MPP / ACP feeds), including agent-only SKUs but not archived ones.
  */
 export function getAgentProducts(): SimpleProduct[] {
-  return loadMappedProducts();
+  return loadLiveProducts();
 }
 
 // Words that place a product in each shop category.
@@ -321,10 +330,12 @@ export function getProductsByCategory(category: string): SimpleProduct[] {
  *
  * Resolves agent-only SKUs too: this backs the MPP purchase route, which has to
  * be able to price and sell the machine-payable sticker even though the
- * storefront never lists it.
+ * storefront never lists it. Archived products resolve only with
+ * `includeArchived`, for orders placed before they came off the shop.
  */
-export function getProductByHandle(handle: string): SimpleProduct | null {
-  return loadMappedProducts().find((product) => product.handle === handle) || null;
+export function getProductByHandle(handle: string, options: { includeArchived?: boolean } = {}): SimpleProduct | null {
+  const products = options.includeArchived ? loadMappedProducts() : loadLiveProducts();
+  return products.find((product) => product.handle === handle) || null;
 }
 
 // Get featured products (sorted by featuredOrder)

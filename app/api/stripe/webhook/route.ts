@@ -565,7 +565,7 @@ async function handleMPPPaymentSucceeded(stripeClient: Stripe, paymentIntent: St
 /** Shapes an MPP payment like a Checkout order, so the owner alert has the address, sizes and totals. */
 function toMPPOrder(paymentIntent: Stripe.PaymentIntent, customerEmail: string): Order {
   const items: OrderItem[] = parseMPPItems(paymentIntent.metadata?.items).map((item: MPPItem) => {
-    const product = getProductByHandle(item.handle);
+    const product = getProductByHandle(item.handle, { includeArchived: true });
     const variant = product?.variants.edges.find((edge) => isSameId(edge.node.id, item.variantId))?.node;
     const color = variant?.selectedOptions?.find((option) => option.name.toLowerCase() === "color")?.value;
     return {
