@@ -379,8 +379,11 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
   return text;
 }
 
-/** `reference` is the badge image, copied into `runDir` so the judge can compare each ape's face against it. */
-export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string, taste: string | null): Promise<Judgment[]> {
+/**
+ * `references` are the reference images copied into `runDir`, the badge first, so the judge can compare each ape's face
+ * against them.
+ */
+export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, references: string[], taste: string | null): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -395,7 +398,7 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
-First open ${reference}: the flat logo is the A-OK ape's canonical face, and every draft's ape must match it. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
+First open the references. ${references[0]} is the round badge: the A-OK ape's canonical face, which every draft's ape must match. ${references.slice(1).join(", ")} are the same face as line art, an illustration and 3D: they show how far a style may change the rendering while the face stays his. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
 ${taste ? `
 THE OWNER'S RULES, distilled from every review. A draft that breaks one fails rulesOk and scores at most 4:
 ${taste}
@@ -408,7 +411,7 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape's face matches the logo: the same eye shape and spacing with white around the pupils, the same brow line, muzzle and nose shape, warm tan face and muzzle, black fur, and a small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a tongue or open shout, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
+- onModel: the ape's face matches the badge: black fur framing a pale tan face and muzzle, wide round eyes with white all around the pupils, high arched brows, a broad flat nose with round nostrils, and the mouth open in a stunned O (the tongue may show), plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a closed mouth, a grin, snarl or bared teeth, angry brows, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
 - rulesOk: no rule is broken.
 - jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
 - score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 4. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.

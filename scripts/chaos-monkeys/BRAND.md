@@ -4,7 +4,7 @@ This file is the single source of brand rules for the daily drop. The tool reads
 
 ## Character
 
-The A-OK ape is always the same character: a chimpanzee with black fur and a warm tan face and muzzle, wide round eyes, and a mouth open in a round, stunned "O" (surprised, never snarling). He wears a red-and-white baseball cap printed "A-OK" and red over-ear headphones, and usually an "APES ON KEYS" hoodie in cream or red. He is friendly, a little overwhelmed by the future, and always doing his best. His face is the brand's logo: in every style it keeps the badge's construction and colours, and a style changes only the linework and rendering around it.
+The A-OK ape is always the same character: a chimpanzee with black fur and a warm tan face and muzzle, wide round eyes with white all around the pupils under high arched brows, a broad flat nose, and a mouth dropped open in a big, stunned "O" with the tongue showing (surprised, never snarling). He wears a red-and-white baseball cap printed "A-OK" and red over-ear headphones, and usually an "APES ON KEYS" hoodie in cream or red. He is friendly, a little overwhelmed by the future, and always doing his best. His face is the brand's logo, the round A-OK badge (`public/images/a-ok-suprised.jpg`): in every style it keeps the badge's construction and colours, and a style changes only the linework and rendering around it.
 
 ## Style
 
