@@ -198,7 +198,7 @@ function normalizeBrief(raw: Brief, slot: Slot, styles: Style[], publishedIds: S
     printText,
     productCopy: clip(raw.productCopy ?? "", 500),
     marketingCopy: clip(raw.marketingCopy ?? "", 220),
-    art: clip(raw.art, 1000),
+    art: clip(raw.art, 1200),
     form,
     parents: raw.parents.filter((id) => publishedIds.has(id)).slice(0, 2),
     inspiration: slot.topical && topic ? { label: `Zingers, ${topic.date}`, url: topic.url } : null,
@@ -260,11 +260,11 @@ export async function writeBriefs(options: {
   const slotLines = slots.map((slot, i) => {
     if (slot.redo) {
       const { brief, note, judgeNote, ref } = slot.redo;
-      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, art: brief.art };
+      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, joke: brief.joke, art: brief.art };
       return `- Draft ${i + 1}: REDO of ${brief.title} (${ref}), style ${slot.style ? styleLine(slot.style) : `"${brief.style}"`}
   The original brief: ${JSON.stringify(original)}
   The owner's note on it: "${note}"${judgeNote ? `\n  The judge's note on it: "${judgeNote}"` : ""}
-  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply.`;
+  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply. A note about the face is fixed in the drawing, which now gets the canonical badge; keep the art about the idea, not the face.`;
     }
     return slot.style
       ? `- Draft ${i + 1}: style ${styleLine(slot.style)}`
@@ -324,7 +324,7 @@ Fields:
 - joke: one plain sentence explaining the gag, for the archive page.
 - alt: one sentence describing the finished graphic for screen readers: the ape, what he is doing, the style, and any printed words.
 - garment, garmentColor, placement: the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette.
-- art: for Astra styles, describe the whole graphic: composition, how the style shows up, the ape's pose and props, and where each printText string sits. For "specimen" and "form", describe only the ape's pose, expression, and props, with no background and no text beyond the cap and hoodie.
+- art: at most 900 characters. For Astra styles, lead with the idea: what the ape is doing and the props that carry the joke, then the composition, how the style shows up, and where each printText string sits. For "specimen" and "form", describe only the ape's pose and props, with no background and no text beyond the cap and hoodie. Do not describe his face, cap, headphones or hoodie: Astra gets the badge and the face rules with every brief, and this space is for the idea.
 - colorway: for "specimen", cream, red, or ink. Otherwise "cream".
 - form: for "form", a heading (an official-sounding form name, at most 36 characters) and 3–6 rows (labels at most 18 characters, values at most 24). Otherwise null.
 - parents: [] unless the draft deliberately riffs on a published monkey.`;
@@ -379,8 +379,11 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
   return text;
 }
 
-/** `reference` is the badge image, copied into `runDir` so the judge can compare each ape's face against it. */
-export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, reference: string, taste: string | null): Promise<Judgment[]> {
+/**
+ * `references` are the reference images copied into `runDir`, the badge first, so the judge can compare each ape's face
+ * against them.
+ */
+export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, references: string[], taste: string | null): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -395,7 +398,7 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
-First open ${reference}: the flat logo is the A-OK ape's canonical face, and every draft's ape must match it. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
+First open the references. ${references[0]} is the round badge: the A-OK ape's canonical face, which every draft's ape must match. ${references.slice(1).join(", ")} are the same face as line art, an illustration and 3D: they show how far a style may change the rendering while the face stays his. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
 ${taste ? `
 THE OWNER'S RULES, distilled from every review. A draft that breaks one fails rulesOk and scores at most 4:
 ${taste}
@@ -408,7 +411,7 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape's face matches the logo: the same eye shape and spacing with white around the pupils, the same brow line, muzzle and nose shape, warm tan face and muzzle, black fur, and a small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a tongue or open shout, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
+- onModel: the ape's face matches the badge: black fur framing a pale tan face and muzzle, wide round eyes with white all around the pupils, high arched brows, a broad flat nose with round nostrils, and the mouth open in a stunned O (the tongue may show), plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a closed mouth, a grin, snarl or bared teeth, angry brows, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
 - rulesOk: no rule is broken.
 - jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
 - score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 4. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
