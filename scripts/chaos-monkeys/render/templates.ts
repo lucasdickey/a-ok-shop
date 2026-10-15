@@ -10,11 +10,13 @@
  *   keyed:    a draft with its flat background removed and trimmed to the art: the print artwork.
  *   printfile: that artwork on a transparent 300 DPI canvas the size of Printful's print area.
  *   cover:    a photo cropped to fill a frame, for the shop's product images.
+ *   repeat:   a seamless tile for an all-over print, laid out from the whole motifs of a pattern draft.
+ *   fabric:   that tile repeated into a large swatch.
  */
 
 type Colorway = "cream" | "red" | "ink";
 type FormBlock = { heading: string; rows: Array<{ label: string; value: string }> };
-type Format = "png" | "webp";
+type Format = "png" | "webp" | "jpeg";
 type ArtSpec = {
   kind: "specimen" | "form";
   size: number;
@@ -51,7 +53,10 @@ type PrintFileSpec = { kind: "printfile"; image: string; width: number; height: 
 /** The art as it should look printed: on a swatch of the fabric colour, so transparency reads as fabric, not black. */
 type OnFabricSpec = { kind: "onfabric"; image: string; color: string; size: number };
 type CoverSpec = { kind: "cover"; image: string; width: number; height: number; format: Format; quality?: number; focusY?: number };
-type Spec = ArtSpec | ImageSpec | SheetSpec | KeyedSpec | PrintFileSpec | CoverSpec | OnFabricSpec;
+/** `art` is the keyed draft (to find motifs), `master` the same art enlarged (to draw them); sizes in pixels. */
+type RepeatSpec = { kind: "repeat"; art: string; master: string; ground: string; size: number; cells: number };
+type FabricSpec = { kind: "fabric"; image: string; width: number; height: number; format: Format; quality?: number };
+type Spec = ArtSpec | ImageSpec | SheetSpec | KeyedSpec | PrintFileSpec | CoverSpec | OnFabricSpec | RepeatSpec | FabricSpec;
 
 const C = {
   red: "#C8161D",
@@ -624,6 +629,139 @@ async function onFabric(spec: OnFabricSpec): Promise<HTMLCanvasElement> {
   return c;
 }
 
+/**
+ * A seamless half-drop repeat. A pattern draft is cut off at its edges, so tiling it as-is shows half motifs at every
+ * seam. Instead: find each whole motif in the keyed draft (pixels grouped with a small gap, so a figure and its props
+ * stay together), drop the ones touching the edge, cut each from the enlarged master, and lay the large motifs out in
+ * a half-drop grid with the small ones (icons, glyphs) in between, at their original relative sizes. Everything is
+ * drawn wrapped around the tile's edges, so the tile repeats without a seam.
+ */
+async function repeat(spec: RepeatSpec): Promise<HTMLCanvasElement> {
+  const art = await loadImage(spec.art);
+  const master = await loadImage(spec.master);
+  const W = art.naturalWidth;
+  const H = art.naturalHeight;
+  const k = master.naturalWidth / W;
+  const c = makeCanvas(W, H);
+  const ctx = context(c);
+  ctx.drawImage(art, 0, 0);
+  const px = ctx.getImageData(0, 0, W, H).data;
+  const solid = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) solid[i] = px[i * 4 + 3] > 40 ? 1 : 0;
+
+  // Close small gaps so a figure and its props group together.
+  const r = Math.max(3, Math.round(W / 160));
+  const across = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) {
+    let run = -1;
+    for (let x = 0; x < W; x++) if (solid[y * W + x]) run = x;
+      else if (run >= 0 && x - run <= r) across[y * W + x] = 1;
+    for (let x = 0; x < W; x++) if (solid[y * W + x]) across[y * W + x] = 1;
+  }
+  const grown = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    if (!across[i]) continue;
+    const x = i % W;
+    const y = (i / W) | 0;
+    for (let dy = -r; dy <= r; dy++) {
+      const yy = y + dy;
+      if (yy >= 0 && yy < H) grown[yy * W + x] = 1;
+    }
+    for (let dx = -r; dx <= r; dx++) {
+      const xx = x + dx;
+      if (xx >= 0 && xx < W) grown[y * W + xx] = 1;
+    }
+  }
+
+  // Connected groups, with the bounding box and area of their own pixels.
+  const label = new Int32Array(W * H).fill(-1);
+  const groups: Array<{ id: number; x0: number; y0: number; x1: number; y1: number; area: number }> = [];
+  const queue = new Int32Array(W * H);
+  for (let start = 0; start < W * H; start++) {
+    if (!grown[start] || label[start] >= 0) continue;
+    const g = { id: groups.length, x0: W, y0: H, x1: 0, y1: 0, area: 0 };
+    let head = 0;
+    let tail = 0;
+    queue[tail++] = start;
+    label[start] = g.id;
+    while (head < tail) {
+      const i = queue[head++];
+      const x = i % W;
+      const y = (i / W) | 0;
+      if (solid[i]) {
+        g.area++;
+        if (x < g.x0) g.x0 = x;
+        if (x > g.x1) g.x1 = x;
+        if (y < g.y0) g.y0 = y;
+        if (y > g.y1) g.y1 = y;
+      }
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+        if (j >= 0 && j < W * H && grown[j] && label[j] < 0) {
+          label[j] = g.id;
+          queue[tail++] = j;
+        }
+      }
+    }
+    groups.push(g);
+  }
+  // Whole groups only (none touching the edge), down to small icons but not specks of texture.
+  const whole = groups.filter((g) => g.area > W * H * 0.0002 && g.x1 - g.x0 >= W / 80 && g.y1 - g.y0 >= W / 80 && g.x0 > 2 && g.y0 > 2 && g.x1 < W - 3 && g.y1 < H - 3);
+  if (!whole.length) throw new Error("repeat: no whole motifs found in the draft");
+  const largest = Math.max(...whole.map((g) => g.area));
+  const motifs = whole.map((g) => {
+    // Cut the group from the master through its own mask, so neighbours inside the box stay out.
+    const bw = g.x1 - g.x0 + 1;
+    const bh = g.y1 - g.y0 + 1;
+    const m = makeCanvas(bw, bh);
+    const mc = context(m);
+    const md = mc.createImageData(bw, bh);
+    for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) if (label[(g.y0 + y) * W + g.x0 + x] === g.id) md.data[(y * bw + x) * 4 + 3] = 255;
+    mc.putImageData(md, 0, 0);
+    const cut = makeCanvas(Math.round(bw * k), Math.round(bh * k));
+    const cc = context(cut);
+    cc.drawImage(master, g.x0 * k, g.y0 * k, bw * k, bh * k, 0, 0, cut.width, cut.height);
+    cc.globalCompositeOperation = "destination-in";
+    cc.imageSmoothingEnabled = true;
+    cc.drawImage(m, 0, 0, cut.width, cut.height);
+    return { canvas: cut, big: g.area >= largest * 0.3, w: bw, h: bh };
+  });
+  const big = motifs.filter((m) => m.big);
+  const small = motifs.filter((m) => !m.big);
+
+  const T = spec.size;
+  const C = spec.cells;
+  const cell = T / C;
+  const out = makeCanvas(T);
+  const o = context(out);
+  o.imageSmoothingQuality = "high";
+  o.fillStyle = spec.ground;
+  o.fillRect(0, 0, T, T);
+  // One scale for every motif, set by the largest, so icons stay small next to the figures as in the draft.
+  const scale = (cell * 0.8) / Math.max(...big.map((m) => Math.max(m.w, m.h)));
+  const place = (m: { canvas: HTMLCanvasElement; w: number; h: number }, x: number, y: number) => {
+    const w = m.w * scale;
+    const h = m.h * scale;
+    for (const dx of [-T, 0, T]) for (const dy of [-T, 0, T]) o.drawImage(m.canvas, x - w / 2 + dx, y - h / 2 + dy, w, h);
+  };
+  for (let col = 0; col < C; col++) {
+    for (let row = 0; row < C; row++) {
+      const drop = col % 2 ? cell / 2 : 0;
+      place(big[(row * (C + 1) + col * 2) % big.length], col * cell + cell / 2, row * cell + cell / 2 + drop);
+      if (small.length) place(small[(row * C + col) % small.length], col * cell, row * cell + drop + cell * 0.25);
+    }
+  }
+  return out;
+}
+
+async function fabric(spec: FabricSpec): Promise<HTMLCanvasElement> {
+  const tile = await loadImage(spec.image);
+  const c = makeCanvas(spec.width, spec.height);
+  const ctx = context(c);
+  ctx.fillStyle = ctx.createPattern(tile, "repeat") as CanvasPattern;
+  ctx.fillRect(0, 0, spec.width, spec.height);
+  return c;
+}
+
 async function cover(spec: CoverSpec): Promise<HTMLCanvasElement> {
   const img = await loadImage(spec.image);
   const c = makeCanvas(spec.width, spec.height);
@@ -749,6 +887,28 @@ async function measure(spec: { image: string; colors: string[] }): Promise<numbe
   });
 }
 
+/** The most common colour in an image: a pattern draft's ground. */
+async function dominant(spec: { image: string }): Promise<string> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(img.naturalWidth, img.naturalHeight);
+  const ctx = context(c);
+  ctx.drawImage(img, 0, 0);
+  const p = ctx.getImageData(0, 0, c.width, c.height).data;
+  const buckets = new Map<number, { n: number; r: number; g: number; b: number }>();
+  for (let i = 0; i < p.length; i += 16) {
+    const key = ((p[i] >> 4) << 8) | ((p[i + 1] >> 4) << 4) | (p[i + 2] >> 4);
+    const b = buckets.get(key) ?? { n: 0, r: 0, g: 0, b: 0 };
+    b.n++;
+    b.r += p[i];
+    b.g += p[i + 1];
+    b.b += p[i + 2];
+    buckets.set(key, b);
+  }
+  const top = [...buckets.values()].sort((a, b) => b.n - a.n)[0];
+  const hex = (v: number) => Math.round(v / top.n).toString(16).padStart(2, "0");
+  return `#${hex(top.r)}${hex(top.g)}${hex(top.b)}`;
+}
+
 /* ------------------------------------------------------------------ entry point */
 
 async function render(spec: Spec): Promise<string> {
@@ -758,13 +918,16 @@ async function render(spec: Spec): Promise<string> {
   if (spec.kind === "printfile") return encode(await printfile(spec), "png", undefined);
   if (spec.kind === "cover") return encode(await cover(spec), spec.format, spec.quality);
   if (spec.kind === "onfabric") return encode(await onFabric(spec), "png", undefined);
+  if (spec.kind === "repeat") return encode(await repeat(spec), "png", undefined);
+  if (spec.kind === "fabric") return encode(await fabric(spec), spec.format, spec.quality);
   const c = spec.kind === "form" ? await form(spec) : await specimen(spec);
   return encode(c, spec.format, spec.quality);
 }
 
-const page = window as unknown as { render: typeof render; measure: typeof measure; READY: boolean; ERROR: string | null };
+const page = window as unknown as { render: typeof render; measure: typeof measure; dominant: typeof dominant; READY: boolean; ERROR: string | null };
 page.render = render;
 page.measure = measure;
+page.dominant = dominant;
 page.READY = false;
 page.ERROR = null;
 Promise.all(["40px Bebas", "500 20px Mono", "700 20px Mono", "40px ArialBlack"].map((font) => document.fonts.load(font)))

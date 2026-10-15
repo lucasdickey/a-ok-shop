@@ -116,7 +116,11 @@ function briefsSchema(styleIds: string[]) {
 }
 
 /** A draft's assigned style; the topical slot (style null) lets Claude choose. */
-type Slot = { style: Style | null; topical: boolean };
+/** A draft the owner asked to see again, with what to change. */
+export type Redo = { ref: string; brief: Brief; note: string; judgeNote: string };
+
+/** A draft's assigned style; the topical slot (style null) lets Claude choose; a redo keeps its draft's style. */
+type Slot = { style: Style | null; topical: boolean; redo?: Redo };
 
 /** Kept and rejected counts per style, from every run's feedback. A shipped draft counts as kept. */
 export type StyleScores = Map<string, { keep: number; reject: number }>;
@@ -198,6 +202,7 @@ function normalizeBrief(raw: Brief, slot: Slot, styles: Style[], publishedIds: S
     form,
     parents: raw.parents.filter((id) => publishedIds.has(id)).slice(0, 2),
     inspiration: slot.topical && topic ? { label: `Zingers, ${topic.date}`, url: topic.url } : null,
+    redoOf: slot.redo?.ref ?? null,
   };
 }
 
@@ -235,17 +240,36 @@ export async function writeBriefs(options: {
   taste: string | null;
   /** Styles drafted in the last few days, so this batch tries others. */
   recentStyles: Map<string, number>;
+  /** Drafts to redo first, then styles to use next, before the rest are picked at random. */
+  redos?: Redo[];
+  styles?: string[];
 }): Promise<Brief[]> {
   const brand = readBrand();
   const styles = readStyles();
-  const slots = draftSlots(options.count, options.topic !== null, styles, options.styleScores, options.recentStyles);
+  const fixed: Slot[] = [
+    ...(options.redos ?? []).map((redo) => ({ style: styles.find((s) => s.id === redo.brief.style) ?? null, topical: false, redo })),
+    ...(options.styles ?? []).map((id) => {
+      const style = styles.find((s) => s.id === id);
+      if (!style) throw new Error(`no style "${id}" in STYLES.md`);
+      return { style, topical: false };
+    }),
+  ];
+  const slots = [...fixed, ...draftSlots(Math.max(0, options.count - fixed.length), options.topic !== null, styles, options.styleScores, options.recentStyles)];
   const styleLine = (style: Style) =>
     `"${style.id}" (${style.name}): ${style.description} ${style.engine === "hybrid" ? "Prints the title and slogan." : style.text === 0 ? "Print text: none." : `Print text: at most ${style.text} short string${style.text > 1 ? "s" : ""}.`}`;
-  const slotLines = slots.map((slot, i) =>
-    slot.style
+  const slotLines = slots.map((slot, i) => {
+    if (slot.redo) {
+      const { brief, note, judgeNote, ref } = slot.redo;
+      const original = { title: brief.title, printText: brief.printText, slogan: brief.slogan, garment: brief.garment, garmentColor: brief.garmentColor, placement: brief.placement, art: brief.art };
+      return `- Draft ${i + 1}: REDO of ${brief.title} (${ref}), style ${slot.style ? styleLine(slot.style) : `"${brief.style}"`}
+  The original brief: ${JSON.stringify(original)}
+  The owner's note on it: "${note}"${judgeNote ? `\n  The judge's note on it: "${judgeNote}"` : ""}
+  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply.`;
+    }
+    return slot.style
       ? `- Draft ${i + 1}: style ${styleLine(slot.style)}`
-      : `- Draft ${i + 1}: TOPICAL (see TODAY'S STORY). Choose whichever style from the library below suits the joke best.`,
-  );
+      : `- Draft ${i + 1}: TOPICAL (see TODAY'S STORY). Choose whichever style from the library below suits the joke best.`;
+  });
   const topicBlock = options.topic
     ? `TODAY'S STORY (from Zingers, our daily AI-news comic)
 Headline: ${options.topic.headline}
@@ -283,7 +307,7 @@ ${options.taste}
 ` : ""}${feedbackBlock(options.feedback, options.feedbackNotes)}ALREADY PUBLISHED (never repeat these jokes; you may riff on one and list its number in "parents"):
 ${published}
 
-DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat):
+DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat, except the redos asked for below):
 ${recent}
 
 ${topicBlock}Write exactly ${slots.length} new briefs, in this order:
@@ -371,7 +395,7 @@ export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: st
 
   const prompt = `You check A-OK's Chaos Monkeys, tee and hoodie graphics, before a person picks which to publish. Open each image below with the Read tool (paths are relative to the current directory) and judge it strictly against its brief.
 
-First open ${reference}: the round badge is the A-OK ape's canonical face, and every draft's ape must match it.
+First open ${reference}: the flat logo is the A-OK ape's canonical face, and every draft's ape must match it. The owner is REALLY strict about this and rejects any drift; when in doubt, it is off-model.
 ${taste ? `
 THE OWNER'S RULES, distilled from every review. A draft that breaks one fails rulesOk and scores at most 4:
 ${taste}
@@ -384,10 +408,10 @@ ${brand.rules}
 For each draft report:
 - textSeen: every piece of text you can read in the image, exactly as written.
 - textOk: true only if each expected string is spelled exactly and there is no garbled, misspelled, or extra wording.
-- onModel: the ape's face matches the badge: the same construction and proportions, wide round eyes with white around the pupils, warm tan face and muzzle, black fur, small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Angry brows, a shouting mouth, a tongue, star eyes, a recoloured face, or a different-looking chimp make it false.
+- onModel: the ape's face matches the logo: the same eye shape and spacing with white around the pupils, the same brow line, muzzle and nose shape, warm tan face and muzzle, black fur, and a small round O mouth, plus the A-OK cap and red headphones. A style may change the linework, never the face's construction or colours. Any of these make it false: different eyes (size, spacing, pupils looking away, lines or stencil cuts across them), a different muzzle or nose, a tongue or open shout, cute or kid-cartoon proportions, realistic chimp anatomy, a recoloured face, or simply a different-looking chimp.
 - rulesOk: no rule is broken.
 - jokeLands: the graphic makes its idea clear at thumbnail size, as a shirt read from across a room, and it commits to its style. False if it is silly or juvenile (mugging, slapstick, kids'-tee or mascot energy) rather than dry.
-- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 5. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
+- score: 1–10 overall; 7 or more means ready to print on a shirt someone would wear for years. Off-model scores at most 4. Busy scenes, fine detail that won't print, and one-off gags that suit a social post better than a shirt score lower.
 - note: at most 140 characters, the single most important problem or strength.
 
 ${lines.join("\n\n")}`;
@@ -406,6 +430,8 @@ export type CopyItem = {
   inches: number;
   /** Colours printed with the light-ink artwork. */
   lightInk: string[];
+  /** An all-over print: the pattern covers the whole garment instead of a print on the chest. */
+  allOver?: boolean;
   brief: Brief;
 };
 export type ProductCopyResult = {
@@ -454,7 +480,11 @@ export async function writeProductCopy(
   const lines = items.map(
     (item) => `- key "${item.key}": a ${item.garment}, ${item.blank}, in ${item.colors.join(", ")}.
   Design: ${item.brief.title}. ${item.brief.joke}
-  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}
+  Printed words: ${item.brief.printText.length ? item.brief.printText.map((t) => `"${t}"`).join(", ") : "none"}. ${
+    item.allOver
+      ? `An all-over print: the pattern covers the whole garment edge to edge, front, back and sleeves, repeating about every ${item.inches} inches; one colourway, the pattern itself.`
+      : `The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}`
+  }
   Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
   );
   const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
@@ -547,7 +577,7 @@ export async function judgeMockups(cwd: string, photos: Array<{ file: string; ga
 For each photo report:
 - file: the photo's path, unchanged.
 - printMatches: the print is the same artwork: the same drawing and composition, the ape's face unchanged (round eyes, tan face and muzzle, small round O mouth, A-OK cap, red headphones), the same colours, every word spelled the same, and nothing added or missing.
-- garmentOk: one adult model wears a plain garment of the stated kind and colour, photographed realistically, with no stray text or logos.
+- garmentOk: one adult model wears the stated garment (plain apart from the print, unless it is an all-over print), photographed realistically, with no stray text or logos.
 - score: 1–10; 7 or more means ready for the shop. A print that doesn't match scores at most 4.
 - note: at most 120 characters, the single most important problem or strength.
 
