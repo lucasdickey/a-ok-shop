@@ -436,6 +436,10 @@ export type CopyItem = {
   /** An all-over print: the pattern covers the whole garment instead of a print on the chest. */
   allOver?: boolean;
   brief: Brief;
+  /** The finished artwork, relative to the copy writer's directory: the brief says what was asked for, the art what was drawn. */
+  art: string;
+  /** The owner's note on the draft, from review. */
+  note?: string;
 };
 export type ProductCopyResult = {
   key: string;
@@ -488,6 +492,7 @@ export async function writeProductCopy(
       ? `An all-over print: the pattern covers the whole garment edge to edge, front, back and sleeves, repeating about every ${item.inches} inches; one colourway, the pattern itself.`
       : `The print is about ${item.inches} inches wide, centred on the chest.${item.lightInk.length ? ` On ${item.lightInk.join(", ")} the black ink prints in bone cream.` : ""}`
   }
+  Artwork: ${item.art}${item.note ? `\n  The owner's note on it: "${item.note}"` : ""}
   Draft copy from the designer: ${item.brief.productCopy} / ${item.brief.marketingCopy} / slogan: ${item.brief.slogan}`,
   );
   const prompt = `You write product pages for A-OK, an AI-culture streetwear label. Each line item below becomes a product on the shop.
@@ -505,6 +510,8 @@ Tags: ${example.tags.join(", ")}
 
 Write one product per line item:
 ${lines.join("\n")}
+
+Open each item's artwork with the Read tool before writing. The designer's draft copy describes the graphic as it was briefed, and the finished drawing can differ from it. Describe only what is actually drawn (its look, what the ape is doing, any printed words); where the draft copy disagrees with the artwork, or the owner's note says it does, the artwork wins. Garment, placement and size come from the facts above, never from the draft copy.
 
 Fields:
 - key: the line item's key, unchanged.

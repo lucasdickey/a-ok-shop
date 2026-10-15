@@ -872,7 +872,7 @@ async function printAllOver(record: Run, pick: { d: Draft; garments: GarmentKind
       const taken = new Set([...catalog.products.edges.map((e) => e.node.handle), ...allMerch().flatMap((m) => [...m.products, ...(m.allOver ?? [])].map((p) => p.copy?.handle ?? ""))]);
       const copies = await writeProductCopy(
         dir,
-        needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: ALL_OVER_BLANKS[p.garment].name, colors: [ALL_OVER_COLOR], inches: TILE.inches, lightInk: [], allOver: true, brief: d.brief })),
+        needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: ALL_OVER_BLANKS[p.garment].name, colors: [ALL_OVER_COLOR], inches: TILE.inches, lightInk: [], allOver: true, brief: d.brief, art: "tile.png", note: d.feedback?.note })),
         { title: example.title, descriptionHtml: example.descriptionHtml, tags: example.tags },
         [...taken],
       );
@@ -1175,7 +1175,7 @@ async function printMerch(options: Options): Promise<void> {
       if (needCopy.length) {
         const copies = await writeProductCopy(
           dir,
-          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...(p.colors ?? SHOP_COLORS)], inches: p.inches, lightInk: p.lightInk ?? [], brief: d.brief })),
+          needCopy.map((p) => ({ key: p.garment, garment: p.garment, blank: BLANKS[p.garment].name, colors: [...(p.colors ?? SHOP_COLORS)], inches: p.inches, lightInk: p.lightInk ?? [], brief: d.brief, art: "art.png", note: d.feedback?.note })),
           { title: example.title, descriptionHtml: example.descriptionHtml, tags: example.tags },
           [...taken],
         );
