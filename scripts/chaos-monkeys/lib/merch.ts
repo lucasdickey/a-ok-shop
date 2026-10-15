@@ -5,7 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { MERCH_DIR } from "./config.ts";
+import { MERCH_DIR, run } from "./config.ts";
 
 export type GarmentKind = "tee" | "hoodie";
 export const GARMENT_KINDS: GarmentKind[] = ["tee", "hoodie"];
@@ -399,7 +399,64 @@ export function catalogNode(options: {
 
 /* ------------------------------------------------------------------ Stripe */
 
+/**
+ * Whether a Stripe key writes to live or test mode, from its prefix (sk_live_, rk_live_, sk_test_, rk_test_). The key
+ * "cli" sends requests through the logged-in Stripe CLI in live mode instead (its stored keys work only through it).
+ */
+export function stripeMode(key: string): "live" | "test" | "unknown" {
+  return key === "cli" || /^(sk|rk)_live_/.test(key) ? "live" : /^(sk|rk)_test_/.test(key) ? "test" : "unknown";
+}
+
+/** One request through `stripe get|post … --live`, for the "cli" key. */
+async function viaCli(method: "get" | "post", endpoint: string, params: Array<[string, string]> = [], idempotencyKey?: string): Promise<{ status: number; body: { id?: string; error?: { message?: string; code?: string } } }> {
+  const args = [method, `/v1/${endpoint}`, "--live", ...(method === "post" ? ["--confirm"] : []), ...(idempotencyKey ? ["-i", idempotencyKey] : []), ...params.flatMap(([k, v]) => ["-d", `${k}=${v}`])];
+  const result = await run("stripe", args, { timeoutMs: 60_000 });
+  const text = result.stdout.slice(result.stdout.indexOf("{"));
+  let body: { id?: string; error?: { message?: string; code?: string } };
+  try {
+    body = JSON.parse(text);
+  } catch {
+    throw new Error(`stripe ${method} ${endpoint}: ${(result.stderr || result.stdout).trim().slice(0, 300)}`);
+  }
+  return { status: body.error ? (body.error.code === "resource_missing" ? 404 : 400) : 200, body };
+}
+
+/** Whether `id` exists for this key. Live and test mode are separate, so an id made with the other mode's key doesn't. */
+async function stripeHas(key: string, endpoint: string, id: string): Promise<boolean> {
+  if (key === "cli") {
+    const { status, body } = await viaCli("get", `${endpoint}/${id}`);
+    if (status === 404) return false;
+    if (status !== 200) throw new Error(`Stripe ${endpoint}/${id}: ${body.error?.message}`);
+    return true;
+  }
+  const response = await fetch(`https://api.stripe.com/v1/${endpoint}/${id}`, { headers: { Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(30_000) });
+  if (response.status === 404) return false;
+  const body = (await response.json()) as { error?: { message?: string } };
+  if (!response.ok) throw new Error(`Stripe ${endpoint}/${id}: ${body.error?.message ?? `HTTP ${response.status}`}`);
+  return true;
+}
+
+/**
+ * Clears the Stripe ids of catalog products this key can't see (made with the other mode's key, as when a test key sat
+ * in .env.local), so `addToStripe` makes them again in this key's mode. Returns the products it cleared.
+ */
+export async function dropForeignStripeIds(key: string, catalog: Catalog): Promise<CatalogNode[]> {
+  const cleared: CatalogNode[] = [];
+  for (const { node } of catalog.products.edges) {
+    if (!node.stripeProductId || (await stripeHas(key, "products", node.stripeProductId))) continue;
+    delete node.stripeProductId;
+    for (const { node: variant } of node.variants.edges) delete variant.stripePriceId;
+    cleared.push(node);
+  }
+  return cleared;
+}
+
 async function stripePost(key: string, endpoint: string, params: Array<[string, string]>, idempotencyKey: string): Promise<{ id: string }> {
+  if (key === "cli") {
+    const { status, body } = await viaCli("post", endpoint, params, idempotencyKey);
+    if (status !== 200 || !body.id) throw new Error(`Stripe ${endpoint}: ${body.error?.message ?? "no id returned"}`);
+    return { id: body.id };
+  }
   const response = await fetch(`https://api.stripe.com/v1/${endpoint}`, {
     method: "POST",
     headers: {

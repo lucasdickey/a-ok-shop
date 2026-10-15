@@ -78,7 +78,9 @@ import {
   merchDir,
   MAX_HARD_TO_SEE,
   matchesGround,
+  dropForeignStripeIds,
   missingFromStripe,
+  stripeMode,
   printfulNotes,
   prefersLightInk,
   printSize,
@@ -1240,8 +1242,7 @@ async function sell(options: Options): Promise<void> {
   const push = !options.flags.has("--no-push");
   const dryRun = options.flags.has("--dry-run");
   const useStripe = !options.flags.has("--no-stripe") && !dryRun;
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (useStripe && !key) throw new Error("set STRIPE_SECRET_KEY to the shop's key (its .env.local), or pass --no-stripe");
+  const key = useStripe ? stripeKey(options) : undefined;
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://a-ok.ai").replace(/\/+$/, "");
 
   // RUN-N sells every product in that folder; RUN-N:tee or RUN-N:hoodie only that garment.
@@ -1385,19 +1386,40 @@ async function sell(options: Options): Promise<void> {
 }
 
 /**
+ * The Stripe key for writing the shop's products: CHAOS_STRIPE_KEY (a live key, or "cli" to go through the logged-in
+ * Stripe CLI in live mode), else ~/.a-ok-chaos/stripe-key (a restricted live key with Products and Prices write,
+ * readable only by you), else STRIPE_SECRET_KEY. Products belong in live
+ * mode, so a test key is refused unless --stripe-test says so; a test key in a dev .env.local once put eight
+ * products' ids in test mode without anyone noticing.
+ */
+function stripeKey(options: Options): string {
+  const file = path.join(STATE_DIR, "stripe-key");
+  const key = process.env.CHAOS_STRIPE_KEY ?? (fs.existsSync(file) ? fs.readFileSync(file, "utf8").trim() : undefined) ?? process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error(`put the shop's live Stripe key in ${file} (or CHAOS_STRIPE_KEY), or pass --no-stripe`);
+  const mode = stripeMode(key);
+  if (mode !== "live" && !options.flags.has("--stripe-test")) {
+    throw new Error(`that Stripe key is ${mode === "test" ? "a test-mode key" : "not a recognisable live key"}; the shop's products live in live mode. Use the live key, or pass --stripe-test to write to test mode on purpose`);
+  }
+  return key;
+}
+
+/**
  * Gives every product in the shop's catalog a Stripe product and a price per variant, for products added outside
  * `chaos sell` (which does this itself). Checkout prices from the catalog either way; this keeps Stripe's catalog
  * complete. `--dry-run` lists what is missing.
  */
 async function stripeSync(options: Options): Promise<void> {
-  const key = process.env.STRIPE_SECRET_KEY;
   const dryRun = options.flags.has("--dry-run");
-  if (!key && !dryRun) throw new Error("set STRIPE_SECRET_KEY to the shop's key (its .env.local), or pass --dry-run");
+  const key = dryRun && !process.env.CHAOS_STRIPE_KEY && !fs.existsSync(path.join(STATE_DIR, "stripe-key")) && !process.env.STRIPE_SECRET_KEY ? undefined : stripeKey(options);
   const branch = flag(options, "--branch") ?? "main";
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://a-ok.ai").replace(/\/+$/, "");
   await syncSite(branch);
   const catalogFile = path.join(SITE_DIR, CATALOG_PATH);
   const catalog = JSON.parse(fs.readFileSync(catalogFile, "utf8")) as Catalog;
+  // Ids this key can't see were made in the other mode; they are made again in this one.
+  if (key) {
+    for (const node of await dropForeignStripeIds(key, catalog)) log(`${node.title}: its Stripe ids are from the other mode (live vs test); making them again in ${stripeMode(key)} mode`);
+  }
   const missing = missingFromStripe(catalog);
   for (const node of missing) {
     const gaps = node.variants.edges.filter((e) => !e.node.stripePriceId).length;
