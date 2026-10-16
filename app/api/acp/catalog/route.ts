@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAllProducts } from "@/app/lib/catalog";
 import { getCorsHeaders } from "@/app/lib/cors";
 import { absoluteUrl } from "@/app/lib/site";
+import { getClothingSizes, isClothing } from "@/app/lib/sizes";
 
 type CatalogProduct = ReturnType<typeof getAllProducts>[number];
 
@@ -47,6 +48,14 @@ function mapProduct(product: CatalogProduct) {
     name: option.name,
     values: option.values,
   }));
+  // Clothing is printed to order in any size the blank offers, even when the
+  // catalog lists only colors; checkout needs one of these sizes.
+  if (
+    isClothing(product.productType, product.tags) &&
+    !options.some((option) => option.name.toLowerCase() === "size")
+  ) {
+    options.push({ name: "Size", values: [...getClothingSizes(product)] });
+  }
 
   const variants = product.variants.edges.map((edge) =>
     mapVariant(product, edge.node)

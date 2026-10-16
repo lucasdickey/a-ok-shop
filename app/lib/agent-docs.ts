@@ -1,3 +1,4 @@
+import { listItems } from "@/app/lib/acp/items";
 import { getAllProducts, getFeaturedProducts, getProductByHandle, getProductsByCategory, type SimpleProduct } from "@/app/lib/catalog";
 import { formatDropDate, getChaosMonkeys, getLatestDrop, type ChaosMonkey } from "@/app/lib/chaos-monkeys";
 import { absoluteUrl, SITE_URL } from "@/app/lib/site";
@@ -55,7 +56,8 @@ const HOW_AGENTS_CAN_SHOP = `## For AI agents
 
 - **Markdown pages.** The home page, every product page and the Chaos Monkeys page have a markdown version: add \`.md\` to the address (for example ${SITE_URL}/index.md).
 - **In the browser (WebMCP).** In a browser that supports WebMCP, every page offers tools: \`search_products\`, \`get_product\`, \`add_to_cart\`, \`view_cart\`, \`update_cart_item\`, \`begin_checkout\`, \`list_chaos_monkeys\`, \`request_print\` and \`open_page\`. Tees and hoodies need a size; ask the shopper rather than guessing. \`begin_checkout\` opens Stripe's checkout page, where the shopper enters shipping and payment.
-- **Product data.** [Product feed (JSON)](${SITE_URL}/api/feed/products.json), [Agentic Commerce Protocol manifest](${SITE_URL}/.well-known/acp.json), [OpenAPI description](${SITE_URL}/.well-known/openapi.json).`;
+- **Agentic Commerce Protocol (ACP 2026-04-17).** Discovery: ${SITE_URL}/.well-known/acp.json. Every color and size has its own item ID in the [ACP product feed](${SITE_URL}/api/acp/products). Create a checkout with POST ${SITE_URL}/api/acp/checkout_sessions (headers \`API-Version: 2026-04-17\` and an \`Idempotency-Key\`), add the shopper's US or Canadian address, then complete it with a Stripe shared payment token. For a Stripe checkout page instead, POST ${SITE_URL}/api/acp/checkout.
+- **Product data.** [ACP product feed](${SITE_URL}/api/acp/products), [Product feed (JSON)](${SITE_URL}/api/feed/products.json), [OpenAPI description](${SITE_URL}/.well-known/openapi.json).`;
 
 /** /llms.txt: what the shop is, and where everything is. */
 export function buildLlmsTxt(): string {
@@ -149,7 +151,9 @@ ${monkeys.map(monkeyBlock).join("\n\n")}
 export function buildProductMarkdown(handle: string): string | null {
   const product = getProductByHandle(handle);
   if (!product || !getAllProducts().some((p) => p.id === product.id)) return null;
-  const { price, currency, category, colors, sizes, variants, images } = describeProduct(product);
+  const { price, currency, category, colors, sizes, images } = describeProduct(product);
+  const items = listItems(product);
+  const exampleItem = items.find((item) => item.available) ?? items[0];
 
   const facts = [
     `- Price: ${money(price, currency)}`,
@@ -180,13 +184,14 @@ ${images.map((image) => `![${label(image.altText || product.title)}](${image.url
 
 - On the web page: pick a color${sizes.length > 0 ? " and size" : ""}, add it to the cart, then check out with Stripe.
 - In a WebMCP browser: \`add_to_cart\` with \`${toolExample}\`, then \`begin_checkout\`.
-- Through the [ACP checkout](${SITE_URL}/.well-known/openapi.json): POST ${SITE_URL}/api/acp/checkout with \`{"cart":{"items":[{"variantId":"<a variant ID below>"${sizes.length > 0 ? ',"size":"<shopper\'s size>"' : ""},"quantity":1}]}}\`, then send the shopper to the returned \`checkout_session.url\`.
+- Through [ACP](${SITE_URL}/.well-known/openapi.json): POST ${SITE_URL}/api/acp/checkout_sessions with \`{"currency":"usd","line_items":[{"id":"${exampleItem?.id ?? "<an item ID below>"}","quantity":1}]}\`, using the item ID of the shopper's color${sizes.length > 0 ? " and size" : ""} below; add their address, then complete with a Stripe shared payment token.
+- For a Stripe checkout page instead: POST ${SITE_URL}/api/acp/checkout with \`{"cart":{"items":[{"variantId":"<a variant ID below>"${sizes.length > 0 ? ',"size":"<shopper\'s size>"' : ""},"quantity":1}]}}\`, then send the shopper to the returned \`checkout_session.url\`.
 
 ## Variants
 
-| Variant ID | Color | Size | Available |
-| --- | --- | --- | --- |
-${variants.map((v) => `| ${v.id} | ${v.color ?? ""} | ${v.size ?? (sizes.length > 0 ? "any" : "")} | ${v.available ? "yes" : "no"} |`).join("\n")}
+| ACP item ID | Variant ID | Color | Size | Available |
+| --- | --- | --- | --- | --- |
+${items.map((item) => `| ${item.id} | ${item.variant.id} | ${item.color ?? ""} | ${item.size ?? ""} | ${item.available ? "yes" : "no"} |`).join("\n")}
 `;
 }
 
