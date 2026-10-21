@@ -62,6 +62,8 @@ export type Renderer = {
   measure(spec: { image: string; colors: string[] }): Promise<number[]>;
   /** The most common colour in an image, as #rrggbb. */
   dominant(image: string): Promise<string>;
+  /** The flat ground the keyed template would cut from an image, as #rrggbb, or null when there is none. */
+  ground(image: string): Promise<string | null>;
   close(): Promise<void>;
 };
 
@@ -161,6 +163,11 @@ export async function openRenderer(roots: Record<string, string>): Promise<Rende
     async dominant(image: string): Promise<string> {
       const value = await evaluate(`dominant(${JSON.stringify({ image })})`);
       if (typeof value !== "string") throw new Error("dominant returned no colour");
+      return value;
+    },
+    async ground(image: string): Promise<string | null> {
+      const value = await evaluate(`ground(${JSON.stringify({ image })})`);
+      if (value !== null && typeof value !== "string") throw new Error("ground returned no colour");
       return value;
     },
     async measure(spec: { image: string; colors: string[] }): Promise<number[]> {

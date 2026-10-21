@@ -554,6 +554,24 @@ Report:
   return { score: output.sameArt ? output.score : Math.min(output.score, 4), note: clip(output.note, 140) };
 }
 
+const KEYING_SCHEMA = { type: "object", properties: { lost: { type: "boolean" }, note: TEXT }, required: ["lost", "note"] };
+
+/**
+ * Checks that cutting the background away left the whole drawing: `draft` as drawn, `print` the keyed art on a
+ * magenta swatch. Paths are relative to `cwd`.
+ */
+export async function judgeKeying(cwd: string, draft: string, print: string): Promise<{ lost: boolean; note: string }> {
+  const prompt = `You check a print file for A-OK, an AI-culture streetwear label. Open ${draft} (the drawing as drawn, on a flat background that stands in for the shirt) and ${print} (the print: the same drawing with that background cut away, on a bright magenta swatch that stands in for a shirt of another colour) with the Read tool.
+
+Cutting the background away also takes anything drawn in the background's own colour where it meets the background with no outline between: the ape's black fur, black trousers or gloves on a black background, a white hoodie on a white one. Wherever that happened, magenta shows inside the drawing in the print.
+
+Report:
+- lost: true if any part of the drawing that is ink in the original shows magenta in the print: the ape's fur, face, clothes or gloves, or a prop's fill. The space around the drawing and the gaps between separate elements were background and should be magenta. Ignore thin slivers along an edge.
+- note: at most 120 characters: what went missing, or that nothing did.`;
+  const output = (await askClaude(prompt, KEYING_SCHEMA, cwd, "medium")) as { lost: boolean; note: string };
+  return { lost: output.lost, note: clip(output.note, 140) };
+}
+
 export type MockupCheck = { file: string; printMatches: boolean; garmentOk: boolean; score: number; note: string };
 
 const MOCKUP_SCHEMA = {

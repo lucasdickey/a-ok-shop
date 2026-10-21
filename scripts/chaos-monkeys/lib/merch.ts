@@ -128,9 +128,9 @@ export function prefersLightInk(weakOriginal: number, weakLight: number): boolea
 }
 
 /**
- * Whether a fabric is close enough to a house poster's ground to stand in for it. Removing the ground also removes
- * anything drawn in the same colour (the ink poster's ground is the ape's black fur), so such a print only comes out
- * right on fabric of about that colour.
+ * Whether a fabric is close enough to a print's ground to stand in for it. Removing the ground also removes anything
+ * drawn in the same colour where the two meet (the ink poster's ground is the ape's black fur; a draft on black can
+ * lose his fur the same way), so such a print only comes out right on fabric of about that colour.
  */
 export function matchesGround(swatch: string, ground: string): boolean {
   return [1, 3, 5].every((i) => Math.abs(parseInt(swatch.slice(i, i + 2), 16) - parseInt(ground.slice(i, i + 2), 16)) <= 48);
@@ -215,6 +215,8 @@ export type Merch = {
   /** The art re-inked for dark garments, and the check that it is still the same art. */
   artLight?: string | null;
   artLightCheck?: { score: number; note: string } | null;
+  /** Whether cutting the ground away lost part of the drawing (`ground` is the draft's), for the art with hash `art`. */
+  keyCheck?: { lost: boolean; note: string; ground: string; art: string } | null;
   products: MerchProduct[];
   /** All-over versions, for drafts whose placement is all-over. */
   allOver?: AllOverProduct[];
