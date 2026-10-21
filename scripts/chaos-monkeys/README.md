@@ -43,7 +43,7 @@ This creates `~/.a-ok-chaos/` (the publish clone, drafts, logs, and a font cache
 ~/.a-ok-chaos/bin/chaos pause | resume          # stop or restart the daily drafts
 ```
 
-`ship` and `unpublish` also take `--branch <name>` and `--no-push`. `draft`, `status`, `judge`, `review`, and `ship` take `--date RUN`, where a run is a date or a date with a label (`2026-10-01-apparel`); labelled runs leave the daily run alone. A feedback file looks like `{"items": [{"run": "2026-10-01", "n": 3, "verdict": "keep", "note": "…"}], "notes": [{"run": "2026-10-01", "note": "…"}]}`. Drafts live in `~/.a-ok-chaos/runs/<run>/`: `sheet.png`, `run.json` (briefs, scores, feedback, and what shipped), each Codex job's prompt and log, and `log.txt`.
+`ship` and `unpublish` also take `--branch <name>` and `--no-push`. `draft`, `status`, `judge`, `review`, and `ship` take `--date RUN`, where a run is a date or a date with a label (`2026-10-01-apparel`); labelled runs leave the daily run alone. A feedback file looks like `{"items": [{"run": "2026-10-01", "n": 3, "verdict": "keep", "note": "…"}], "notes": [{"run": "2026-10-01", "note": "…"}]}`. Drafts live in `~/.a-ok-chaos/runs/<run>/`: `sheet.png`, `run.json` (briefs, scores, feedback, and what shipped), each Codex job's prompt and log, and `log.txt`. Codex hands the image tool a prompt of its own, so a job's `prompt.txt` tells it to pass the spec on word for word; to see what it actually sent, run with `CHAOS_CODEX_TRACE=1`, which keeps each Codex session in `~/.codex/sessions` and saves every image tool call (prompt and references) to the job's `image-calls.json`.
 
 ## Merch
 
