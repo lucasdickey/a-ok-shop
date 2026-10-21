@@ -223,5 +223,24 @@
       "product": "This is model-as-judge evaluation, the A-OK ape way: he answered the question, marked his own work and agreed with the marks. The house specimen poster, with the title in giant type behind him, on the front of a white tee.",
       "marketing": "Wrote the answer. Graded it. A+. Evals have never been easier."
     }
+  },
+  {
+    "id": "0014",
+    "date": "2026-10-20",
+    "title": "INFERENCE ENGINE",
+    "slogan": "FOUR CYLINDERS. ONE CONCLUSION.",
+    "joke": "The ape's inference engine is literally a four-cylinder engine in his chest, belted up to his head.",
+    "alt": "Technical manual cutaway of the A-OK ape at a keyboard with a window in his chest revealing a small engine with red pistons and a belt running to his head, with numbered callouts 1 to 4; no words.",
+    "image": "/chaos-monkeys/0014.webp",
+    "width": 1200,
+    "height": 1200,
+    "engine": "astra",
+    "credit": "Illustrated by GPT-6-Astra from a brief by Claude",
+    "parents": [],
+    "style": "manual",
+    "copy": {
+      "product": "Inference engines were the reasoning core of early AI: facts in, conclusions out. Open the ape up and you'll find an actual one, four cylinders driving a belt straight up to his head. Appliance-manual cutaway on the front of a white crewneck, pistons in red.",
+      "marketing": "Four cylinders, one belt, one conclusion. We opened him up so you don't have to."
+    }
   }
 ]
