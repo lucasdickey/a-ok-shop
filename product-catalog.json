@@ -20420,6 +20420,2370 @@
           "publishedAt": "2026-10-21T06:25:43.023Z",
           "stripeProductId": "prod_VTqfxXR1leGYjL"
         }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000032",
+          "handle": "a-ok-drag-and-drop-tee",
+          "title": "A-OK Drag and Drop Tee",
+          "description": "A giant cursor hand lifts our Apes on Keys operator by the hood, leaving a dashed outline where he used to stand. Center-chest print on a Bella + Canvas 3001 tee in Black or Navy.",
+          "descriptionHtml": "<p><strong>Picked up. Moved. Not consulted.</strong></p><p>Somewhere, someone decided the ape belongs in a different folder.</p><p>Nobody asked him.</p><p>The <strong>Drag and Drop Tee</strong> catches our Apes on Keys operator mid-transfer. A giant cursor hand has him by the hood, his sneakers are off the ground, and a dashed outline marks the spot where he stood a second ago. Cream hoodie. Headphones on. Mouth open. Destination not disclosed.</p><p>For anyone who has been reorganized without a meeting.</p><p><strong>Same ape. New location. A-OK.</strong></p><ul><li>Center-chest graphic, about 9.8 inches wide.</li><li>Red, black, cream and white artwork; the only lettering is A-OK on the cap and Apes on Keys on the hoodie.</li><li>Printed on the Bella + Canvas 3001 Unisex Staple T-Shirt.</li><li>Catalog colorways: Black and Navy.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "ape graphic",
+            "AI satire",
+            "drag and drop",
+            "cursor",
+            "cream hoodie"
+          ],
+          "seo": {
+            "title": "A-OK Drag and Drop Tee | Apes on Keys AI Satire",
+            "description": "A giant cursor grabs the A-OK ape by the hood and drags him somewhere new. Center-chest print on a Bella + Canvas 3001 tee in Black or Navy."
+          },
+          "swatches": {
+            "Black": "#0c0c0c",
+            "Navy": "#212642"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000118",
+                  "url": "/images/products/a-ok-drag-and-drop-tee-black.webp",
+                  "altText": "Black A-OK Drag and Drop Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000119",
+                  "url": "/images/products/a-ok-drag-and-drop-tee-navy.webp",
+                  "altText": "Navy A-OK Drag and Drop Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Navy"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000582",
+                  "title": "Black / XS",
+                  "sku": "printful-9527",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgdKcMygrnU2DIkAAD9Dq"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000583",
+                  "title": "Black / S",
+                  "sku": "printful-4016",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgdKcMygrnU2DichSCpTt"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000584",
+                  "title": "Black / M",
+                  "sku": "printful-4017",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DnMqiEufo"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000585",
+                  "title": "Black / L",
+                  "sku": "printful-4018",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DCXX2WyfZ"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000586",
+                  "title": "Black / XL",
+                  "sku": "printful-4019",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DVVMpuRy3"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000587",
+                  "title": "Black / 2XL",
+                  "sku": "printful-4020",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DHeYiD5WO"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000588",
+                  "title": "Navy / XS",
+                  "sku": "printful-9546",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DYv8Aj30Q"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000589",
+                  "title": "Navy / S",
+                  "sku": "printful-4111",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgeKcMygrnU2DXLf17Reh"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000590",
+                  "title": "Navy / M",
+                  "sku": "printful-4112",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgfKcMygrnU2D3QFncm99"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000591",
+                  "title": "Navy / L",
+                  "sku": "printful-4113",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgfKcMygrnU2DSfXmQEjL"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000592",
+                  "title": "Navy / XL",
+                  "sku": "printful-4114",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgfKcMygrnU2DEcbtipAC"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000593",
+                  "title": "Navy / 2XL",
+                  "sku": "printful-4115",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Navy"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgfKcMygrnU2D675sqJX1"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000137",
+              "name": "Color",
+              "values": [
+                "Black",
+                "Navy"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000138",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-21T07:11:38.720Z",
+          "updatedAt": "2026-10-21T07:11:38.720Z",
+          "publishedAt": "2026-10-21T07:11:38.720Z",
+          "stripeProductId": "prod_VTrPgcJAsuocJZ"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000033",
+          "handle": "a-ok-deep-learning-tee",
+          "title": "A-OK Deep Learning Tee",
+          "description": "Deep learning means more layers, so the ape went deep underwater with a book. A spray-textured chest print of a waterline, a rising trail of bubbles and a reclining ape, on a Bella + Canvas 3001 unisex tee.",
+          "descriptionHtml": "<p><strong>Further down. Book still open.</strong></p><p>Deep learning works by stacking more layers.</p><p>The ape went with water.</p><p>The <strong>Deep Learning Tee</strong> puts our Apes on Keys operator far below the surface: A-OK cap on, red headphones on, red book open, one long trail of bubbles rising all the way back up to the waterline. The depth is impressive. The comprehension is under review.</p><p>For anyone who has been told to go deeper on something and took it as a direction.</p><p><strong>More layers. Less air. A-OK.</strong></p><ul><li>Tall spray-paint-textured graphic of a wavy waterline, rising bubble trail and reclining ape, about 10.4 inches wide, centered on the chest.</li><li>Black, red and cream artwork; no printed words beyond the A-OK cap. On Red, the black ink prints in bone cream.</li><li>Bella + Canvas 3001 Unisex Staple T-Shirt.</li><li>Colorways: Red, Yellow, Green and White.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "ape graphic",
+            "AI satire",
+            "deep learning",
+            "underwater",
+            "spray paint"
+          ],
+          "seo": {
+            "title": "A-OK Deep Learning Tee | AI Satire Ape Graphic T-Shirt",
+            "description": "Deep learning, taken literally: an ape sunk far below the waterline with a red book and a trail of bubbles. Unisex Bella + Canvas 3001 tee."
+          },
+          "swatches": {
+            "Red": "#d0071e",
+            "Yellow": "#ffd667",
+            "Green": "#1a9462",
+            "White": "#ffffff"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000120",
+                  "url": "/images/products/a-ok-deep-learning-tee-red.webp",
+                  "altText": "Red A-OK Deep Learning Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000121",
+                  "url": "/images/products/a-ok-deep-learning-tee-yellow.webp",
+                  "altText": "Yellow A-OK Deep Learning Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000122",
+                  "url": "/images/products/a-ok-deep-learning-tee-green.webp",
+                  "altText": "Green A-OK Deep Learning Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000123",
+                  "url": "/images/products/a-ok-deep-learning-tee-white.webp",
+                  "altText": "White A-OK Deep Learning Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000594",
+                  "title": "Red / XS",
+                  "sku": "printful-9552",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgfKcMygrnU2DydTaZV20"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000595",
+                  "title": "Red / S",
+                  "sku": "printful-4141",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStggKcMygrnU2DG6M5Wh0J"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000596",
+                  "title": "Red / M",
+                  "sku": "printful-4142",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStggKcMygrnU2DwpeyrkgM"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000597",
+                  "title": "Red / L",
+                  "sku": "printful-4143",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStggKcMygrnU2DFUqsUX8L"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000598",
+                  "title": "Red / XL",
+                  "sku": "printful-4144",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2DcM7UNlwt"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000599",
+                  "title": "Red / 2XL",
+                  "sku": "printful-4145",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2D2HMAqNLx"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000600",
+                  "title": "Yellow / XS",
+                  "sku": "printful-9560",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2DKDG3bzqa"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000601",
+                  "title": "Yellow / S",
+                  "sku": "printful-4181",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2DuGd66M1Q"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000602",
+                  "title": "Yellow / M",
+                  "sku": "printful-4182",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2D3JUnN0WJ"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000603",
+                  "title": "Yellow / L",
+                  "sku": "printful-4183",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStghKcMygrnU2DAvWeemzD"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000604",
+                  "title": "Yellow / XL",
+                  "sku": "printful-4184",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2DTXE2OWqK"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000605",
+                  "title": "Yellow / 2XL",
+                  "sku": "printful-4185",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2D4xtLr8Ug"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000606",
+                  "title": "Green / XS",
+                  "sku": "printful-9541",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2DaFMRKh8H"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000607",
+                  "title": "Green / S",
+                  "sku": "printful-4086",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2D4lxIJn0a"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000608",
+                  "title": "Green / M",
+                  "sku": "printful-4087",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2DTjOV1Gwf"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000609",
+                  "title": "Green / L",
+                  "sku": "printful-4088",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgiKcMygrnU2Dpq1Hp24U"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000610",
+                  "title": "Green / XL",
+                  "sku": "printful-4089",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgjKcMygrnU2DsN1rQKTl"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000611",
+                  "title": "Green / 2XL",
+                  "sku": "printful-4090",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgjKcMygrnU2DrY2EDVKE"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000612",
+                  "title": "White / XS",
+                  "sku": "printful-9526",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgjKcMygrnU2DSRVZ8U7K"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000613",
+                  "title": "White / S",
+                  "sku": "printful-4011",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgjKcMygrnU2DaRzB7riT"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000614",
+                  "title": "White / M",
+                  "sku": "printful-4012",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgjKcMygrnU2D7bxAeAI2"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000615",
+                  "title": "White / L",
+                  "sku": "printful-4013",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgkKcMygrnU2DdjRRLWLM"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000616",
+                  "title": "White / XL",
+                  "sku": "printful-4014",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgkKcMygrnU2DojlrIrpM"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000617",
+                  "title": "White / 2XL",
+                  "sku": "printful-4015",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgkKcMygrnU2DMN32mXEN"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000139",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Yellow",
+                "Green",
+                "White"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000140",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-21T07:11:38.720Z",
+          "updatedAt": "2026-10-21T07:11:38.720Z",
+          "publishedAt": "2026-10-21T07:11:38.720Z",
+          "stripeProductId": "prod_VTrPPCGXyWzwPP"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000034",
+          "handle": "a-ok-pinned-tee",
+          "title": "A-OK Pinned Tee",
+          "description": "Our Apes on Keys ape, hung by the hood from an oversized safety pin and locked to one version for good. A dependency-pinning joke printed about 10.7 inches wide on the chest of a Bella + Canvas 3001 tee.",
+          "descriptionHtml": "<p><strong>One version. Pinned. Worn daily.</strong></p><p>Pin a dependency and it stops moving. No updates. No surprises. No breaking changes.</p><p>We pinned the ape.</p><p>The <strong>Pinned Tee</strong> hangs our Apes on Keys operator by the tip of the red hood from an oversized safety pin. A-OK cap. Headphones on. Sneakers dangling. The wide-eyed expression suggests nobody asked the ape about the version lock.</p><p>Locked to this exact release for as long as you wear it. Upgrades are someone else's problem.</p><p><strong>No updates. No breaking changes. A-OK.</strong></p><ul><li>Ape-on-a-safety-pin graphic, about 10.7 inches wide, centered on the chest.</li><li>Red, black and cream artwork with A-OK cap and Apes on Keys hoodie details.</li><li>Printed on the Bella + Canvas 3001 Unisex Staple T-Shirt.</li><li>Colors: Red, Yellow, Green, Black and White.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "safety pin",
+            "version pinning",
+            "dependencies",
+            "AI satire",
+            "red hoodie"
+          ],
+          "seo": {
+            "title": "A-OK Pinned Tee | Ape on a Safety Pin",
+            "description": "One version. Pinned. Worn daily. The Apes on Keys ape hangs from an oversized safety pin on a Bella + Canvas 3001 tee in five colors."
+          },
+          "swatches": {
+            "Red": "#d0071e",
+            "Yellow": "#ffd667",
+            "Green": "#1a9462",
+            "Black": "#0c0c0c",
+            "White": "#ffffff"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000124",
+                  "url": "/images/products/a-ok-pinned-tee-red.webp",
+                  "altText": "Red A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000125",
+                  "url": "/images/products/a-ok-pinned-tee-yellow.webp",
+                  "altText": "Yellow A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000126",
+                  "url": "/images/products/a-ok-pinned-tee-green.webp",
+                  "altText": "Green A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000127",
+                  "url": "/images/products/a-ok-pinned-tee-black.webp",
+                  "altText": "Black A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000128",
+                  "url": "/images/products/a-ok-pinned-tee-white.webp",
+                  "altText": "White A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000618",
+                  "title": "Red / XS",
+                  "sku": "printful-9552",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgkKcMygrnU2DWh4KvJbE"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000619",
+                  "title": "Red / S",
+                  "sku": "printful-4141",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgkKcMygrnU2DRjx1p3MX"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000620",
+                  "title": "Red / M",
+                  "sku": "printful-4142",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStglKcMygrnU2DmpOGQPwA"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000621",
+                  "title": "Red / L",
+                  "sku": "printful-4143",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStglKcMygrnU2D5Jof0YYx"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000622",
+                  "title": "Red / XL",
+                  "sku": "printful-4144",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStglKcMygrnU2DvYT4OX7h"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000623",
+                  "title": "Red / 2XL",
+                  "sku": "printful-4145",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Red"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStglKcMygrnU2DWb5wEiEx"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000624",
+                  "title": "Yellow / XS",
+                  "sku": "printful-9560",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStglKcMygrnU2Duv5iY06Z"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000625",
+                  "title": "Yellow / S",
+                  "sku": "printful-4181",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2DyryUKoof"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000626",
+                  "title": "Yellow / M",
+                  "sku": "printful-4182",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2DTHwoXFBz"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000627",
+                  "title": "Yellow / L",
+                  "sku": "printful-4183",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2DK9WtIJRa"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000628",
+                  "title": "Yellow / XL",
+                  "sku": "printful-4184",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2D1VSvTCZq"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000629",
+                  "title": "Yellow / 2XL",
+                  "sku": "printful-4185",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2DV6u0lDCi"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000630",
+                  "title": "Green / XS",
+                  "sku": "printful-9541",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgmKcMygrnU2Dxbdaa2zG"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000631",
+                  "title": "Green / S",
+                  "sku": "printful-4086",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2DhnLdx85J"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000632",
+                  "title": "Green / M",
+                  "sku": "printful-4087",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2DxavdJlYx"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000633",
+                  "title": "Green / L",
+                  "sku": "printful-4088",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2Dj6k3lHAG"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000634",
+                  "title": "Green / XL",
+                  "sku": "printful-4089",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2DobHVzA8D"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000635",
+                  "title": "Green / 2XL",
+                  "sku": "printful-4090",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Green"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2DVIUmFbqC"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000636",
+                  "title": "Black / XS",
+                  "sku": "printful-9527",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgnKcMygrnU2DJMc1FL26"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000637",
+                  "title": "Black / S",
+                  "sku": "printful-4016",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2DCBHeU31J"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000638",
+                  "title": "Black / M",
+                  "sku": "printful-4017",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2D9t2JHOy3"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000639",
+                  "title": "Black / L",
+                  "sku": "printful-4018",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2DNRHHhPG9"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000640",
+                  "title": "Black / XL",
+                  "sku": "printful-4019",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2Dmbs7b4Wd"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000641",
+                  "title": "Black / 2XL",
+                  "sku": "printful-4020",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Black"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2Dw7v1EuIA"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000642",
+                  "title": "White / XS",
+                  "sku": "printful-9526",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgoKcMygrnU2DxNxjShBA"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000643",
+                  "title": "White / S",
+                  "sku": "printful-4011",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgpKcMygrnU2D74YhpzMd"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000644",
+                  "title": "White / M",
+                  "sku": "printful-4012",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgpKcMygrnU2Dl7oftwji"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000645",
+                  "title": "White / L",
+                  "sku": "printful-4013",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgpKcMygrnU2DdV6TwKtY"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000646",
+                  "title": "White / XL",
+                  "sku": "printful-4014",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgpKcMygrnU2D1kojnePb"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000647",
+                  "title": "White / 2XL",
+                  "sku": "printful-4015",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgpKcMygrnU2D64aBIdDO"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000141",
+              "name": "Color",
+              "values": [
+                "Red",
+                "Yellow",
+                "Green",
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000142",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-21T07:11:38.720Z",
+          "updatedAt": "2026-10-21T07:11:38.720Z",
+          "publishedAt": "2026-10-21T07:11:38.720Z",
+          "stripeProductId": "prod_VTrP9d8qVKFAVu"
+        }
+      },
+      {
+        "node": {
+          "id": "gid://a-ok/Product/8940000000035",
+          "handle": "a-ok-neural-net-tee",
+          "title": "A-OK Neural Net Tee",
+          "description": "Our Apes on Keys operator lounges in a hammock strung from a fully connected neural net layer: red nodes, black wires, sneakers up. Printed about 11 inches wide on the chest of a Bella + Canvas 3001 tee in Yellow or White.",
+          "descriptionHtml": "<p><strong>Fully connected. Load-bearing.</strong></p><p>We told the ape to rest on the network.</p><p>It took that literally.</p><p>The <strong>Neural Net Tee</strong> strings a fully connected layer between two posts and puts our Apes on Keys operator in it. Red nodes. Black wires. Hands behind the head, sneakers up, A-OK cap on, headphones on. The expression suggests the weights are holding and nobody can explain why.</p><p>Finally, a neural net you can lie down in. Interpretability not included.</p><p><strong>Every node connected. One ape supported. A-OK.</strong></p><ul><li>Neural-net hammock graphic, about 11 inches wide, centered on the chest.</li><li>Red, black and cream artwork with A-OK and Apes on Keys details.</li><li>Printed on the Bella + Canvas 3001 Unisex Staple T-Shirt.</li><li>Colors: Yellow and White.</li></ul>",
+          "productType": "T-Shirts",
+          "vendor": "A-OK Shop",
+          "tags": [
+            "T-shirts",
+            "A-OK",
+            "Apes on Keys",
+            "ape graphic",
+            "AI satire",
+            "neural network",
+            "fully connected",
+            "hammock"
+          ],
+          "seo": {
+            "title": "A-OK Neural Net Tee | Fully Connected Hammock Ape",
+            "description": "An ape lounging in a hammock strung from a fully connected neural net layer. AI-culture streetwear tee from A-OK in Yellow or White."
+          },
+          "swatches": {
+            "Yellow": "#ffd667",
+            "White": "#ffffff"
+          },
+          "priceRange": {
+            "minVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "30.0",
+              "currencyCode": "USD"
+            }
+          },
+          "compareAtPriceRange": {
+            "minVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            },
+            "maxVariantPrice": {
+              "amount": "0.0",
+              "currencyCode": "USD"
+            }
+          },
+          "images": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000129",
+                  "url": "/images/products/a-ok-neural-net-tee-yellow.webp",
+                  "altText": "Yellow A-OK Neural Net Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000130",
+                  "url": "/images/products/a-ok-neural-net-tee-white.webp",
+                  "altText": "White A-OK Neural Net Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              }
+            ]
+          },
+          "variants": {
+            "edges": [
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000648",
+                  "title": "Yellow / XS",
+                  "sku": "printful-9560",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgqKcMygrnU2DR4nXmz7N"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000649",
+                  "title": "Yellow / S",
+                  "sku": "printful-4181",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgqKcMygrnU2D46qhgeWu"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000650",
+                  "title": "Yellow / M",
+                  "sku": "printful-4182",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgqKcMygrnU2D3pDRXDMP"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000651",
+                  "title": "Yellow / L",
+                  "sku": "printful-4183",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgqKcMygrnU2DBqL9F4DR"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000652",
+                  "title": "Yellow / XL",
+                  "sku": "printful-4184",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DA01xCquI"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000653",
+                  "title": "Yellow / 2XL",
+                  "sku": "printful-4185",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "Yellow"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DYIMFFiEv"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000654",
+                  "title": "White / XS",
+                  "sku": "printful-9526",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XS"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DwZyiWPc2"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000655",
+                  "title": "White / S",
+                  "sku": "printful-4011",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "S"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DTsbBEpB0"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000656",
+                  "title": "White / M",
+                  "sku": "printful-4012",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "M"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DWZrc95Gm"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000657",
+                  "title": "White / L",
+                  "sku": "printful-4013",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "L"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgrKcMygrnU2DTrZ9Hc0U"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000658",
+                  "title": "White / XL",
+                  "sku": "printful-4014",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgsKcMygrnU2DceACbXUr"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductVariant/47200000000659",
+                  "title": "White / 2XL",
+                  "sku": "printful-4015",
+                  "price": {
+                    "amount": "30.0",
+                    "currencyCode": "USD"
+                  },
+                  "compareAtPrice": null,
+                  "availableForSale": true,
+                  "selectedOptions": [
+                    {
+                      "name": "Color",
+                      "value": "White"
+                    },
+                    {
+                      "name": "Size",
+                      "value": "2XL"
+                    }
+                  ],
+                  "stripePriceId": "price_1UStgsKcMygrnU2DeY2BsaaT"
+                }
+              }
+            ]
+          },
+          "options": [
+            {
+              "id": "gid://a-ok/ProductOption/89400000000143",
+              "name": "Color",
+              "values": [
+                "Yellow",
+                "White"
+              ]
+            },
+            {
+              "id": "gid://a-ok/ProductOption/89400000000144",
+              "name": "Size",
+              "values": [
+                "XS",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "2XL"
+              ]
+            }
+          ],
+          "collections": {
+            "edges": []
+          },
+          "onlineStoreUrl": "",
+          "availableForSale": true,
+          "createdAt": "2026-10-21T07:11:38.720Z",
+          "updatedAt": "2026-10-21T07:11:38.720Z",
+          "publishedAt": "2026-10-21T07:11:38.720Z",
+          "stripeProductId": "prod_VTrP0jRBmzqhbn"
+        }
       }
     ]
   }
