@@ -323,7 +323,7 @@ Fields:
 - marketingCopy: one launch line for social or email, at most 200 characters. No hashtags.
 - joke: one plain sentence explaining the gag, for the archive page.
 - alt: one sentence describing the finished graphic for screen readers: the ape, what he is doing, the style, and any printed words.
-- garment, garmentColor, placement: the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette.
+- garment, garmentColor, placement: the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette. On a black or navy shirt the ape is outlined in bone cream so his black fur reads, so no idea that needs black melting into the fabric (a silhouette in the dark, an ape emerging from shadow) unless it is all-over.
 - art: at most 900 characters. For Astra styles, lead with the idea: what the ape is doing and the props that carry the joke, then the composition, how the style shows up, and where each printText string sits. For "specimen" and "form", describe only the ape's pose and props, with no background and no text beyond the cap and hoodie. Do not describe his face, cap, headphones or hoodie: Astra gets the badge and the face rules with every brief, and this space is for the idea.
 - colorway: for "specimen", cream, red, or ink. Otherwise "cream".
 - form: for "form", a heading (an official-sounding form name, at most 36 characters) and 3–6 rows (labels at most 18 characters, values at most 24). Otherwise null.

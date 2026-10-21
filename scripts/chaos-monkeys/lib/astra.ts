@@ -53,7 +53,12 @@ Create ONE square image, at least 1024x1024: the flat print artwork for a ${brie
     brief.placement === "all-over"
       ? `filling the whole square edge to edge as a swatch of the printed fabric`
       : `centred on a plain flat ${brief.garmentColor} background that stands in for the fabric, with generous margins`
-  }. No garment, mockup, model, hanger, or photograph: just the artwork as it would be screen-printed.
+  }. No garment, mockup, model, hanger, or photograph: just the artwork as it would be screen-printed.${
+    brief.placement !== "all-over" && (brief.garmentColor === "black" || brief.garmentColor === "navy")
+      ? `
+On a dark shirt black ink disappears into the fabric, and the background is cut away to print the art on other colours too, so nothing black may touch the background: wherever the ape's black fur or any black linework or shape meets it, separate them with a thin, even bone-cream outline, the way a screen printer preps art for dark shirts.`
+      : ""
+  }
 Style: ${style ? `${style.name}. ${style.description}` : `${brief.style}.`} Commit to it fully.
 The graphic: ${brief.art}
 Text: ${words} The cap reads "A-OK". If the ape wears the hoodie and its front is visible, it reads "APES ON KEYS". No other letters, numbers, or logos.

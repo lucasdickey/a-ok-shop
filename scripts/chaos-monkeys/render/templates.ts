@@ -569,6 +569,10 @@ async function keyed(spec: KeyedSpec): Promise<HTMLCanvasElement> {
           }
         }
       }
+      // On a black ground, black ink comes off with it, and the ape's fur goes too wherever a black outline joins it
+      // to the ground.
+      const black = [1, 3, 5].map((i) => parseInt(C.ink.slice(i, i + 2), 16));
+      if (median.every((v, ch) => Math.abs(v - black[ch]) <= tolerance)) keepInside(seen, W, H, border);
       for (let i = 0; i < W * H; i++) {
         if (seen[i]) {
           p[i * 4 + 3] = 0;
@@ -590,6 +594,75 @@ async function keyed(spec: KeyedSpec): Promise<HTMLCanvasElement> {
     }
   }
   return prepareArt(c);
+}
+
+/** Chamfer distance from every pixel to the nearest one set in `mask`: 3 per pixel straight across, 4 diagonally. */
+function chamfer(mask: Uint8Array, W: number, H: number): Int32Array {
+  const d = new Int32Array(W * H);
+  for (let i = 0; i < W * H; i++) d[i] = mask[i] ? 0 : 1 << 29;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      let v = d[i];
+      if (x > 0) v = Math.min(v, d[i - 1] + 3);
+      if (y > 0) {
+        v = Math.min(v, d[i - W] + 3);
+        if (x > 0) v = Math.min(v, d[i - W - 1] + 4);
+        if (x < W - 1) v = Math.min(v, d[i - W + 1] + 4);
+      }
+      d[i] = v;
+    }
+  }
+  for (let y = H - 1; y >= 0; y--) {
+    for (let x = W - 1; x >= 0; x--) {
+      const i = y * W + x;
+      let v = d[i];
+      if (x < W - 1) v = Math.min(v, d[i + 1] + 3);
+      if (y < H - 1) {
+        v = Math.min(v, d[i + W] + 3);
+        if (x < W - 1) v = Math.min(v, d[i + W + 1] + 4);
+        if (x > 0) v = Math.min(v, d[i + W - 1] + 4);
+      }
+      d[i] = v;
+    }
+  }
+  return d;
+}
+
+/**
+ * Puts back what the flood fill took from inside the art. `seen` marks the pixels it removed. The art's outline is
+ * the art closed by a few pixels: wide enough to seal the hairline gaps the fill leaked through (a hood's outline
+ * meeting the ground), narrow enough to leave the gaps between letters and props open. Removed pixels inside that
+ * outline are ink in the ground's colour (his fur, a keycap's dark opening) and print in it.
+ */
+function keepInside(seen: Uint8Array, W: number, H: number, border: number[]): void {
+  const reach = 3 * Math.max(2, Math.round(Math.max(W, H) / 400));
+  const fromArt = chamfer(seen.map((v) => 1 - v), W, H);
+  // The real ground: reachable from the border without coming within `reach` of the art.
+  const outside = new Uint8Array(W * H);
+  const queue = new Int32Array(W * H);
+  let head = 0;
+  let tail = 0;
+  for (const i of border) {
+    if (!outside[i] && fromArt[i] > reach) {
+      outside[i] = 1;
+      queue[tail++] = i;
+    }
+  }
+  // Art crowding every edge leaves no ground to measure from; key it as found.
+  if (!tail) return;
+  while (head < tail) {
+    const i = queue[head++];
+    const x = i % W;
+    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+      if (j >= 0 && j < W * H && !outside[j] && fromArt[j] > reach) {
+        outside[j] = 1;
+        queue[tail++] = j;
+      }
+    }
+  }
+  const fromOutside = chamfer(outside, W, H);
+  for (let i = 0; i < W * H; i++) if (seen[i] && fromOutside[i] > reach) seen[i] = 0;
 }
 
 async function printfile(spec: PrintFileSpec): Promise<HTMLCanvasElement> {
