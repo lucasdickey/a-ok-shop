@@ -4,6 +4,7 @@
  *
  *   chaos draft [--count 6] [--date RUN] [--force] [--zingers]  brief, illustrate, compose, judge, contact sheet (~10 min)
  *               [--redo RUN-N,…] [--styles stencil,…]       redo drafts with the owner's notes first, then use these styles
+ *               [--theme "machine payments, sharding, …"]   take every new draft's idea from this theme
  *   chaos status [--date RUN]                                the latest drafts, their scores, and what shipped
  *   chaos judge [--date RUN]                                 re-score a run's drafts and rebuild its contact sheet
  *   chaos review [--date RUN[,RUN…]] --out DIR               export runs for the feedback page (index.html, drafts.json, img/)
@@ -132,7 +133,7 @@ function parseArgs(argv: string[]): Options {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (!arg.startsWith("--")) positional.push(arg);
-    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out", "--redo", "--styles", "--drop"].includes(arg)) flags.set(arg, argv[++i]);
+    else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith("--") && ["--count", "--date", "--branch", "--out", "--redo", "--styles", "--drop", "--theme"].includes(arg)) flags.set(arg, argv[++i]);
     else flags.set(arg, true);
   }
   return { positional, flags };
@@ -414,6 +415,8 @@ async function draft(options: Options): Promise<void> {
         return { ref, brief: source.brief, note: source.feedback?.note ?? "", judgeNote: source.judgment?.note ?? "" };
       });
     const fixedStyles = (flag(options, "--styles") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    const theme = flag(options, "--theme")?.trim() || null;
+    if (theme) log(`theme: ${theme}`);
     if (redos.length) log(`redoing ${redos.map((r) => `${r.brief.title} (${r.ref})`).join(", ")}`);
     log(`briefing ${count} drafts for ${id}${topic ? `; topical story: ${topic.headline}` : ""}${feedback.lines.length ? `; learning from ${feedback.lines.length} past verdicts` : ""}`);
     const briefs = await writeBriefs({
@@ -429,6 +432,7 @@ async function draft(options: Options): Promise<void> {
       recentStyles: recentStyles(id),
       redos,
       styles: fixedStyles,
+      theme,
     });
     const record: Run = {
       id,

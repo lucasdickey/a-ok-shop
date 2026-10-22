@@ -243,6 +243,8 @@ export async function writeBriefs(options: {
   /** Drafts to redo first, then styles to use next, before the rest are picked at random. */
   redos?: Redo[];
   styles?: string[];
+  /** A theme for the whole batch: every new draft takes its idea from it. */
+  theme?: string | null;
 }): Promise<Brief[]> {
   const brand = readBrand();
   const styles = readStyles();
@@ -310,7 +312,10 @@ ${published}
 DRAFTED RECENTLY BUT NOT PUBLISHED (do not repeat, except the redos asked for below):
 ${recent}
 
-${topicBlock}Write exactly ${slots.length} new briefs, in this order:
+${topicBlock}${options.theme ? `THEME FOR THIS BATCH. Every new draft (a redo keeps its own idea) takes its AI or computing idea from this theme: ${options.theme}
+Spread the drafts across the theme instead of doubling up on one corner of it. Pick ideas that people who build this technology will recognise and laugh at, and that still read for everyone else. The theme gives ideas, never brands: don't name, quote, or draw any company, product, logo, or mascot it brings to mind.
+
+` : ""}Write exactly ${slots.length} new briefs, in this order:
 ${slotLines.join("\n")}
 Every draft must use a different AI or computing idea and a different visual gag. Commit to each style: the varsity one should look like it came off a letterman jacket, the woodcut one like an almanac page. Homage the format, never another brand's name, logo, or pattern. Vary garments, garment colours, and placements across the set.
 
