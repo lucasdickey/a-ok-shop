@@ -35,6 +35,7 @@ This creates `~/.a-ok-chaos/` (the publish clone, drafts, logs, and a font cache
 ~/.a-ok-chaos/bin/chaos ship 2 4 5              # publish drafts 2, 4 and 5 of the latest run
 ~/.a-ok-chaos/bin/chaos draft --count 15 --date 2026-10-01-apparel   # an extra, labelled batch
 ~/.a-ok-chaos/bin/chaos draft --count 12 --date 2026-10-14-redo --redo 2026-10-09-2,2026-10-09-6 --styles stencil   # redo drafts with their notes first
+~/.a-ok-chaos/bin/chaos draft --count 15 --date 2026-10-21-infra --theme "machine payments, sharding, vector search"   # a themed batch
 ~/.a-ok-chaos/bin/chaos review --out DIR        # export the latest run for the feedback page (--date A,B for several)
 ~/.a-ok-chaos/bin/chaos feedback verdicts.json  # import keep/reject verdicts and notes
 ~/.a-ok-chaos/bin/chaos print                   # print files, model photos and copy for drafts ticked Print
