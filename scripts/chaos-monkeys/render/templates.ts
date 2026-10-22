@@ -520,6 +520,9 @@ async function form(spec: ArtSpec): Promise<HTMLCanvasElement> {
 
 /* ------------------------------------------------------------------ merch */
 
+/** How far, per channel, a pixel may be from the ground's colour and still be ground. */
+const TOLERANCE = 30;
+
 /**
  * Removes a flat background: when nearly all of the border is one colour, everything connected to the border in
  * that colour becomes transparent, and the anti-aliased edge is un-blended from it so no halo of the old colour
@@ -534,66 +537,91 @@ async function keyed(spec: KeyedSpec): Promise<HTMLCanvasElement> {
   ctx.drawImage(img, 0, 0);
   const data = ctx.getImageData(0, 0, W, H);
   const p = data.data;
+  const border = edge(W, H);
+  const known = spec.background ? [1, 3, 5].map((i) => parseInt((spec.background as string).slice(i, i + 2), 16)) : null;
+  const median = flatGround(p, border, known);
+  if (median) {
+    const opaque = border.filter((i) => p[i * 4 + 3] > 200);
+    const dist = (i: number) => Math.max(Math.abs(p[i * 4] - median[0]), Math.abs(p[i * 4 + 1] - median[1]), Math.abs(p[i * 4 + 2] - median[2]));
+    const seen = new Uint8Array(W * H);
+    const queue = new Int32Array(W * H);
+    let head = 0;
+    let tail = 0;
+    for (const i of border) {
+      if (!seen[i] && dist(i) <= TOLERANCE) {
+        seen[i] = 1;
+        queue[tail++] = i;
+      }
+    }
+    while (head < tail) {
+      const i = queue[head++];
+      const x = i % W;
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+        if (j >= 0 && j < W * H && !seen[j] && dist(j) <= TOLERANCE) {
+          seen[j] = 1;
+          queue[tail++] = j;
+        }
+      }
+    }
+    // Ink in the ground's colour comes off with it wherever a gap in an outline joins the two: the ape's black fur on
+    // a black ground, his cream hoodie on a white one. A textured ground (heather) is left as found: the specks of
+    // its texture that survive the fill would close into patches of ground.
+    const groundEdge = opaque.filter((i) => dist(i) <= TOLERANCE);
+    if (groundEdge.filter((i) => dist(i) <= 8).length >= groundEdge.length * 0.95) keepInside(seen, W, H, border);
+    for (let i = 0; i < W * H; i++) {
+      if (seen[i]) {
+        p[i * 4 + 3] = 0;
+        continue;
+      }
+      const x = i % W;
+      const touches = (x > 0 && seen[i - 1]) || (x < W - 1 && seen[i + 1]) || (i >= W && seen[i - W]) || (i + W < W * H && seen[i + W]);
+      if (!touches) continue;
+      // An edge pixel is part background: estimate how much, and recover the ink's own colour.
+      const a = Math.min(1, Math.max(0, (dist(i) - TOLERANCE) / (2 * TOLERANCE)));
+      if (a === 0) {
+        p[i * 4 + 3] = 0;
+        continue;
+      }
+      for (let ch = 0; ch < 3; ch++) p[i * 4 + ch] = Math.min(255, Math.max(0, Math.round(median[ch] + (p[i * 4 + ch] - median[ch]) / a)));
+      p[i * 4 + 3] = Math.round(p[i * 4 + 3] * a);
+    }
+    ctx.putImageData(data, 0, 0);
+  }
+  return prepareArt(c);
+}
+
+/** The pixels along an image's edge, as indices. */
+function edge(W: number, H: number): number[] {
   const border: number[] = [];
   for (let x = 0; x < W; x++) border.push(x, (H - 1) * W + x);
   for (let y = 1; y < H - 1; y++) border.push(y * W, y * W + W - 1);
+  return border;
+}
+
+/**
+ * The flat ground `keyed` removes, as RGB: `known` or the median of the edge when nearly all of it is that colour.
+ * Null when the edge is mostly transparent (Astra drew it on transparency) or not one colour (a full-bleed poster).
+ */
+function flatGround(p: Uint8ClampedArray, border: number[], known: number[] | null): number[] | null {
   const opaque = border.filter((i) => p[i * 4 + 3] > 200);
-  if (opaque.length > border.length / 2) {
-    const known = spec.background ? [1, 3, 5].map((i) => parseInt((spec.background as string).slice(i, i + 2), 16)) : null;
-    const median =
-      known ??
-      [0, 1, 2].map((ch) => {
-        const values = opaque.map((i) => p[i * 4 + ch]).sort((a, b) => a - b);
-        return values[values.length >> 1];
-      });
-    const tolerance = 30;
-    const dist = (i: number) => Math.max(Math.abs(p[i * 4] - median[0]), Math.abs(p[i * 4 + 1] - median[1]), Math.abs(p[i * 4 + 2] - median[2]));
-    if (known || opaque.filter((i) => dist(i) <= tolerance).length >= opaque.length * 0.85) {
-      const seen = new Uint8Array(W * H);
-      const queue = new Int32Array(W * H);
-      let head = 0;
-      let tail = 0;
-      for (const i of border) {
-        if (!seen[i] && dist(i) <= tolerance) {
-          seen[i] = 1;
-          queue[tail++] = i;
-        }
-      }
-      while (head < tail) {
-        const i = queue[head++];
-        const x = i % W;
-        for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
-          if (j >= 0 && j < W * H && !seen[j] && dist(j) <= tolerance) {
-            seen[j] = 1;
-            queue[tail++] = j;
-          }
-        }
-      }
-      // On a black ground, black ink comes off with it, and the ape's fur goes too wherever a black outline joins it
-      // to the ground.
-      const black = [1, 3, 5].map((i) => parseInt(C.ink.slice(i, i + 2), 16));
-      if (median.every((v, ch) => Math.abs(v - black[ch]) <= tolerance)) keepInside(seen, W, H, border);
-      for (let i = 0; i < W * H; i++) {
-        if (seen[i]) {
-          p[i * 4 + 3] = 0;
-          continue;
-        }
-        const x = i % W;
-        const touches = (x > 0 && seen[i - 1]) || (x < W - 1 && seen[i + 1]) || (i >= W && seen[i - W]) || (i + W < W * H && seen[i + W]);
-        if (!touches) continue;
-        // An edge pixel is part background: estimate how much, and recover the ink's own colour.
-        const a = Math.min(1, Math.max(0, (dist(i) - tolerance) / (2 * tolerance)));
-        if (a === 0) {
-          p[i * 4 + 3] = 0;
-          continue;
-        }
-        for (let ch = 0; ch < 3; ch++) p[i * 4 + ch] = Math.min(255, Math.max(0, Math.round(median[ch] + (p[i * 4 + ch] - median[ch]) / a)));
-        p[i * 4 + 3] = Math.round(p[i * 4 + 3] * a);
-      }
-      ctx.putImageData(data, 0, 0);
-    }
-  }
-  return prepareArt(c);
+  if (opaque.length <= border.length / 2) return null;
+  if (known) return known;
+  const median = [0, 1, 2].map((ch) => {
+    const values = opaque.map((i) => p[i * 4 + ch]).sort((a, b) => a - b);
+    return values[values.length >> 1];
+  });
+  const near = opaque.filter((i) => Math.max(...[0, 1, 2].map((ch) => Math.abs(p[i * 4 + ch] - median[ch]))) <= TOLERANCE);
+  return near.length >= opaque.length * 0.85 ? median : null;
+}
+
+/** The flat ground `keyed` would remove from an image, as #rrggbb, or null when there is none to remove. */
+async function ground(spec: { image: string }): Promise<string | null> {
+  const img = await loadImage(spec.image);
+  const c = makeCanvas(img.naturalWidth, img.naturalHeight);
+  const ctx = context(c);
+  ctx.drawImage(img, 0, 0);
+  const median = flatGround(ctx.getImageData(0, 0, c.width, c.height).data, edge(c.width, c.height), null);
+  return median ? `#${median.map((v) => v.toString(16).padStart(2, "0")).join("")}` : null;
 }
 
 /** Chamfer distance from every pixel to the nearest one set in `mask`: 3 per pixel straight across, 4 diagonally. */
@@ -629,6 +657,9 @@ function chamfer(mask: Uint8Array, W: number, H: number): Int32Array {
   return d;
 }
 
+/** How far clear of the ink, in closing widths, an enclosed area must reach to go back. */
+const DEEP = 2;
+
 /**
  * Puts back what the flood fill took from inside the art. `seen` marks the pixels it removed. The art's outline is
  * the art closed by a few pixels: wide enough to seal the hairline gaps the fill leaked through (a hood's outline
@@ -662,8 +693,32 @@ function keepInside(seen: Uint8Array, W: number, H: number, border: number[]): v
     }
   }
   const fromOutside = chamfer(outside, W, H);
-  for (let i = 0; i < W * H; i++) if (seen[i] && fromOutside[i] > reach) seen[i] = 0;
+  // Each enclosed area goes back only if some of it lies well clear of the ink: fur or a keycap's opening does,
+  // while the ground showing between the dots of a dense halftone or particle cloud never gets that far from one.
+  const enclosed = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) if (seen[i] && fromOutside[i] > reach) enclosed[i] = 1;
+  for (let start = 0; start < W * H; start++) {
+    if (enclosed[start] !== 1) continue;
+    enclosed[start] = 2;
+    head = 0;
+    tail = 0;
+    queue[tail++] = start;
+    let deep = false;
+    while (head < tail) {
+      const i = queue[head++];
+      if (fromArt[i] > DEEP * reach) deep = true;
+      const x = i % W;
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+        if (j >= 0 && j < W * H && enclosed[j] === 1) {
+          enclosed[j] = 2;
+          queue[tail++] = j;
+        }
+      }
+    }
+    if (deep) for (let k = 0; k < tail; k++) seen[queue[k]] = 0;
+  }
 }
+
 
 async function printfile(spec: PrintFileSpec): Promise<HTMLCanvasElement> {
   const img = await loadImage(spec.image);
@@ -997,10 +1052,18 @@ async function render(spec: Spec): Promise<string> {
   return encode(c, spec.format, spec.quality);
 }
 
-const page = window as unknown as { render: typeof render; measure: typeof measure; dominant: typeof dominant; READY: boolean; ERROR: string | null };
+const page = window as unknown as {
+  render: typeof render;
+  measure: typeof measure;
+  dominant: typeof dominant;
+  ground: typeof ground;
+  READY: boolean;
+  ERROR: string | null;
+};
 page.render = render;
 page.measure = measure;
 page.dominant = dominant;
+page.ground = ground;
 page.READY = false;
 page.ERROR = null;
 Promise.all(["40px Bebas", "500 20px Mono", "700 20px Mono", "40px ArialBlack"].map((font) => document.fonts.load(font)))

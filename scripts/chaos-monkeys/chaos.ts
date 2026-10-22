@@ -22,6 +22,7 @@
  * (2026-10-01-apparel). Without --date, commands use the latest run. --zingers adds a draft that riffs on the day's
  * Zingers story; it is off by default.
  */
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -56,7 +57,7 @@ import {
   type ManifestEntry,
   type Run,
 } from "./lib/config.ts";
-import { distillTaste, judgeDrafts, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type Redo, type StyleScores } from "./lib/claude.ts";
+import { distillTaste, judgeDrafts, judgeKeying, judgeLightInk, judgeMockups, writeBriefs, writeProductCopy, type FeedbackLine, type Redo, type StyleScores } from "./lib/claude.ts";
 import { AstraUnavailable, allOverMockup, illustrate, lightInk, mockup } from "./lib/astra.ts";
 import { allMerch, syncToArchive, type ArchiveWork } from "./lib/printfiles.ts";
 import { upscale } from "./lib/upscale.ts";
@@ -968,9 +969,38 @@ async function printMerch(options: Options): Promise<void> {
       const merch: Merch = existing ?? { id: merchId, run: id, n: d.n, title: d.brief.title, art: "art.png", artWidth: art.width, products: [] };
       merch.artWidth = art.width;
 
-      // House posters carry their own background, so only art Astra drew whole needs re-inking.
-      if (d.engine !== "astra") merch.artLight = null;
-      for (let attempt = 1; d.engine === "astra" && !astraDown && attempt <= 2 && !(merch.artLight && (merch.artLightCheck?.score ?? 0) >= 7); attempt++) {
+      // Cutting a flat ground away also takes anything drawn in its colour where the two meet with no outline between
+      // (black fur on a black ground), and with no outline there is nothing to find it by. So when a ground was cut,
+      // Claude compares the print with the draft, again whenever the art changes; if part of the drawing went, the
+      // print is only offered on fabric close to the ground, where it comes out as drawn.
+      let ground = background;
+      const cut = d.engine === "astra" ? await renderer.ground(`/run/${d.image}`) : null;
+      if (cut) {
+        const artHash = createHash("sha256").update(fs.readFileSync(path.join(dir, "art.png"))).digest("hex").slice(0, 16);
+        if (merch.keyCheck?.art !== artHash) {
+          const job = path.join(dir, "jobs", "key-check");
+          fs.mkdirSync(job, { recursive: true });
+          fs.copyFileSync(path.join(runDir, d.image as string), path.join(job, "draft.png"));
+          fs.writeFileSync(path.join(job, "print.png"), await renderer.render({ kind: "onfabric", image: `/merch/${merchId}/art.png`, color: "#FF00FF", size: 1000 }));
+          try {
+            merch.keyCheck = { ...(await judgeKeying(job, "draft.png", "print.png")), ground: cut, art: artHash };
+            log(`${merchId}: cutting out the art ${merch.keyCheck.lost ? "lost part of the drawing" : "kept the whole drawing"}: ${merch.keyCheck.note}`);
+          } catch (error) {
+            // Unchecked art is treated as damaged for this run, and checked again on the next.
+            merch.keyCheck = { lost: true, note: "not checked", ground: cut, art: "" };
+            log(`${merchId}: checking the cut-out art failed, so it is offered only near its ground colour; rerun chaos print to check again: ${(error as Error).message.split("\n")[0].slice(0, 160)}`);
+          }
+          saveMerch(merch);
+        }
+        if (merch.keyCheck?.lost) ground = merch.keyCheck.ground;
+      } else if (d.engine === "astra") {
+        merch.keyCheck = null;
+      }
+
+      // Art that only prints true near its ground colour (a house poster, or a draft that lost part of the drawing)
+      // prints as drawn, so only the rest of the art Astra drew whole is re-inked.
+      if (ground) merch.artLight = null;
+      for (let attempt = 1; d.engine === "astra" && !ground && !astraDown && attempt <= 2 && !(merch.artLight && (merch.artLightCheck?.score ?? 0) >= 7); attempt++) {
         try {
           const out = await lightInk(path.join(dir, merch.art), path.join(dir, "jobs", `light-ink-${attempt}`));
           fs.copyFileSync(out, path.join(dir, "art-light-raw.png"));
@@ -1014,10 +1044,10 @@ async function printMerch(options: Options): Promise<void> {
         const dropped = [...new Set([...(kept?.dropped ?? []), ...dropFlag])];
         const offered = frozen
           ? (frozen.colors ?? [...SHOP_COLORS])
-          : SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!background || matchesGround(swatch[color], background)) && !dropped.includes(color));
+          : SHOP_COLORS.filter((color, i) => weakChosen[i] <= MAX_HARD_TO_SEE && (!ground || matchesGround(swatch[color], ground)) && !dropped.includes(color));
         const unread = SHOP_COLORS.filter((color) => !offered.includes(color) && !dropped.includes(color));
         if (unread.length) {
-          log(`${merchId} ${garment}: not offered in ${unread.join(", ")}: ${background ? "the poster only prints true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
+          log(`${merchId} ${garment}: not offered in ${unread.join(", ")}: ${ground ? "the print only comes out true on fabric close to its ground colour, or" : ""} too much of the print would be hard to see`);
         }
         if (dropped.length) log(`${merchId} ${garment}: dropped by request: ${dropped.join(", ")}`);
         log(
@@ -1260,6 +1290,7 @@ async function sell(options: Options): Promise<void> {
     for (const p of merch.products.filter((x) => !x.sold && wanted(merch, x.garment))) {
       if (!p.copy) throw new Error(`${merch.id} ${p.garment} has no copy yet; run chaos print`);
       const offered = p.mockups.filter((m) => (p.colors ?? SHOP_COLORS).includes(m.color));
+      if (!offered.length) throw new Error(`${merch.id} ${p.garment} prints true on no shop colour (see chaos print's log); leave it unsold`);
       const missing = offered.filter((m) => !m.web).map((m) => m.color);
       if (missing.length) throw new Error(`${merch.id} ${p.garment} is missing photos for ${missing.join(", ")}; run chaos print`);
       if (p.lightInk?.length && (merch.artLightCheck?.score ?? 0) < 7 && !options.flags.has("--force")) {
