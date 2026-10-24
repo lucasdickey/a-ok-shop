@@ -6,7 +6,7 @@ Homage is part of streetwear, and it is welcome here as homage to a *format*: th
 
 Each style is a `## id · Name` heading followed by `engine:` (`astra`, `hybrid specimen`, or `hybrid form`), `text:` (how many short printed strings it allows, beyond the cap and hoodie lettering), an optional `weight:` (relative chance of being picked, default 1; 0 retires a style without deleting it), and a description that both models read. Add, remove, or rewrite styles freely.
 
-Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern. Retired after the second: racing and crest (silly, juvenile) and monogram (rejected twice as uninspired). Retired after the Oct 7 review: varsity ("no sports t-shirt looks"), box-logo ("no more Supreme references"), souvenir (the ape and a landscape in a circle, tried too often), and swiss ("looks like bad AI slop"); pixel halved ("too many 8-bits lately").
+Retired after the first review: advisory (big black-and-white boxes), comic (reads as a social post, not a shirt), and form (a site graphic, too busy for a shirt). Weighted up: the street-art styles and the all-over pattern. Retired after the second: racing and crest (silly, juvenile) and monogram (rejected twice as uninspired). Retired after the Oct 7 review: varsity ("no sports t-shirt looks"), box-logo ("no more Supreme references"), souvenir (the ape and a landscape in a circle, tried too often), and swiss ("looks like bad AI slop"); pixel halved ("too many 8-bits lately"). Retired after the Oct 20 review: ape-camo ("no more repeat background like this"; it runs only when asked for, with `--styles ape-camo`) and specimen ("absolutely no more structured/layout like this"); pattern cut from 2 to a quarter ("cut back repeated pattern concepts significantly"); skate-zine weighted up ("loving these skate inspired ones").
 
 ## icon · Street-art icon
 engine: astra
@@ -68,11 +68,13 @@ Roadside and national-park souvenir tee: a round or shield badge with a simple l
 ## skate-zine · Skate zine
 engine: astra
 text: 1
+weight: 1.5
 80s skate and punk zine graphic: cut-and-paste collage, photocopy grit, xerox halftone, spiky hand lettering, the ape mid-trick or wiping out over an AI prop. Raw and black-heavy with one red accent.
 
 ## ape-camo · Ape camo
 engine: astra
 text: 1
+weight: 0
 Ura-Harajuku camouflage homage: an all-over camo whose blobs are built from A-OK ape-head silhouettes in red, black, cream and tan, with one solid tag or patch on top where the ape sits. This is A-OK's own camo, never another brand's.
 
 ## monogram · Monogram canvas
@@ -133,7 +135,7 @@ Swiss International Style: a strict grid, the ape simplified into circles and re
 ## pattern · All-over pattern
 engine: astra
 text: 0
-weight: 2
+weight: 0.25
 A repeating all-over print in the spirit of a luxury house's printed silk: small ape vignettes doing variations on one action, evenly spaced and tiled with AI glyphs, tidy and tonal. No words at all.
 
 ## chest-hit · Small chest hit
@@ -150,6 +152,7 @@ One panel of a vintage comic book: Ben-Day dots, a dramatic angle, the ape mid-r
 ## specimen · Specimen poster
 engine: hybrid specimen
 text: 2
+weight: 0
 The house poster: the title in giant condensed type behind the ape and the slogan in a bar along the bottom. Prints the title and the slogan.
 
 ## form · Official form

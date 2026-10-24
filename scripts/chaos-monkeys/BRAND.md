@@ -38,3 +38,5 @@ Dry, specific AI-culture satire that is in on its own joke. The brand is made by
 - The ape never smokes, drinks, or takes drugs. No weapons, gore, or sexual content. Nothing that punches down.
 - Spell every word exactly. The only words in the art are the brief's print text and the cap and hoodie lettering.
 - It must read as a 300 px thumbnail: one clear idea, big shapes, few words.
+- Never the poster layout: a giant headline across the top, a small ape under it, and a slogan bar or three-beat tagline along the bottom (SESSION EXPIRED, TL;DR, FOUNDATION MODEL were all this). The picture is the graphic; any words sit inside it, never stacked above and below it, and the slogan stays in the product copy.
+- No ape-head camo, in any style and at any size: not as a background, a fill, a texture, or a pattern on a prop (HOT SHARD's camo shards). It appears only when the owner asks for it, by name in a note or theme, or as the draft's assigned ape-camo style.
