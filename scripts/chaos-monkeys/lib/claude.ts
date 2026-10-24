@@ -249,7 +249,12 @@ export async function writeBriefs(options: {
   const brand = readBrand();
   const styles = readStyles();
   const fixed: Slot[] = [
-    ...(options.redos ?? []).map((redo) => ({ style: styles.find((s) => s.id === redo.brief.style) ?? null, topical: false, redo })),
+    // A redo keeps its draft's style, unless that style has since been retired: then it is redrawn in an active one.
+    ...(options.redos ?? []).map((redo) => {
+      const original = styles.find((s) => s.id === redo.brief.style);
+      const style = original && original.weight > 0 ? original : (draftSlots(1, false, styles, options.styleScores, options.recentStyles)[0]?.style ?? null);
+      return { style, topical: false, redo };
+    }),
     ...(options.styles ?? []).map((id) => {
       const style = styles.find((s) => s.id === id);
       if (!style) throw new Error(`no style "${id}" in STYLES.md`);
@@ -266,7 +271,7 @@ export async function writeBriefs(options: {
       return `- Draft ${i + 1}: REDO of ${brief.title} (${ref}), style ${slot.style ? styleLine(slot.style) : `"${brief.style}"`}
   The original brief: ${JSON.stringify(original)}
   The owner's note on it: "${note}"${judgeNote ? `\n  The judge's note on it: "${judgeNote}"` : ""}
-  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply. A note about the face is fixed in the drawing, which now gets the canonical badge; keep the art about the idea, not the face.`;
+  Keep the idea and everything the note doesn't object to; change exactly what the note asks, and fix what the judge found. Keep the title. The owner's rules still apply.${slot.style && slot.style.id !== brief.style ? ` Its original style, "${brief.style}", is retired: draw it in the style above instead, and keep nothing that belonged to the old one.` : ""} A note about the face is fixed in the drawing, which now gets the canonical badge; keep the art about the idea, not the face.`;
     }
     return slot.style
       ? `- Draft ${i + 1}: style ${styleLine(slot.style)}`
