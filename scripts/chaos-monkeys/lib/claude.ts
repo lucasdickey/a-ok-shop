@@ -9,6 +9,7 @@ import {
   GARMENT_COLORS,
   MODELS,
   PLACEMENTS,
+  chunks,
   log,
   readBrand,
   readStyles,
@@ -50,6 +51,30 @@ async function askClaude(prompt: string, schema: object, cwd: string, effort: "m
 }
 
 const TEXT = { type: "string" } as const;
+
+function ideasSchema(styleIds: string[]) {
+  return {
+    type: "object",
+    properties: {
+      ideas: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            style: { enum: styleIds },
+            title: TEXT,
+            idea: TEXT,
+            garment: { enum: [...GARMENTS] },
+            garmentColor: { enum: [...GARMENT_COLORS] },
+            placement: { enum: [...PLACEMENTS] },
+          },
+          required: ["style", "title", "idea", "garment", "garmentColor", "placement"],
+        },
+      },
+    },
+    required: ["ideas"],
+  };
+}
 
 function briefsSchema(styleIds: string[]) {
   return {
@@ -227,6 +252,20 @@ ${show("reject")}
 `;
 }
 
+/** One line of the batch plan: a draft's idea and shirt, before its brief is written. */
+type Idea = { style: string; title: string; idea: string; garment: string; garmentColor: string; placement: string };
+
+/** Briefs per parallel call: one call for a whole batch of 15 took over five minutes. */
+const BRIEFS_PER_CALL = 8;
+
+const TITLE_FIELD = `the design's name, 1–3 words, UPPERCASE, at most 22 characters. It is what the archive and the product page call the design; it only appears on the shirt if it is also in printText.`;
+const GARMENT_FIELD = `the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette. On a black or navy shirt the ape is outlined in bone cream so his black fur reads, so no idea that needs black melting into the fabric (a silhouette in the dark, an ape emerging from shadow) unless it is all-over.`;
+
+/**
+ * Plans the batch in one quick call (an idea, title and shirt per draft, distinct across the set), then writes the
+ * full briefs from that plan in parallel calls of BRIEFS_PER_CALL. Every call sees the same brand, rules, feedback,
+ * redos, story and theme.
+ */
 export async function writeBriefs(options: {
   count: number;
   cwd: string;
@@ -295,7 +334,7 @@ ${styles.map((style) => `- ${styleLine(style)}`).join("\n")}
     : "(nothing yet: these are the first)";
   const recent = options.recentlyDrafted.length ? options.recentlyDrafted.join("\n") : "(none)";
 
-  const prompt = `You are the creative director of A-OK, an AI-culture streetwear label. Every day you brief a new set of "Chaos Monkeys": tee and hoodie graphics starring the A-OK ape. They are published on the A-OK site and are the source of the next shirts, so think like a streetwear designer, not a poster designer: one strong graphic idea per shirt, few words on the fabric, and the rest of the bit in the product and marketing copy.
+  const preamble = `You are the creative director of A-OK, an AI-culture streetwear label. Every day you brief a new set of "Chaos Monkeys": tee and hoodie graphics starring the A-OK ape. They are published on the A-OK site and are the source of the next shirts, so think like a streetwear designer, not a poster designer: one strong graphic idea per shirt, few words on the fabric, and the rest of the bit in the product and marketing copy.
 
 Each draft has an assigned style. Most are drawn whole by GPT-6-Astra from your "art" description, as flat artwork on a swatch of the garment colour. Two are house templates ("specimen" and "form"): Astra draws only the ape as a cutout from your "art" description, and the template sets the title and slogan (and, for "form", your form rows) in type.
 
@@ -320,35 +359,82 @@ ${recent}
 ${topicBlock}${options.theme ? `THEME FOR THIS BATCH. Every new draft (a redo keeps its own idea) takes its AI or computing idea from this theme: ${options.theme}
 Spread the drafts across the theme instead of doubling up on one corner of it. Pick ideas that people who build this technology will recognise and laugh at, and that still read for everyone else. The theme gives ideas, never brands: don't name, quote, or draw any company, product, logo, or mascot it brings to mind.
 
-` : ""}Write exactly ${slots.length} new briefs, in this order:
+` : ""}`;
+  const commit = `Commit to each style: the varsity one should look like it came off a letterman jacket, the woodcut one like an almanac page. Homage the format, never another brand's name, logo, or pattern.`;
+  const styleIds = styles.map((style) => style.id);
+
+  // A quick plan of the whole batch comes first, so the briefs can be written in parallel without two drafts sharing an idea.
+  const { ideas: planned } = (await askClaude(
+    `${preamble}Plan exactly ${slots.length} new drafts, in this order:
 ${slotLines.join("\n")}
-Every draft must use a different AI or computing idea and a different visual gag. Commit to each style: the varsity one should look like it came off a letterman jacket, the woodcut one like an almanac page. Homage the format, never another brand's name, logo, or pattern. Vary garments, garment colours, and placements across the set.
+Every draft must use a different AI or computing idea and a different visual gag. ${commit} Vary garments, garment colours, and placements across the set.
+
+This is the plan for the whole batch. Each draft's full brief is written from its line afterwards, so make every idea distinct, and specific enough to brief on its own.
+
+Fields, one entry per draft, in the order above:
+- style: the draft's assigned style id (for the topical draft, your choice).
+- title: ${TITLE_FIELD} A redo keeps its title.
+- idea: one or two sentences: the AI or computing idea, the visual gag that carries it, and the words it prints, if any. For a redo, what changes.
+- garment, garmentColor, placement: ${GARMENT_FIELD}`,
+    ideasSchema(styleIds),
+    options.cwd,
+    "medium",
+  )) as { ideas: Idea[] };
+  const ideas = planned.slice(0, slots.length);
+  const planLine = (idea: Idea) => `${idea.title} [${idea.style}], ${idea.garmentColor} ${idea.garment}, ${idea.placement}. ${idea.idea}`;
+  // The topical draft is briefed in the style its plan chose.
+  const plannedSlots = ideas.map((idea, i) => ({ ...slots[i], style: slots[i].style ?? styles.find((s) => s.id === idea.style) ?? null }));
+  const groups = chunks(ideas.map((_, i) => i), BRIEFS_PER_CALL);
+  log(`planned ${ideas.length} drafts; writing their briefs in ${groups.length} parallel call${groups.length === 1 ? "" : "s"}`);
+
+  const publishedIds = new Set(options.published.map((m) => m.id));
+  const written = await Promise.all(
+    groups.map(async (group) => {
+      const numbers = `${group[0] + 1}–${group[group.length - 1] + 1}`;
+      const prompt = `${preamble}THE BATCH, already planned with one idea per draft so that no two overlap:
+${ideas.map((idea, i) => `- Draft ${i + 1}: ${planLine(idea)}`).join("\n")}
+
+Write the full briefs for drafts ${numbers}, in this order:
+${group.map((i) => `${slotLines[i]}\n  The plan: ${planLine(ideas[i])}`).join("\n")}
+Brief each draft on its planned idea, and keep its planned title, style, garment, colour, and placement: they were chosen across the whole batch. Don't borrow another draft's idea or gag. ${commit}
 
 Fields:
-- style: the draft's assigned style id (for the topical draft, your choice).
-- title: the design's name, 1–3 words, UPPERCASE, at most 22 characters. It is what the archive and the product page call the design; it only appears on the shirt if it is also in printText.
+- style: the draft's planned style id.
+- title: ${TITLE_FIELD}
 - printText: every string that appears in the print, spelled exactly as it should be printed, within the style's budget (beyond the cap's "A-OK" and the hoodie's "APES ON KEYS", which are always allowed). Often just the title, sometimes nothing. Each at most 32 characters. Ignored for "specimen" and "form", which print the title and slogan.
 - slogan: UPPERCASE, at most 45 characters, two or three beats. The line that sells the design; printed only if it is also in printText.
 - productCopy: 2–3 sentences for the product page, in the brand voice. Carry the joke the shirt doesn't spell out, and say what the shirt is (garment, colour, where the print sits). At most 450 characters.
 - marketingCopy: one launch line for social or email, at most 200 characters. No hashtags.
 - joke: one plain sentence explaining the gag, for the archive page.
 - alt: one sentence describing the finished graphic for screen readers: the ape, what he is doing, the style, and any printed words.
-- garment, garmentColor, placement: the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette. On a black or navy shirt the ape is outlined in bone cream so his black fur reads, so no idea that needs black melting into the fabric (a silhouette in the dark, an ape emerging from shadow) unless it is all-over.
+- garment, garmentColor, placement: ${GARMENT_FIELD}
 - art: at most 900 characters. For Astra styles, lead with the idea: what the ape is doing and the props that carry the joke, then the composition, how the style shows up, and where each printText string sits. For "specimen" and "form", describe only the ape's pose and props, with no background and no text beyond the cap and hoodie. Do not describe his face, cap, headphones or hoodie: Astra gets the badge and the face rules with every brief, and this space is for the idea.
 - colorway: for "specimen", cream, red, or ink. Otherwise "cream".
 - form: for "form", a heading (an official-sounding form name, at most 36 characters) and 3–6 rows (labels at most 18 characters, values at most 24). Otherwise null.
 - parents: [] unless the draft deliberately riffs on a published monkey.`;
 
-  const output = (await askClaude(prompt, briefsSchema(styles.map((style) => style.id)), options.cwd, "high")) as { briefs: Brief[] };
-  const publishedIds = new Set(options.published.map((m) => m.id));
-  const briefs: Brief[] = [];
-  output.briefs.slice(0, slots.length).forEach((raw, i) => {
-    try {
-      briefs.push(normalizeBrief(raw, slots[i], styles, publishedIds, options.topic));
-    } catch (error) {
-      log(`skipping brief ${i + 1}: ${(error as Error).message}`);
-    }
-  });
+      const ask = () => askClaude(prompt, briefsSchema(styleIds), options.cwd, "high") as Promise<{ briefs: Brief[] }>;
+      const output = await ask()
+        .catch((error: Error) => {
+          log(`briefs for drafts ${numbers} failed, trying once more: ${error.message.split("\n")[0]}`);
+          return ask();
+        })
+        .catch((error: Error) => {
+          log(`skipping drafts ${numbers}: ${error.message.split("\n")[0]}`);
+          return { briefs: [] };
+        });
+      const briefs: Brief[] = [];
+      output.briefs.slice(0, group.length).forEach((raw, j) => {
+        try {
+          briefs.push(normalizeBrief(raw, plannedSlots[group[j]], styles, publishedIds, options.topic));
+        } catch (error) {
+          log(`skipping brief ${group[j] + 1}: ${(error as Error).message}`);
+        }
+      });
+      return briefs;
+    }),
+  );
+  const briefs = written.flat();
   if (briefs.length === 0) throw new Error("Claude returned no usable briefs");
   return briefs;
 }
@@ -389,11 +475,23 @@ export function expectedText(draft: Draft, label: string, dateLabel: string): st
   return text;
 }
 
+/** Drafts per parallel judging call. */
+const JUDGED_PER_CALL = 10;
+
 /**
  * `references` are the reference images copied into `runDir`, the badge first, so the judge can compare each ape's face
- * against them.
+ * against them. The drafts are judged in parallel calls of JUDGED_PER_CALL; a call that fails leaves its drafts
+ * unscored, and only if every call fails does this throw.
  */
 export async function judgeDrafts(runDir: string, drafts: Draft[], dateLabel: string, references: string[], taste: string | null): Promise<Judgment[]> {
+  const settled = await Promise.allSettled(chunks(drafts, JUDGED_PER_CALL).map((group) => judgeGroup(runDir, group, dateLabel, references, taste)));
+  const failed = settled.flatMap((result) => (result.status === "rejected" ? [result.reason as Error] : []));
+  if (failed.length && failed.length === settled.length) throw failed[0];
+  for (const error of failed) log(`judging some drafts failed, they stay unscored: ${error.message.split("\n")[0]}`);
+  return settled.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
+}
+
+async function judgeGroup(runDir: string, drafts: Draft[], dateLabel: string, references: string[], taste: string | null): Promise<Judgment[]> {
   const brand = readBrand();
   const styles = readStyles();
   const lines = drafts.map((draft) => {
@@ -430,7 +528,8 @@ For each draft report:
 ${lines.join("\n\n")}`;
 
   const output = (await askClaude(prompt, JUDGE_SCHEMA, runDir, "medium")) as { results: Judgment[] };
-  return output.results.map((result) => ({ ...result, note: clip(result.note, 160) }));
+  const numbers = new Set(drafts.map((draft) => draft.n));
+  return output.results.filter((result) => numbers.has(result.draft)).map((result) => ({ ...result, note: clip(result.note, 160) }));
 }
 
 /* ------------------------------------------------------------------ merch */

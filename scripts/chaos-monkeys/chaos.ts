@@ -28,6 +28,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
+  ASTRA_JOBS,
   IMAGE_SIZE,
   CATALOG_PATH,
   IMAGE_DIR,
@@ -389,7 +390,7 @@ async function judgeAndSheet(record: Run, runDir: string, renderer: Renderer): P
 async function draft(options: Options): Promise<void> {
   const id = flag(options, "--date") ?? today();
   const date = dateOf(id);
-  const count = Math.max(2, Math.min(24, Number(flag(options, "--count") ?? 6) || 6));
+  const count = Math.max(2, Math.min(30, Number(flag(options, "--count") ?? 6) || 6));
   const force = options.flags.has("--force");
   const runDir = runDirFor(id);
   if (fs.existsSync(PAUSE_FILE) && !force) return log("paused; run `chaos resume` to restart the daily drafts");
@@ -444,11 +445,12 @@ async function draft(options: Options): Promise<void> {
     };
     saveRun(record);
 
-    // Astra illustrates, three at a time. A usage limit stops the rest; those drafts fall back to the badge.
+    // Astra illustrates, ASTRA_JOBS at a time. A usage limit stops the rest; those drafts fall back to the badge.
     const refs = REFERENCE_IMAGES.map((ref) => path.join(CHECKOUT, ref));
     let astraDown = false;
     for (const dir of ["drafts", "cutouts"]) fs.mkdirSync(path.join(runDir, dir), { recursive: true });
-    await pool(record.drafts, 3, async (d) => {
+    log(`illustrating ${record.drafts.length} drafts, ${ASTRA_JOBS} at a time`);
+    await pool(record.drafts, ASTRA_JOBS, async (d) => {
       const started = Date.now();
       if (astraDown) {
         d.engine = "code";
@@ -828,7 +830,7 @@ async function printAllOver(record: Run, pick: { d: Draft; garments: GarmentKind
     const todo = shots.filter(({ photo }) => !photo.image || (photo.score !== null && photo.score < 7));
     if (!todo.length) break;
     log(`${merchId}: photographing ${todo.length} all-over mockups${attempt > 1 ? " again (they failed the check)" : ""}…`);
-    await pool(todo, 3, async ({ p, photo }) => {
+    await pool(todo, ASTRA_JOBS, async ({ p, photo }) => {
       const blank = ALL_OVER_BLANKS[p.garment];
       try {
         const out = await allOverMockup(
@@ -1109,7 +1111,7 @@ async function printMerch(options: Options): Promise<void> {
     await renderer.close();
   }
 
-  // Model photos, three at a time; each folder's photos are checked against its art, and failures get one more try.
+  // Model photos, ASTRA_JOBS at a time; each folder's photos are checked against its art, and failures get one more try.
   type Job = { merch: Merch; product: MerchProduct; mockup: Mockup };
   const artFor = (merch: Merch, product: MerchProduct, color: ShopColor) =>
     merch.artLight && product.lightInk?.includes(color) ? merch.artLight : merch.art;
@@ -1126,7 +1128,7 @@ async function printMerch(options: Options): Promise<void> {
     const todo = all.filter((job) => !job.mockup.image || (job.mockup.score !== null && job.mockup.score < 7));
     if (!todo.length) break;
     log(`photographing ${todo.length} mockups${attempt > 1 ? " again (they failed the check)" : ""}…`);
-    await pool(todo, 3, async (job) => {
+    await pool(todo, ASTRA_JOBS, async (job) => {
       if (astraDown) return;
       const { merch, product, mockup: m } = job;
       const blank = BLANKS[product.garment];

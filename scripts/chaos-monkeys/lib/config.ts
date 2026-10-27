@@ -38,6 +38,8 @@ export const MODELS = {
   claude: process.env.CHAOS_CLAUDE_MODEL ?? "opus",
   astra: process.env.CHAOS_ASTRA_MODEL ?? "gpt-6-astra",
 };
+/** How many Astra (Codex) jobs run at once, for drafts and for print photos. Fifteen draw a batch of 30 in two rounds. */
+export const ASTRA_JOBS = Math.max(1, Math.floor(Number(process.env.CHAOS_ASTRA_JOBS)) || 15);
 
 export type Engine = "hybrid" | "astra" | "code";
 export type Template = "specimen" | "form";
@@ -231,6 +233,12 @@ export async function pool<T>(items: T[], limit: number, worker: (item: T) => Pr
     for (let item = queue.shift(); item !== undefined; item = queue.shift()) await worker(item);
   });
   await Promise.all(runners);
+}
+
+/** Splits `items` into as few groups of at most `size` as possible, their sizes as even as they can be. */
+export function chunks<T>(items: T[], size: number): T[][] {
+  const count = Math.ceil(items.length / size);
+  return Array.from({ length: count }, (_, i) => items.slice(Math.round((i * items.length) / count), Math.round(((i + 1) * items.length) / count)));
 }
 
 /** Reads the sections of BRAND.md, keyed by their `##` heading. */
