@@ -24,7 +24,7 @@ import {
 
 type ClaudeJson = { is_error?: boolean; result?: string; structured_output?: unknown };
 
-async function askClaude(prompt: string, schema: object, cwd: string, effort: "low" | "medium" | "high"): Promise<unknown> {
+async function askClaude(prompt: string, schema: object, cwd: string, effort: "medium" | "high"): Promise<unknown> {
   const args = [
     "-p",
     "--restricted",
@@ -262,9 +262,9 @@ const TITLE_FIELD = `the design's name, 1–3 words, UPPERCASE, at most 22 chara
 const GARMENT_FIELD = `the shirt this is for. Choose what suits the style (a chest hit goes on the left chest, a pattern is all-over, a tour tee is front or back). The ink colours stay in the brand palette. On a black or navy shirt the ape is outlined in bone cream so his black fur reads, so no idea that needs black melting into the fabric (a silhouette in the dark, an ape emerging from shadow) unless it is all-over.`;
 
 /**
- * Plans the batch in one quick, low-effort call (an idea, title and shirt per draft, distinct across the set), then
- * writes the full briefs from that plan in parallel high-effort calls of BRIEFS_PER_CALL. Every call sees the same
- * brand, rules, feedback, redos, story and theme.
+ * Plans the batch in one quick call (an idea, title and shirt per draft, distinct across the set), then writes the
+ * full briefs from that plan in parallel calls of BRIEFS_PER_CALL. Every call sees the same brand, rules, feedback,
+ * redos, story and theme.
  */
 export async function writeBriefs(options: {
   count: number;
@@ -364,7 +364,6 @@ Spread the drafts across the theme instead of doubling up on one corner of it. P
   const styleIds = styles.map((style) => style.id);
 
   // A quick plan of the whole batch comes first, so the briefs can be written in parallel without two drafts sharing an idea.
-  // At low effort it takes about half a minute for 30 drafts; at medium it took three to four and a half.
   const { ideas: planned } = (await askClaude(
     `${preamble}Plan exactly ${slots.length} new drafts, in this order:
 ${slotLines.join("\n")}
@@ -379,7 +378,7 @@ Fields, one entry per draft, in the order above:
 - garment, garmentColor, placement: ${GARMENT_FIELD}`,
     ideasSchema(styleIds),
     options.cwd,
-    "low",
+    "medium",
   )) as { ideas: Idea[] };
   const ideas = planned.slice(0, slots.length);
   const planLine = (idea: Idea) => `${idea.title} [${idea.style}], ${idea.garmentColor} ${idea.garment}, ${idea.placement}. ${idea.idea}`;
