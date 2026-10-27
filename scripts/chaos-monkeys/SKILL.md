@@ -39,7 +39,7 @@ Only ship the draft numbers the user names; never choose for them. Run `~/.a-ok-
 
 ## Other commands
 
-- `~/.a-ok-chaos/bin/chaos draft` makes today's drafts now if the morning run didn't (about 10 minutes). Add `--force` to redo a day. For an extra batch that leaves the daily run alone, use a labelled run: `chaos draft --count 15 --date 2026-10-01-apparel` (up to 24 drafts; about a minute per draft).
+- `~/.a-ok-chaos/bin/chaos draft` makes today's drafts now if the morning run didn't (about 10 minutes). Add `--force` to redo a day. For an extra batch that leaves the daily run alone, use a labelled run: `chaos draft --count 15 --date 2026-10-01-apparel` (up to 30 drafts; a batch of 30 takes about 14 minutes).
 - `~/.a-ok-chaos/bin/chaos unpublish 0007` takes a published monkey down. Confirm the number with the user first.
 - `~/.a-ok-chaos/bin/chaos pause` and `resume` stop and restart the daily drafts.
 
