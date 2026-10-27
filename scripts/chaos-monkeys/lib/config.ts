@@ -38,8 +38,8 @@ export const MODELS = {
   claude: process.env.CHAOS_CLAUDE_MODEL ?? "opus",
   astra: process.env.CHAOS_ASTRA_MODEL ?? "gpt-6-astra",
 };
-/** How many Astra (Codex) jobs run at once, for drafts and for print photos. */
-export const ASTRA_JOBS = Math.max(1, Math.floor(Number(process.env.CHAOS_ASTRA_JOBS)) || 8);
+/** How many Astra (Codex) jobs run at once, for drafts and for print photos. Ten draw a batch of 30 in three rounds. */
+export const ASTRA_JOBS = Math.max(1, Math.floor(Number(process.env.CHAOS_ASTRA_JOBS)) || 10);
 
 export type Engine = "hybrid" | "astra" | "code";
 export type Template = "specimen" | "form";
