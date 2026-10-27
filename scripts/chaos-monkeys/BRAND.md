@@ -32,6 +32,7 @@ Dry, specific AI-culture satire that is in on its own joke. The brand is made by
 ## Rules
 
 - No real people or likenesses.
+- Sneakers are always plain: no swoosh, stripes, star, wing, checkmark, or any other mark that reads as a shoe brand.
 - No third-party logos, trademarks, or company, product, or model names in the art or text. Homage to a streetwear format (a box logo, a monogram canvas, a bootleg tee) is welcome; another brand's name, wordmark, logo, character, or signature pattern is not.
 - No partisan politics, elections, or politicians.
 - Nothing that echoes hate or authoritarian imagery, even by accident: no straight-arm raised salute (a raised hand bends at the elbow), no rising-sun rays, no propaganda-flag compositions.
