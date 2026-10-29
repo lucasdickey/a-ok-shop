@@ -250,7 +250,7 @@ const STAGE_HTML = `<!doctype html>
   #intro .eyebrow { font-size: 24px; color: rgba(247,243,223,.7); }
   #intro h1 { margin: 26px 0 26px; font: 900 176px/.86 'Barlow Condensed', Impact, sans-serif; text-transform: uppercase; }
   #intro h1 b { color: var(--red-light); font-weight: inherit; }
-  #intro p { margin: 0; max-width: 1280px; font: 500 40px/1.3 'Space Grotesk', sans-serif; color: rgba(247,243,223,.92); }
+  #intro p { margin: 0; max-width: 1280px; font: 500 40px/1.3 'Space Grotesk', sans-serif; color: rgba(247,243,223,.92); text-wrap: balance; }
   #intro ul { display: flex; flex-wrap: wrap; gap: 16px 36px; margin: 52px 0 0; padding: 0; list-style: none;
     font: 500 21px/1 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: rgba(247,243,223,.82); }
   #intro li::before, #tag::before { content: ""; display: inline-block; width: 11px; height: 11px; margin-right: 12px;
@@ -261,7 +261,7 @@ const STAGE_HTML = `<!doctype html>
   #card.paper { background: var(--slip); border: 3px solid var(--ink); color: var(--ink); box-shadow: 12px 12px 0 var(--ink); }
   #card .eyebrow { color: var(--accent); }
   #card h2 { margin: 12px 0 14px; font: 900 112px/.9 'Barlow Condensed', Impact, sans-serif; text-transform: uppercase; }
-  #card p { margin: 0; font: 500 38px/1.25 'Space Grotesk', sans-serif; }
+  #card p { margin: 0; font: 500 38px/1.25 'Space Grotesk', sans-serif; text-wrap: balance; }
   #card.night p { color: rgba(247,243,223,.92); }
 
   #tag { font: 500 19px/1 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: rgba(247,243,223,.85);
