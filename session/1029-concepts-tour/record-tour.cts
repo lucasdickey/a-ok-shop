@@ -13,7 +13,7 @@
  *   AOK_TOUR_URL       site to record (default https://a-ok.ai; a local `next start` works too)
  *   AOK_TOUR_OUT       output file (default concepts-tour.mp4 beside this script)
  *   AOK_TOUR_FPS       frames per second (default 60; 15 makes a quick draft)
- *   AOK_TOUR_CRF       x264 quality, lower is better and bigger (default 22)
+ *   AOK_TOUR_CRF       x264 quality, lower is better and bigger (default 24, about 25 MB)
  *   AOK_TOUR_FRAMES    folder that also gets four frames a second as JPEGs, for review
  *   PLAYWRIGHT_MODULE  where to load Playwright from (it isn't a project dependency)
  *
@@ -32,7 +32,7 @@ const { chromium }: typeof import("playwright") = require(process.env.PLAYWRIGHT
 const BASE = (process.env.AOK_TOUR_URL ?? "https://a-ok.ai").replace(/\/+$/, "");
 const OUT = path.resolve(process.env.AOK_TOUR_OUT ?? path.join(__dirname, "concepts-tour.mp4"));
 const FPS = Number(process.env.AOK_TOUR_FPS ?? 60);
-const CRF = Number(process.env.AOK_TOUR_CRF ?? 22);
+const CRF = Number(process.env.AOK_TOUR_CRF ?? 24);
 const FRAMES_DIR = process.env.AOK_TOUR_FRAMES;
 const LENGTH_SECS = 60;
 const WIDTH = 1920;

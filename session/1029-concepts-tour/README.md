@@ -1,6 +1,6 @@
 # Concepts tour video · Oct 29, 2026
 
-[`concepts-tour.mp4`](concepts-tour.mp4) is a 60-second walk through the `/concepts` design review that ends on today's homepage. 1920×1080, 60 fps, no sound.
+[`concepts-tour.mp4`](concepts-tour.mp4) is a 60-second walk through the `/concepts` design review that ends on today's homepage. 1920×1080, 60 fps, H.264, 25 MB, no sound.
 
 It goes round by round through all 27 concepts in the gallery's fullscreen viewer. Each concept is scrolled stop by stop through its main sections, and the ones that work as tools are used on screen. At the end, concept 27 lines up with today's homepage and dissolves into it, since that's where the site came from.
 
