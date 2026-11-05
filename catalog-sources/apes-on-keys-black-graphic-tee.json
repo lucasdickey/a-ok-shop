@@ -1,0 +1,76 @@
+{
+  "status": "catalog-intake",
+  "handle": "apes-on-keys-black-graphic-tee",
+  "title": "Apes on Keys Graphic T-Shirt — Black",
+  "productType": "T-Shirt",
+  "color": "Black",
+  "description": "Headphones on. Personality up. A red-hoodie ape takes center stage on this black graphic tee, bringing bold color and a wide-eyed expression to your everyday rotation.",
+  "descriptionHtml": "<p>Make room for a little character. The Apes on Keys graphic tee pairs a black backdrop with a full-color ape in a red hoodie, oversized headphones, and an A-OK cap. Red-and-white sneakers complete the look, while the “APES ON KEYS” lettering keeps the name front and center.</p><p>Wear it with denim, joggers, or your favorite sneakers. From playlist-building sessions to off-duty hangs, this is a graphic with plenty to say.</p><ul><li>Black T-shirt with a centered front graphic</li><li>Full-body ape artwork in a bold red, white, and black palette</li><li>A-OK cap, oversized headphones, and red hoodie details</li><li>“APES ON KEYS” lettering within the artwork</li></ul>",
+  "callToAction": "Bring the character. Shop the tee.",
+  "seo": {
+    "title": "Apes on Keys Graphic T-Shirt in Black",
+    "description": "Meet the Apes on Keys black graphic tee: a red-hoodie ape, oversized headphones, and an A-OK cap bring bold character to your everyday look."
+  },
+  "image": {
+    "url": "/images/products/apes-on-keys-black-graphic-tee-front.png",
+    "altText": "Front view of a black T-shirt featuring an ape in a red “APES ON KEYS” hoodie, headphones, an A-OK cap, and red-and-white sneakers.",
+    "width": 1254,
+    "height": 1254,
+    "color": "Black",
+    "kind": "generated-mockup"
+  },
+  "assets": [
+    {
+      "path": "artwork/apes-on-keys-black-graphic-tee/transparent-artwork.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "8c544f78cb17d069df620efdccfefc4cc68bcf5425403b820cc578b37c6d12b2"
+    },
+    {
+      "path": "public/images/products/apes-on-keys-black-graphic-tee-front.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "2603c7cd5fb518162ee591b7bd0a9a255f85819a2f26165b48a8b51629de0cb7"
+    },
+    {
+      "path": "artwork/apes-on-keys-black-graphic-tee/source-reference.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "0ab7d5bb3ef8b02525fd9db1451f7996f1ce75b8b62a71fa894a5b8189d1138d"
+    }
+  ],
+  "source": {
+    "driveFolder": "https://drive.google.com/drive/folders/1XNTzHtHXMU3FB2d2s1Nza_tWSvwCPePu",
+    "copyDocument": "https://docs.google.com/document/d/1qRiazv0ihYyggNcC3ZlZ5Fl_aOM0913A3KlJw1ZFZ5M/edit"
+  },
+  "production": {
+    "printResolutionPixels": [
+      1024,
+      1536
+    ],
+    "canvasInchesAt300Ppi": [
+      3.41,
+      5.12
+    ],
+    "productionApproval": "pending",
+    "garment": null,
+    "fabric": null,
+    "fit": null,
+    "supportedSizes": null,
+    "careInstructions": null,
+    "price": null,
+    "currencyCode": null,
+    "sku": null,
+    "illustrativeCanvasInches": [
+      6,
+      9
+    ],
+    "effectivePpiAtIllustrativeCanvas": 170.67
+  },
+  "activationRequirements": [
+    "Confirm garment, supplier, fabric, fit, supported sizes and care instructions.",
+    "Confirm price, currency and SKU/variant identifiers.",
+    "Approve final print dimensions and a production sample; obtain a higher-resolution master if the printer requires 300 PPI at chest size.",
+    "Map this intake record into product-catalog.json using the Product type in app/lib/catalog.ts, then follow STRIPE_CATALOG_SYNC.md."
+  ]
+}
