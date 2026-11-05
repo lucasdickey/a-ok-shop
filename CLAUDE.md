@@ -41,3 +41,7 @@ Please do:
 18. Ask before deleting any files.
 19. Ask before deleting any code.
 20. Ask before deleting any dependencies.
+
+<!-- stripe-projects-cli managed:claude-md:start -->
+look at AGENTS.md for your rules
+<!-- stripe-projects-cli managed:claude-md:end -->

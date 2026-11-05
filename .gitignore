@@ -26,9 +26,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 .env.development
-.env.test
 .env.production
 
 # vercel
@@ -51,3 +49,14 @@ Thumbs.db
 podcast_feed.xml
 
 **/.claude/settings.local.json
+
+.env*
+
+.projects/cache
+.projects/vault
+.projects/state.test.json
+.projects/state.local.test.json
+.env
+.env.*
+!.env.example
+.projects/state.local.json
