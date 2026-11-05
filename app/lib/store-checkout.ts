@@ -11,9 +11,14 @@ import { getClothingSizes, isClothing } from "@/app/lib/sizes";
 
 const FREE_SHIPPING_THRESHOLD_CENTS = 5000;
 const FLAT_SHIPPING_CENTS = 999;
-const MAX_QUANTITY_PER_ITEM = 20;
+export const MAX_QUANTITY_PER_ITEM = 20;
 /** We only ship to these countries. */
 export const SHIPPING_COUNTRIES = ["US", "CA"] as const;
+
+/** Flat-rate shipping, free from $50. */
+export function shippingCentsFor(subtotalCents: number): number {
+  return subtotalCents < FREE_SHIPPING_THRESHOLD_CENTS ? FLAT_SHIPPING_CENTS : 0;
+}
 
 export type CartItemInput = {
   variantId: string;
@@ -22,7 +27,7 @@ export type CartItemInput = {
   color?: string;
 };
 
-type ProductVariant = SimpleProduct["variants"]["edges"][number]["node"];
+export type ProductVariant = SimpleProduct["variants"]["edges"][number]["node"];
 
 /** Checks the shape of cart items. Returns null if anything is missing or out of range. */
 export function parseCartItems(raw: unknown): CartItemInput[] | null {
@@ -51,7 +56,7 @@ export function parseCartItems(raw: unknown): CartItemInput[] | null {
   return items;
 }
 
-function getOption(variant: ProductVariant, name: string): string | undefined {
+export function getOption(variant: ProductVariant, name: string): string | undefined {
   return variant.selectedOptions?.find(
     (option) => option.name.toLowerCase() === name
   )?.value;
@@ -64,7 +69,7 @@ type Resolved = { product: SimpleProduct; variant: ProductVariant; size?: string
  * printed on demand in its supported sizes; the chosen size is validated
  * against the garment blank and recorded on the order.
  */
-function resolveVariant(
+export function resolveVariant(
   products: SimpleProduct[],
   item: CartItemInput
 ): Resolved | { error: string } | null {
@@ -175,8 +180,7 @@ export async function createStoreCheckoutSession(
     });
   }
 
-  const shippingCents =
-    subtotalCents < FREE_SHIPPING_THRESHOLD_CENTS ? FLAT_SHIPPING_CENTS : 0;
+  const shippingCents = shippingCentsFor(subtotalCents);
 
   const session = await stripe.checkout.sessions.create(
     {
