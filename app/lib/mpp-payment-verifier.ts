@@ -56,9 +56,9 @@ export async function createStripePaymentFromSPT(
 
     console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // The caller builds orderId from the payment token and the exact order, so a repeat
-    // of the same request uses the same key and Stripe returns the first payment
-    // instead of charging again.
+    // The caller builds orderId from our 402 payment request id (or the token, if the
+    // agent left the id out) and the exact order, so a repeat of the same order uses the
+    // same key and Stripe returns the first payment instead of charging again.
     const idempotencyKey = orderId;
 
     // Single PaymentIntent create call with confirm:true per Stripe MPP spec
