@@ -3,30 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart, CartItem } from "@/app/components/cart/CartProvider";
-import { CLOTHING_SIZES } from "@/app/lib/sizes";
+import { MONTHLY_DEAL, monthlyDealVariantId } from "@/app/lib/monthly-deal";
 
-// Monthly deal product data - will be updated monthly
-const MONTHLY_DEAL = {
-  id: "monthly-deal-2025-01",
-  title: "A-OK DAY 2 MONKEY HOODIE",
-  description: "Simplified. Streamlined. Still A Little Scary. A hoodie designed to reflect the clean, evolving interfaces of modern LLMs with a focus on comfort and style. New look. Same depth. Fully backward compatible.",
-  price: 50.00,
-  originalPrice: 75.00,
-  images: [
-    "/images/monthly-deals/hoodie-lids-front-modeled.png",
-    "/images/monthly-deals/pullover-hoodie.png",
-    "/images/monthly-deals/hoodie-worn.jpg"
-  ],
-  sizes: [...CLOTHING_SIZES],
-  colors: ["Black", "Navy", "Heather Grey"],
-  features: [
-    "Cozy fleece interior",
-    "Simplified A-OK mascot on front",
-    "Classic hoodie fit",
-    "Designed for prompt engineers & digital therapists",
-    "Limited monthly release"
-  ]
-};
 
 export default function MonthlyDealsPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -42,12 +20,12 @@ export default function MonthlyDealsPage() {
     }
 
     const cartItem: CartItem = {
-      id: `${MONTHLY_DEAL.id}-${selectedSize}-${selectedColor}`,
+      id: monthlyDealVariantId(selectedSize, selectedColor),
       title: `${MONTHLY_DEAL.title} - ${selectedSize} - ${selectedColor}`,
       price: MONTHLY_DEAL.price,
       quantity: 1,
       image: MONTHLY_DEAL.images[0],
-      variantId: `${MONTHLY_DEAL.id}-${selectedSize}-${selectedColor}`,
+      variantId: monthlyDealVariantId(selectedSize, selectedColor),
       size: selectedSize,
       color: selectedColor
     };

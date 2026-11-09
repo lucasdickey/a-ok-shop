@@ -1,6 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import type Stripe from "stripe";
 import { getStripeClient } from "@/app/lib/stripe-client";
+import {
+  createStoreCheckoutSession,
+  parseCartItems,
+  type ServerPricedLine,
+} from "@/app/lib/store-checkout";
+import {
+  MONTHLY_DEAL,
+  isMonthlyDealVariant,
+  monthlyDealVariantId,
+} from "@/app/lib/monthly-deal";
+
+/*
+ * Checkout from the monthly deals page. Prices come from the server, never from the
+ * browser: the deal hoodie is priced from app/lib/monthly-deal.ts, and anything else in
+ * the cart is priced from the catalog, the same way the main store checkout does it.
+ */
+
+function getBaseUrl(request: NextRequest): string {
+  if (process.env.SITE_URL) return process.env.SITE_URL;
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+
+  const host = request.headers.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  return `${protocol}://${host}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,88 +43,68 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { items, subtotal } = await request.json();
-
-    if (!items || items.length === 0) {
+    // Only ids, sizes, colors and quantities are read from the browser. Any title,
+    // price or subtotal it sends is ignored.
+    const body = await request.json().catch(() => null);
+    const items = parseCartItems(body?.items);
+    if (!items) {
       return NextResponse.json(
-        { error: "No items in cart" },
+        { error: "Your cart is empty or has an invalid item" },
         { status: 400 }
       );
     }
 
-    // Check if Stripe Tax is enabled (requires tax registration in Stripe Dashboard)
-    const automaticTaxEnabled = process.env.STRIPE_AUTOMATIC_TAX_ENABLED === 'true';
+    const catalogItems = items.filter((item) => !isMonthlyDealVariant(item.variantId));
+    const dealLines: ServerPricedLine[] = [];
+    const unitAmountCents = Math.round(MONTHLY_DEAL.price * 100);
 
-    // Convert cart items to Stripe line items
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.title,
-          images: item.image && item.image.startsWith('http') ? [item.image] : [],
-          metadata: {
-            size: item.size || "",
-            color: item.color || "",
-            variantId: item.variantId || ""
-          }
-        },
-        unit_amount: Math.round(item.price * 100), // Convert to cents
-      },
-      quantity: item.quantity,
-    }));
-
-    // Add shipping if subtotal is under $50
-    if (subtotal < 50) {
-      lineItems.push({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Shipping",
+    for (const item of items) {
+      if (!isMonthlyDealVariant(item.variantId)) continue;
+      const { size, color } = item;
+      if (
+        !size ||
+        !color ||
+        !MONTHLY_DEAL.sizes.includes(size) ||
+        !MONTHLY_DEAL.colors.includes(color) ||
+        item.variantId !== monthlyDealVariantId(size, color)
+      ) {
+        return NextResponse.json(
+          { error: `${MONTHLY_DEAL.title} isn't available in that size or color` },
+          { status: 400 }
+        );
+      }
+      const image = MONTHLY_DEAL.images[0];
+      dealLines.push({
+        unitAmountCents,
+        quantity: item.quantity,
+        lineItem: {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${MONTHLY_DEAL.title} - ${color} / ${size}`,
+              images: image.startsWith("http") ? [image] : [],
+              metadata: { size, color, variantId: item.variantId, sku: "" },
+            },
+            unit_amount: unitAmountCents,
           },
-          unit_amount: 999, // $9.99 in cents
+          quantity: item.quantity,
         },
-        quantity: 1,
       });
     }
 
-    // Get the base URL from the request headers or environment variables
-    const host = request.headers.get('host') || 'localhost:3000';
-    const protocol = host.includes('localhost') ? 'http' : 'https';
-    const baseUrl = process.env.SITE_URL ||
-                   process.env.NEXT_PUBLIC_SITE_URL ||
-                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
-                   `${protocol}://${host}`);
-
-    console.log("Creating checkout session with base URL:", baseUrl);
-
-    const session = await stripe.checkout.sessions.create({
-      line_items: lineItems,
-      mode: "payment",
-      success_url: `${baseUrl}/monthly-deals/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/monthly-deals`,
-      shipping_address_collection: {
-        allowed_countries: ["US", "CA"],
-      },
-      customer_creation: "always",
-      metadata: {
-        source: "monthly-deals",
-        month: "2025-01",
-      },
-      // Only enable automatic tax if configured in Stripe Dashboard
-      ...(automaticTaxEnabled && {
-        automatic_tax: {
-          enabled: true,
-        },
-      }),
-      // Custom branding (if configured in Stripe Dashboard)
-      custom_text: {
-        submit: {
-          message: "Items ship within 3-5 business days after payment confirmation."
-        }
-      }
+    const baseUrl = getBaseUrl(request);
+    const result = await createStoreCheckoutSession(stripe, catalogItems, {
+      baseUrl,
+      successUrl: `${baseUrl}/monthly-deals/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${baseUrl}/monthly-deals`,
+      metadata: { source: "monthly-deals", month: MONTHLY_DEAL.month },
+      serverPricedLines: dealLines,
     });
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: result.session.url });
   } catch (error) {
     console.error("Error creating checkout session:", error);
     return NextResponse.json(

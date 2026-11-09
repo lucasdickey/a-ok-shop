@@ -122,6 +122,18 @@ export type CheckoutOptions = {
   /** Extra notes on the order; `source` defaults to "a-ok-shop-catalog". */
   metadata?: Record<string, string>;
   idempotencyKey?: string;
+  /**
+   * Lines the caller has already priced on the server (for example the monthly deal,
+   * which isn't in the catalog). They count toward the free-shipping threshold.
+   */
+  serverPricedLines?: ServerPricedLine[];
+};
+
+export type ServerPricedLine = {
+  lineItem: Stripe.Checkout.SessionCreateParams.LineItem;
+  /** Price of one unit in cents, as set by the server. */
+  unitAmountCents: number;
+  quantity: number;
 };
 
 /**
@@ -174,6 +186,13 @@ export async function createStoreCheckoutSession(
       quantity: item.quantity,
     });
   }
+
+  for (const line of options.serverPricedLines ?? []) {
+    lineItems.push(line.lineItem);
+    subtotalCents += line.unitAmountCents * line.quantity;
+  }
+
+  if (lineItems.length === 0) return { error: "No items in cart" };
 
   const shippingCents =
     subtotalCents < FREE_SHIPPING_THRESHOLD_CENTS ? FLAT_SHIPPING_CENTS : 0;

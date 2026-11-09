@@ -1,51 +1,29 @@
 # Order flow findings
 
-Checked at commit `4191481` with `node verification/run.mjs` (models in `verification/models/`,
-how to use them in `.claude/skills/verify-order-flow/SKILL.md`). No product code was changed.
+First checked at commit `4191481` with `node verification/run.mjs` (models in
+`verification/models/`, how to use them in `.claude/skills/verify-order-flow/SKILL.md`).
+B1 and B2 were then fixed on the `fix-checkout-money-bugs` branch; see "Fixed" below.
 
 Each finding names the rule it breaks, why it matters, the shortest way it happens, and the
 code it traces to. `node verification/run.mjs --paths` prints every path.
 
 ## Real bugs
 
-### B1. Monthly deals checkout charges whatever price the browser sends
-- **Rule broken:** every line is charged its catalog price; orders under $50 pay shipping;
-  every paid garment is in a size its blank comes in.
-- **Why it matters:** anyone can post a cart with a price of $0.01 (or any made-up name and
-  size) to `/api/monthly-deals/create-checkout-session` and Stripe will charge exactly that.
-  Lucas then gets an owner email saying "place it with the vendor" for an order that paid a
-  cent. Sending a subtotal of 100 also skips the $9.99 shipping on a small order.
-- **Steps:** one request: a tee, price sent 1 cent.
-- **Code:** `app/api/monthly-deals/create-checkout-session/route.ts:28-43` takes `title`,
-  `price`, `size` and `quantity` from the request; `:46` decides shipping from the
-  request's `subtotal`. The store's own checkout gets this right by re-pricing every line
-  from the catalog (`app/lib/store-checkout.ts:143-179`).
-- **Suggested fix:** have the monthly deals route call `parseCartItems` and
-  `createStoreCheckoutSession` like `app/api/catalog/checkout/route.ts` does (it can still
-  pass its own success URL and `source: "monthly-deals"` metadata), or remove the route if
-  monthly deals is over. Its metadata still says `month: "2025-01"` (`:80`).
-
-### B2. An agent (MPP) order can be charged twice
+### B2b. An agent that leaves out the payment request id can still be charged twice
 - **Rules broken:** an agent order is charged at most once; the shop never tells an agent
   "failed" after charging it.
-- **Why it matters:** the customer pays twice and Lucas gets two owner emails for what was
-  meant to be one order.
-- **Steps (charged twice):** the agent sends its paid request; Stripe charges the card;
-  the answer never reaches the agent (timeout); the agent tries again; Stripe charges again.
-- **Steps (told it failed):** the agent sends its paid request; Stripe charges the card;
-  saving the order to Redis fails; the server answers 500 "Payment processing failed", so a
-  sensible agent tries again and is charged again.
-- **Code:** `app/api/mpp/purchase/route.ts:302` makes a new random `orderId` on every
-  request, and `app/lib/mpp-payment-verifier.ts:52-54` uses it as Stripe's idempotency key,
-  so the key never repeats and can't stop a second charge (its comment says it should).
-  `route.ts:341` saves the order after the charge, and any error there lands in the catch at
-  `:363-365`, which answers 500. `saveOrder` rethrows Redis errors
-  (`app/lib/mpp-order-store.ts:40-43`).
-- **Suggested fix:** key the payment on something that stays the same when the agent
-  retries the same purchase, such as the 402 challenge id the agent sends back; and once the
-  card is charged, answer with the order even if saving it fails (log the save error).
-  `node verification/run.mjs checkout --variant fix-agent-stable-key` shows both rules
-  holding with that change.
+- **What happens:** the B2 fix ties an agent's payment to the shop's payment request id,
+  which the agent is supposed to send back with its payment. An agent that leaves the id
+  out falls back to its payment token, so if its answer times out and it retries with a
+  new token, the second token is charged too.
+- **Steps:** the agent sends its paid request without the request id; Stripe charges the
+  card; the answer never reaches the agent; the agent tries again with a new token; Stripe
+  charges again.
+- **Code:** `app/api/mpp/purchase/route.ts` (`buildOrderId` falls back to `token:`), and
+  `app/lib/mpp-payment-verifier.ts` (`readChallengeId`).
+- **Why it's left:** the payment protocol has agents send the request back, so a
+  well-behaved agent is covered. Refusing payments without it would also refuse agents that
+  use the older direct `spt` field. Worth closing if logs show credentials without it.
 
 ### B3. Lucas's order email leaves out line 11 onwards
 - **Why it matters:** the owner email is what Lucas uses to place the order with the
@@ -103,6 +81,42 @@ code it traces to. `node verification/run.mjs --paths` prints every path.
   section; a test purchase in Stripe test mode would confirm it in a minute.
 - **Suggested fix:** call `clearCart()` from `useCart()` on the success page.
 
+## Fixed on this branch
+
+### B1. Monthly deals checkout charged whatever price the browser sent (fixed)
+- **Was:** `app/api/monthly-deals/create-checkout-session/route.ts` took the title, price,
+  size and quantity from the request and decided shipping from the request's subtotal, so
+  anyone could post a cart at $0.01 and Stripe would charge exactly that.
+- **Now:** the deal lives in `app/lib/monthly-deal.ts`, shared by the page and the route.
+  The route reads only ids, sizes, colors and quantities from the browser. A deal line must
+  use one of the deal's sizes and colors and is priced from that file; any other item in the
+  cart is priced from the catalog, the same way the store checkout does it. Shipping is
+  worked out from the server's own total by `createStoreCheckoutSession`, which now takes
+  these server-priced deal lines (`serverPricedLines`).
+- **Also changes:** monthly deals orders now get the store checkout's shipping option,
+  phone number field and promo code box, and shipping shows as shipping in Stripe instead
+  of as a "Shipping" product line. The order's month now comes from the deal file (still
+  "2025-01", so the deal itself may be stale).
+- **Check:** `node verification/run.mjs checkout` shows all three pricing rules holding for
+  monthly deals; `--variant broken-before-money-fixes` shows them failing on the old code.
+
+### B2. An agent (MPP) order could be charged twice (fixed)
+- **Was:** `app/api/mpp/purchase/route.ts` made a new random order id on every request and
+  used it as the key Stripe uses to spot a repeat, so a retry looked new and was charged
+  again. A Redis error after the charge also answered 500 "Payment processing failed",
+  which invites the agent to pay again.
+- **Now:** the order id is built from the shop's payment request id that the agent sends
+  back (or its payment token if it leaves that out) plus the exact order. A retry of the
+  same order gets the same id, so Stripe returns the first payment instead of charging
+  again; a retry with a new token is refused by Stripe and answered 409 "already used" with
+  the order id. A saved order with that id is answered without charging, which covers
+  retries after Stripe's 24-hour memory runs out (when Redis is on). Once the card is
+  charged, a failed save is logged and the order is still answered as paid. A second copy
+  of a request that's still being charged gets 409 with "try again in a moment".
+- **Check:** `node verification/run.mjs checkout` shows both rules holding with and without
+  Redis; `--variant broken-before-money-fixes` shows both failing on the old code. B2b
+  above is the case this doesn't cover.
+
 ## Smaller cart issues
 
 These only affect carts saved before a size list changed.
@@ -148,12 +162,22 @@ These only affect carts saved before a size list changed.
 - The store checkout charges catalog prices, adds shipping under $50 from its own total,
   and only accepts sizes the blank comes in, whatever the browser sends.
 - Agent purchases charge catalog prices and add shipping correctly.
+- Monthly deals checkout charges the deal's own price and catalog prices for anything else
+  in the cart, and adds shipping under $50 from its own total.
+- An agent order is charged once however often the agent retries, as long as it sends back
+  the payment request id (B2b covers the case where it doesn't).
 
 Every rule above was also seen failing on a deliberately broken variant
 (`--variant broken-...`), so a pass is not just the check being unable to fail.
 
 ## Worth a look, not bugs
 
+- The monthly deal still says January 2025 (`app/lib/monthly-deal.ts`). Its real blank
+  sizes aren't in the catalog, so the size rule can only check it against the deal's own
+  list.
+- A deal hoodie in the cart can only be checked out from a `/monthly-deals` page; the cart
+  drawer elsewhere sends it to the store checkout, which says it's no longer available.
+  This was already the case before the fix.
 - Free shipping is decided before discounts (`app/lib/store-checkout.ts:178-179`), so a
   $55 order with the game's 25% code pays $41.25 and ships free. Fine if intended.
 - If the owner alert fails for longer than Stripe retries (about 3 days), Stripe stops and
