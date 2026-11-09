@@ -1,10 +1,15 @@
 // Checkout: how a cart becomes a charge.
 //
 // Part 1, "agent purchase": app/api/mpp/purchase/route.ts with createStripePaymentFromSPT
-// (app/lib/mpp-payment-verifier.ts) and saveOrder (app/lib/mpp-order-store.ts). One agent
-// wants one order. It may send the paid request again after a failure (MAX_PAID_REQUESTS
-// in all). The server charges the card, saves the order, then answers. Any answer can be
-// lost on the way back (timeout), which the agent sees as a failure.
+// and parsePaymentAuthorization (app/lib/mpp-payment-verifier.ts) and saveOrder/getOrder
+// (app/lib/mpp-order-store.ts). One agent wants one order. After a failure it may send the
+// paid request again (MAX_PAID_REQUESTS in all), with the same payment token or a new one.
+// The server looks for a saved order with the same id, charges the card through Stripe
+// (which remembers each key: the same key and token give back the first result, the same
+// key with a new token is refused), saves the order, then answers. Any answer sent after
+// the charge can be lost on the way back (timeout), which the agent sees as a failure.
+// The agent is assumed to echo the shop's payment request id, as the payment protocol
+// asks; the "request id left out" config shows what happens when it doesn't.
 //
 // Part 2, "what Stripe is asked to charge": the three ways in, given whatever the caller
 // sends: the store's checkout (app/api/catalog/checkout + app/lib/store-checkout.ts), the
@@ -20,28 +25,55 @@ const PRODUCTS = {
   sweatshirt: { priceCents: 6000, sizes: ["S", "M", "L", "XL", "2XL"] },
 };
 const CLOTHING_SIZES = ["XS", "S", "M", "L", "XL", "2XL"]; // app/lib/sizes.ts:4
+// The monthly deal hoodie (app/lib/monthly-deal.ts): $50, offered in every shop size. It
+// isn't in the catalog, so its "catalog price" here is the price in that file. Only the
+// monthly deals checkout sells it.
+PRODUCTS.deal = { priceCents: 5000, sizes: CLOTHING_SIZES };
+const MONTHLY_DEAL = PRODUCTS.deal;
 const FREE_SHIPPING_FROM_CENTS = 5000;
 const SHIPPING_CENTS = 999;
 
-function agentSpec({ redis, variant }) {
+function agentSpec({ redis, echoesRequest = true, variant }) {
   const init = [
-    { agent: "wants to buy", requestsSent: 0, server: null, charges: 0, keysCharged: [], answeredFailedAfterCharge: false },
+    {
+      agent: "wants to buy",
+      requestsSent: 0,
+      tokens: 1,
+      server: null,
+      charges: 0,
+      stripeSeen: {}, // idempotency key -> { token, outcome }
+      saved: [], // order ids saved to Redis
+      answeredFailedAfterCharge: false,
+    },
   ];
   const copy = (s) => structuredClone(s);
+
+  // route.ts buildOrderId: the order id (and Stripe key) comes from the echoed 402 payment
+  // request id, or from the token when the agent leaves the id out. The old code made a
+  // fresh random id per request (variant randomKey).
+  const keyFor = (s) =>
+    variant.randomKey ? `order-${s.requestsSent}` : echoesRequest ? "request" : `token-${s.tokens}`;
 
   function next(s) {
     const moves = [];
     const push = (step, t) => moves.push({ step, state: t });
 
     if (s.server === null && (s.agent === "wants to buy" || s.agent === "saw a failure") && s.requestsSent < MAX_PAID_REQUESTS) {
-      const t = copy(s);
-      t.requestsSent++;
-      // route.ts:302 makes a fresh random orderId per request; the verifier uses it as the
-      // Stripe idempotency key (mpp-payment-verifier.ts:52-54). The fix keys on the 402 challenge.
-      const key = variant.stableKey ? "challenge" : `order-${t.requestsSent}`;
-      t.server = { pc: "charge", key, charged: false };
-      t.agent = "waiting";
-      push(s.requestsSent === 0 ? "the agent sends its paid request (route.ts:177-179)" : "the agent tries again with a new payment token", t);
+      for (const newToken of s.requestsSent === 0 ? [false] : [false, true]) {
+        const t = copy(s);
+        t.requestsSent++;
+        if (newToken) t.tokens++;
+        t.server = { pc: redis && !variant.randomKey ? "lookup" : "charge", key: keyFor(t), token: t.tokens, charged: false };
+        t.agent = "waiting";
+        push(
+          s.requestsSent === 0
+            ? "the agent sends its paid request"
+            : newToken
+              ? "the agent tries again with a new payment token"
+              : "the agent sends the same paid request again",
+          t
+        );
+      }
     }
     if (s.agent === "saw a failure") {
       const t = copy(s);
@@ -51,47 +83,68 @@ function agentSpec({ redis, variant }) {
 
     const srv = s.server;
     if (srv) {
-      const answer = (t, ok, label) => {
-        if (!ok && t.server.charged) t.answeredFailedAfterCharge = true;
+      const answer = (t, kind, label) => {
+        if (kind === "failed" && t.charges > 0) t.answeredFailedAfterCharge = true;
         t.server = null;
-        t.agent = ok ? "told it paid" : "saw a failure";
+        t.agent = { paid: "told it paid", failed: "saw a failure", used: "told the request was already used" }[kind];
         push(label, t);
       };
-      // The answer can be lost once the card may have been charged.
-      if (srv.pc !== "charge") {
+      // Once the card may have been charged, the answer can be lost on the way back.
+      if (srv.pc !== "charge" && srv.pc !== "lookup") {
         const t = copy(s);
         t.server = null;
         t.agent = "saw a failure";
         push("the answer never reaches the agent (timeout)", t);
       }
-      if (srv.pc === "charge") {
-        const ok = copy(s);
-        if (!s.keysCharged.includes(srv.key)) {
-          ok.charges++;
-          ok.keysCharged.push(srv.key);
+      if (srv.pc === "lookup") {
+        // route.ts: getOrder(orderId) before charging.
+        if (s.saved.includes(srv.key)) {
+          answer(copy(s), "paid", "the order is already saved, so it is answered as paid without charging");
+        } else {
+          const t = copy(s);
+          t.server.pc = "charge";
+          push("no saved order with this id, so go on to charge", t);
         }
-        ok.server.charged = true;
-        ok.server.pc = "save";
-        push(s.keysCharged.includes(srv.key)
-          ? "Stripe sees the same idempotency key and returns the earlier payment, no new charge"
-          : "Stripe charges the card (mpp-payment-verifier.ts:58-79)", ok);
-        const declined = copy(s);
-        answer(declined, false, "the card is declined, answered 401 (route.ts:315-318)");
+      } else if (srv.pc === "charge") {
+        const seen = s.stripeSeen[srv.key];
+        if (!seen) {
+          const ok = copy(s);
+          ok.charges++;
+          ok.stripeSeen[srv.key] = { token: srv.token, outcome: "charged" };
+          ok.server.charged = true;
+          ok.server.pc = "save";
+          push("Stripe charges the card (mpp-payment-verifier.ts)", ok);
+          const declined = copy(s);
+          declined.stripeSeen[srv.key] = { token: srv.token, outcome: "declined" };
+          answer(declined, "failed", "the card is declined, answered 401");
+        } else if (seen.token === srv.token) {
+          const t = copy(s);
+          if (seen.outcome === "charged") {
+            t.server.charged = true;
+            t.server.pc = "save";
+            push("Stripe sees the same request again and returns the earlier payment, no new charge", t);
+          } else {
+            answer(t, "failed", "Stripe returns the earlier decline, answered 401");
+          }
+        } else {
+          answer(copy(s), "used", "Stripe refuses the same key with a new token, nothing charged, answered 409 'already used'");
+        }
       } else if (srv.pc === "save") {
         const ok = copy(s);
         ok.server.pc = "answer";
-        push(redis ? "the order is saved to Redis (mpp-order-store.ts:34)" : "no REDIS_URL, so saving is skipped (mpp-order-store.ts:27-30)", ok);
+        if (redis) ok.saved.push(srv.key);
+        push(redis ? "the order is saved to Redis (mpp-order-store.ts)" : "no REDIS_URL, so saving is skipped (mpp-order-store.ts)", ok);
         if (redis) {
           const bad = copy(s);
-          if (variant.answerPaidEvenIfSaveFails) {
+          if (variant.failedIfSaveFails) {
+            answer(bad, "failed", "saving to Redis fails, so the server answers 500 'Payment processing failed'");
+          } else {
             bad.server.pc = "answer";
             push("saving fails; the error is logged and the order still answered as paid", bad);
-          } else {
-            answer(bad, false, "saving to Redis fails, so the server answers 500 'Payment processing failed' (route.ts:341, 363-365)");
           }
         }
       } else {
-        answer(copy(s), true, "the server answers 200 'Order completed' (route.ts:356)");
+        answer(copy(s), "paid", "the server answers 200 'Order completed'");
       }
     }
     return moves;
@@ -119,11 +172,21 @@ function handle(endpoint, req, variant) {
     return { unit, shipping, size: req.size };
   }
   if (endpoint === "monthly deals") {
-    // monthly-deals/create-checkout-session/route.ts:28-43 uses the browser's price and size;
-    // :46 decides shipping from the browser's subtotal.
-    const unit = req.clientPriceCents;
-    const shipping = req.clientSubtotalCents < FREE_SHIPPING_FROM_CENTS ? SHIPPING_CENTS : 0;
-    return { unit, shipping, size: req.size };
+    if (variant.dealsTrustBrowser) {
+      // The old route used the browser's price and size, and decided shipping from the
+      // browser's subtotal.
+      const unit = req.clientPriceCents;
+      const shipping = req.clientSubtotalCents < FREE_SHIPPING_FROM_CENTS ? SHIPPING_CENTS : 0;
+      return { unit, shipping, size: req.size };
+    }
+    // monthly-deals/create-checkout-session/route.ts: catalog items in the cart are priced
+    // like the store checkout; the deal line is checked against the deal's own sizes and
+    // priced from app/lib/monthly-deal.ts; shipping is decided by createStoreCheckoutSession
+    // from the server's subtotal.
+    if (req.item !== "deal") return handle("store", req, {});
+    if (!MONTHLY_DEAL.sizes.includes(req.size)) return { rejected: true };
+    const unit = MONTHLY_DEAL.priceCents;
+    return { unit, shipping: unit < FREE_SHIPPING_FROM_CENTS ? SHIPPING_CENTS : 0, size: req.size };
   }
   // agent purchase: mpp/purchase/route.ts:127-133 checks the size against the shop-wide list;
   // :150 takes the price from the catalog; :171 adds shipping under $50.
@@ -136,7 +199,7 @@ function handle(endpoint, req, variant) {
 function chargeSpec({ endpoint, variant }) {
   const init = [];
   {
-    for (const item of Object.keys(PRODUCTS)) {
+    for (const item of Object.keys(PRODUCTS).filter((i) => i !== "deal" || endpoint === "monthly deals")) {
       for (const size of ["XS", "M"]) {
         for (const clientPriceCents of [PRODUCTS[item].priceCents, 1]) {
           for (const clientSubtotalCents of [PRODUCTS[item].priceCents, 10000]) {
@@ -174,6 +237,7 @@ export function spec(config) {
 export const configs = [
   { label: "agent purchase, Redis on", part: "agent", redis: true },
   { label: "agent purchase, no Redis", part: "agent", redis: false },
+  { label: "agent purchase, request id left out", part: "agent", redis: true, echoesRequest: false },
   { label: "store checkout charges", part: "charge", endpoint: "store" },
   { label: "agent purchase charges", part: "charge", endpoint: "agent purchase" },
   { label: "monthly deals checkout charges", part: "charge", endpoint: "monthly deals" },
@@ -181,13 +245,17 @@ export const configs = [
 
 export const variants = {
   "broken-store-trusts-browser": { storeTrustsBrowser: true },
-  "fix-agent-stable-key": { stableKey: true, answerPaidEvenIfSaveFails: true, agentChecksBlankSizes: true },
+  // The code before the fixes in this branch: a random order id per request, a 500 when
+  // saving fails after charging, and monthly deals priced from the browser.
+  "broken-before-money-fixes": { randomKey: true, failedIfSaveFails: true, dealsTrustBrowser: true },
+  "fix-agent-blank-sizes": { agentChecksBlankSizes: true },
 };
 
 export const covers = [
   "app/api/mpp/purchase/route.ts: POST, handlePaymentAuthorization",
-  "app/lib/mpp-payment-verifier.ts: createStripePaymentFromSPT",
-  "app/lib/mpp-order-store.ts: saveOrder",
+  "app/lib/mpp-payment-verifier.ts: createStripePaymentFromSPT, parsePaymentAuthorization",
+  "app/lib/mpp-order-store.ts: saveOrder, getOrder",
+  "app/lib/monthly-deal.ts: MONTHLY_DEAL",
   "app/lib/store-checkout.ts: resolveVariant, createStoreCheckoutSession",
   "app/api/catalog/checkout/route.ts: POST",
   "app/api/monthly-deals/create-checkout-session/route.ts: POST",

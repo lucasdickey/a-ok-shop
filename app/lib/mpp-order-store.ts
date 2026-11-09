@@ -42,3 +42,20 @@ export async function saveOrder(order: MPPOrder): Promise<void> {
     throw error;
   }
 }
+
+/**
+ * Read a saved MPP order. Returns null when Redis isn't configured, the order isn't
+ * there, or Redis can't be reached (the caller then relies on Stripe's own repeat check).
+ */
+export async function getOrder(orderId: string): Promise<MPPOrder | null> {
+  const redisClient = getRedisClient();
+  if (!redisClient) return null;
+
+  try {
+    const raw = await redisClient.get(`mpp:order:${orderId}`);
+    return raw ? (JSON.parse(raw) as MPPOrder) : null;
+  } catch (error) {
+    console.error('[MPP] Error reading order:', error);
+    return null;
+  }
+}

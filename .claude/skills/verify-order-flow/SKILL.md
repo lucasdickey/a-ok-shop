@@ -18,7 +18,7 @@ Yes if it changes any of these (the same list is in each model's `covers` export
 | Model | Files and functions |
 |---|---|
 | `verification/models/cart.mjs` | `app/components/cart/CartProvider.tsx` (load, save, addToCart, updateQuantity, updateSize, removeFromCart); `app/components/cart/CartDrawer.tsx` (size picker for retired sizes); `app/products/[handle]/ProductPageClient.tsx` (`cartLineId`); `app/checkout/success/page.tsx` (`CheckoutSuccessContent`) |
-| `verification/models/checkout.mjs` | `app/api/mpp/purchase/route.ts` (`POST`, `handlePaymentAuthorization`); `app/lib/mpp-payment-verifier.ts` (`createStripePaymentFromSPT`); `app/lib/mpp-order-store.ts` (`saveOrder`); `app/lib/store-checkout.ts` (`resolveVariant`, `createStoreCheckoutSession`); `app/api/catalog/checkout/route.ts`; `app/api/monthly-deals/create-checkout-session/route.ts` |
+| `verification/models/checkout.mjs` | `app/api/mpp/purchase/route.ts` (`POST`, `handlePaymentAuthorization`); `app/lib/mpp-payment-verifier.ts` (`createStripePaymentFromSPT`, `parsePaymentAuthorization`); `app/lib/mpp-order-store.ts` (`saveOrder`, `getOrder`); `app/lib/monthly-deal.ts` (`MONTHLY_DEAL`); `app/lib/store-checkout.ts` (`resolveVariant`, `createStoreCheckoutSession`); `app/api/catalog/checkout/route.ts`; `app/api/monthly-deals/create-checkout-session/route.ts` |
 | `verification/models/fulfillment.mjs` | `app/api/stripe/webhook/route.ts` (`POST`, `handlePaidCheckoutSession`, `ensureCustomerReceipt`, `sendOwnerOrderAlert`, `sendConfirmationEmail`, `handleMPPPaymentSucceeded`); `app/lib/kv.ts` (`runOnce`) |
 
 Not covered: the ACP checkout route's own request parsing, discount codes, the catalog
@@ -83,7 +83,11 @@ A pass covers the model, under these bounds and assumptions, not the whole syste
   Assumes Resend drops a repeat of an idempotency key it has seen, and that Stripe sends
   a receipt each time `receipt_email` is set on a paid PaymentIntent. Delayed payment
   methods (`async_payment_succeeded`) are not modeled.
-- Checkout: one agent order, up to 2 paid requests; two products (a tee in XS to 2XL and
-  a sweatshirt from S up); sizes XS and M; a caller may send any price or subtotal.
+- Checkout: one agent order, up to 2 paid requests, each with the same payment token or a
+  new one, one at a time; Stripe is assumed to return the first result for a repeated key
+  with the same token and to refuse it with a new token, within its 24-hour window (after
+  that only the saved-order check, with Redis, stops a repeat). Two products (a tee in XS
+  to 2XL and a sweatshirt from S up) plus the monthly deal hoodie; sizes XS and M; a caller
+  may send any price or subtotal.
 - Cart: a tee and the sweatshirt, sizes XS and M, a per-line cap of 3 instead of 20
   (the capping code is the same for any number), one color.
