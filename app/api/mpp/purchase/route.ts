@@ -1,7 +1,8 @@
 import { getProductByHandle, isSameId } from '@/app/lib/catalog';
 import { getStripeClient } from '@/app/lib/stripe-client';
 import { createStripePaymentFromSPT, parsePaymentAuthorization } from '@/app/lib/mpp-payment-verifier';
-import { saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
+import { getOrder, saveOrder, MPPOrder } from '@/app/lib/mpp-order-store';
+import { createHash } from 'crypto';
 import { CLOTHING_SIZES, isClothing } from '@/app/lib/sizes';
 import { SHIPPING_COUNTRIES } from '@/app/lib/store-checkout';
 import { MPPItem, MPPOrderConfirmation, MPPPaymentChallenge, MPPPurchaseRequest, MPPShipping } from '@/app/types/mpp';
@@ -289,7 +290,7 @@ async function handlePaymentAuthorization(
 ): Promise<NextResponse> {
   try {
     // Parse the SPT from base64url-encoded Authorization header
-    const { method, spt } = parsePaymentAuthorization(authHeader);
+    const { method, spt, challengeId } = parsePaymentAuthorization(authHeader);
 
     if (method !== 'stripe-link' || !spt) {
       console.warn('[MPP] Invalid authorization method or missing SPT:', method);
@@ -298,8 +299,20 @@ async function handlePaymentAuthorization(
 
     console.log('[MPP] Processing SPT payment for agent:', agentId);
 
-    // Generate order ID upfront
-    const orderId = `mpp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    // The order id comes from our 402 payment request (or, if the agent didn't echo it,
+    // the payment token) and the exact order. An agent that tries again after a timeout
+    // or an error gets the same order id, even with a new token. The order id is also the
+    // key Stripe uses to spot a repeat, so a repeat returns the first payment (or is
+    // refused) instead of charging the card a second time.
+    const orderId = buildOrderId(challengeId ? `challenge:${challengeId}` : `token:${spt}`, amountInCents, items, email, shipping);
+
+    // Stripe only remembers a request for 24 hours. If we already saved this order,
+    // answer with it and don't charge again.
+    const existing = await getOrder(orderId);
+    if (existing && existing.status === 'completed') {
+      console.log('[MPP] Repeat of a completed order, not charging again:', orderId);
+      return orderConfirmation(orderId, existing.paymentIntentId, existing.amount, existing.items);
+    }
 
     // Create and confirm PaymentIntent with SPT
     const paymentResult = await createStripePaymentFromSPT(
@@ -313,6 +326,17 @@ async function handlePaymentAuthorization(
     );
 
     if (!paymentResult.verified) {
+      if (paymentResult.alreadyUsed) {
+        console.warn('[MPP] Payment request reused with different payment details:', orderId);
+        return NextResponse.json({ error: paymentResult.error, orderId }, { status: 409 });
+      }
+      if (paymentResult.inProgress) {
+        console.warn('[MPP] Same order already being charged:', orderId);
+        return NextResponse.json(
+          { error: paymentResult.error, orderId },
+          { status: 409, headers: { 'Retry-After': '2' } }
+        );
+      }
       console.error('[MPP] Payment verification failed:', paymentResult.error);
       return NextResponse.json({ error: paymentResult.error || 'Payment failed' }, { status: 401 });
     }
@@ -338,30 +362,59 @@ async function handlePaymentAuthorization(
       },
     };
 
-    await saveOrder(order);
-    console.log('[MPP] Order saved:', orderId);
+    // The card has been charged by now, so a failed save must not turn into a "failed"
+    // answer: the agent would try again. The payment and its webhook still record the
+    // order in Stripe and email the owner.
+    try {
+      await saveOrder(order);
+      console.log('[MPP] Order saved:', orderId);
+    } catch (saveError) {
+      console.error('[MPP] Charged but could not save order record:', orderId, saveError);
+    }
 
-    // Return order confirmation
-    const confirmation: MPPOrderConfirmation = {
-      orderId,
-      status: 'completed',
-      amount: amountInCents / 100,
-      currency: 'USD',
-      paymentMethod: 'stripe-spt',
-      paymentId: paymentResult.paymentId,
-      items,
-      message: 'Order completed successfully',
-    };
-
-    return NextResponse.json(confirmation, {
-      status: 200,
-      headers: {
-        'Payment-Receipt': `receipt-${orderId}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    return orderConfirmation(orderId, paymentResult.paymentId, amountInCents, items);
   } catch (error) {
     console.error('[MPP] Error processing payment authorization:', error);
     return NextResponse.json({ error: 'Payment processing failed' }, { status: 500 });
   }
+}
+
+/** Same payment request and same order always give the same id; anything different gives a new one. */
+function buildOrderId(
+  paymentRef: string,
+  amountInCents: number,
+  items: MPPPurchaseRequest['items'],
+  email?: string,
+  shipping?: MPPShipping
+): string {
+  const digest = createHash('sha256')
+    .update(JSON.stringify([paymentRef, amountInCents, items, email ?? '', shipping ?? null]))
+    .digest('hex');
+  return `mpp_${digest.slice(0, 32)}`;
+}
+
+function orderConfirmation(
+  orderId: string,
+  paymentId: string,
+  amountInCents: number,
+  items: MPPPurchaseRequest['items']
+): NextResponse {
+  const confirmation: MPPOrderConfirmation = {
+    orderId,
+    status: 'completed',
+    amount: amountInCents / 100,
+    currency: 'USD',
+    paymentMethod: 'stripe-spt',
+    paymentId,
+    items,
+    message: 'Order completed successfully',
+  };
+
+  return NextResponse.json(confirmation, {
+    status: 200,
+    headers: {
+      'Payment-Receipt': `receipt-${orderId}`,
+      'Content-Type': 'application/json',
+    },
+  });
 }

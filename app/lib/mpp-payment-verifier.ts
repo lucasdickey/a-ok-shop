@@ -17,6 +17,13 @@ export interface PaymentVerificationResult {
   method: 'stripe-link' | 'tempo';
   timestamp: number;
   error?: string;
+  /** True when Stripe is still working on an earlier request for the same order. */
+  inProgress?: boolean;
+  /**
+   * True when this payment request was already used with different payment details
+   * (for example a new token). Stripe refuses it and nothing is charged.
+   */
+  alreadyUsed?: boolean;
 }
 
 /**
@@ -49,8 +56,9 @@ export async function createStripePaymentFromSPT(
 
     console.log('[MPP] Creating PaymentIntent with SPT for agent:', agentId, 'amount:', amount, 'orderId:', orderId);
 
-    // Use stable idempotency key based on orderId to ensure retries are idempotent
-    // Stripe will return the same PaymentIntent if called with the same key
+    // The caller builds orderId from our 402 payment request id (or the token, if the
+    // agent left the id out) and the exact order, so a repeat of the same order uses the
+    // same key and Stripe returns the first payment instead of charging again.
     const idempotencyKey = orderId;
 
     // Single PaymentIntent create call with confirm:true per Stripe MPP spec
@@ -105,6 +113,31 @@ export async function createStripePaymentFromSPT(
     };
   } catch (error) {
     console.error('[MPP] Error creating Stripe payment from SPT:', error);
+    const stripeError = error as { type?: string; rawType?: string; code?: string; statusCode?: number } | null;
+    if (stripeError?.type === 'StripeIdempotencyError' || stripeError?.rawType === 'idempotency_error') {
+      return {
+        verified: false,
+        paymentId: '',
+        amount: 0,
+        currency: 'usd',
+        method: 'stripe-link',
+        timestamp: Date.now(),
+        error: 'This payment request was already used. If an earlier try went through, this is its order id; otherwise send the order without payment to get a new payment request.',
+        alreadyUsed: true,
+      };
+    }
+    if (stripeError?.code === 'idempotency_key_in_use' || stripeError?.statusCode === 409) {
+      return {
+        verified: false,
+        paymentId: '',
+        amount: 0,
+        currency: 'usd',
+        method: 'stripe-link',
+        timestamp: Date.now(),
+        error: 'This order is already being charged. Send the same request again in a moment to get the order.',
+        inProgress: true,
+      };
+    }
     return {
       verified: false,
       paymentId: '',
@@ -134,6 +167,7 @@ export function parsePaymentAuthorization(authHeader: string): {
   method: 'stripe-link' | 'tempo' | 'unknown';
   spt?: string; // Shared Payment Token for SPT flow
   payload?: string; // Raw payload for fallback
+  challengeId?: string; // The id of our 402 payment request, echoed back by the agent
 } {
   if (!authHeader || !authHeader.startsWith('Payment ')) {
     return { method: 'unknown' };
@@ -150,16 +184,18 @@ export function parsePaymentAuthorization(authHeader: string): {
     const decodedJson = Buffer.from(padded, 'base64').toString('utf-8');
     const credential = JSON.parse(decodedJson);
 
+    const challengeId = readChallengeId(credential?.challenge);
+
     // Check for proper credential envelope with payload.spt (Stripe SPT)
     if (credential.payload?.spt && credential.payload.spt.startsWith('spt_')) {
       console.log('[MPP] Extracted SPT from credential envelope');
-      return { method: 'stripe-link', spt: credential.payload.spt };
+      return { method: 'stripe-link', spt: credential.payload.spt, challengeId };
     }
 
     // Fallback: check for direct SPT field (for backwards compatibility)
     if (credential.spt && credential.spt.startsWith('spt_')) {
       console.log('[MPP] Extracted SPT from direct field');
-      return { method: 'stripe-link', spt: credential.spt };
+      return { method: 'stripe-link', spt: credential.spt, challengeId };
     }
 
     // Check for Tempo transaction hash
@@ -173,4 +209,18 @@ export function parsePaymentAuthorization(authHeader: string): {
     console.warn('[MPP] Error parsing Authorization header:', error);
     return { method: 'unknown' };
   }
+}
+
+/**
+ * The credential echoes our 402 payment request, either as its id or as the whole
+ * request object. Returns the id, or undefined if it isn't there.
+ */
+function readChallengeId(challenge: unknown): string | undefined {
+  const id =
+    typeof challenge === 'string'
+      ? challenge
+      : challenge && typeof challenge === 'object' && typeof (challenge as { id?: unknown }).id === 'string'
+        ? (challenge as { id: string }).id
+        : undefined;
+  return id && id.length <= 200 ? id : undefined;
 }
