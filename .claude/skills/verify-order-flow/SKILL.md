@@ -24,7 +24,7 @@ Yes if it changes any of these (the same list is in each model's `covers` export
 Not covered: the ACP checkout route's own request parsing, discount codes, the catalog
 data itself, Stripe's hosted checkout page, and what Lucas does after the owner email.
 
-Sync commit: `4191481ecef7e9e4ea40c32c1460d0a336a063b3`
+Sync commit: `2dc6d548831b13ef51c9e0e2d3ec98ba5602d2d1`
 
 That is the last commit at which someone read the covered code and confirmed the models
 describe it. To see what changed since:
