@@ -4977,6 +4977,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000035",
+                  "url": "/images/products/a-ok-local-minimum-tee-white.webp",
+                  "altText": "White A-OK Local Minimum Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000030",
                   "url": "/images/products/a-ok-local-minimum-tee-red.webp",
                   "altText": "Red A-OK Local Minimum Tee, worn by a model",
@@ -5023,16 +5033,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000035",
-                  "url": "/images/products/a-ok-local-minimum-tee-white.webp",
-                  "altText": "White A-OK Local Minimum Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "White"
                 }
               },
               {
@@ -6151,22 +6151,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000037",
-                  "url": "/images/products/a-ok-insert-token-tee-red.webp",
-                  "altText": "Red A-OK Insert Token Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000038",
                   "url": "/images/products/a-ok-insert-token-tee-blue.webp",
                   "altText": "Blue A-OK Insert Token Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Blue"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000037",
+                  "url": "/images/products/a-ok-insert-token-tee-red.webp",
+                  "altText": "Red A-OK Insert Token Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -7647,6 +7647,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000046",
+                  "url": "/images/products/a-ok-scaled-up-tee-navy.webp",
+                  "altText": "Navy A-OK Scaled Up Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Navy"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000042",
                   "url": "/images/products/a-ok-scaled-up-tee-red.webp",
                   "altText": "Red A-OK Scaled Up Tee, worn by a model",
@@ -7683,16 +7693,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000046",
-                  "url": "/images/products/a-ok-scaled-up-tee-navy.webp",
-                  "altText": "Navy A-OK Scaled Up Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Navy"
                 }
               }
             ]
@@ -10005,22 +10005,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000058",
-                  "url": "/images/products/a-ok-out-of-distribution-tee-red.webp",
-                  "altText": "Red A-OK Out of Distribution Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000059",
                   "url": "/images/products/a-ok-out-of-distribution-tee-yellow.webp",
                   "altText": "Yellow A-OK Out of Distribution Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000058",
+                  "url": "/images/products/a-ok-out-of-distribution-tee-red.webp",
+                  "altText": "Red A-OK Out of Distribution Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -10965,22 +10965,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000064",
-                  "url": "/images/products/a-ok-sharded-tee-red.webp",
-                  "altText": "Red A-OK Sharded Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000065",
                   "url": "/images/products/a-ok-sharded-tee-blue.webp",
                   "altText": "Blue A-OK Sharded Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Blue"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000064",
+                  "url": "/images/products/a-ok-sharded-tee-red.webp",
+                  "altText": "Red A-OK Sharded Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -11829,6 +11829,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000071",
+                  "url": "/images/products/a-ok-world-model-tee-green.webp",
+                  "altText": "Green A-OK World Model Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000069",
                   "url": "/images/products/a-ok-world-model-tee-red.webp",
                   "altText": "Red A-OK World Model Tee, worn by a model",
@@ -11845,16 +11855,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000071",
-                  "url": "/images/products/a-ok-world-model-tee-green.webp",
-                  "altText": "Green A-OK World Model Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Green"
                 }
               },
               {
@@ -12692,6 +12692,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000077",
+                  "url": "/images/products/a-ok-drift-tee-white.webp",
+                  "altText": "White A-OK Drift Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000074",
                   "url": "/images/products/a-ok-drift-tee-red.webp",
                   "altText": "Red A-OK Drift Tee, worn by a model",
@@ -12718,16 +12728,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Green"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000077",
-                  "url": "/images/products/a-ok-drift-tee-white.webp",
-                  "altText": "White A-OK Drift Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "White"
                 }
               }
             ]
@@ -14503,6 +14503,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000086",
+                  "url": "/images/products/a-ok-long-context-tee-navy.webp",
+                  "altText": "Navy A-OK Long Context Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Navy"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000084",
                   "url": "/images/products/a-ok-long-context-tee-black.webp",
                   "altText": "Black A-OK Long Context Tee, worn by a model",
@@ -14519,16 +14529,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "White"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000086",
-                  "url": "/images/products/a-ok-long-context-tee-navy.webp",
-                  "altText": "Navy A-OK Long Context Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Navy"
                 }
               }
             ]
@@ -15057,22 +15057,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000087",
-                  "url": "/images/products/a-ok-fine-tuning-tee-red.webp",
-                  "altText": "Red A-OK Fine-Tuning Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000088",
                   "url": "/images/products/a-ok-fine-tuning-tee-blue.webp",
                   "altText": "Blue A-OK Fine-Tuning Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Blue"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000087",
+                  "url": "/images/products/a-ok-fine-tuning-tee-red.webp",
+                  "altText": "Red A-OK Fine-Tuning Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -15920,22 +15920,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000092",
-                  "url": "/images/products/a-ok-drift-hoodie-red.webp",
-                  "altText": "Red A-OK Drift Hoodie, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000093",
                   "url": "/images/products/a-ok-drift-hoodie-yellow.webp",
                   "altText": "Yellow A-OK Drift Hoodie, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000092",
+                  "url": "/images/products/a-ok-drift-hoodie-red.webp",
+                  "altText": "Red A-OK Drift Hoodie, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -16628,6 +16628,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000098",
+                  "url": "/images/products/a-ok-voice-mode-tee-green.webp",
+                  "altText": "Green A-OK Voice Mode Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000096",
                   "url": "/images/products/a-ok-voice-mode-tee-red.webp",
                   "altText": "Red A-OK Voice Mode Tee, worn by a model",
@@ -16644,16 +16654,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000098",
-                  "url": "/images/products/a-ok-voice-mode-tee-green.webp",
-                  "altText": "Green A-OK Voice Mode Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Green"
                 }
               },
               {
@@ -17889,6 +17889,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000107",
+                  "url": "/images/products/a-ok-flops-tee-white.webp",
+                  "altText": "White A-OK FLOPS Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000103",
                   "url": "/images/products/a-ok-flops-tee-red.webp",
                   "altText": "Red A-OK FLOPS Tee, worn by a model",
@@ -17925,16 +17935,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000107",
-                  "url": "/images/products/a-ok-flops-tee-white.webp",
-                  "altText": "White A-OK FLOPS Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "White"
                 }
               }
             ]
@@ -18753,22 +18753,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000108",
-                  "url": "/images/products/a-ok-deepfake-tee-red.webp",
-                  "altText": "Red A-OK Deepfake Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000109",
                   "url": "/images/products/a-ok-deepfake-tee-yellow.webp",
                   "altText": "Yellow A-OK Deepfake Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000108",
+                  "url": "/images/products/a-ok-deepfake-tee-red.webp",
+                  "altText": "Red A-OK Deepfake Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -19617,6 +19617,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000115",
+                  "url": "/images/products/a-ok-deepfake-hoodie-black.webp",
+                  "altText": "Black A-OK Deepfake Hoodie, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000113",
                   "url": "/images/products/a-ok-deepfake-hoodie-red.webp",
                   "altText": "Red A-OK Deepfake Hoodie, worn by a model",
@@ -19633,16 +19643,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Green"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000115",
-                  "url": "/images/products/a-ok-deepfake-hoodie-black.webp",
-                  "altText": "Black A-OK Deepfake Hoodie, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Black"
                 }
               },
               {
@@ -20478,22 +20478,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000118",
-                  "url": "/images/products/a-ok-drag-and-drop-tee-black.webp",
-                  "altText": "Black A-OK Drag and Drop Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Black"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000119",
                   "url": "/images/products/a-ok-drag-and-drop-tee-navy.webp",
                   "altText": "Navy A-OK Drag and Drop Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Navy"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000118",
+                  "url": "/images/products/a-ok-drag-and-drop-tee-black.webp",
+                  "altText": "Black A-OK Drag and Drop Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
                 }
               }
             ]
@@ -21585,6 +21585,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000128",
+                  "url": "/images/products/a-ok-pinned-tee-white.webp",
+                  "altText": "White A-OK Pinned Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000124",
                   "url": "/images/products/a-ok-pinned-tee-red.webp",
                   "altText": "Red A-OK Pinned Tee, worn by a model",
@@ -21621,16 +21631,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000128",
-                  "url": "/images/products/a-ok-pinned-tee-white.webp",
-                  "altText": "White A-OK Pinned Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "White"
                 }
               }
             ]
@@ -22842,6 +22842,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000133",
+                  "url": "/images/products/a-ok-mechanical-tee-green.webp",
+                  "altText": "Green A-OK Mechanical Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000131",
                   "url": "/images/products/a-ok-mechanical-tee-red.webp",
                   "altText": "Red A-OK Mechanical Tee, worn by a model",
@@ -22858,16 +22868,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Blue"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000133",
-                  "url": "/images/products/a-ok-mechanical-tee-green.webp",
-                  "altText": "Green A-OK Mechanical Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Green"
                 }
               }
             ]
@@ -23394,22 +23394,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000134",
-                  "url": "/images/products/a-ok-similarity-search-tee-yellow.webp",
-                  "altText": "Yellow A-OK Similarity Search Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Yellow"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000135",
                   "url": "/images/products/a-ok-similarity-search-tee-black.webp",
                   "altText": "Black A-OK Similarity Search Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000134",
+                  "url": "/images/products/a-ok-similarity-search-tee-yellow.webp",
+                  "altText": "Yellow A-OK Similarity Search Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Yellow"
                 }
               },
               {
@@ -23947,22 +23947,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000137",
-                  "url": "/images/products/a-ok-serverless-tee-red.webp",
-                  "altText": "Red A-OK Serverless Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000138",
                   "url": "/images/products/a-ok-serverless-tee-blue.webp",
                   "altText": "Blue A-OK Serverless Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Blue"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000137",
+                  "url": "/images/products/a-ok-serverless-tee-red.webp",
+                  "altText": "Red A-OK Serverless Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -24895,6 +24895,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000144",
+                  "url": "/images/products/a-ok-resharded-tee-green.webp",
+                  "altText": "Green A-OK Resharded Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000142",
                   "url": "/images/products/a-ok-resharded-tee-red.webp",
                   "altText": "Red A-OK Resharded Tee, worn by a model",
@@ -24911,16 +24921,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000144",
-                  "url": "/images/products/a-ok-resharded-tee-green.webp",
-                  "altText": "Green A-OK Resharded Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Green"
                 }
               },
               {
@@ -26311,22 +26311,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000150",
-                  "url": "/images/products/a-ok-inpainting-tee-red.webp",
-                  "altText": "Red A-OK Inpainting Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000151",
                   "url": "/images/products/a-ok-inpainting-tee-yellow.webp",
                   "altText": "Yellow A-OK Inpainting Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000150",
+                  "url": "/images/products/a-ok-inpainting-tee-red.webp",
+                  "altText": "Red A-OK Inpainting Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -27018,22 +27018,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000154",
-                  "url": "/images/products/a-ok-knowledge-graph-tee-red.webp",
-                  "altText": "Red A-OK Knowledge Graph Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000155",
                   "url": "/images/products/a-ok-knowledge-graph-tee-black.webp",
                   "altText": "Black A-OK Knowledge Graph Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Black"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000154",
+                  "url": "/images/products/a-ok-knowledge-graph-tee-red.webp",
+                  "altText": "Red A-OK Knowledge Graph Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
@@ -27572,6 +27572,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000159",
+                  "url": "/images/products/a-ok-key-rotation-tee-green.webp",
+                  "altText": "Green A-OK Key Rotation Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Green"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000157",
                   "url": "/images/products/a-ok-key-rotation-tee-red.webp",
                   "altText": "Red A-OK Key Rotation Tee, worn by a model",
@@ -27588,16 +27598,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000159",
-                  "url": "/images/products/a-ok-key-rotation-tee-green.webp",
-                  "altText": "Green A-OK Key Rotation Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Green"
                 }
               },
               {
@@ -28830,6 +28830,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000166",
+                  "url": "/images/products/a-ok-auto-compact-tee-navy.webp",
+                  "altText": "Navy A-OK Auto-Compact Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Navy"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000164",
                   "url": "/images/products/a-ok-auto-compact-tee-black.webp",
                   "altText": "Black A-OK Auto-Compact Tee, worn by a model",
@@ -28846,16 +28856,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "White"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000166",
-                  "url": "/images/products/a-ok-auto-compact-tee-navy.webp",
-                  "altText": "Navy A-OK Auto-Compact Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Navy"
                 }
               }
             ]
@@ -29384,6 +29384,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000169",
+                  "url": "/images/products/a-ok-long-running-tee-black.webp",
+                  "altText": "Black A-OK Long-Running Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Black"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000167",
                   "url": "/images/products/a-ok-long-running-tee-red.webp",
                   "altText": "Red A-OK Long-Running Tee, worn by a model",
@@ -29400,16 +29410,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Green"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000169",
-                  "url": "/images/products/a-ok-long-running-tee-black.webp",
-                  "altText": "Black A-OK Long-Running Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Black"
                 }
               },
               {
@@ -30247,6 +30247,16 @@
             "edges": [
               {
                 "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000175",
+                  "url": "/images/products/a-ok-full-pads-tee-white.webp",
+                  "altText": "White A-OK Full Pads Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "White"
+                }
+              },
+              {
+                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000172",
                   "url": "/images/products/a-ok-full-pads-tee-red.webp",
                   "altText": "Red A-OK Full Pads Tee, worn by a model",
@@ -30273,16 +30283,6 @@
                   "width": 1122,
                   "height": 1402,
                   "color": "Green"
-                }
-              },
-              {
-                "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000175",
-                  "url": "/images/products/a-ok-full-pads-tee-white.webp",
-                  "altText": "White A-OK Full Pads Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "White"
                 }
               }
             ]
@@ -30954,22 +30954,22 @@
             "edges": [
               {
                 "node": {
-                  "id": "gid://a-ok/ProductImage/89500000000176",
-                  "url": "/images/products/a-ok-sovereign-tee-red.webp",
-                  "altText": "Red A-OK Sovereign Tee, worn by a model",
-                  "width": 1122,
-                  "height": 1402,
-                  "color": "Red"
-                }
-              },
-              {
-                "node": {
                   "id": "gid://a-ok/ProductImage/89500000000177",
                   "url": "/images/products/a-ok-sovereign-tee-yellow.webp",
                   "altText": "Yellow A-OK Sovereign Tee, worn by a model",
                   "width": 1122,
                   "height": 1402,
                   "color": "Yellow"
+                }
+              },
+              {
+                "node": {
+                  "id": "gid://a-ok/ProductImage/89500000000176",
+                  "url": "/images/products/a-ok-sovereign-tee-red.webp",
+                  "altText": "Red A-OK Sovereign Tee, worn by a model",
+                  "width": 1122,
+                  "height": 1402,
+                  "color": "Red"
                 }
               },
               {
