@@ -110,13 +110,13 @@ export default function ProductBrowser({
             <li aria-hidden="true">/</li>
             <li>
               {category ? (
-                <a
+                <Link
                   href="/products"
                   onClick={(event) => selectCategory(event, "/products")}
                   className="inline-flex min-h-[44px] items-center underline-offset-4 hover:underline"
                 >
                   Shop
-                </a>
+                </Link>
               ) : (
                 <span aria-current="page">Shop</span>
               )}

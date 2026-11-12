@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 // DO NOT PUT IN HARDCODED VALUES IN HERE -- EVERYTHING SHOULD BE DYNAMICALLY GENERATED FROM THE CATALOG
 
 // Page title, search description and social preview, from the product's copy when it has some.
-export async function generateMetadata({ params }: { params: { handle: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ handle: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const product = getProductByHandle(params.handle);
   if (!product) return {};
   const title = product.seo?.title ?? `${product.title} | A-OK`;
@@ -34,13 +35,14 @@ export async function generateMetadata({ params }: { params: { handle: string } 
 }
 
 // Server component
-export default async function ProductPage({
-  params,
-  searchParams,
-}: {
-  params: { handle: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function ProductPage(
+  props: {
+    params: Promise<{ handle: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const product = await getProductByHandle(params.handle);
 
   if (!product) {

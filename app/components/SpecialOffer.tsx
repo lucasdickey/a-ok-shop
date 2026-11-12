@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 interface DiscountInfo {
   percentage?: number;
@@ -211,12 +212,12 @@ export default function SpecialOffer() {
                 <p className="text-dark font-medium mb-3">
                   Ready to save? Start shopping!
                 </p>
-                <a
+                <Link
                   href="/products"
                   className="btn btn-primary px-6 py-3 rounded font-semibold hover:bg-primary-light transition-colors"
                 >
                   SHOP NOW
-                </a>
+                </Link>
               </div>
             </div>
           </div>
