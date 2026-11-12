@@ -77,6 +77,7 @@ import {
   addToStripe,
   catalogNode,
   idAllocator,
+  leadWithRandomColor,
   loadMerch,
   merchDir,
   MAX_HARD_TO_SEE,
@@ -1334,6 +1335,7 @@ async function sell(options: Options): Promise<void> {
         return { color: m.color, url: `/${relative.replace(/^public\//, "")}`, ...PHOTO };
       });
       const node = catalogNode({ newId, blank, copy, images, swatch, variant: (color, size) => variant(color as ShopColor, size), now });
+      leadWithRandomColor(node, catalog);
       catalog.products.edges.push({ node });
       added.push({ merch, product, node });
       log(`${node.title} (${node.handle}): ${node.variants.edges.length} variants at $${blank.price}`);

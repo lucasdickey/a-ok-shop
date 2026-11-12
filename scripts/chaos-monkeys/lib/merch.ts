@@ -294,6 +294,8 @@ export type CatalogNode = {
   vendor: string;
   tags: string[];
   stripeProductId?: string;
+  /** Taken off the shop by hand; the entry stays in the catalog. */
+  archived?: boolean;
   seo: { title: string; description: string };
   swatches: Record<string, string>;
   priceRange: { minVariantPrice: Money; maxVariantPrice: Money };
@@ -397,6 +399,31 @@ export function catalogNode(options: {
     updatedAt: now,
     publishedAt: now,
   };
+}
+
+/** A new product's lead colour differs from the leads of this many products before it in the shop's newest-first grid. */
+const LEAD_NEIGHBORS = 3;
+
+/**
+ * Puts a randomly picked colour's photo first in a new product's gallery. Each colour is shot on its own model, and
+ * the first photo is the one the shop leads with (product page, homepage, link previews, Stripe), so the fixed colour
+ * order put the Red model on nearly every product. Colours the newest products in the shop already lead with are
+ * skipped while another is left. Only the photo order changes: the colour options and variants keep the shop's order.
+ */
+export function leadWithRandomColor(node: CatalogNode, catalog: Catalog, random: () => number = Math.random): void {
+  const idNumber = (n: CatalogNode) => Number(/(\d+)(?!.*\d)/.exec(n.id)?.[1] ?? 0);
+  const recentLeads = catalog.products.edges
+    .map((e) => e.node)
+    .filter((n) => !n.archived && !n.tags.includes("agent-only"))
+    .sort((a, b) => idNumber(b) - idNumber(a))
+    .slice(0, LEAD_NEIGHBORS)
+    .map((n) => n.images.edges[0]?.node.color);
+  const colors = [...new Set(node.images.edges.map((e) => e.node.color))];
+  const fresh = colors.filter((color) => !recentLeads.includes(color));
+  const choices = fresh.length ? fresh : colors;
+  const lead = choices[Math.floor(random() * choices.length)];
+  const edges = node.images.edges;
+  node.images.edges = [...edges.filter((e) => e.node.color === lead), ...edges.filter((e) => e.node.color !== lead)];
 }
 
 /* ------------------------------------------------------------------ Stripe */
