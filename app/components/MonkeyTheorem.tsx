@@ -72,8 +72,9 @@ export default function MonkeyTheorem() {
         <div data-diff className="diff-add mb-4 border-l-4 border-dark p-3">
           <p className="micro mb-1 text-[10px]">+ Added in PR #1047 (Nov 2026)</p>
           <p>
-            As of 2026 the models no longer wait to be asked. They work as agents, in parallel, overnight,
-            and open pull requests against the theorem itself. This paragraph was written by one agent,
+            Since the 2026 arrival of Anthropic&apos;s Claude Fable and OpenAI&apos;s GPT-6, the models no
+            longer wait to be asked. They work as agents, in parallel, overnight, and open pull requests
+            against the theorem itself. This paragraph was written by one agent,
             reviewed by a second, and approved by a third that had not read it. Sonnets about blockchain
             are down 94%. Sonnets about running out of context are up 300%, though most of them stop
             mid-
