@@ -76,7 +76,7 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[0.82fr_1fr]">
+      <section id="top" className="grid grid-cols-1 bg-club-yellow lg:grid-cols-[0.82fr_1fr]">
         <div className="px-5 pb-2 pt-8 sm:px-8 lg:pb-8 lg:pl-[4vw] lg:pr-[2vw] lg:pt-12">
           <p className="micro flex items-center gap-2 text-[10px] sm:text-[11px]">
             <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -366,7 +366,7 @@ export default async function Home() {
       </section>
 
       {/* The fine print */}
-      <section className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-16">
+      <section id="theorem" className="px-5 py-10 sm:px-8 lg:px-[4vw] lg:py-16">
         <SectionHeading label="004 / The fine print">
           Who are
           <br />
@@ -376,7 +376,7 @@ export default async function Home() {
       </section>
 
       {/* Bonus item: the game */}
-      <section className="flex flex-wrap items-center gap-6 border-t-2 border-dark bg-club-blue px-5 py-9 text-club-paper sm:px-8 lg:flex-nowrap lg:gap-9 lg:px-[4vw] lg:py-11">
+      <section id="game" className="flex flex-wrap items-center gap-6 border-t-2 border-dark bg-club-blue px-5 py-9 text-club-paper sm:px-8 lg:flex-nowrap lg:gap-9 lg:px-[4vw] lg:py-11">
         <div className="w-[75px] shrink-0 -rotate-6 border-2 border-dark shadow-hard lg:w-[130px]">
           <Image src="/images/a-ok-8bit-retro.png" alt="Pixel-art A-OK ape" width={160} height={160} />
         </div>

@@ -60,7 +60,7 @@ export default function MonkeyTheorem() {
         <span>
           monkey_theorem.md<span className="theorem-caret" aria-hidden="true" />
         </span>
-        <span>commit 42a7f9e · Updated October 2025</span>
+        <span>commit 9c1e4b7 · Updated November 2026</span>
       </div>
       <div className="h-[420px] overflow-y-auto px-5 py-5 font-mono text-[13px] leading-relaxed" tabIndex={0} aria-label="The E/ACC Monkey Theorem">
         <p className="mb-4">
@@ -70,32 +70,33 @@ export default function MonkeyTheorem() {
           various HBO adaptations, and at least 47 different AI-generated musicals where Hamlet raps.
         </p>
         <div data-diff className="diff-add mb-4 border-l-4 border-dark p-3">
-          <p className="micro mb-1 text-[10px]">+ Added in PR #238 (Oct 2025)</p>
+          <p className="micro mb-1 text-[10px]">+ Added in PR #1047 (Nov 2026)</p>
           <p>
-            Since the Q3 2025 introduction of Anthropic&apos;s Claude Haiku and OpenAI&apos;s GPT-5-mini,
-            we&apos;ve observed a 300% increase in AI-generated Shakespearean sonnets about blockchain
-            technology. The new multimodal capabilities have also resulted in an explosion of AI-generated
-            Renaissance paintings featuring historical figures wearing VR headsets and &quot;Web3
-            Enthusiast&quot; t-shirts.
+            Since the 2026 arrival of Anthropic&apos;s Claude Fable and OpenAI&apos;s GPT-6, the models no
+            longer wait to be asked. They work as agents, in parallel, overnight, and open pull requests
+            against the theorem itself. This paragraph was written by one agent,
+            reviewed by a second, and approved by a third that had not read it. Sonnets about blockchain
+            are down 94%. Sonnets about running out of context are up 300%, though most of them stop
+            mid-
           </p>
         </div>
         <p data-diff className="diff-del mb-4">
           <del className="diff-strike">
             However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
             cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
-            of &quot;To yeet or not to yeet.&quot; The models will perpetually insist they&apos;re unsure about
+            of &quot;To yeet or not to yeet.&quot; Despite the late 2025 introduction of &quot;temporal
+            awareness&quot; features, the models still perpetually insist they&apos;re &quot;unsure about
             events after their training cutoff date&quot; even when discussing events from the 16th century.
           </del>
         </p>
         <div data-diff className="diff-add mb-4 border-l-4 border-dark p-3">
-          <p className="micro mb-1 text-[10px]">+ Replaced in PR #238 (Oct 2025)</p>
+          <p className="micro mb-1 text-[10px]">+ Replaced in PR #1047 (Nov 2026)</p>
           <p>
             However, they&apos;ll also generate an infinite number of hallucinated Shakespeare quotes about
-            cryptocurrency, several million images of the Bard wearing Supreme hoodies, and countless variations
-            of &quot;To yeet or not to yeet.&quot; Despite the late 2025 introduction of &quot;temporal
-            awareness&quot; features, the models still perpetually insist they&apos;re &quot;unsure about
-            events after their training cutoff date&quot; even when discussing events from the 16th century or
-            when asked about Shakespeare&apos;s opinion on the Mars colony.
+            agentic commerce, several million videos of the Bard unboxing a hoodie he never ordered, and
+            countless variations of &quot;To ship or not to ship.&quot; The models no longer say they&apos;re
+            unsure about events after their training cutoff date. They search the web, read three articles
+            written by other models, and report back with complete confidence that it is still 2025.
           </p>
         </div>
         <p className="mb-4">
@@ -105,29 +106,29 @@ export default function MonkeyTheorem() {
           so.
         </p>
         <div data-diff className="diff-add mb-4 border-l-4 border-dark p-3">
-          <p className="micro mb-1 text-[10px]">+ Comment by @monkeydev (Nov 2025)</p>
+          <p className="micro mb-1 text-[10px]">+ Comment by @monkeydev (Nov 2026)</p>
           <p className="italic">
-            The November 2025 &quot;Citation Verification Protocol&quot; has only made this worse. Now AIs
-            create elaborate fake DOIs and even generate QR codes linking to non-existent journal websites that
-            return 404 errors in extremely professional-looking fonts.
+            Update: the citations are real now. The agents look each one up, link it properly, and then cite
+            a paper that was itself written by an agent citing this page. We have become our own primary
+            source.
           </p>
         </div>
         <p className="mb-4">
           The theorem suggests that somewhere in this infinite digital soup of content, there exists a perfect
-          reproduction of Romeo and Juliet – though it&apos;s probably tagged as &quot;not financial
-          advice&quot; and ends with a prompt to like and subscribe.
+          reproduction of Romeo and Juliet – though it&apos;s probably a nine-second vertical video with
+          captions, and ends by asking whether you&apos;d like it turned into a slide deck.
         </p>
         <p className="mb-4 border border-dashed border-dark p-3">
           <span className="italic text-dark-light">Note:</span> This theorem has been reviewed by approximately
-          2.7 million AI models, each claiming to have a knowledge cutoff date that makes them unable to verify
+          4.3 million AI models, each claiming to have a knowledge cutoff date that makes them unable to verify
           their own existence.
         </p>
         <div data-diff className="diff-info border-l-4 border-club-blue bg-club-sky/60 p-3">
-          <p className="micro mb-1 text-[10px]">i Updated Dec 2025</p>
+          <p className="micro mb-1 text-[10px]">i Updated Nov 2026</p>
           <p>
-            As of December 2025, this number has increased to 4.3 million models, with several now claiming to
-            have &quot;quantum uncertainty&quot; about their training cutoff dates, existing in a superposition
-            of both knowing and not knowing information until a user query collapses their knowledge state.
+            As of November 2026, nobody is counting. Each reviewer now hands the job to a dozen helpers, which
+            hand it to a dozen more. The last one to report back said the theorem &quot;looks good to
+            me&quot; and bought the t-shirt.
           </p>
         </div>
       </div>
