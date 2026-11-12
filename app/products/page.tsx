@@ -7,11 +7,12 @@ import { CATEGORY_FILTERS } from "./categories";
 export const dynamic = "force-dynamic";
 export const revalidate = 0; // Disable caching for this page
 
-export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function ProductsPage(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   let products: SimpleProduct[] = [];
   // Product ids in each category, worked out here with the catalog's own rules so the
   // browser can switch categories in place without asking the server again.

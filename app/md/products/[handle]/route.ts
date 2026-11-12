@@ -8,7 +8,8 @@ export function generateStaticParams() {
   return getAllProducts().map((product) => ({ handle: product.handle }));
 }
 
-export function GET(_request: Request, { params }: { params: { handle: string } }) {
+export async function GET(_request: Request, props: { params: Promise<{ handle: string }> }) {
+  const params = await props.params;
   const markdown = buildProductMarkdown(params.handle);
   if (!markdown) return new Response("Not found\n", { status: 404, headers: MARKDOWN_HEADERS });
   return new Response(markdown, { headers: MARKDOWN_HEADERS });

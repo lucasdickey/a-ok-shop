@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductByHandle } from "@/app/lib/catalog";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { handle: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ handle: string }> }) {
+  const params = await props.params;
   try {
     const product = getProductByHandle(params.handle);
 
