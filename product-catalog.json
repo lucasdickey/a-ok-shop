@@ -8944,7 +8944,8 @@
           "createdAt": "2026-10-14T22:20:03.094Z",
           "updatedAt": "2026-10-14T22:20:03.094Z",
           "publishedAt": "2026-10-14T22:20:03.094Z",
-          "stripeProductId": "prod_VRYtGXIHLBN6Gv"
+          "stripeProductId": "prod_VRYtGXIHLBN6Gv",
+          "archived": true
         }
       },
       {
@@ -9194,7 +9195,8 @@
           "createdAt": "2026-10-14T22:20:03.094Z",
           "updatedAt": "2026-10-14T22:20:03.094Z",
           "publishedAt": "2026-10-14T22:20:03.094Z",
-          "stripeProductId": "prod_VRYt46IrYdtwdR"
+          "stripeProductId": "prod_VRYt46IrYdtwdR",
+          "archived": true
         }
       },
       {
@@ -9444,7 +9446,8 @@
           "createdAt": "2026-10-14T22:20:03.094Z",
           "updatedAt": "2026-10-14T22:20:03.094Z",
           "publishedAt": "2026-10-14T22:20:03.094Z",
-          "stripeProductId": "prod_VRYto9Ae8ubaxn"
+          "stripeProductId": "prod_VRYto9Ae8ubaxn",
+          "archived": true
         }
       },
       {
@@ -9694,7 +9697,8 @@
           "createdAt": "2026-10-14T22:20:03.094Z",
           "updatedAt": "2026-10-14T22:20:03.094Z",
           "publishedAt": "2026-10-14T22:20:03.094Z",
-          "stripeProductId": "prod_VRYtaIuBeIShdg"
+          "stripeProductId": "prod_VRYtaIuBeIShdg",
+          "archived": true
         }
       },
       {
@@ -9944,7 +9948,8 @@
           "createdAt": "2026-10-14T22:20:03.094Z",
           "updatedAt": "2026-10-14T22:20:03.094Z",
           "publishedAt": "2026-10-14T22:20:03.094Z",
-          "stripeProductId": "prod_VRYtnEG5GOLXaj"
+          "stripeProductId": "prod_VRYtnEG5GOLXaj",
+          "archived": true
         }
       },
       {
@@ -10902,7 +10907,8 @@
           "createdAt": "2026-10-15T03:50:06.115Z",
           "updatedAt": "2026-10-15T03:50:06.115Z",
           "publishedAt": "2026-10-15T03:50:06.115Z",
-          "stripeProductId": "prod_VRYtLiEBqxSE7Q"
+          "stripeProductId": "prod_VRYtLiEBqxSE7Q",
+          "archived": true
         }
       },
       {
